@@ -9,23 +9,23 @@ export const WEBSITE_URL = env.NEXT_PUBLIC_CODEBUFF_APP_URL
 const FREEBUFF_WEB_URL = IS_DEV ? 'http://localhost:3002' : 'https://freebuff.com'
 export const LOGIN_WEBSITE_URL = IS_FREEBUFF ? FREEBUFF_WEB_URL : WEBSITE_URL
 
-// Codebuff ASCII Logo - compact version for 80-width terminals
-const LOGO_CODEBUFF = `
-  ██████╗ ██████╗ ██████╗ ███████╗██████╗ ██╗   ██╗███████╗███████╗
- ██╔════╝██╔═══██╗██╔══██╗██╔════╝██╔══██╗██║   ██║██╔════╝██╔════╝
- ██║     ██║   ██║██║  ██║█████╗  ██████╔╝██║   ██║█████╗  █████╗
- ██║     ██║   ██║██║  ██║██╔══╝  ██╔══██╗██║   ██║██╔══╝  ██╔══╝
- ╚██████╗╚██████╔╝██████╔╝███████╗██████╔╝╚██████╔╝██║     ██║
-  ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝╚═════╝  ╚═════╝ ╚═╝     ╚═╝
+// NEXUS ASCII Logo - compact version for 80-width terminals
+const LOGO_NEXUS = `
+ ███╗   ██╗███████╗██╗  ██╗██╗   ██╗███████╗
+ ████╗  ██║██╔════╝╚██╗██╔╝██║   ██║██╔════╝
+ ██╔██╗ ██║█████╗   ╚███╔╝ ██║   ██║███████╗
+ ██║╚██╗██║██╔══╝   ██╔██╗ ██║   ██║╚════██║
+ ██║ ╚████║███████╗██╔╝ ██╗╚██████╔╝███████║
+ ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝
 `
 
-const LOGO_SMALL_CODEBUFF = `
-  ██████╗ ██████╗
- ██╔════╝ ██╔══██╗
- ██║      ██████╔╝
- ██║      ██╔══██╗
- ╚██████╗ ██████╔╝
-  ╚═════╝ ╚═════╝
+const LOGO_SMALL_NEXUS = `
+ ███╗   ██╗██╗  ██╗
+ ████╗  ██║╚██╗██╔╝
+ ██╔██╗ ██║ ╚███╔╝
+ ██║╚██╗██║ ██╔██╗
+ ██║ ╚████║██╔╝ ██╗
+ ╚═╝  ╚═══╝╚═╝  ╚═╝
 `
 
 // Freebuff ASCII Logo
@@ -47,8 +47,8 @@ const LOGO_SMALL_FREEBUFF = `
  ╚═╝     ╚═════╝
 `
 
-export const LOGO = IS_FREEBUFF ? LOGO_FREEBUFF : LOGO_CODEBUFF
-export const LOGO_SMALL = IS_FREEBUFF ? LOGO_SMALL_FREEBUFF : LOGO_SMALL_CODEBUFF
+export const LOGO = IS_FREEBUFF ? LOGO_FREEBUFF : LOGO_NEXUS
+export const LOGO_SMALL = IS_FREEBUFF ? LOGO_SMALL_FREEBUFF : LOGO_SMALL_NEXUS
 
 // Shadow/border characters that receive the sheen animation effect
 export const SHADOW_CHARS = new Set([

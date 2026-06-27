@@ -129,7 +129,7 @@ function parseArgs(): ParsedArgs {
     // Codebuff: full CLI with all options
     program
       .name('codebuff')
-      .description('Codebuff CLI - AI-powered coding assistant')
+      .description('NEXUS CLI - AI-powered coding assistant')
       .version(loadPackageVersion(), '-v, --version', 'Print the CLI version')
       .option(
         '--agent <agent-id>',

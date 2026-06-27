@@ -121,7 +121,7 @@ function escapeHtml(s: string): string {
 }
 
 function callbackPageHtml(success: boolean, errorMessage?: string): string {
-  const title = success ? 'Connected — Codebuff' : 'Connection Failed — Codebuff'
+  const title = success ? 'Connected — NEXUS' : 'Connection Failed — NEXUS'
   const heading = success ? '✓ Connected to ChatGPT' : 'Connection Failed'
   const headingColor = success ? '#4ade80' : '#f87171'
   const body = success

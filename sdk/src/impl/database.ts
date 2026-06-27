@@ -1,3 +1,7 @@
+import {
+  BYOK_STUB_USER,
+  isByokDirectMode,
+} from '@codebuff/common/constants/byok'
 import { validateSingleAgent } from '@codebuff/common/templates/agent-validation'
 import { DynamicAgentTemplateSchema } from '@codebuff/common/types/dynamic-agent-template'
 import { getErrorObject } from '@codebuff/common/util/error'
@@ -99,6 +103,14 @@ export async function getUserInfoFromApiKey<T extends UserColumn>(
   params: GetUserInfoFromApiKeyInput<T>,
 ): GetUserInfoFromApiKeyOutput<T> {
   const { apiKey, fields, logger } = params
+
+  // BYOK direct mode: no Codebuff backend/account. Return a local stub user so
+  // auth validation and run bookkeeping succeed without any /api/v1/me call.
+  if (isByokDirectMode()) {
+    return Object.fromEntries(
+      fields.map((field) => [field, BYOK_STUB_USER[field] ?? null]),
+    ) as Awaited<GetUserInfoFromApiKeyOutput<T>>
+  }
 
   const cached = userInfoCache[apiKey]
   if (cached === null) {
@@ -218,6 +230,10 @@ export async function fetchAgentFromDatabase(
   const { apiKey, parsedAgentId, logger } = params
   const { publisherId, agentId, version } = parsedAgentId
 
+  // BYOK direct mode: no Codebuff registry. Published-agent lookups return null
+  // so the caller falls back to local/builtin agents.
+  if (isByokDirectMode()) return null
+
   const url = new URL(
     `/api/v1/agents/${publisherId}/${agentId}/${version ? version : 'latest'}`,
     WEBSITE_URL,
@@ -302,6 +318,9 @@ export async function fetchAgentFromDatabase(
 export async function startAgentRun(
   params: ParamsOf<StartAgentRunFn>,
 ): ReturnType<StartAgentRunFn> {
+  // BYOK direct mode: no server-side run tracking. Return a local stub run id.
+  if (isByokDirectMode()) return 'byok-local-run'
+
   const { apiKey, agentId, ancestorRunIds, logger } = params
 
   const url = new URL(`/api/v1/agent-runs`, WEBSITE_URL)
@@ -358,6 +377,9 @@ export async function finishAgentRun(
     logger,
   } = params
 
+  // BYOK direct mode: no server-side run tracking.
+  if (isByokDirectMode()) return
+
   const url = new URL(`/api/v1/agent-runs`, WEBSITE_URL)
 
   try {
@@ -407,6 +429,9 @@ export async function addAgentStep(
     startTime,
     logger,
   } = params
+
+  // BYOK direct mode: no server-side step tracking.
+  if (isByokDirectMode()) return null
 
   const url = new URL(`/api/v1/agent-runs/${agentRunId}/steps`, WEBSITE_URL)
 

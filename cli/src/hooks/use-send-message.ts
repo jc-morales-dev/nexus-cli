@@ -489,6 +489,7 @@ export const useSendMessage = ({
           timerController,
           updater,
           aiMessageId,
+          hasReceivedContentRef,
           wasAbortedByUser: abortController.signal.aborted,
           setStreamStatus,
           setCanProcessQueue,

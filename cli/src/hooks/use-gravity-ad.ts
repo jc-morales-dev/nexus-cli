@@ -513,7 +513,7 @@ function getAdUserAgent(): string {
 }
 
 function getCliAdRequestUserAgent(): string {
-  const product = IS_FREEBUFF ? 'Freebuff-CLI' : 'Codebuff-CLI'
+  const product = IS_FREEBUFF ? 'Freebuff-CLI' : 'NEXUS-CLI'
   const version = getCliEnv().CODEBUFF_CLI_VERSION ?? 'dev'
   return `${product}/${version}`
 }

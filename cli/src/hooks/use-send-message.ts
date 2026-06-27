@@ -365,7 +365,7 @@ export const useSendMessage = ({
           '[send-message] No Codebuff client available. Please ensure you are authenticated.',
         )
         // Show error to user instead of silently failing
-        const brandName = IS_FREEBUFF ? 'Freebuff' : 'Codebuff'
+        const brandName = IS_FREEBUFF ? 'Freebuff' : 'NEXUS'
         setMessages((prev) => [
           ...prev,
           createErrorChatMessage(

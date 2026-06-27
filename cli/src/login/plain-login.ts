@@ -21,7 +21,7 @@ export async function runPlainLogin(): Promise<void> {
   const fingerprintId = await getFingerprintId()
 
   console.log()
-  console.log(bold(IS_FREEBUFF ? 'Freebuff Login' : 'Codebuff Login'))
+  console.log(bold(IS_FREEBUFF ? 'Freebuff Login' : 'NEXUS Login'))
   console.log()
   console.log('Generating login URL...')
 

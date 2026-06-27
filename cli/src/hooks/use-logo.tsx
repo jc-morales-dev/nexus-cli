@@ -74,16 +74,16 @@ export const useLogo = ({
   const ASCII_LOGO_LINES = 6
   const rawLogoString = useMemo(() => {
     if (maxHeight != null && maxHeight < ASCII_LOGO_LINES) {
-      return IS_FREEBUFF ? 'FREEBUFF' : 'CODEBUFF'
+      return IS_FREEBUFF ? 'FREEBUFF' : 'NEXUS'
     }
     if (availableWidth >= 70) return LOGO
     if (availableWidth >= 20) return LOGO_SMALL
-    return IS_FREEBUFF ? 'FREEBUFF' : 'CODEBUFF'
+    return IS_FREEBUFF ? 'FREEBUFF' : 'NEXUS'
   }, [availableWidth, maxHeight])
 
   // Format text block for plain text contexts (chat messages, etc.)
   const textBlock = useMemo(() => {
-    if (rawLogoString === 'CODEBUFF' || rawLogoString === 'FREEBUFF') {
+    if (rawLogoString === 'NEXUS' || rawLogoString === 'FREEBUFF') {
       return '' // Don't show ASCII art for text-only variant in plain text contexts
     }
     // Parse and format for plain text display
@@ -95,8 +95,8 @@ export const useLogo = ({
   // Format component for React contexts (login modal, etc.)
   const component = useMemo(() => {
     // Text-only variant for very narrow widths
-    if (rawLogoString === 'CODEBUFF' || rawLogoString === 'FREEBUFF') {
-      const brandName = IS_FREEBUFF ? 'Freebuff' : 'Codebuff'
+    if (rawLogoString === 'NEXUS' || rawLogoString === 'FREEBUFF') {
+      const brandName = IS_FREEBUFF ? 'Freebuff' : 'NEXUS'
       // When we collapsed to text purely to fit a short terminal (not because
       // the terminal is narrow), keep it to the bare brand name — "Freebuff
       // CLI" reads as filler in that already-cramped space.

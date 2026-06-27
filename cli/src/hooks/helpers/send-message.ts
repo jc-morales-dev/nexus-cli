@@ -329,6 +329,34 @@ export const setupStreamingContext = (params: {
   return { updater, hasReceivedContentRef, abortController }
 }
 
+/**
+ * Extract the final assistant text from a run's output. Used as a fallback so
+ * the response is shown even when the model didn't stream incremental `text`
+ * events (e.g. some reasoning/free models via BYOK only surface the answer in
+ * the final run state). Reasoning parts are intentionally skipped.
+ */
+const extractFinalAssistantText = (output: unknown): string | null => {
+  const o = output as { type?: string; value?: unknown } | null | undefined
+  if (!o || o.type === 'error' || !Array.isArray(o.value)) {
+    return null
+  }
+  for (let i = o.value.length - 1; i >= 0; i--) {
+    const message = o.value[i] as {
+      role?: string
+      content?: Array<{ type?: string; text?: string }>
+    }
+    if (message?.role === 'assistant' && Array.isArray(message.content)) {
+      const text = message.content
+        .filter((p) => p?.type === 'text' && typeof p.text === 'string')
+        .map((p) => p.text)
+        .join('')
+        .trim()
+      if (text) return text
+    }
+  }
+  return null
+}
+
 export const handleRunCompletion = (params: {
   runState: RunState
   actualCredits: number | undefined
@@ -336,6 +364,7 @@ export const handleRunCompletion = (params: {
   timerController: SendMessageTimerController
   updater: BatchedMessageUpdater
   aiMessageId: string
+  hasReceivedContentRef?: MutableRefObject<boolean>
   wasAbortedByUser: boolean
   setStreamStatus: (status: StreamStatus) => void
   setCanProcessQueue: (can: boolean) => void
@@ -455,6 +484,34 @@ export const handleRunCompletion = (params: {
   let completionTime: string | undefined
   if (elapsedSeconds > 0) {
     completionTime = formatElapsedTime(elapsedSeconds)
+  }
+
+  // Fallback: ensure the final answer is shown even when the model only streamed
+  // reasoning/tool events (no visible `text` delta) and surfaced the answer in
+  // the final run state — common with reasoning/free models via BYOK. Only
+  // append if there is no visible (non-reasoning) text block already, so it
+  // never duplicates a normally-streamed answer.
+  const finalText = extractFinalAssistantText(output)
+  if (finalText) {
+    updater.updateAiMessageBlocks((blocks) => {
+      const hasVisibleAnswer = blocks.some(
+        (b) =>
+          b.type === 'text' &&
+          b.textType !== 'reasoning' &&
+          typeof b.content === 'string' &&
+          b.content.trim().length > 0,
+      )
+      if (hasVisibleAnswer) return blocks
+      return [
+        ...blocks,
+        {
+          type: 'text' as const,
+          content: finalText,
+          textType: 'text' as const,
+          status: 'complete' as const,
+        },
+      ]
+    })
   }
 
   updater.markComplete({

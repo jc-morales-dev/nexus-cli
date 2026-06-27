@@ -1,3 +1,4 @@
+import { isByokDirectMode } from '@codebuff/common/constants/byok'
 import { API_KEY_ENV_VAR } from '@codebuff/common/constants/paths'
 
 import { WEBSITE_URL } from './constants'
@@ -65,6 +66,11 @@ export class CodebuffClient {
    * @returns Promise that resolves to true if connected, false otherwise
    */
   public async checkConnection(): Promise<boolean> {
+    // BYOK direct mode talks to the provider directly; there is no Codebuff
+    // backend to reach, so report connected to avoid a perpetual "connecting…".
+    if (isByokDirectMode()) {
+      return true
+    }
     try {
       const response = await fetch(`${WEBSITE_URL}/api/healthz`, {
         method: 'GET',

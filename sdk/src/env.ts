@@ -60,6 +60,29 @@ export const getNvidiaApiBaseFromEnv = (): string => {
   return process.env.NVIDIA_API_BASE || NVIDIA_API_BASE_DEFAULT
 }
 
+/** OpenRouter direct (BYOK) OpenAI-compatible endpoint. */
+export const OPENROUTER_API_BASE = 'https://openrouter.ai/api/v1'
+
+/**
+ * Personal OpenRouter key (format: `sk-or-...`). When set, ALL model requests
+ * go directly to OpenRouter, bypassing the Codebuff backend — no Codebuff
+ * account or credits. OpenRouter hosts the same model ids the agents already
+ * use (anthropic/*, deepseek/*, nvidia/*:free, ...). Falls back to the legacy
+ * CODEBUFF_BYOK_OPENROUTER var for compatibility.
+ */
+export const getOpenRouterApiKeyFromEnv = (): string | undefined => {
+  return process.env.OPENROUTER_API_KEY || process.env[BYOK_OPENROUTER_ENV_VAR]
+}
+
+/**
+ * Optional global model override. When set, every agent uses this model id
+ * regardless of its own definition — handy to force a single free model
+ * (e.g. CODEBUFF_MODEL=nvidia/nemotron-3-ultra-550b-a55b:free).
+ */
+export const getForcedModelFromEnv = (): string | undefined => {
+  return process.env.CODEBUFF_MODEL || undefined
+}
+
 /**
  * Get ChatGPT OAuth token from environment variable.
  */

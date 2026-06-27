@@ -26,8 +26,11 @@ import { WEBSITE_URL } from '../constants'
 import { getValidChatGptOAuthCredentials } from '../credentials'
 import {
   getByokOpenrouterApiKeyFromEnv,
+  getForcedModelFromEnv,
   getNvidiaApiBaseFromEnv,
   getNvidiaApiKeyFromEnv,
+  getOpenRouterApiKeyFromEnv,
+  OPENROUTER_API_BASE,
 } from '../env'
 import {
   createChatGptBackendFetch,
@@ -131,19 +134,26 @@ type OpenRouterUsageAccounting = {
 export async function getModelForRequest(
   params: ModelRequestParams,
 ): Promise<ModelResult> {
-  const { apiKey, model, skipChatGptOAuth, costMode } = params
+  const { apiKey, skipChatGptOAuth, costMode } = params
 
-  // NVIDIA NIM direct (BYOK): highest priority. When the model is a NVIDIA
-  // model, route straight to NVIDIA's OpenAI-compatible endpoint using the
-  // user's own NVIDIA_API_KEY — no Codebuff account, credits, or backend.
-  if (isNvidiaModel(model)) {
-    const nvidiaApiKey = getNvidiaApiKeyFromEnv()
-    if (!nvidiaApiKey) {
-      throw new Error(
-        `Model "${model}" routes to NVIDIA but NVIDIA_API_KEY is not set. ` +
-          `Get a free key at https://build.nvidia.com and set NVIDIA_API_KEY in your environment.`,
-      )
+  // Optional global override: force every agent onto a single model id (e.g. a
+  // free OpenRouter model). Falls back to the agent's own requested model.
+  const model = getForcedModelFromEnv() ?? params.model
+
+  // Direct BYOK provider (highest priority): route straight to the user's own
+  // provider, bypassing the Codebuff backend entirely — no account or credits.
+  // 1) OpenRouter (preferred): hosts the same model ids the agents already use.
+  const openRouterApiKey = getOpenRouterApiKeyFromEnv()
+  if (openRouterApiKey) {
+    return {
+      model: createOpenRouterDirectModel(model, openRouterApiKey),
+      isChatGptOAuth: false,
+      isNvidia: false,
     }
+  }
+  // 2) NVIDIA NIM: when only a NVIDIA_API_KEY is configured.
+  const nvidiaApiKey = getNvidiaApiKeyFromEnv()
+  if (nvidiaApiKey) {
     return {
       model: createNvidiaModel(model, nvidiaApiKey),
       isChatGptOAuth: false,
@@ -224,6 +234,32 @@ function createOpenAIOAuthModel(
     fetch: createChatGptBackendFetch(),
     supportsStructuredOutputs: true,
     includeUsage: undefined,
+  })
+}
+
+/**
+ * Create a model that routes directly to OpenRouter's OpenAI-compatible API
+ * using the user's own OPENROUTER_API_KEY (BYOK). Bypasses the Codebuff backend
+ * entirely, so it works with no Codebuff account or credits. OpenRouter hosts
+ * the same model ids the agents already use (anthropic/*, deepseek/*, etc.).
+ */
+function createOpenRouterDirectModel(
+  model: string,
+  openRouterApiKey: string,
+): LanguageModel {
+  return new OpenAICompatibleChatLanguageModel(model, {
+    provider: 'openrouter',
+    url: ({ path: endpoint }) => `${OPENROUTER_API_BASE}${endpoint}`,
+    headers: () => ({
+      Authorization: `Bearer ${openRouterApiKey}`,
+      'Content-Type': 'application/json',
+      'HTTP-Referer': 'https://github.com/CodebuffAI/codebuff',
+      'X-Title': 'Codebuff CLI',
+      'user-agent': `ai-sdk/openai-compatible/${VERSION}/codebuff-openrouter`,
+    }),
+    fetch: undefined,
+    includeUsage: undefined,
+    supportsStructuredOutputs: true,
   })
 }
 

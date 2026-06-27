@@ -42,6 +42,24 @@ export const getByokOpenrouterApiKeyFromEnv = (): string | undefined => {
   return process.env[BYOK_OPENROUTER_ENV_VAR]
 }
 
+/** Default NVIDIA NIM (build.nvidia.com) OpenAI-compatible inference endpoint. */
+export const NVIDIA_API_BASE_DEFAULT = 'https://integrate.api.nvidia.com/v1'
+
+/**
+ * Personal NVIDIA API key (format: `nvapi-...`) for direct, BYOK inference
+ * against NVIDIA NIM. When set, models whose id is routed by `isNvidiaModel`
+ * bypass the Codebuff backend and hit NVIDIA directly. Each user brings their
+ * own free key, so no Codebuff account or credits are required.
+ */
+export const getNvidiaApiKeyFromEnv = (): string | undefined => {
+  return process.env.NVIDIA_API_KEY
+}
+
+/** Override the NVIDIA inference base URL (defaults to NVIDIA_API_BASE_DEFAULT). */
+export const getNvidiaApiBaseFromEnv = (): string => {
+  return process.env.NVIDIA_API_BASE || NVIDIA_API_BASE_DEFAULT
+}
+
 /**
  * Get ChatGPT OAuth token from environment variable.
  */

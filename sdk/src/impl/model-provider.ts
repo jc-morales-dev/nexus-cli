@@ -24,7 +24,11 @@ import {
 
 import { WEBSITE_URL } from '../constants'
 import { getValidChatGptOAuthCredentials } from '../credentials'
-import { getByokOpenrouterApiKeyFromEnv } from '../env'
+import {
+  getByokOpenrouterApiKeyFromEnv,
+  getNvidiaApiBaseFromEnv,
+  getNvidiaApiKeyFromEnv,
+} from '../env'
 import {
   createChatGptBackendFetch,
   extractChatGptAccountId,
@@ -94,6 +98,18 @@ export interface ModelResult {
   model: LanguageModel
   /** Whether this model uses ChatGPT OAuth direct (affects cost tracking) */
   isChatGptOAuth: boolean
+  /** Whether this model routes directly to NVIDIA NIM (BYOK, bypasses backend) */
+  isNvidia: boolean
+}
+
+/**
+ * Returns true when a model id should be routed directly to NVIDIA NIM instead
+ * of the Codebuff backend. NVIDIA hosts these under their own catalog ids
+ * (e.g. `z-ai/glm-5.1`), and we treat the `nvidia/` and `z-ai/` prefixes as the
+ * opt-in markers. Routing only actually happens when a NVIDIA_API_KEY is set.
+ */
+export function isNvidiaModel(model: string): boolean {
+  return model.startsWith('nvidia/') || model.startsWith('z-ai/')
 }
 
 // Usage accounting type for OpenRouter/Codebuff backend responses
@@ -116,6 +132,24 @@ export async function getModelForRequest(
   params: ModelRequestParams,
 ): Promise<ModelResult> {
   const { apiKey, model, skipChatGptOAuth, costMode } = params
+
+  // NVIDIA NIM direct (BYOK): highest priority. When the model is a NVIDIA
+  // model, route straight to NVIDIA's OpenAI-compatible endpoint using the
+  // user's own NVIDIA_API_KEY — no Codebuff account, credits, or backend.
+  if (isNvidiaModel(model)) {
+    const nvidiaApiKey = getNvidiaApiKeyFromEnv()
+    if (!nvidiaApiKey) {
+      throw new Error(
+        `Model "${model}" routes to NVIDIA but NVIDIA_API_KEY is not set. ` +
+          `Get a free key at https://build.nvidia.com and set NVIDIA_API_KEY in your environment.`,
+      )
+    }
+    return {
+      model: createNvidiaModel(model, nvidiaApiKey),
+      isChatGptOAuth: false,
+      isNvidia: true,
+    }
+  }
 
   // Check if we should use ChatGPT OAuth direct
   // Only attempt for allowlisted models; non-allowlisted models silently fall through to backend.
@@ -143,6 +177,7 @@ export async function getModelForRequest(
             chatGptOAuthCredentials.accessToken,
           ),
           isChatGptOAuth: true,
+          isNvidia: false,
         }
       }
 
@@ -159,6 +194,7 @@ export async function getModelForRequest(
   return {
     model: createCodebuffBackendModel(apiKey, model),
     isChatGptOAuth: false,
+    isNvidia: false,
   }
 }
 
@@ -188,6 +224,31 @@ function createOpenAIOAuthModel(
     fetch: createChatGptBackendFetch(),
     supportsStructuredOutputs: true,
     includeUsage: undefined,
+  })
+}
+
+/**
+ * Create a model that routes directly to NVIDIA NIM's OpenAI-compatible API.
+ * Uses the user's personal NVIDIA_API_KEY (BYOK) and bypasses the Codebuff
+ * backend entirely, so it works with no Codebuff account or credits.
+ */
+function createNvidiaModel(
+  model: string,
+  nvidiaApiKey: string,
+): LanguageModel {
+  const baseUrl = getNvidiaApiBaseFromEnv()
+
+  return new OpenAICompatibleChatLanguageModel(model, {
+    provider: 'nvidia',
+    url: ({ path: endpoint }) => `${baseUrl}${endpoint}`,
+    headers: () => ({
+      Authorization: `Bearer ${nvidiaApiKey}`,
+      'Content-Type': 'application/json',
+      'user-agent': `ai-sdk/openai-compatible/${VERSION}/codebuff-nvidia`,
+    }),
+    fetch: undefined,
+    includeUsage: undefined,
+    supportsStructuredOutputs: true,
   })
 }
 

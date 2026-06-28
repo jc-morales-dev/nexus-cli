@@ -12,7 +12,10 @@ export type QueuedMessage = {
 }
 
 // Watchdog timeout duration: 60 seconds
-const QUEUE_WATCHDOG_TIMEOUT_MS = 60 * 1000
+// 5 minutes: a single agent run on a slow/cheap BYOK model can legitimately take
+// well over a minute, so the stuck-lock watchdog must sit safely above real run
+// times (it only fires on a true hang, not a slow-but-working run).
+const QUEUE_WATCHDOG_TIMEOUT_MS = 5 * 60 * 1000
 
 export const useMessageQueue = (
   sendMessage: (message: QueuedMessage) => Promise<void>,

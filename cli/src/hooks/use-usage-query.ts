@@ -1,3 +1,4 @@
+import { isByokDirectMode } from '@codebuff/common/constants/byok'
 import { env } from '@codebuff/common/env'
 import { useCallback } from 'react'
 
@@ -102,7 +103,8 @@ export function useUsageQuery(deps: UseUsageQueryDeps = {}) {
   return useActivityQuery({
     queryKey: usageQueryKeys.current(),
     queryFn: () => fetchUsageData({ authToken: authToken!, logger }),
-    enabled: enabled && !!authToken,
+    // BYOK direct mode has no Codebuff account/credits backend — skip the call.
+    enabled: enabled && !!authToken && !isByokDirectMode(),
     staleTime: 0, // Always consider data stale for immediate refetching
     gcTime: 5 * 60 * 1000, // 5 minutes
     retry: false, // Don't retry failed usage queries

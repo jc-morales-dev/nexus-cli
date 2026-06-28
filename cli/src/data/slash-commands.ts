@@ -1,4 +1,5 @@
 import { CHATGPT_OAUTH_ENABLED } from '@codebuff/common/constants/chatgpt-oauth'
+import { isByokDirectMode } from '@codebuff/common/constants/byok'
 import { AGENT_MODES, IS_FREEBUFF } from '../utils/constants'
 import { getChatGptOAuthStatus } from '../utils/chatgpt-oauth'
 
@@ -49,6 +50,18 @@ const FREEBUFF_ONLY_COMMAND_IDS = new Set([
   'end-session',
 ])
 
+// Commands that only make sense with a Codebuff account/backend. Hidden in BYOK
+// direct mode (the free, account-less setup) so the slash menu stays clean.
+const BYOK_HIDDEN_COMMAND_IDS = new Set([
+  'usage',
+  'subscribe',
+  'ads:enable',
+  'ads:disable',
+  'feedback',
+  'agent:gpt-5',
+  'logout',
+])
+
 const ALL_SLASH_COMMANDS: SlashCommand[] = [
   {
     id: 'help',
@@ -56,6 +69,12 @@ const ALL_SLASH_COMMANDS: SlashCommand[] = [
     description: 'Display keyboard shortcuts and tips',
     aliases: ['h', '?'],
     implicitCommand: true,
+  },
+  {
+    id: 'key',
+    label: 'key',
+    description: 'Set / view / clear your OpenRouter API key',
+    aliases: ['apikey', 'openrouter'],
   },
   ...(CHATGPT_OAUTH_ENABLED
     ? [
@@ -196,13 +215,15 @@ const ALL_SLASH_COMMANDS: SlashCommand[] = [
   },
 ]
 
-export const SLASH_COMMANDS = IS_FREEBUFF
-  ? ALL_SLASH_COMMANDS.filter(
-      (cmd) => !FREEBUFF_REMOVED_COMMAND_IDS.has(cmd.id),
-    )
-  : ALL_SLASH_COMMANDS.filter(
-      (cmd) => !FREEBUFF_ONLY_COMMAND_IDS.has(cmd.id),
-    )
+export const SLASH_COMMANDS = (
+  IS_FREEBUFF
+    ? ALL_SLASH_COMMANDS.filter(
+        (cmd) => !FREEBUFF_REMOVED_COMMAND_IDS.has(cmd.id),
+      )
+    : ALL_SLASH_COMMANDS.filter(
+        (cmd) => !FREEBUFF_ONLY_COMMAND_IDS.has(cmd.id),
+      )
+).filter((cmd) => !(isByokDirectMode() && BYOK_HIDDEN_COMMAND_IDS.has(cmd.id)))
 
 export const SLASHLESS_COMMAND_IDS = new Set(
   SLASH_COMMANDS.filter((cmd) => cmd.implicitCommand).map((cmd) =>

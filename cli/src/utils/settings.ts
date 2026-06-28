@@ -22,6 +22,10 @@ const DEFAULT_SETTINGS: Settings = {
 export interface Settings {
   mode?: AgentMode
   adsEnabled?: boolean
+  /** The user's own OpenRouter API key (format: sk-or-...). Stored in the user's
+   *  config dir so NEXUS works as a distributable CLI without editing any .env
+   *  or having the source. Injected into process.env.OPENROUTER_API_KEY at start. */
+  openRouterApiKey?: string
   /** Last model the user picked in the freebuff model selector. Restored on
    *  next freebuff launch so users land in the queue for their preferred
    *  model without re-picking. Persisted as the canonical model id. */
@@ -102,6 +106,14 @@ const validateSettings = (parsed: unknown): Settings => {
     settings.adsEnabled = obj.adsEnabled
   }
 
+  // Validate openRouterApiKey — any non-empty string is accepted.
+  if (
+    typeof obj.openRouterApiKey === 'string' &&
+    obj.openRouterApiKey.trim().length > 0
+  ) {
+    settings.openRouterApiKey = obj.openRouterApiKey.trim()
+  }
+
   // Validate freebuffModel — drop unknown ids so a removed model doesn't
   // strand the user on a non-existent queue.
   if (typeof obj.freebuffModel === 'string' && isFreebuffModelId(obj.freebuffModel)) {
@@ -175,5 +187,20 @@ export const loadFreebuffModelPreference = (): string | undefined => {
  */
 export const saveFreebuffModelPreference = (model: string): void => {
   saveSettings({ freebuffModel: model })
+}
+
+/** Load the user's saved OpenRouter API key, or undefined if none is set. */
+export const loadOpenRouterApiKey = (): string | undefined => {
+  return loadSettings().openRouterApiKey
+}
+
+/** Persist the user's OpenRouter API key to their config dir. */
+export const saveOpenRouterApiKey = (key: string): void => {
+  saveSettings({ openRouterApiKey: key.trim() })
+}
+
+/** Remove the saved OpenRouter API key. */
+export const clearOpenRouterApiKey = (): void => {
+  saveSettings({ openRouterApiKey: undefined })
 }
 

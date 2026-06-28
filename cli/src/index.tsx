@@ -6,6 +6,9 @@
 // of tree-sitter.cjs and fails on user machines. Must run before the SDK / code-map
 // import chain triggers Parser.init.
 import './pre-init/tree-sitter-wasm'
+// Load the user's saved OpenRouter key (settings) into process.env + bake default
+// models, so NEXUS runs as a distributable CLI without any .env / source.
+import './pre-init/byok-key'
 
 import fs from 'fs'
 import { createRequire } from 'module'

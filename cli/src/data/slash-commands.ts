@@ -73,8 +73,14 @@ const ALL_SLASH_COMMANDS: SlashCommand[] = [
   {
     id: 'key',
     label: 'key',
-    description: 'Set / view / clear your OpenRouter API key',
+    description: 'Pegá, mirá o borrá tu API key de OpenRouter',
     aliases: ['apikey', 'openrouter'],
+  },
+  {
+    id: 'model',
+    label: 'model',
+    description: 'Elegí el modelo de IA (razonamiento)',
+    aliases: ['models', 'modelo'],
   },
   ...(CHATGPT_OAUTH_ENABLED
     ? [

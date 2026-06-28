@@ -242,8 +242,8 @@ export const App = ({
         </text>
         {!process.env.OPENROUTER_API_KEY && (
           <text style={{ wrapMode: 'word', marginTop: 1, fg: theme.foreground }}>
-            👋 Paste your OpenRouter API key to start:  /key sk-or-...   (get one
-            free at openrouter.ai/keys)
+            👋 Escribí  /key  para pegar tu API key de OpenRouter y empezar.
+            ¿No tenés? Conseguí una gratis en openrouter.ai/keys
           </text>
         )}
       </box>

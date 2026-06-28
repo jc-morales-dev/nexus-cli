@@ -21,9 +21,10 @@ import { capturePendingAttachments } from '../utils/pending-attachments'
 import { resetCodebuffClient } from '../utils/codebuff-client'
 import {
   saveOpenRouterApiKey,
-  loadOpenRouterApiKey,
   clearOpenRouterApiKey,
+  saveNexusModel,
 } from '../utils/settings'
+import { NEXUS_DEFAULT_MODEL, nexusModelLabel } from '../data/nexus-models'
 import { getSkillByName } from '../utils/skill-registry'
 
 import type { MultilineInputHandle } from '../components/multiline-input'
@@ -66,6 +67,8 @@ export type CommandResult = {
   openPublishMode?: boolean
   openChatHistory?: boolean
   openReviewScreen?: boolean
+  openKeyModal?: boolean
+  openModelSelector?: boolean
   preSelectAgents?: string[]
 } | void
 
@@ -596,6 +599,8 @@ const ALL_COMMANDS: CommandDefinition[] = [
       const post = (text: string) =>
         params.setMessages((prev) => [...prev, getSystemMessage(text)])
 
+      // Power-user shortcuts keep working: "/key clear" and "/key sk-or-..."
+      // act immediately. With no argument we open the visual modal instead.
       if (arg.toLowerCase() === 'clear' || arg.toLowerCase() === 'remove') {
         clearOpenRouterApiKey()
         delete process.env.OPENROUTER_API_KEY
@@ -605,13 +610,7 @@ const ALL_COMMANDS: CommandDefinition[] = [
       }
 
       if (!arg) {
-        const current = loadOpenRouterApiKey()
-        post(
-          current
-            ? `🔑 OpenRouter key is set: ${mask(current)}\nChange it with "/key <new-key>" or remove it with "/key clear".`
-            : '🔑 No OpenRouter key set.\nGet a free key at https://openrouter.ai/keys , then run:  /key sk-or-...',
-        )
-        return
+        return { openKeyModal: true }
       }
 
       saveOpenRouterApiKey(arg)
@@ -621,6 +620,41 @@ const ALL_COMMANDS: CommandDefinition[] = [
         ? ''
         : '\n(Note: OpenRouter keys usually start with "sk-or-". Run "/key clear" if this was a mistake.)'
       post(`✅ OpenRouter key saved: ${mask(arg)}. NEXUS is ready — start coding!${note}`)
+      return
+    },
+  }),
+  defineCommandWithArgs({
+    name: 'model',
+    aliases: ['models', 'modelo'],
+    handler: (params, args) => {
+      const arg = args.trim()
+      params.saveToHistory(params.inputValue.trim())
+      clearInput(params)
+
+      const post = (text: string) =>
+        params.setMessages((prev) => [...prev, getSystemMessage(text)])
+
+      // "/model" with no argument opens the visual picker.
+      if (!arg) {
+        return { openModelSelector: true }
+      }
+
+      // "/model reset" / "/model default" returns to the built-in default.
+      const lowered = arg.toLowerCase()
+      const target =
+        lowered === 'reset' || lowered === 'default'
+          ? NEXUS_DEFAULT_MODEL
+          : arg
+
+      // "/model <id>" sets the reasoning (STRONG) model directly — handy for
+      // any OpenRouter id that isn't in the curated picker list.
+      saveNexusModel(target)
+      process.env.CODEBUFF_MODEL_STRONG = target
+      resetCodebuffClient()
+      post(
+        `✅ Modelo cambiado a ${nexusModelLabel(target)} (${target}).\nLas tareas chicas siguen usando un modelo barato para ahorrarte tokens.`,
+      )
+      return
     },
   }),
   defineCommand({

@@ -9,7 +9,8 @@ export const BYOK_OPENROUTER_ENV_VAR = 'CODEBUFF_BYOK_OPENROUTER'
  */
 export function isByokDirectMode(): boolean {
   return Boolean(
-    process.env.OPENROUTER_API_KEY ||
+    process.env.NEXUS_MODE ||
+      process.env.OPENROUTER_API_KEY ||
       process.env[BYOK_OPENROUTER_ENV_VAR] ||
       process.env.NVIDIA_API_KEY,
   )

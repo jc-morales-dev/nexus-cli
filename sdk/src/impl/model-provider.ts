@@ -187,6 +187,14 @@ export async function getModelForRequest(
     }
   }
 
+  // NEXUS is account-less: if no provider key is set yet, guide the user to add
+  // one instead of silently failing against a Codebuff backend that isn't there.
+  if (process.env.NEXUS_MODE) {
+    throw new Error(
+      'No OpenRouter API key set. Run "/key sk-or-..." to add yours (get a free key at https://openrouter.ai/keys).',
+    )
+  }
+
   // Check if we should use ChatGPT OAuth direct
   // Only attempt for allowlisted models; non-allowlisted models silently fall through to backend.
   if (

@@ -18,6 +18,12 @@ import { getChatGptOAuthStatus } from '../utils/chatgpt-oauth'
 import { AGENT_MODES, END_SESSION_MESSAGE, IS_FREEBUFF } from '../utils/constants'
 import { getSystemMessage, getUserMessage } from '../utils/message-history'
 import { capturePendingAttachments } from '../utils/pending-attachments'
+import { resetCodebuffClient } from '../utils/codebuff-client'
+import {
+  saveOpenRouterApiKey,
+  loadOpenRouterApiKey,
+  clearOpenRouterApiKey,
+} from '../utils/settings'
 import { getSkillByName } from '../utils/skill-registry'
 
 import type { MultilineInputHandle } from '../components/multiline-input'
@@ -575,6 +581,46 @@ const ALL_COMMANDS: CommandDefinition[] = [
 
       // Otherwise open the selection UI
       return { openReviewScreen: true }
+    },
+  }),
+  defineCommandWithArgs({
+    name: 'key',
+    aliases: ['apikey', 'openrouter'],
+    handler: (params, args) => {
+      const arg = args.trim()
+      params.saveToHistory(params.inputValue.trim())
+      clearInput(params)
+
+      const mask = (k: string): string =>
+        k.length > 12 ? `${k.slice(0, 8)}…${k.slice(-4)}` : k
+      const post = (text: string) =>
+        params.setMessages((prev) => [...prev, getSystemMessage(text)])
+
+      if (arg.toLowerCase() === 'clear' || arg.toLowerCase() === 'remove') {
+        clearOpenRouterApiKey()
+        delete process.env.OPENROUTER_API_KEY
+        resetCodebuffClient()
+        post('🔑 OpenRouter key removed.')
+        return
+      }
+
+      if (!arg) {
+        const current = loadOpenRouterApiKey()
+        post(
+          current
+            ? `🔑 OpenRouter key is set: ${mask(current)}\nChange it with "/key <new-key>" or remove it with "/key clear".`
+            : '🔑 No OpenRouter key set.\nGet a free key at https://openrouter.ai/keys , then run:  /key sk-or-...',
+        )
+        return
+      }
+
+      saveOpenRouterApiKey(arg)
+      process.env.OPENROUTER_API_KEY = arg
+      resetCodebuffClient()
+      const note = arg.startsWith('sk-or-')
+        ? ''
+        : '\n(Note: OpenRouter keys usually start with "sk-or-". Run "/key clear" if this was a mistake.)'
+      post(`✅ OpenRouter key saved: ${mask(arg)}. NEXUS is ready — start coding!${note}`)
     },
   }),
   defineCommand({

@@ -75,12 +75,28 @@ export const getOpenRouterApiKeyFromEnv = (): string | undefined => {
 }
 
 /**
- * Optional global model override. When set, every agent uses this model id
- * regardless of its own definition — handy to force a single free model
- * (e.g. CODEBUFF_MODEL=nvidia/nemotron-3-ultra-550b-a55b:free).
+ * Optional global model override. When set, EVERY agent uses this model id
+ * regardless of its own definition — a single forced model (highest priority,
+ * e.g. CODEBUFF_MODEL=deepseek/deepseek-v3.2). Takes precedence over the tiered
+ * STRONG/CHEAP map below.
  */
 export const getForcedModelFromEnv = (): string | undefined => {
   return process.env.CODEBUFF_MODEL || undefined
+}
+
+/**
+ * Tiered model map. Instead of one model for everything, route the agent's
+ * nominal model to a tier: STRONG for editing/reasoning agents, CHEAP for
+ * utility agents (file search, context pruning). Cheaper AND more reliable,
+ * since the token-heavy utility work goes to the cheap model and the critical
+ * editing goes to the strong one. Used only when CODEBUFF_MODEL is unset.
+ */
+export const getStrongModelFromEnv = (): string | undefined => {
+  return process.env.CODEBUFF_MODEL_STRONG || undefined
+}
+
+export const getCheapModelFromEnv = (): string | undefined => {
+  return process.env.CODEBUFF_MODEL_CHEAP || undefined
 }
 
 /**

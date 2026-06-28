@@ -338,7 +338,10 @@ export async function* promptAiSdkStream(
     prompt: undefined,
     model: aiSDKModel,
     messages: convertCbToModelMessages(params),
-    ...(isChatGptOAuth && { maxRetries: 0 }),
+    // ChatGPT OAuth disables retries (avoids cascading auth failures). BYOK/
+    // OpenRouter routes get a higher retry budget so transient 429/5xx from
+    // cheap providers self-heal instead of surfacing as a hard error.
+    maxRetries: isChatGptOAuth ? 0 : 4,
     // For ChatGPT OAuth direct, don't send codebuff metadata/provider options to OpenAI
     ...(isChatGptOAuth
       ? {}
@@ -510,9 +513,15 @@ export async function* promptAiSdkStream(
           },
           'Tool call error in AI SDK stream - passing through to agent to retry',
         )
+        // Append an explicit, actionable repair instruction. Weaker/cheaper
+        // models often emit malformed tool calls; a clear "re-emit valid JSON"
+        // hint helps them self-correct instead of looping or giving up.
+        const repairHint = NoSuchToolError.isInstance(chunkValue.error)
+          ? 'Use one of the available tools exactly as named, or call end_turn.'
+          : 'Re-emit the tool call with valid, well-formed JSON that matches the tool schema. Output only the corrected tool call.'
         yield {
           type: 'error',
-          message: errorMessage,
+          message: `${errorMessage}\n\n${repairHint}`,
         }
         continue
       }

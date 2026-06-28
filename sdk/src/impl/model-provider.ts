@@ -26,10 +26,12 @@ import { WEBSITE_URL } from '../constants'
 import { getValidChatGptOAuthCredentials } from '../credentials'
 import {
   getByokOpenrouterApiKeyFromEnv,
+  getCheapModelFromEnv,
   getForcedModelFromEnv,
   getNvidiaApiBaseFromEnv,
   getNvidiaApiKeyFromEnv,
   getOpenRouterApiKeyFromEnv,
+  getStrongModelFromEnv,
   OPENROUTER_API_BASE,
 } from '../env'
 import {
@@ -115,6 +117,30 @@ export function isNvidiaModel(model: string): boolean {
   return model.startsWith('nvidia/') || model.startsWith('z-ai/')
 }
 
+/** Markers in a nominal model id that signal a cheap/fast/utility-tier model. */
+const CHEAP_TIER_MODEL_RE = /(flash|lite|mini|nano|haiku)/i
+
+/**
+ * Resolve which model id to actually call for a given agent's requested model:
+ * 1. CODEBUFF_MODEL — a single forced model for everything (highest priority).
+ * 2. Tiered map — classify the requested model (cheap markers -> CHEAP tier,
+ *    otherwise STRONG tier) and use CODEBUFF_MODEL_CHEAP / CODEBUFF_MODEL_STRONG.
+ *    If only one tier is configured, it is used for both tiers.
+ * 3. Otherwise the agent's own requested model (unchanged).
+ */
+function resolveModelOverride(requestedModel: string): string {
+  const forced = getForcedModelFromEnv()
+  if (forced) return forced
+
+  const cheap = getCheapModelFromEnv()
+  const strong = getStrongModelFromEnv()
+  if (!cheap && !strong) return requestedModel
+
+  return CHEAP_TIER_MODEL_RE.test(requestedModel)
+    ? (cheap ?? strong ?? requestedModel)
+    : (strong ?? cheap ?? requestedModel)
+}
+
 // Usage accounting type for OpenRouter/Codebuff backend responses
 type OpenRouterUsageAccounting = {
   cost: number | null
@@ -136,9 +162,9 @@ export async function getModelForRequest(
 ): Promise<ModelResult> {
   const { apiKey, skipChatGptOAuth, costMode } = params
 
-  // Optional global override: force every agent onto a single model id (e.g. a
-  // free OpenRouter model). Falls back to the agent's own requested model.
-  const model = getForcedModelFromEnv() ?? params.model
+  // Resolve the effective model: single override, or the tiered STRONG/CHEAP
+  // map, or the agent's own requested model. See resolveModelOverride.
+  const model = resolveModelOverride(params.model)
 
   // Direct BYOK provider (highest priority): route straight to the user's own
   // provider, bypassing the Codebuff backend entirely — no account or credits.

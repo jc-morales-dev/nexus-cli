@@ -486,33 +486,33 @@ export const handleRunCompletion = (params: {
     completionTime = formatElapsedTime(elapsedSeconds)
   }
 
-  // Fallback: ensure the final answer is shown even when the model only streamed
-  // reasoning/tool events (no visible `text` delta) and surfaced the answer in
-  // the final run state — common with reasoning/free models via BYOK. Only
-  // append if there is no visible (non-reasoning) text block already, so it
-  // never duplicates a normally-streamed answer.
-  const finalText = extractFinalAssistantText(output)
-  if (finalText) {
-    updater.updateAiMessageBlocks((blocks) => {
-      const hasVisibleAnswer = blocks.some(
-        (b) =>
-          b.type === 'text' &&
-          b.textType !== 'reasoning' &&
-          typeof b.content === 'string' &&
-          b.content.trim().length > 0,
-      )
-      if (hasVisibleAnswer) return blocks
-      return [
-        ...blocks,
-        {
-          type: 'text' as const,
-          content: finalText,
-          textType: 'text' as const,
-          status: 'complete' as const,
-        },
-      ]
-    })
-  }
+  // "Always show something" invariant: a successful run must never leave a blank
+  // message bubble. If nothing visible (non-reasoning text) was streamed, render
+  // the final answer from the run state; if the model returned no text at all,
+  // render a clear hint instead of leaving it empty. Common with reasoning/free
+  // models via BYOK that only surface the answer in the final run state.
+  updater.updateAiMessageBlocks((blocks) => {
+    const hasVisibleAnswer = blocks.some(
+      (b) =>
+        b.type === 'text' &&
+        b.textType !== 'reasoning' &&
+        typeof b.content === 'string' &&
+        b.content.trim().length > 0,
+    )
+    if (hasVisibleAnswer) return blocks
+    const finalText = extractFinalAssistantText(output)
+    return [
+      ...blocks,
+      {
+        type: 'text' as const,
+        content:
+          finalText ??
+          '_El modelo terminó sin devolver texto. Probá reformular el pedido o reintentar._',
+        textType: 'text' as const,
+        status: 'complete' as const,
+      },
+    ]
+  })
 
   updater.markComplete({
     ...(completionTime && { completionTime }),

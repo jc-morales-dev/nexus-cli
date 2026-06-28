@@ -1,3 +1,4 @@
+import { isByokDirectMode } from '@codebuff/common/constants/byok'
 import { useQuery } from '@tanstack/react-query'
 
 import { getAuthToken } from '../utils/auth'
@@ -82,7 +83,8 @@ export function useUserDetailsQuery<T extends UserField>({
       }
       return fetchUserDetails({ authToken, fields, logger })
     },
-    enabled: enabled && !!authToken,
+    // BYOK direct mode has no Codebuff /api/v1/me backend — skip the call.
+    enabled: enabled && !!authToken && !isByokDirectMode(),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 30 * 60 * 1000, // 30 minutes
     retry: false,

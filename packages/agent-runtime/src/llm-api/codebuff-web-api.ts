@@ -1,4 +1,7 @@
+import { isByokDirectMode } from '@codebuff/common/constants/byok'
 import { withTimeout } from '@codebuff/common/util/promise'
+
+import { countTokens, countTokensJson } from '../util/token-counter'
 
 import type { ClientEnv, CiEnv } from '@codebuff/common/types/contracts/env'
 import type { JSONObject } from '@codebuff/common/types/json'
@@ -50,6 +53,17 @@ const callCodebuffV1 = async (params: {
   requestName: 'web-search' | 'docs-search' | 'gravity-index'
 }): Promise<{ json?: unknown; error?: string; creditsUsed?: number }> => {
   const { endpoint, payload, fetch, logger, env, requestName } = params
+
+  // BYOK direct mode: these features are backed by the Codebuff service, which
+  // isn't running. Fail fast with a clear message (no network call / retries) so
+  // the agent gets a clean signal instead of a confusing ConnectionRefused loop.
+  // TODO: wire web-search directly to Serper (SERPER_API_KEY) for a real result.
+  if (isByokDirectMode()) {
+    return {
+      error: `"${requestName}" no está disponible en modo BYOK local (sin backend Codebuff).`,
+    }
+  }
+
   const baseUrl = params.baseUrl ?? env.clientEnv.NEXT_PUBLIC_CODEBUFF_APP_URL
   const apiKey = params.apiKey ?? env.ciEnv.CODEBUFF_API_KEY
 
@@ -279,6 +293,17 @@ export async function callTokenCountAPI(params: {
   apiKey?: string
 }): Promise<{ inputTokens?: number; error?: string }> {
   const { messages, system, model, tools, fetch, logger, env } = params
+
+  // BYOK direct mode: no Codebuff backend. Estimate input tokens locally so the
+  // context-window math keeps working without the (always-failing) network call.
+  if (isByokDirectMode()) {
+    let inputTokens = 0
+    if (system) inputTokens += countTokens(system)
+    for (const message of messages) inputTokens += countTokensJson(message as object)
+    if (tools) inputTokens += countTokensJson(tools)
+    return { inputTokens }
+  }
+
   const baseUrl = params.baseUrl ?? env.clientEnv.NEXT_PUBLIC_CODEBUFF_APP_URL
   const apiKey = params.apiKey ?? env.ciEnv.CODEBUFF_API_KEY
 

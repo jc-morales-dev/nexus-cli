@@ -1,3 +1,5 @@
+import { isByokDirectMode } from '@codebuff/common/constants/byok'
+
 import { useChatStore } from '../state/chat-store'
 import { IS_FREEBUFF } from '../utils/constants'
 import { logger } from '../utils/logger'
@@ -36,6 +38,8 @@ export const handleAdsDisable = (): {
 }
 
 export const getAdsEnabled = (): boolean => {
+  // BYOK direct mode is a personal, account-less setup — never fetch ads.
+  if (isByokDirectMode()) return false
   if (IS_FREEBUFF) return true
 
   // Codebuff LITE is a paid mode now, so use the normal saved setting.

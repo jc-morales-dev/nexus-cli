@@ -208,6 +208,44 @@ const tryMatchOldStr = (params: {
   }
   return {
     success: false,
-    error: `The old string ${JSON.stringify(oldStr)} was not found in the file, skipping. Please try again with a different old string that matches the file content exactly.`,
+    error: buildNotFoundError(oldStr, initialContent),
   }
+}
+
+/**
+ * Build an actionable "not found" error: point the model at the closest region
+ * of the file so it can copy the exact text on its next attempt. Especially
+ * helpful for weaker/cheaper models that reproduce surrounding text imperfectly.
+ */
+const buildNotFoundError = (oldStr: string, content: string): string => {
+  const base = `The old string ${JSON.stringify(
+    oldStr,
+  )} was not found in the file. Copy the exact text (including whitespace and indentation) from the file and try again.`
+
+  // Pick the longest distinctive line of oldStr as an anchor to locate the region.
+  const anchor = oldStr
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line.length >= 4)
+    .sort((a, b) => b.length - a.length)[0]
+  if (!anchor) return base
+
+  const lines = content.split('\n')
+  const idx = lines.findIndex((line) => {
+    const trimmed = line.trim()
+    return (
+      trimmed.length >= 4 &&
+      (trimmed.includes(anchor) || anchor.includes(trimmed))
+    )
+  })
+  if (idx < 0) return base
+
+  const start = Math.max(0, idx - 3)
+  const end = Math.min(lines.length, idx + 4)
+  const snippet = lines
+    .slice(start, end)
+    .map((line, i) => `${start + i + 1}: ${line}`)
+    .join('\n')
+
+  return `${base}\n\nClosest region in the file (copy the exact text from here):\n${snippet}`
 }

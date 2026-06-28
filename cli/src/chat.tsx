@@ -17,6 +17,8 @@ import { ChoiceAdBanner } from './components/choice-ad-banner'
 import { ChatInputBar } from './components/chat-input-bar'
 import { LoadPreviousButton } from './components/load-previous-button'
 import { ReviewScreen } from './components/review-screen'
+import { NexusKeyModal } from './components/nexus-key-modal'
+import { NexusModelSelector } from './components/nexus-model-selector'
 import { MessageWithAgents } from './components/message-with-agents'
 import { areCreditsRestored } from './components/out-of-credits-banner'
 import { PendingBashMessage } from './components/pending-bash-message'
@@ -48,6 +50,7 @@ import { WEBSITE_URL } from './login/constants'
 import { getProjectRoot } from './project-files'
 import { useChatHistoryStore } from './state/chat-history-store'
 import { useChatStore } from './state/chat-store'
+import { useNexusOverlayStore } from './state/nexus-overlay-store'
 import { useReviewStore } from './state/review-store'
 import { useFeedbackStore } from './state/feedback-store'
 import { useMessageBlockStore } from './state/message-block-store'
@@ -60,6 +63,14 @@ import { returnToFreebuffLanding } from './hooks/use-freebuff-session'
 import { END_SESSION_MESSAGE, IS_FREEBUFF } from './utils/constants'
 import { getSystemMessage } from './utils/message-history'
 import { getInputModeConfig } from './utils/input-modes'
+import { resetCodebuffClient } from './utils/codebuff-client'
+import {
+  loadOpenRouterApiKey,
+  saveOpenRouterApiKey,
+  clearOpenRouterApiKey,
+  saveNexusModel,
+} from './utils/settings'
+import { NEXUS_DEFAULT_MODEL, nexusModelLabel } from './data/nexus-models'
 
 import {
   type ChatKeyboardState,
@@ -664,6 +675,24 @@ export const Chat = ({
     })),
   )
 
+  const {
+    keyModalOpen,
+    modelSelectorOpen,
+    openKeyModal,
+    closeKeyModal,
+    openModelSelector,
+    closeModelSelector,
+  } = useNexusOverlayStore(
+    useShallow((state) => ({
+      keyModalOpen: state.keyModalOpen,
+      modelSelectorOpen: state.modelSelectorOpen,
+      openKeyModal: state.openKeyModal,
+      closeKeyModal: state.closeKeyModal,
+      openModelSelector: state.openModelSelector,
+      closeModelSelector: state.closeModelSelector,
+    })),
+  )
+
   const publishMutation = usePublishMutation()
 
   const handleCommandResult = useCallback(
@@ -699,12 +728,22 @@ export const Chat = ({
       if (result.openReviewScreen) {
         useReviewStore.getState().openReviewScreen()
       }
+
+      if (result.openKeyModal) {
+        openKeyModal()
+      }
+
+      if (result.openModelSelector) {
+        openModelSelector()
+      }
     },
     [
       saveCurrentInput,
       openFeedbackForMessage,
       openPublishMode,
       preSelectAgents,
+      openKeyModal,
+      openModelSelector,
     ],
   )
 
@@ -850,6 +889,64 @@ export const Chat = ({
     setInputMode('review')
     setInputFocused(true)
   }, [closeReviewScreen, setInputMode, setInputFocused])
+
+  // --- NEXUS /key modal: save / clear / cancel -----------------------------
+  const handleSaveKey = useCallback(
+    (key: string) => {
+      saveOpenRouterApiKey(key)
+      process.env.OPENROUTER_API_KEY = key
+      resetCodebuffClient()
+      closeKeyModal()
+      setInputFocused(true)
+      const masked =
+        key.length > 12 ? `${key.slice(0, 8)}…${key.slice(-4)}` : key
+      const note = key.startsWith('sk-or-')
+        ? ''
+        : '\n(Ojo: las keys de OpenRouter suelen empezar con "sk-or-".)'
+      setMessages((prev) => [
+        ...prev,
+        getSystemMessage(`✅ Key guardada: ${masked}. ¡NEXUS listo!${note}`),
+      ])
+    },
+    [closeKeyModal, setInputFocused, setMessages],
+  )
+
+  const handleClearKey = useCallback(() => {
+    clearOpenRouterApiKey()
+    delete process.env.OPENROUTER_API_KEY
+    resetCodebuffClient()
+    closeKeyModal()
+    setInputFocused(true)
+    setMessages((prev) => [...prev, getSystemMessage('🔑 Key borrada.')])
+  }, [closeKeyModal, setInputFocused, setMessages])
+
+  const handleCancelKey = useCallback(() => {
+    closeKeyModal()
+    setInputFocused(true)
+  }, [closeKeyModal, setInputFocused])
+
+  // --- NEXUS /model selector: select / cancel ------------------------------
+  const handleSelectModel = useCallback(
+    (modelId: string) => {
+      saveNexusModel(modelId)
+      process.env.CODEBUFF_MODEL_STRONG = modelId
+      resetCodebuffClient()
+      closeModelSelector()
+      setInputFocused(true)
+      setMessages((prev) => [
+        ...prev,
+        getSystemMessage(
+          `✅ Modelo cambiado a ${nexusModelLabel(modelId)} (${modelId}).\nLas tareas chicas siguen usando un modelo barato para ahorrarte tokens.`,
+        ),
+      ])
+    },
+    [closeModelSelector, setInputFocused, setMessages],
+  )
+
+  const handleCancelModel = useCallback(() => {
+    closeModelSelector()
+    setInputFocused(true)
+  }, [closeModelSelector, setInputFocused])
 
   const handlePublish = useCallback(
     async (agentIds: string[]) => {
@@ -1206,7 +1303,11 @@ export const Chat = ({
   useChatKeyboard({
     state: chatKeyboardState,
     handlers: chatKeyboardHandlers,
-    disabled: askUserState !== null || reviewMode,
+    disabled:
+      askUserState !== null ||
+      reviewMode ||
+      keyModalOpen ||
+      modelSelectorOpen,
   })
 
   // Sync message block context to zustand store for child components
@@ -1360,6 +1461,30 @@ export const Chat = ({
       reportActivity()
     }
   }, [])
+
+  // NEXUS overlays take over the chat surface while open. Early-returning here
+  // keeps <Chat> mounted (so the conversation, streaming state, etc. are all
+  // preserved) but unmounts the input bar — so the modal owns the keyboard with
+  // no competing handler. Closing drops straight back to the chat as it was.
+  if (keyModalOpen) {
+    return (
+      <NexusKeyModal
+        currentKey={loadOpenRouterApiKey()}
+        onSave={handleSaveKey}
+        onClear={handleClearKey}
+        onCancel={handleCancelKey}
+      />
+    )
+  }
+  if (modelSelectorOpen) {
+    return (
+      <NexusModelSelector
+        currentModel={process.env.CODEBUFF_MODEL_STRONG || NEXUS_DEFAULT_MODEL}
+        onSelect={handleSelectModel}
+        onCancel={handleCancelModel}
+      />
+    )
+  }
 
   return (
     <box

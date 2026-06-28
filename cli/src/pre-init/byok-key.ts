@@ -3,7 +3,7 @@
 // from their settings into process.env, and bakes sensible default models so the
 // tiered routing works out of the box. The user only ever pastes their key once
 // (via the first-run onboarding or the /key command).
-import { loadOpenRouterApiKey } from '../utils/settings'
+import { loadOpenRouterApiKey, loadNexusModel } from '../utils/settings'
 
 // NEXUS is always an account-less, BYOK tool — never a Codebuff account. This
 // marker makes isByokDirectMode() true from the very first run (before any key
@@ -20,14 +20,24 @@ if (savedKey && !process.env.OPENROUTER_API_KEY) {
   process.env.OPENROUTER_API_KEY = savedKey
 }
 
-// Default tiered models (only when the user hasn't overridden via env). STRONG
-// for editing/reasoning, CHEAP for utility agents. Both cheap+reliable on
-// OpenRouter; the user can change them later.
-if (
-  !process.env.CODEBUFF_MODEL &&
-  !process.env.CODEBUFF_MODEL_STRONG &&
-  !process.env.CODEBUFF_MODEL_CHEAP
-) {
-  process.env.CODEBUFF_MODEL_STRONG = 'deepseek/deepseek-v3.2'
-  process.env.CODEBUFF_MODEL_CHEAP = 'deepseek/deepseek-v4-flash'
+// Tiered models — single source of truth so the user's /model pick persists and
+// the distributable binary works with no .env. An explicit CODEBUFF_MODEL (a
+// forced single-model override) disables the tiered map entirely, so respect it.
+//   STRONG = reasoning/editing (the "smart" model the user picks via /model)
+//   CHEAP  = utility agents (file search, context pruning) — kept cheap to save
+//            tokens while quality work still runs on STRONG.
+const STRONG_DEFAULT = 'deepseek/deepseek-v3.2'
+const CHEAP_DEFAULT = 'deepseek/deepseek-v4-flash'
+if (!process.env.CODEBUFF_MODEL) {
+  // The user's saved /model pick wins over the baked default (and over a STRONG
+  // value inherited from a dev .env), so changing the model actually sticks.
+  const savedModel = loadNexusModel()
+  if (savedModel) {
+    process.env.CODEBUFF_MODEL_STRONG = savedModel
+  } else if (!process.env.CODEBUFF_MODEL_STRONG) {
+    process.env.CODEBUFF_MODEL_STRONG = STRONG_DEFAULT
+  }
+  if (!process.env.CODEBUFF_MODEL_CHEAP) {
+    process.env.CODEBUFF_MODEL_CHEAP = CHEAP_DEFAULT
+  }
 }

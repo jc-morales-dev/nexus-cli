@@ -26,6 +26,11 @@ export interface Settings {
    *  config dir so NEXUS works as a distributable CLI without editing any .env
    *  or having the source. Injected into process.env.OPENROUTER_API_KEY at start. */
   openRouterApiKey?: string
+  /** The user's chosen main (STRONG-tier) model id — the model NEXUS uses for
+   *  reasoning and editing. Picked via /model and persisted here so it survives
+   *  restarts. Loaded into process.env.CODEBUFF_MODEL_STRONG at start. Utility
+   *  agents keep using the cheap tier, so this only changes the "smart" model. */
+  nexusModel?: string
   /** Last model the user picked in the freebuff model selector. Restored on
    *  next freebuff launch so users land in the queue for their preferred
    *  model without re-picking. Persisted as the canonical model id. */
@@ -112,6 +117,15 @@ const validateSettings = (parsed: unknown): Settings => {
     obj.openRouterApiKey.trim().length > 0
   ) {
     settings.openRouterApiKey = obj.openRouterApiKey.trim()
+  }
+
+  // Validate nexusModel — any non-empty model id string is accepted (the
+  // OpenRouter catalog changes constantly, so we don't gate on a fixed list).
+  if (
+    typeof obj.nexusModel === 'string' &&
+    obj.nexusModel.trim().length > 0
+  ) {
+    settings.nexusModel = obj.nexusModel.trim()
   }
 
   // Validate freebuffModel — drop unknown ids so a removed model doesn't
@@ -202,5 +216,20 @@ export const saveOpenRouterApiKey = (key: string): void => {
 /** Remove the saved OpenRouter API key. */
 export const clearOpenRouterApiKey = (): void => {
   saveSettings({ openRouterApiKey: undefined })
+}
+
+/** Load the user's chosen main (STRONG-tier) model id, or undefined if none. */
+export const loadNexusModel = (): string | undefined => {
+  return loadSettings().nexusModel
+}
+
+/** Persist the user's chosen main model id (set via /model). */
+export const saveNexusModel = (model: string): void => {
+  saveSettings({ nexusModel: model.trim() })
+}
+
+/** Clear the saved model preference (fall back to the built-in default). */
+export const clearNexusModel = (): void => {
+  saveSettings({ nexusModel: undefined })
 }
 

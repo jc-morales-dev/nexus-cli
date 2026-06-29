@@ -25,6 +25,7 @@ export const terminalCommandOutputSchema = z.union([
     command: z.string(),
     processId: z.number(),
     backgroundProcessStatus: z.enum(['running', 'completed', 'error']),
+    message: z.string().optional(),
   }),
   z.object({
     command: z.string(),

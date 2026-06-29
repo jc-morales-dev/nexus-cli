@@ -1,0 +1,3 @@
+bin/*.exe
+bin/*.wasm
+bin/nexus

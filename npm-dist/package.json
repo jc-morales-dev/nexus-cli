@@ -1,0 +1,29 @@
+{
+  "name": "nexus-ai-cli",
+  "version": "1.0.0",
+  "description": "NEXUS — un CLI de coding con IA, gratis. Traé tu propia API key de OpenRouter (gratis o de pago) y usá cualquier modelo.",
+  "keywords": [
+    "ai",
+    "cli",
+    "coding-agent",
+    "openrouter",
+    "llm",
+    "terminal"
+  ],
+  "license": "MIT",
+  "bin": {
+    "nexus": "bin/nexus.js"
+  },
+  "files": [
+    "bin/"
+  ],
+  "os": [
+    "win32"
+  ],
+  "cpu": [
+    "x64"
+  ],
+  "engines": {
+    "node": ">=16"
+  }
+}

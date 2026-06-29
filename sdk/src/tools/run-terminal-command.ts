@@ -9,6 +9,10 @@ import {
 } from '../../../common/src/util/string'
 import { getSystemProcessEnv } from '../env'
 import { backgroundProcesses } from './background-processes'
+import {
+  classifyCommand,
+  loadPermissionsConfig,
+} from './command-permissions'
 
 import type { CodebuffToolOutput } from '../../../common/src/tools/list'
 
@@ -130,6 +134,26 @@ export function runTerminalCommand({
   timeout_seconds: number
   env?: NodeJS.ProcessEnv
 }): Promise<CodebuffToolOutput<'run_terminal_command'>> {
+  // Safety gate: block catastrophic / denied commands before anything runs
+  // (covers both SYNC and BACKGROUND). See command-permissions.ts.
+  const decision = classifyCommand(
+    command,
+    loadPermissionsConfig(path.resolve(cwd)),
+  )
+  if (!decision.allowed) {
+    return Promise.resolve([
+      {
+        type: 'json',
+        value: {
+          command,
+          errorMessage:
+            `⛔ Blocked by NEXUS safety policy: ${decision.reason}. ` +
+            `If this is intentional, allowlist it in .nexus/permissions.json under "allow".`,
+        },
+      },
+    ])
+  }
+
   if (process_type === 'BACKGROUND') {
     try {
       return Promise.resolve(runBackgroundCommand({ command, cwd, env }))

@@ -158,6 +158,10 @@ async function main() {
 
   const defineFlags = [
     ['process.env.NODE_ENV', '"production"'],
+    // NEXUS is always an account-less BYOK tool. Bake the marker so account-less
+    // boot doesn't depend on the pre-init's runtime process.env mutation (which
+    // bun --compile may not reflect at inlined read sites).
+    ['process.env.NEXUS_MODE', '"1"'],
     ['process.env.NEXUS_IS_BINARY', '"true"'],
     ['process.env.NEXUS_CLI_VERSION', `"${version}"`],
     [

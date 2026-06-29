@@ -61,7 +61,7 @@ describe('markdown renderer', () => {
     expect(nodes[0]).toBe('Use ')
 
     const inlineCode = nodes[1] as El
-    expect(inlineCode.props.fg).toBe('#86efac')
+    expect(inlineCode.props.fg).toBe('#FF8534')
     expect(inlineCode.props.bg).toBe('#0d1117')
     expect(flattenChildren(inlineCode.props.children)).toEqual([' ls '])
 
@@ -244,7 +244,7 @@ codebuff "add a new feature to handle user authentication"
     expect(nodes[0]).toBe('Use ')
 
     const inlineCode = nodes[1] as El
-    expect(inlineCode.props.fg).toBe('#86efac')
+    expect(inlineCode.props.fg).toBe('#FF8534')
     const inlineContent = flattenChildren(inlineCode.props.children).join('')
     expect(inlineContent).toContain('codebuff "fix bug"')
 

@@ -19,7 +19,7 @@ interface UseLogoOptions {
    */
   textColor?: string
   /**
-   * Accent color for shadow/border characters (defaults to acid green #9EFC62)
+   * Accent color for shadow/border characters (defaults to neon red #FF073A)
    */
   accentColor?: string
   /**
@@ -65,7 +65,7 @@ export const useLogo = ({
   availableWidth,
   applySheenToChar,
   textColor,
-  accentColor = '#9EFC62',
+  accentColor = '#FF073A',
   blockColor = '#ffffff',
   maxHeight,
 }: UseLogoOptions): LogoResult => {

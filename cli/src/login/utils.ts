@@ -67,7 +67,7 @@ export function getSheenColor(
   sheenPosition: number,
   logoColor: string,
   shadowChars: Set<string>,
-  accentColor: string = '#9EFC62',
+  accentColor: string = '#FF073A',
   blockColor: string = '#ffffff',
   isReversing: boolean = false,
 ): string {

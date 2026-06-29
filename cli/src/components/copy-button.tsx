@@ -83,7 +83,7 @@ const CopyIcon: React.FC<CopyIconProps> = ({
   const text = getCopyIconText(isCopied, isHovered, leadingSpace)
 
   if (isCopied) {
-    return <span fg="green">{text}</span>
+    return <span fg={theme.primary}>{text}</span>
   }
 
   if (isHovered) {

@@ -8,6 +8,7 @@ import {
   truncateStringWithMessage,
 } from '../../../common/src/util/string'
 import { getSystemProcessEnv } from '../env'
+import { backgroundProcesses } from './background-processes'
 
 import type { CodebuffToolOutput } from '../../../common/src/tools/list'
 
@@ -130,7 +131,11 @@ export function runTerminalCommand({
   env?: NodeJS.ProcessEnv
 }): Promise<CodebuffToolOutput<'run_terminal_command'>> {
   if (process_type === 'BACKGROUND') {
-    throw new Error('BACKGROUND process_type not implemented')
+    try {
+      return Promise.resolve(runBackgroundCommand({ command, cwd, env }))
+    } catch (error) {
+      return Promise.reject(error)
+    }
   }
 
   return new Promise((resolve, reject) => {
@@ -241,4 +246,98 @@ export function runTerminalCommand({
       reject(new Error(`Failed to spawn command: ${error.message}`))
     })
   })
+}
+
+/**
+ * Start a command in the background: spawn it, stream its combined output to
+ * `.nexus/bg/<pid>.log`, register it so it can be monitored and killed, and
+ * return immediately. The process is a child of NEXUS, so it's cleaned up on
+ * exit. The agent monitors it by reading the log file.
+ */
+function runBackgroundCommand({
+  command,
+  cwd,
+  env,
+}: {
+  command: string
+  cwd: string
+  env?: NodeJS.ProcessEnv
+}): CodebuffToolOutput<'run_terminal_command'> {
+  const isWindows = os.platform() === 'win32'
+  const processEnv = {
+    ...getSystemProcessEnv(),
+    ...(env ?? {}),
+  } as NodeJS.ProcessEnv
+
+  let shell: string
+  let shellArgs: string[]
+  if (isWindows) {
+    const bashPath = findWindowsBash(processEnv)
+    if (!bashPath) {
+      throw createWindowsBashNotFoundError()
+    }
+    shell = bashPath
+    shellArgs = ['-c']
+  } else {
+    shell = 'bash'
+    shellArgs = ['-c']
+  }
+
+  const resolvedCwd = path.resolve(cwd)
+  const logDir = path.join(resolvedCwd, '.nexus', 'bg')
+  fs.mkdirSync(logDir, { recursive: true })
+
+  const child = spawn(shell, [...shellArgs, command], {
+    cwd: resolvedCwd,
+    env: processEnv,
+    stdio: 'pipe',
+  })
+
+  const pid = child.pid ?? Date.now()
+  const logPath = path.join(logDir, `${pid}.log`)
+  try {
+    fs.writeFileSync(logPath, `[nexus] background process ${pid}: ${command}\n\n`)
+  } catch {
+    /* best-effort */
+  }
+
+  const append = (data: Buffer) => {
+    try {
+      fs.appendFileSync(logPath, data.toString())
+    } catch {
+      /* best-effort */
+    }
+  }
+  child.stdout?.on('data', append)
+  child.stderr?.on('data', append)
+  child.on('close', (exitCode) => backgroundProcesses.markExited(pid, exitCode))
+  child.on('error', (error) => {
+    append(Buffer.from(`\n[nexus] spawn error: ${error.message}\n`))
+    backgroundProcesses.markExited(pid, 1)
+  })
+
+  backgroundProcesses.register({
+    id: pid,
+    command,
+    status: 'running',
+    exitCode: null,
+    logPath,
+    startedAt: Date.now(),
+    child,
+  })
+
+  const relLog = path.relative(resolvedCwd, logPath).replace(/\\/g, '/')
+  return [
+    {
+      type: 'json',
+      value: {
+        command,
+        processId: pid,
+        backgroundProcessStatus: 'running',
+        message:
+          `Started in the background (id ${pid}). Output is streaming to ${relLog} — ` +
+          `read that file to monitor progress. The user can run /bg to list or kill background processes.`,
+      },
+    },
+  ]
 }

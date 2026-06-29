@@ -116,6 +116,12 @@ const ALL_SLASH_COMMANDS: SlashCommand[] = [
     aliases: ['revert'],
   },
   {
+    id: 'bg',
+    label: 'bg',
+    description: 'Ver / matar procesos en background (/bg kill <id>)',
+    aliases: ['jobs', 'processes'],
+  },
+  {
     id: 'usage',
     label: 'usage',
     description: 'View credits and subscription quota',

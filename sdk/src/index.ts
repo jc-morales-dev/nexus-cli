@@ -9,6 +9,11 @@ export type {
 export { run } from './run'
 export { checkpoints } from './checkpoints'
 export type { UndoResult, CheckpointSummary } from './checkpoints'
+export { backgroundProcesses } from './tools/background-processes'
+export type {
+  BackgroundProcessSummary,
+  BackgroundStatus,
+} from './tools/background-processes'
 export { getFiles } from './tools/read-files'
 export type { FileFilter, FileFilterResult } from './tools/read-files'
 export type {

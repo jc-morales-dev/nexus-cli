@@ -1,5 +1,5 @@
 import { CHATGPT_OAUTH_ENABLED } from '@codebuff/common/constants/chatgpt-oauth'
-import { checkpoints } from '@codebuff/sdk'
+import { checkpoints, backgroundProcesses } from '@codebuff/sdk'
 import { safeOpen } from '../utils/open-url'
 
 import { handleAdsEnable, handleAdsDisable } from './ads'
@@ -657,6 +657,58 @@ const ALL_COMMANDS: CommandDefinition[] = [
         `✅ Modelo cambiado a ${nexusModelLabel(target)} (${target}).\nLas tareas chicas siguen usando un modelo barato para ahorrarte tokens.`,
       )
       return
+    },
+  }),
+  defineCommandWithArgs({
+    name: 'bg',
+    aliases: ['jobs', 'processes'],
+    handler: (params, args) => {
+      params.saveToHistory(params.inputValue.trim())
+      clearInput(params)
+      const post = (text: string) =>
+        params.setMessages((prev) => [...prev, getSystemMessage(text)])
+
+      const arg = args.trim()
+      const lowered = arg.toLowerCase()
+
+      // /bg kill [id|all] — kill one or all background processes.
+      if (lowered.startsWith('kill')) {
+        const target = arg.slice(4).trim()
+        if (!target || target.toLowerCase() === 'all') {
+          const n = backgroundProcesses.killAll()
+          post(`🧹 ${n} proceso(s) en background terminado(s).`)
+          return
+        }
+        const id = Number(target)
+        if (!Number.isFinite(id)) {
+          post(`Uso: /bg kill <id>  ·  /bg kill all`)
+          return
+        }
+        post(
+          backgroundProcesses.kill(id)
+            ? `🛑 Proceso ${id} terminado.`
+            : `No encontré un proceso ${id} corriendo.`,
+        )
+        return
+      }
+
+      // /bg — list background processes.
+      const procs = backgroundProcesses.list()
+      if (procs.length === 0) {
+        post('No hay procesos en background. (El agente puede lanzar uno con run_terminal_command en modo BACKGROUND.)')
+        return
+      }
+      const icon = (s: string) =>
+        s === 'running' ? '▶' : s === 'error' ? '✖' : '✓'
+      const lines = procs.map(
+        (p) =>
+          `${icon(p.status)} [${p.id}] ${p.status}${
+            p.exitCode != null ? ` (exit ${p.exitCode})` : ''
+          } — ${p.command.slice(0, 60)}`,
+      )
+      post(
+        `Procesos en background:\n${lines.join('\n')}\n\nMatar uno: /bg kill <id> · todos: /bg kill all`,
+      )
     },
   }),
   defineCommand({

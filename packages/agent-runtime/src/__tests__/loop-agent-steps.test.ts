@@ -263,6 +263,61 @@ describe('loopAgentSteps - runAgentStep vs runProgrammaticStep behavior', () => 
     expect(result.agentState).toBeDefined()
   })
 
+  it('reliability guard: forces ONE validation step when base2 edits without validating', async () => {
+    // Mark the agent as the main coding orchestrator so the guards apply.
+    mockTemplate.id = 'base2'
+    // Edit a file exactly once (recorded as a write_file tool call), then hand
+    // control to the LLM. The closure flag keeps a recreated generator from
+    // re-editing, mirroring base2 (which only prunes context on later steps).
+    let editedOnce = false
+    mockTemplate.handleSteps = function* () {
+      if (!editedOnce) {
+        editedOnce = true
+        yield {
+          toolName: 'write_file',
+          input: { path: 'out.txt', content: 'x' },
+        }
+      }
+      while (true) {
+        const { stepsComplete } = yield 'STEP'
+        if (stepsComplete) break
+      }
+    } as () => StepGenerator
+
+    // The LLM never validates — it just ends its turn every time.
+    agentRuntimeImpl.promptAiSdkStream = mock(async function* ({}) {
+      llmCallCount++
+      yield { type: 'text' as const, text: 'done\n\n' }
+      yield createToolCallChunk('end_turn', {})
+      return promptSuccess('mock-message-id')
+    })
+
+    const result = await loopAgentSteps({
+      ...loopAgentStepsBaseParams,
+      promptAiSdkStream: agentRuntimeImpl.promptAiSdkStream,
+      agentType: 'base2',
+      localAgentTemplates: { base2: mockTemplate },
+    })
+
+    // The guard fired: it injected the validation nudge — and crucially exactly
+    // ONCE (the per-turn cap prevents an infinite force-loop), and it forced at
+    // least one extra LLM step to validate.
+    const messageText = (m: any): string => {
+      if (typeof m.content === 'string') return m.content
+      if (Array.isArray(m.content)) {
+        return m.content
+          .map((p: any) => (typeof p?.text === 'string' ? p.text : ''))
+          .join(' ')
+      }
+      return ''
+    }
+    const nudgeCount = result.agentState.messageHistory.filter((m) =>
+      messageText(m).includes('not validated'),
+    ).length
+    expect(nudgeCount).toBe(1)
+    expect(llmCallCount).toBeGreaterThanOrEqual(2)
+  })
+
   it('should handle programmatic agent that yields STEP_ALL', async () => {
     // Test STEP_ALL behavior - should run LLM then continue with programmatic step
 

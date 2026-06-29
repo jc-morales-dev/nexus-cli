@@ -19,6 +19,12 @@ import { callTokenCountAPI } from './llm-api/codebuff-web-api'
 import { getMCPToolData } from './mcp'
 import { getAgentStreamFromTemplate } from './prompt-agent-stream'
 import { runProgrammaticStep } from './run-programmatic-step'
+import {
+  buildLoopRedirectMessage,
+  buildValidationNudgeMessage,
+  editedWithoutValidation,
+  findRepeatedToolCall,
+} from './reliability-guards'
 import { additionalSystemPrompts } from './system-prompt/prompts'
 import { getAgentTemplate } from './templates/agent-registry'
 import { buildAgentToolSet } from './templates/prompts'
@@ -846,6 +852,20 @@ export async function loopAgentSteps(
   let totalSteps = 0
   let nResponses: string[] | undefined = undefined
 
+  // Reliability guards (model-agnostic). Scoped to the main coding orchestrator
+  // (base2 + its mode variants: base2-max / -lite / -plan / -free / -fast) so
+  // they apply to every user mode but never to sub-agents (file-picker, editor,
+  // basher) or custom/test agents, which have their own control flow.
+  const isMainCodingAgent = (agentTemplate.id ?? '').startsWith('base2')
+  // Baseline message count marks the start of this turn so the validation gate
+  // only considers this turn's edits.
+  const turnStartMessageCount = currentAgentState.messageHistory.length
+  // Force the "validate before finishing" step at most once per turn.
+  let validationForced = false
+  // Cooldown so the loop-redirect nudge fires at most once every few steps.
+  const LOOP_REDIRECT_COOLDOWN = 3
+  let lastLoopRedirectStep = -LOOP_REDIRECT_COOLDOWN
+
   try {
     while (true) {
       totalSteps++
@@ -983,6 +1003,29 @@ export async function loopAgentSteps(
         shouldEndTurn = false
       }
 
+      // Reliability guard: don't let the top-level agent finish right after
+      // editing files without validating them. Force one validation step
+      // (typecheck/test/lint/review) — at most once per turn so we never loop.
+      if (
+        shouldEndTurn &&
+        isMainCodingAgent &&
+        !validationForced &&
+        editedWithoutValidation(
+          currentAgentState.messageHistory,
+          turnStartMessageCount,
+        )
+      ) {
+        validationForced = true
+        currentAgentState.messageHistory = [
+          ...currentAgentState.messageHistory,
+          userMessage({
+            content: withSystemTags(buildValidationNudgeMessage()),
+            keepDuringTruncation: true,
+          }),
+        ]
+        shouldEndTurn = false
+      }
+
       // End turn if programmatic step ended turn, or if the previous runAgentStep ended turn
       if (shouldEndTurn) {
         break
@@ -1028,6 +1071,29 @@ export async function loopAgentSteps(
       currentAgentState = initialAgentState
       shouldEndTurn = llmShouldEndTurn
       nResponses = generatedResponses
+
+      // Reliability guard: if the agent is stuck repeating the same tool call,
+      // inject a redirect so it breaks the death-spiral instead of burning all
+      // its steps. Cooldown-limited so we nudge at most once every few steps.
+      if (
+        isMainCodingAgent &&
+        !shouldEndTurn &&
+        totalSteps - lastLoopRedirectStep >= LOOP_REDIRECT_COOLDOWN
+      ) {
+        const repeated = findRepeatedToolCall(currentAgentState.messageHistory)
+        if (repeated) {
+          lastLoopRedirectStep = totalSteps
+          currentAgentState.messageHistory = [
+            ...currentAgentState.messageHistory,
+            userMessage({
+              content: withSystemTags(
+                buildLoopRedirectMessage(repeated.toolName, repeated.count),
+              ),
+              keepDuringTruncation: true,
+            }),
+          ]
+        }
+      }
 
       currentPrompt = undefined
       currentParams = undefined

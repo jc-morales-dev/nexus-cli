@@ -1,4 +1,5 @@
 import { CHATGPT_OAUTH_ENABLED } from '@codebuff/common/constants/chatgpt-oauth'
+import { checkpoints } from '@codebuff/sdk'
 import { safeOpen } from '../utils/open-url'
 
 import { handleAdsEnable, handleAdsDisable } from './ads'
@@ -310,6 +311,7 @@ const ALL_COMMANDS: CommandDefinition[] = [
       // Clear the conversation
       params.setMessages(() => [])
       params.clearMessages()
+      checkpoints.clear()
       params.saveToHistory(params.inputValue.trim())
       clearInput(params)
       params.stopStreaming()
@@ -655,6 +657,34 @@ const ALL_COMMANDS: CommandDefinition[] = [
         `✅ Modelo cambiado a ${nexusModelLabel(target)} (${target}).\nLas tareas chicas siguen usando un modelo barato para ahorrarte tokens.`,
       )
       return
+    },
+  }),
+  defineCommand({
+    name: 'undo',
+    aliases: ['revert'],
+    handler: (params) => {
+      params.saveToHistory(params.inputValue.trim())
+      clearInput(params)
+      const post = (text: string) =>
+        params.setMessages((prev) => [...prev, getSystemMessage(text)])
+
+      const result = checkpoints.undo()
+      if (!result) {
+        post('↩️ Nada que deshacer (el agente no hizo ediciones recientes).')
+        return
+      }
+      const parts: string[] = []
+      if (result.restored.length > 0) {
+        parts.push(`restaurados: ${result.restored.join(', ')}`)
+      }
+      if (result.deleted.length > 0) {
+        parts.push(`borrados (eran nuevos): ${result.deleted.join(', ')}`)
+      }
+      post(
+        `↩️ Deshecho${result.label ? ` "${result.label.slice(0, 40)}"` : ''} — ${
+          parts.join(' · ') || 'sin archivos que revertir'
+        }.`,
+      )
     },
   }),
   defineCommand({

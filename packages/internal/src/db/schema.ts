@@ -20,12 +20,12 @@ import { ReferralStatusValues } from '../types/referral'
 import type { SQL } from 'drizzle-orm'
 import type { AdapterAccount } from 'next-auth/adapters'
 import type {
-  FreebuffCountryBlockReason,
-  FreebuffIpPrivacySignal,
-  FreebuffPrivacyDecision,
-  FreebuffPrivacyProviderDecision,
-  FreebuffScamalyticsStatus,
-  FreebuffSpurStatus,
+  FreeTierCountryBlockReason,
+  FreeTierIpPrivacySignal,
+  FreeTierPrivacyDecision,
+  FreeTierPrivacyProviderDecision,
+  FreeTierScamalyticsStatus,
+  FreeTierSpurStatus,
 } from '@nexus/common/types/freetier-session'
 
 export const ReferralStatus = pgEnum('referral_status', [
@@ -565,7 +565,7 @@ export type GitEvalMetadata = {
   avgEfficiency?: number // Average efficiency across all cases
   avgCodeQuality?: number // Average code quality across all cases
   avgDuration?: number // Average duration across all cases
-  suite?: string // Name of the repo (eg: codebuff, manifold)
+  suite?: string // Name of the repo (eg: nexus, manifold)
   avgTurns?: number // Average number of user turns across all cases
 }
 
@@ -679,7 +679,7 @@ export const agentRun = pgTable(
     // Agent identity (either "publisher/agent@version" OR a plain string with no '/' or '@')
     agent_id: text('agent_id').notNull(),
 
-    // Agent identity (full versioned ID like "CodebuffAI/reviewer@1.0.0")
+    // Agent identity (full versioned ID like "NexusAI/reviewer@1.0.0")
     publisher_id: text('publisher_id').generatedAlwaysAs(
       sql`CASE
              WHEN agent_id ~ '^[^/@]+/[^/@]+@[^/@]+$'
@@ -843,7 +843,7 @@ export const freeSessionStatusEnum = pgEnum('free_session_status', [
   'queued',
   'active',
 ])
-export const freebuffAccessTierEnum = pgEnum('freebuff_access_tier', [
+export const freetierAccessTierEnum = pgEnum('freetier_access_tier', [
   'full',
   'limited',
 ])
@@ -870,11 +870,11 @@ export const freeSession = pgTable(
       .references(() => user.id, { onDelete: 'cascade' }),
     status: freeSessionStatusEnum('status').notNull(),
     active_instance_id: text('active_instance_id').notNull(),
-    /** Which freebuff model this row is queued for / locked to. Each model has
+    /** Which freetier model this row is queued for / locked to. Each model has
      *  its own queue (admission picks one queued user per model per tick) and
      *  the model is fixed for the life of an active session. */
     model: text('model').notNull(),
-    access_tier: freebuffAccessTierEnum('access_tier')
+    access_tier: freetierAccessTierEnum('access_tier')
       .notNull()
       .default('full'),
     /** Resolved country/privacy metadata from the latest successful
@@ -885,10 +885,10 @@ export const freeSession = pgTable(
     geoip_country: text('geoip_country'),
     country_block_reason: text(
       'country_block_reason',
-    ).$type<FreebuffCountryBlockReason | null>(),
+    ).$type<FreeTierCountryBlockReason | null>(),
     ip_privacy_signals: text('ip_privacy_signals')
       .array()
-      .$type<FreebuffIpPrivacySignal[] | null>(),
+      .$type<FreeTierIpPrivacySignal[] | null>(),
     client_ip_hash: text('client_ip_hash'),
     country_checked_at: timestamp('country_checked_at', {
       mode: 'date',
@@ -950,29 +950,29 @@ export const freeModeCountryAccessCache = pgTable(
     geoip_country: text('geoip_country'),
     country_block_reason: text(
       'country_block_reason',
-    ).$type<FreebuffCountryBlockReason | null>(),
+    ).$type<FreeTierCountryBlockReason | null>(),
     ip_privacy_signals: text('ip_privacy_signals')
       .array()
-      .$type<FreebuffIpPrivacySignal[] | null>(),
+      .$type<FreeTierIpPrivacySignal[] | null>(),
     spur_ip_privacy_signals: text('spur_ip_privacy_signals')
       .array()
-      .$type<FreebuffIpPrivacySignal[] | null>(),
-    spur_status: text('spur_status').$type<FreebuffSpurStatus | null>(),
+      .$type<FreeTierIpPrivacySignal[] | null>(),
+    spur_status: text('spur_status').$type<FreeTierSpurStatus | null>(),
     scamalytics_ip_privacy_signals: text('scamalytics_ip_privacy_signals')
       .array()
-      .$type<FreebuffIpPrivacySignal[] | null>(),
+      .$type<FreeTierIpPrivacySignal[] | null>(),
     scamalytics_status: text(
       'scamalytics_status',
-    ).$type<FreebuffScamalyticsStatus | null>(),
+    ).$type<FreeTierScamalyticsStatus | null>(),
     scamalytics_score: integer('scamalytics_score'),
     scamalytics_risk: text('scamalytics_risk'),
     risk_score: integer('risk_score'),
     privacy_decision: text(
       'privacy_decision',
-    ).$type<FreebuffPrivacyDecision | null>(),
+    ).$type<FreeTierPrivacyDecision | null>(),
     privacy_provider_decision: text(
       'privacy_provider_decision',
-    ).$type<FreebuffPrivacyProviderDecision | null>(),
+    ).$type<FreeTierPrivacyProviderDecision | null>(),
     checked_at: timestamp('checked_at', {
       mode: 'date',
       withTimezone: true,
@@ -1002,7 +1002,7 @@ export const freeModeCountryAccessCache = pgTable(
 
 /**
  * Audit log of every admission — one row per queued→active transition. Used
- * to track shared premium-session usage for Freebuff's 5 sessions per Pacific
+ * to track shared premium-session usage for FreeTier's 5 sessions per Pacific
  * day allowance. `session_units` starts at 1.0 and may be reduced when users
  * end active sessions early.
  *
@@ -1019,7 +1019,7 @@ export const freeSessionAdmit = pgTable(
       .notNull()
       .references(() => user.id, { onDelete: 'cascade' }),
     model: text('model').notNull(),
-    access_tier: freebuffAccessTierEnum('access_tier')
+    access_tier: freetierAccessTierEnum('access_tier')
       .notNull()
       .default('full'),
     admitted_at: timestamp('admitted_at', {

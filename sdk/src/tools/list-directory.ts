@@ -1,13 +1,13 @@
 import * as path from 'path'
 
-import type { CodebuffToolOutput } from '@nexus/common/tools/list'
-import type { CodebuffFileSystem } from '@nexus/common/types/filesystem'
+import type { NexusToolOutput } from '@nexus/common/tools/list'
+import type { NexusFileSystem } from '@nexus/common/types/filesystem'
 
 export async function listDirectory(params: {
   directoryPath: string
   projectPath: string
-  fs: CodebuffFileSystem
-}): Promise<CodebuffToolOutput<'list_directory'>> {
+  fs: NexusFileSystem
+}): Promise<NexusToolOutput<'list_directory'>> {
   const { directoryPath, projectPath, fs } = params
 
   try {

@@ -8,10 +8,10 @@ import {
   extractSubagentContextParams,
 } from './spawn-agent-utils'
 
-import type { CodebuffToolHandlerFunction } from '../handler-function-type'
+import type { NexusToolHandlerFunction } from '../handler-function-type'
 import type {
-  CodebuffToolCall,
-  CodebuffToolOutput,
+  NexusToolCall,
+  NexusToolOutput,
 } from '@nexus/common/tools/list'
 import type { AgentTemplate } from '@nexus/common/types/agent-template'
 import type { Logger } from '@nexus/common/types/contracts/logger'
@@ -33,7 +33,7 @@ type ToolName = 'spawn_agents'
 export const handleSpawnAgents = (async (
   params: {
     previousToolCallFinished: Promise<void>
-    toolCall: CodebuffToolCall<ToolName>
+    toolCall: NexusToolCall<ToolName>
 
     agentState: AgentState
     agentTemplate: AgentTemplate
@@ -64,7 +64,7 @@ export const handleSpawnAgents = (async (
       | 'parentTools'
       | 'onResponseChunk'
     >,
-): Promise<{ output: CodebuffToolOutput<ToolName> }> => {
+): Promise<{ output: NexusToolOutput<ToolName> }> => {
   const {
     previousToolCallFinished,
     toolCall,
@@ -252,4 +252,4 @@ export const handleSpawnAgents = (async (
   })
 
   return { output: jsonToolResult(reports) }
-}) satisfies CodebuffToolHandlerFunction<ToolName>
+}) satisfies NexusToolHandlerFunction<ToolName>

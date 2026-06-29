@@ -1,5 +1,5 @@
 /**
- * Stateful stream XML parser that extracts tool calls from <codebuff_tool_call> XML
+ * Stateful stream XML parser that extracts tool calls from <nexus_tool_call> XML
  * and filters them out of the text stream.
  *
  * Handles partial tags at chunk boundaries using a stateful approach.

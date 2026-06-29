@@ -1,12 +1,12 @@
 import { postStreamProcessing } from './write-file'
 import { processStrReplace } from '../../../process-str-replace'
 
-import type { CodebuffToolHandlerFunction } from '../handler-function-type'
+import type { NexusToolHandlerFunction } from '../handler-function-type'
 import type { FileProcessingState } from './write-file'
 import type {
   ClientToolCall,
-  CodebuffToolCall,
-  CodebuffToolOutput,
+  NexusToolCall,
+  NexusToolOutput,
 } from '@nexus/common/tools/list'
 import type { RequestOptionalFileFn } from '@nexus/common/types/contracts/client'
 import type { Logger } from '@nexus/common/types/contracts/logger'
@@ -15,19 +15,19 @@ import type { ParamsExcluding } from '@nexus/common/types/function-params'
 export const handleStrReplace = (async (
   params: {
     previousToolCallFinished: Promise<void>
-    toolCall: CodebuffToolCall<'str_replace'>
+    toolCall: NexusToolCall<'str_replace'>
 
     fileProcessingState: FileProcessingState
     logger: Logger
 
     requestClientToolCall: (
       toolCall: ClientToolCall<'str_replace'>,
-    ) => Promise<CodebuffToolOutput<'str_replace'>>
+    ) => Promise<NexusToolOutput<'str_replace'>>
     writeToClient: (chunk: string) => void
 
     requestOptionalFile: RequestOptionalFileFn
   } & ParamsExcluding<RequestOptionalFileFn, 'filePath'>,
-): Promise<{ output: CodebuffToolOutput<'str_replace'> }> => {
+): Promise<{ output: NexusToolOutput<'str_replace'> }> => {
   const {
     previousToolCallFinished,
     toolCall,
@@ -94,4 +94,4 @@ export const handleStrReplace = (async (
   }
 
   return { output: clientToolResult }
-}) satisfies CodebuffToolHandlerFunction<'str_replace'>
+}) satisfies NexusToolHandlerFunction<'str_replace'>

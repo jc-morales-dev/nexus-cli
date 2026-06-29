@@ -199,7 +199,7 @@ describe.skipIf(SKIP_INTEGRATION_TESTS)('Advisory Lock Integration Tests (Real D
       try {
         await testDb.insert(schema.user).values({
           id: userId,
-          email: `${userId}@codebuff.test`,
+          email: `${userId}@nexus.test`,
           name: `Advisory Lock Test User ${userId}`,
         })
       } catch {

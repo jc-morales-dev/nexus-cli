@@ -165,14 +165,14 @@ describe('readUrl', () => {
   })
 
   it('returns pretty-printed JSON for JSON responses', async () => {
-    const result = await successValue('{"name":"Codebuff","answer":42}', {
+    const result = await successValue('{"name":"Nexus","answer":42}', {
       contentType: 'application/json',
     })
 
     expect('errorMessage' in result).toBe(false)
     if ('errorMessage' in result) return
 
-    expect(result.text).toContain('"name": "Codebuff"')
+    expect(result.text).toContain('"name": "Nexus"')
     expect(result.text).toContain('"answer": 42')
   })
 

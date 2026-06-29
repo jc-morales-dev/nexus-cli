@@ -3,7 +3,7 @@ import { getApiClient } from './nexus-api'
 import { logger } from './logger'
 import { useChatStore } from '../state/chat-store'
 
-import type { CodebuffApiClient } from './nexus-api'
+import type { NexusApiClient } from './nexus-api'
 import type { Logger } from '@nexus/common/types/contracts/logger'
 
 export interface FetchAndUpdateUsageParams {
@@ -14,7 +14,7 @@ export interface FetchAndUpdateUsageParams {
     setInputMode: (mode: 'usage' | 'default') => void
   }
   logger?: Logger
-  apiClient?: CodebuffApiClient
+  apiClient?: NexusApiClient
 }
 
 /**

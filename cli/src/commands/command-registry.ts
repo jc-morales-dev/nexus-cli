@@ -9,17 +9,17 @@ import { handleInitializationFlowLocally } from './init'
 import { buildInterviewPrompt, buildPlanPrompt, buildReviewPromptFromArgs } from './prompt-builders'
 import { runBashCommand } from './router'
 import { handleUsageCommand } from './usage'
-import { returnToFreebuffLanding } from '../hooks/use-freetier-session'
+import { returnToFreeTierLanding } from '../hooks/use-freetier-session'
 import { useThemeStore } from '../hooks/use-theme'
 import { WEBSITE_URL } from '../login/constants'
 import { useChatStore } from '../state/chat-store'
 import { useFeedbackStore } from '../state/feedback-store'
 import { useLoginStore } from '../state/login-store'
 import { getChatGptOAuthStatus } from '../utils/chatgpt-oauth'
-import { AGENT_MODES, END_SESSION_MESSAGE, IS_FREEBUFF } from '../utils/constants'
+import { AGENT_MODES, END_SESSION_MESSAGE, IS_FREETIER } from '../utils/constants'
 import { getSystemMessage, getUserMessage } from '../utils/message-history'
 import { capturePendingAttachments } from '../utils/pending-attachments'
-import { resetCodebuffClient } from '../utils/nexus-client'
+import { resetNexusClient } from '../utils/nexus-client'
 import {
   saveOpenRouterApiKey,
   clearOpenRouterApiKey,
@@ -174,7 +174,7 @@ const clearInput = (params: RouterParams) => {
   params.setInputValue({ text: '', cursorPosition: 0, lastEditDueToNav: false })
 }
 
-const FREEBUFF_REMOVED_COMMANDS = new Set([
+const FREETIER_REMOVED_COMMANDS = new Set([
   'ads:enable',
   'ads:disable',
   'usage',
@@ -184,7 +184,7 @@ const FREEBUFF_REMOVED_COMMANDS = new Set([
   'gpt-5-agent',
 ])
 
-const FREEBUFF_ONLY_COMMANDS = new Set([
+const FREETIER_ONLY_COMMANDS = new Set([
   'connect',
   'plan',
   'end-session',
@@ -403,8 +403,8 @@ const ALL_COMMANDS: CommandDefinition[] = [
       clearInput(params)
     },
   }),
-  // Mode commands generated from AGENT_MODES (excluded in Freebuff)
-  ...(IS_FREEBUFF ? [] : AGENT_MODES).map((mode) =>
+  // Mode commands generated from AGENT_MODES (excluded in FreeTier)
+  ...(IS_FREETIER ? [] : AGENT_MODES).map((mode) =>
     defineCommandWithArgs({
       name: `mode:${mode.toLowerCase()}`,
       aliases: [`model:${mode.toLowerCase()}`],
@@ -513,8 +513,8 @@ const ALL_COMMANDS: CommandDefinition[] = [
   defineCommandWithArgs({
     name: 'plan',
     handler: (params, args) => {
-      // In freebuff mode, require ChatGPT connection
-      if (IS_FREEBUFF && !getChatGptOAuthStatus().connected) {
+      // In freetier mode, require ChatGPT connection
+      if (IS_FREETIER && !getChatGptOAuthStatus().connected) {
         params.setMessages((prev) => [
           ...prev,
           getUserMessage(params.inputValue.trim()),
@@ -552,8 +552,8 @@ const ALL_COMMANDS: CommandDefinition[] = [
   defineCommandWithArgs({
     name: 'review',
     handler: (params, args) => {
-      // In freebuff mode, require ChatGPT connection
-      if (IS_FREEBUFF && !getChatGptOAuthStatus().connected) {
+      // In freetier mode, require ChatGPT connection
+      if (IS_FREETIER && !getChatGptOAuthStatus().connected) {
         params.setMessages((prev) => [
           ...prev,
           getUserMessage(params.inputValue.trim()),
@@ -606,7 +606,7 @@ const ALL_COMMANDS: CommandDefinition[] = [
       if (arg.toLowerCase() === 'clear' || arg.toLowerCase() === 'remove') {
         clearOpenRouterApiKey()
         delete process.env.OPENROUTER_API_KEY
-        resetCodebuffClient()
+        resetNexusClient()
         post('🔑 OpenRouter key removed.')
         return
       }
@@ -617,7 +617,7 @@ const ALL_COMMANDS: CommandDefinition[] = [
 
       saveOpenRouterApiKey(arg)
       process.env.OPENROUTER_API_KEY = arg
-      resetCodebuffClient()
+      resetNexusClient()
       const note = arg.startsWith('sk-or-')
         ? ''
         : '\n(Note: OpenRouter keys usually start with "sk-or-". Run "/key clear" if this was a mistake.)'
@@ -651,8 +651,8 @@ const ALL_COMMANDS: CommandDefinition[] = [
       // "/model <id>" sets the reasoning (STRONG) model directly — handy for
       // any OpenRouter id that isn't in the curated picker list.
       saveNexusModel(target)
-      process.env.CODEBUFF_MODEL_STRONG = target
-      resetCodebuffClient()
+      process.env.NEXUS_MODEL_STRONG = target
+      resetNexusClient()
       post(
         `✅ Modelo cambiado a ${nexusModelLabel(target)} (${target}).\nLas tareas chicas siguen usando un modelo barato para ahorrarte tokens.`,
       )
@@ -768,7 +768,7 @@ const ALL_COMMANDS: CommandDefinition[] = [
       ])
       params.saveToHistory(params.inputValue.trim())
       clearInput(params)
-      returnToFreebuffLanding({ resetChat: true }).catch(() => {
+      returnToFreeTierLanding({ resetChat: true }).catch(() => {
         // The hook surfaces poll errors via the session store; nothing to do
         // here beyond letting the chat history reflect the attempt.
       })
@@ -776,9 +776,9 @@ const ALL_COMMANDS: CommandDefinition[] = [
   }),
 ]
 
-export const COMMAND_REGISTRY: CommandDefinition[] = IS_FREEBUFF
-  ? ALL_COMMANDS.filter((cmd) => !FREEBUFF_REMOVED_COMMANDS.has(cmd.name))
-  : ALL_COMMANDS.filter((cmd) => !FREEBUFF_ONLY_COMMANDS.has(cmd.name))
+export const COMMAND_REGISTRY: CommandDefinition[] = IS_FREETIER
+  ? ALL_COMMANDS.filter((cmd) => !FREETIER_REMOVED_COMMANDS.has(cmd.name))
+  : ALL_COMMANDS.filter((cmd) => !FREETIER_ONLY_COMMANDS.has(cmd.name))
 
 export function findCommand(cmd: string): CommandDefinition | undefined {
   const lowerCmd = cmd.toLowerCase()

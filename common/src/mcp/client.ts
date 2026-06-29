@@ -113,7 +113,7 @@ export async function getMCPClient(config: MCPConfig): Promise<string> {
   }
 
   const client = new Client({
-    name: 'codebuff',
+    name: 'nexus',
     version: '1.0.0',
   })
 

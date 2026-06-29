@@ -11,7 +11,7 @@ import { parseTextWithToolCalls } from './util/parse-tool-calls-from-text'
 import type { FileProcessingState } from './tools/handlers/tool/write-file'
 import type { ExecuteToolCallParams } from './tools/tool-executor'
 import type { ParsedSegment } from './util/parse-tool-calls-from-text'
-import type { CodebuffToolCall } from '@nexus/common/tools/list'
+import type { NexusToolCall } from '@nexus/common/tools/list'
 import type {
   AgentTemplate,
   StepGenerator,
@@ -184,7 +184,7 @@ export async function runProgrammaticStep(
   const agentStepId = crypto.randomUUID()
 
   // Initialize state for tool execution
-  const toolCalls: CodebuffToolCall[] = []
+  const toolCalls: NexusToolCall[] = []
   const toolResults: ToolMessage[] = []
   const fileProcessingState: FileProcessingState = {
     promisesByPath: {},

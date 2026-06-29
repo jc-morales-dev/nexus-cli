@@ -13,7 +13,7 @@ export enum AnalyticsEvent {
   SLASH_COMMAND_USED = 'cli.slash_command_used',
   TERMINAL_COMMAND_COMPLETED = 'cli.terminal_command_completed',
   USER_INPUT_COMPLETE = 'cli.user_input_complete',
-  UPDATE_CODEBUFF_FAILED = 'cli.update_codebuff_failed',
+  UPDATE_NEXUS_FAILED = 'cli.update_nexus_failed',
   FEEDBACK_BUTTON_HOVERED = 'cli.feedback_button_hovered',
   FOLLOWUP_CLICKED = 'cli.followup_clicked',
 
@@ -63,7 +63,7 @@ export enum AnalyticsEvent {
   ONBOARD_PAGE_INSTALL_COMMAND_COPIED = 'onboard_page.install_command_copied',
 
   // Web - Creator Attribution
-  CODEBUFF_REFERRER_ATTRIBUTED = 'codebuff.referrer_attributed',
+  NEXUS_REFERRER_ATTRIBUTED = 'nexus.referrer_attributed',
 
   // Web - Install Dialog
   INSTALL_DIALOG_CD_COMMAND_COPIED = 'install_dialog.cd_command_copied',
@@ -149,19 +149,19 @@ export enum AnalyticsEvent {
   CHATGPT_OAUTH_RATE_LIMITED = 'sdk.chatgpt_oauth_rate_limited',
   CHATGPT_OAUTH_AUTH_ERROR = 'sdk.chatgpt_oauth_auth_error',
 
-  // Freebuff - Creator Attribution
-  FREEBUFF_REFERRER_ATTRIBUTED = 'freebuff.referrer_attributed',
+  // FreeTier - Creator Attribution
+  FREETIER_REFERRER_ATTRIBUTED = 'freetier.referrer_attributed',
 
-  // Freebuff - Get Started Page
-  FREEBUFF_GET_STARTED_VIEWED = 'freebuff.get_started_viewed',
-  FREEBUFF_GET_STARTED_HELP_EXPANDED = 'freebuff.get_started_help_expanded',
-  FREEBUFF_GET_STARTED_EDITOR_CLICKED = 'freebuff.get_started_editor_clicked',
+  // FreeTier - Get Started Page
+  FREETIER_GET_STARTED_VIEWED = 'freetier.get_started_viewed',
+  FREETIER_GET_STARTED_HELP_EXPANDED = 'freetier.get_started_help_expanded',
+  FREETIER_GET_STARTED_EDITOR_CLICKED = 'freetier.get_started_editor_clicked',
 
-  // Freebuff - Home Page
-  FREEBUFF_HOME_INSTALL_COMMAND_COPIED = 'freebuff.home_install_command_copied',
-  FREEBUFF_HOME_GITHUB_CLICKED = 'freebuff.home_github_clicked',
-  FREEBUFF_HOME_INSTALL_GUIDE_EXPANDED = 'freebuff.home_install_guide_expanded',
-  FREEBUFF_HOME_FAQ_OPENED = 'freebuff.home_faq_opened',
+  // FreeTier - Home Page
+  FREETIER_HOME_INSTALL_COMMAND_COPIED = 'freetier.home_install_command_copied',
+  FREETIER_HOME_GITHUB_CLICKED = 'freetier.home_github_clicked',
+  FREETIER_HOME_INSTALL_GUIDE_EXPANDED = 'freetier.home_install_guide_expanded',
+  FREETIER_HOME_FAQ_OPENED = 'freetier.home_faq_opened',
 
   // Common
   FLUSH_FAILED = 'common.flush_failed',

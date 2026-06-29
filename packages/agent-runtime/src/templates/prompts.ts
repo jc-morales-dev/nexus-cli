@@ -22,7 +22,7 @@ function ensureJsonSchemaCompatible(schema: z.ZodType): z.ZodType {
 
 /**
  * Gets the short agent name from a fully qualified agent ID.
- * E.g., 'codebuff/file-picker@1.0.0' -> 'file-picker'
+ * E.g., 'nexus/file-picker@1.0.0' -> 'file-picker'
  */
 export function getAgentShortName(agentType: AgentTemplateType): string {
   const withoutVersion = agentType.split('@')[0]

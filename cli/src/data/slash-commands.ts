@@ -1,6 +1,6 @@
 import { CHATGPT_OAUTH_ENABLED } from '@nexus/common/constants/chatgpt-oauth'
 import { isByokDirectMode } from '@nexus/common/constants/byok'
-import { AGENT_MODES, IS_FREEBUFF } from '../utils/constants'
+import { AGENT_MODES, IS_FREETIER } from '../utils/constants'
 import { getChatGptOAuthStatus } from '../utils/chatgpt-oauth'
 
 import type { SkillsMap } from '@nexus/common/types/skill'
@@ -23,8 +23,8 @@ export interface SlashCommand {
   insertText?: string
 }
 
-// Generate mode commands from the AGENT_MODES constant (excluded in Freebuff)
-const MODE_COMMANDS: SlashCommand[] = IS_FREEBUFF
+// Generate mode commands from the AGENT_MODES constant (excluded in FreeTier)
+const MODE_COMMANDS: SlashCommand[] = IS_FREETIER
   ? []
   : AGENT_MODES.map((mode) => ({
       id: `mode:${mode.toLowerCase()}`,
@@ -33,7 +33,7 @@ const MODE_COMMANDS: SlashCommand[] = IS_FREEBUFF
       aliases: [`model:${mode.toLowerCase()}`],
     }))
 
-const FREEBUFF_REMOVED_COMMAND_IDS = new Set([
+const FREETIER_REMOVED_COMMAND_IDS = new Set([
   'ads:enable',
   'ads:disable',
   'usage',
@@ -44,13 +44,13 @@ const FREEBUFF_REMOVED_COMMAND_IDS = new Set([
   'init',
 ])
 
-const FREEBUFF_ONLY_COMMAND_IDS = new Set([
+const FREETIER_ONLY_COMMAND_IDS = new Set([
   'connect',
   'plan',
   'end-session',
 ])
 
-// Commands that only make sense with a Codebuff account/backend. Hidden in BYOK
+// Commands that only make sense with a Nexus account/backend. Hidden in BYOK
 // direct mode (the free, account-less setup) so the slash menu stays clean.
 const BYOK_HIDDEN_COMMAND_IDS = new Set([
   'usage',
@@ -176,7 +176,7 @@ const ALL_SLASH_COMMANDS: SlashCommand[] = [
   {
     id: 'feedback',
     label: 'feedback',
-    description: IS_FREEBUFF ? 'Share general feedback about Freebuff' : 'Share general feedback about Codebuff',
+    description: IS_FREETIER ? 'Share general feedback about FreeTier' : 'Share general feedback about Nexus',
   },
   {
     id: 'bash',
@@ -224,12 +224,12 @@ const ALL_SLASH_COMMANDS: SlashCommand[] = [
 ]
 
 export const SLASH_COMMANDS = (
-  IS_FREEBUFF
+  IS_FREETIER
     ? ALL_SLASH_COMMANDS.filter(
-        (cmd) => !FREEBUFF_REMOVED_COMMAND_IDS.has(cmd.id),
+        (cmd) => !FREETIER_REMOVED_COMMAND_IDS.has(cmd.id),
       )
     : ALL_SLASH_COMMANDS.filter(
-        (cmd) => !FREEBUFF_ONLY_COMMAND_IDS.has(cmd.id),
+        (cmd) => !FREETIER_ONLY_COMMAND_IDS.has(cmd.id),
       )
 ).filter((cmd) => !(isByokDirectMode() && BYOK_HIDDEN_COMMAND_IDS.has(cmd.id)))
 
@@ -262,7 +262,7 @@ export function getSlashCommandsWithSkills(skills: SkillsMap): SlashCommand[] {
 
   let commands = [...SLASH_COMMANDS, ...skillCommands]
 
-  if (IS_FREEBUFF && !getChatGptOAuthStatus().connected) {
+  if (IS_FREETIER && !getChatGptOAuthStatus().connected) {
     commands = commands.map((cmd) => {
       if (cmd.id === 'review' || cmd.id === 'plan') {
         return { ...cmd, description: 'Connect required. ' + cmd.description }

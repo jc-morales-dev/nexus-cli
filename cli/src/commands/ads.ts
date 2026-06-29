@@ -1,7 +1,7 @@
 import { isByokDirectMode } from '@nexus/common/constants/byok'
 
 import { useChatStore } from '../state/chat-store'
-import { IS_FREEBUFF } from '../utils/constants'
+import { IS_FREETIER } from '../utils/constants'
 import { logger } from '../utils/logger'
 import { getSystemMessage } from '../utils/message-history'
 import { saveSettings, loadSettings } from '../utils/settings'
@@ -40,9 +40,9 @@ export const handleAdsDisable = (): {
 export const getAdsEnabled = (): boolean => {
   // BYOK direct mode is a personal, account-less setup — never fetch ads.
   if (isByokDirectMode()) return false
-  if (IS_FREEBUFF) return true
+  if (IS_FREETIER) return true
 
-  // Codebuff LITE is a paid mode now, so use the normal saved setting.
+  // Nexus LITE is a paid mode now, so use the normal saved setting.
   const settings = loadSettings()
   return settings.adsEnabled ?? false
 }

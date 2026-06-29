@@ -51,7 +51,7 @@ describe('First-Time Login Flow (helpers)', () => {
           user: {
             id: 'new-user-123',
             name: 'New User',
-            email: 'new@codebuff.dev',
+            email: 'new@nexus.dev',
             authToken: 'token-123',
           },
         },

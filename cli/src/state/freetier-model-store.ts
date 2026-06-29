@@ -1,19 +1,19 @@
 import {
-  DEFAULT_FREEBUFF_MODEL_ID,
-  resolveAvailableFreebuffModel,
-  resolveFreebuffModel,
+  DEFAULT_FREETIER_MODEL_ID,
+  resolveAvailableFreeTierModel,
+  resolveFreeTierModel,
 } from '@nexus/common/constants/freetier-models'
 import { create } from 'zustand'
 
-import { loadFreebuffModelPreference } from '../utils/settings'
+import { loadFreeTierModelPreference } from '../utils/settings'
 
 /**
- * Holds the user's currently-selected freebuff model. Initialized from the
- * persisted settings file so freebuff defaults to whatever model the user
+ * Holds the user's currently-selected freetier model. Initialized from the
+ * persisted settings file so freetier defaults to whatever model the user
  * last picked.
  *
  * `setSelectedModel` is in-memory only — it does NOT persist. Persistence
- * happens exclusively in `joinFreebuffQueue` (the explicit-pick path), so
+ * happens exclusively in `joinFreeTierQueue` (the explicit-pick path), so
  * server-driven auto-flips (`model_locked`, `model_unavailable`, takeover)
  * can update the in-memory selection without overwriting the user's saved
  * preference. The latter previously caused users to get permanently flipped
@@ -22,21 +22,21 @@ import { loadFreebuffModelPreference } from '../utils/settings'
  * Components in the waiting room read this to highlight the current row in
  * the model picker; the session hook reads it to decide which queue to join.
  */
-interface FreebuffModelStore {
+interface FreeTierModelStore {
   selectedModel: string
   setSelectedModel: (model: string) => void
 }
 
-export const useFreebuffModelStore = create<FreebuffModelStore>((set) => ({
-  selectedModel: resolveAvailableFreebuffModel(
-    loadFreebuffModelPreference() ?? DEFAULT_FREEBUFF_MODEL_ID,
+export const useFreeTierModelStore = create<FreeTierModelStore>((set) => ({
+  selectedModel: resolveAvailableFreeTierModel(
+    loadFreeTierModelPreference() ?? DEFAULT_FREETIER_MODEL_ID,
   ),
   setSelectedModel: (model) =>
-    set({ selectedModel: resolveFreebuffModel(model) }),
+    set({ selectedModel: resolveFreeTierModel(model) }),
 }))
 
 /** Imperative read for non-React callers (the session hook's tick loop and
  *  the chat-completions metadata builder). */
-export function getSelectedFreebuffModel(): string {
-  return useFreebuffModelStore.getState().selectedModel
+export function getSelectedFreeTierModel(): string {
+  return useFreeTierModelStore.getState().selectedModel
 }

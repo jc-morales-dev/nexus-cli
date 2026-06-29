@@ -25,8 +25,8 @@ GitHub API URLs are extracted as environment variables to avoid duplication:
 
 ```yaml
 env:
-  GITHUB_API_URL: https://api.github.com/repos/CodebuffAI/codebuff
-  GITHUB_UPLOADS_URL: https://uploads.github.com/repos/CodebuffAI/codebuff
+  GITHUB_API_URL: https://api.github.com/repos/NexusAI/nexus
+  GITHUB_UPLOADS_URL: https://uploads.github.com/repos/NexusAI/nexus
 ```
 
 This pattern:
@@ -63,7 +63,7 @@ Each test job:
 
 - Runs unit tests only (excludes integration tests)
 - Uses `nick-fields/retry@v3` for reliability
-- Sets `CODEBUFF_GITHUB_ACTIONS=true` and `NEXT_PUBLIC_CB_ENVIRONMENT=test`
+- Sets `NEXUS_GITHUB_ACTIONS=true` and `NEXT_PUBLIC_CB_ENVIRONMENT=test`
 
 ### Environment Variables
 
@@ -91,7 +91,7 @@ Each test job:
 
 - Secrets and environment variables are managed through GitHub repository settings
 - The workflow uses GitHub secrets for sensitive data
-- CI-specific flags (like CODEBUFF_GITHUB_ACTIONS) are set directly in workflow steps
+- CI-specific flags (like NEXUS_GITHUB_ACTIONS) are set directly in workflow steps
 
 ### Local Testing with Act
 
@@ -109,7 +109,7 @@ When running GitHub Actions locally using `act`:
    - `run-local.sh` automatically:
      - Backs up existing `.env.local` before running
      - Restores the backup after completion
-   - The CI workflow only writes `CODEBUFF_GITHUB_ACTIONS=true` to `.env.local`
+   - The CI workflow only writes `NEXUS_GITHUB_ACTIONS=true` to `.env.local`
    - Other environment variables come from `.env.act` and `.secrets.act`
 
 3. **Running Act**:
@@ -170,7 +170,7 @@ When running GitHub Actions locally using `act`:
 2. If tests fail with environment issues:
 
    - Verify `.secrets` file was created correctly
-   - Check that `CODEBUFF_GITHUB_ACTIONS=true` is set
+   - Check that `NEXUS_GITHUB_ACTIONS=true` is set
    - Ensure all required environment variables are present
 
 3. If Bun commands fail:

@@ -20,7 +20,7 @@ import * as runAgentStep from '../run-agent-step'
 import { handleSpawnAgentInline } from '../tools/handlers/tool/spawn-agent-inline'
 import { handleSpawnAgents } from '../tools/handlers/tool/spawn-agents'
 
-import type { CodebuffToolCall } from '@nexus/common/tools/list'
+import type { NexusToolCall } from '@nexus/common/tools/list'
 import type { AgentTemplate } from '@nexus/common/types/agent-template'
 import type { ParamsExcluding } from '@nexus/common/types/function-params'
 import type { ImagePart, TextPart } from '@nexus/common/types/messages/content-part'
@@ -119,7 +119,7 @@ describe('Spawn Agents Image Content Propagation', () => {
   const createSpawnToolCall = (
     agentType: string,
     prompt = 'test prompt',
-  ): CodebuffToolCall<'spawn_agents'> => ({
+  ): NexusToolCall<'spawn_agents'> => ({
     toolName: 'spawn_agents' as const,
     toolCallId: 'test-tool-call-id',
     input: {
@@ -130,7 +130,7 @@ describe('Spawn Agents Image Content Propagation', () => {
   const createInlineSpawnToolCall = (
     agentType: string,
     prompt = 'test prompt',
-  ): CodebuffToolCall<'spawn_agent_inline'> => ({
+  ): NexusToolCall<'spawn_agent_inline'> => ({
     toolName: 'spawn_agent_inline' as const,
     toolCallId: 'test-tool-call-id',
     input: {
@@ -298,7 +298,7 @@ describe('Spawn Agents Image Content Propagation', () => {
 
       const imageContent = createImageContent()
 
-      const toolCall: CodebuffToolCall<'spawn_agents'> = {
+      const toolCall: NexusToolCall<'spawn_agents'> = {
         toolName: 'spawn_agents' as const,
         toolCallId: 'test-tool-call-id',
         input: {

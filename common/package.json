@@ -1,7 +1,7 @@
 {
   "name": "@nexus/common",
   "version": "1.0.0",
-  "description": "Common utilities for Codebuff",
+  "description": "Common utilities for Nexus",
   "private": true,
   "type": "module",
   "exports": {

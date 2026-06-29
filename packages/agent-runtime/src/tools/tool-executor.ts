@@ -7,20 +7,20 @@ import { getMCPToolData } from '../mcp'
 import { MCP_TOOL_SEPARATOR } from '../mcp-constants'
 import { getAgentShortName, getAgentToolName } from '../templates/prompts'
 import { formatValueForError } from '../util/format-value'
-import { codebuffToolHandlers } from './handlers/list'
+import { nexusToolHandlers } from './handlers/list'
 import { getMatchingSpawn } from './handlers/tool/spawn-agent-utils'
 import { getAgentTemplate } from '../templates/agent-registry'
 import { ensureZodSchema } from './prompts'
 
 import type { AgentTemplate } from '../templates/types'
-import type { CodebuffToolHandlerFunction } from './handlers/handler-function-type'
+import type { NexusToolHandlerFunction } from './handlers/handler-function-type'
 import type { FileProcessingState } from './handlers/tool/write-file'
 import type { ToolName } from '@nexus/common/tools/constants'
 import type {
   ClientToolCall,
   ClientToolName,
-  CodebuffToolCall,
-  CodebuffToolOutput,
+  NexusToolCall,
+  NexusToolOutput,
 } from '@nexus/common/tools/list'
 import type {
   AgentRuntimeDeps,
@@ -50,7 +50,7 @@ export type ToolCallError = {
   toolName?: string
   input: unknown
   error: string
-} & Pick<CodebuffToolCall, 'toolCallId'>
+} & Pick<NexusToolCall, 'toolCallId'>
 
 const bareStringFieldRepairAllowlist: Partial<
   Record<string, readonly string[]>
@@ -195,7 +195,7 @@ export function parseRawToolCall<T extends ToolName = ToolName>(params: {
     toolCallId: string
     input: unknown
   }
-}): CodebuffToolCall<T> | ToolCallError {
+}): NexusToolCall<T> | ToolCallError {
   const { rawToolCall } = params
   const toolName = rawToolCall.toolName
 
@@ -242,7 +242,7 @@ export function parseRawToolCall<T extends ToolName = ToolName>(params: {
     toolName,
     input: result.data,
     toolCallId: rawToolCall.toolCallId,
-  } as CodebuffToolCall<T>
+  } as NexusToolCall<T>
 }
 
 export type ExecuteToolCallParams<T extends string = ToolName> = {
@@ -273,8 +273,8 @@ export type ExecuteToolCallParams<T extends string = ToolName> = {
   system: string
   tools: ToolSet
   toolCallId: string | undefined
-  toolCalls: (CodebuffToolCall | CustomToolCall)[]
-  toolCallsToAddToMessageHistory: (CodebuffToolCall | CustomToolCall)[]
+  toolCalls: (NexusToolCall | CustomToolCall)[]
+  toolCallsToAddToMessageHistory: (NexusToolCall | CustomToolCall)[]
   toolResults: ToolMessage[]
   toolResultsToAddToMessageHistory: ToolMessage[]
   userId: string | undefined
@@ -311,7 +311,7 @@ export async function executeToolCall<T extends ToolName>(
   } = params
   const toolCallId = params.toolCallId ?? generateCompactId()
 
-  const toolCall: CodebuffToolCall<T> | ToolCallError = parseRawToolCall<T>({
+  const toolCall: NexusToolCall<T> | ToolCallError = parseRawToolCall<T>({
     rawToolCall: {
       toolName,
       toolCallId,
@@ -465,9 +465,9 @@ export async function executeToolCall<T extends ToolName>(
   })
 
   // Cast to any to avoid type errors
-  const handler = codebuffToolHandlers[
+  const handler = nexusToolHandlers[
     toolName
-  ] as unknown as CodebuffToolHandlerFunction<T>
+  ] as unknown as NexusToolHandlerFunction<T>
 
   // Use effective input for spawn_agents so the handler receives the correct agent types
   const finalToolCall =
@@ -497,7 +497,7 @@ export async function executeToolCall<T extends ToolName>(
         toolName: clientToolCall.toolName,
         input: clientToolCall.input,
       })
-      return clientToolResult.output as CodebuffToolOutput<T>
+      return clientToolResult.output as NexusToolOutput<T>
     }) as any,
   })
 
@@ -572,7 +572,7 @@ export function parseRawCustomToolCall(params: {
     processedParameters[param] = val
   }
 
-  // Add the required codebuff_end_step parameter with the correct value for this tool if requested
+  // Add the required nexus_end_step parameter with the correct value for this tool if requested
   if (autoInsertEndStepParam) {
     processedParameters[endsAgentStepParam] =
       customToolDefs?.[toolName]?.endsAgentStep

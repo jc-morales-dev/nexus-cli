@@ -9,7 +9,7 @@ export const createTestCiEnv = (overrides: Partial<CiEnv> = {}): CiEnv => ({
   GITHUB_ACTIONS: undefined,
   RENDER: undefined,
   IS_PULL_REQUEST: undefined,
-  CODEBUFF_GITHUB_TOKEN: undefined,
-  CODEBUFF_API_KEY: 'test-api-key',
+  NEXUS_GITHUB_TOKEN: undefined,
+  NEXUS_API_KEY: 'test-api-key',
   ...overrides,
 })

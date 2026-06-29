@@ -2,7 +2,7 @@ import { describe, test, expect, beforeEach, mock } from 'bun:test'
 
 import { fetchAndUpdateUsage } from '../fetch-usage'
 
-import type { CodebuffApiClient } from '../nexus-api'
+import type { NexusApiClient } from '../nexus-api'
 import type { FetchAndUpdateUsageParams } from '../fetch-usage'
 import type { Logger } from '@nexus/common/types/contracts/logger'
 
@@ -10,50 +10,50 @@ describe('fetchAndUpdateUsage (deprecated)', () => {
   let setInputModeMock: ReturnType<typeof mock>
   let getAuthTokenMock: ReturnType<typeof mock>
   let loggerMock: Logger
-  let apiClientMock: CodebuffApiClient
+  let apiClientMock: NexusApiClient
 
   // Note: fetch-usage now uses apiClient.usage() instead of apiClient.post()
   const createMockApiClient = (
     usageMock: ReturnType<typeof mock>,
-  ): CodebuffApiClient => ({
+  ): NexusApiClient => ({
     get: mock(() =>
       Promise.resolve({ ok: true, status: 200, data: {} }),
-    ) as CodebuffApiClient['get'],
+    ) as NexusApiClient['get'],
     post: mock(() =>
       Promise.resolve({ ok: true, status: 200, data: {} }),
-    ) as CodebuffApiClient['post'],
+    ) as NexusApiClient['post'],
     put: mock(() =>
       Promise.resolve({ ok: true, status: 200, data: {} }),
-    ) as CodebuffApiClient['put'],
+    ) as NexusApiClient['put'],
     patch: mock(() =>
       Promise.resolve({ ok: true, status: 200, data: {} }),
-    ) as CodebuffApiClient['patch'],
+    ) as NexusApiClient['patch'],
     delete: mock(() =>
       Promise.resolve({ ok: true, status: 200, data: {} }),
-    ) as CodebuffApiClient['delete'],
+    ) as NexusApiClient['delete'],
     request: mock(() =>
       Promise.resolve({ ok: true, status: 200, data: {} }),
-    ) as CodebuffApiClient['request'],
+    ) as NexusApiClient['request'],
     me: mock(() =>
       Promise.resolve({ ok: true, status: 200, data: {} }),
-    ) as CodebuffApiClient['me'],
-    usage: usageMock as CodebuffApiClient['usage'],
+    ) as NexusApiClient['me'],
+    usage: usageMock as NexusApiClient['usage'],
     loginCode: mock(() =>
       Promise.resolve({ ok: true, status: 200, data: {} }),
-    ) as CodebuffApiClient['loginCode'],
+    ) as NexusApiClient['loginCode'],
     loginStatus: mock(() =>
       Promise.resolve({ ok: true, status: 200, data: {} }),
-    ) as CodebuffApiClient['loginStatus'],
+    ) as NexusApiClient['loginStatus'],
     publish: mock(() =>
       Promise.resolve({ ok: true, status: 200, data: {} }),
-    ) as CodebuffApiClient['publish'],
+    ) as NexusApiClient['publish'],
     logout: mock(() =>
       Promise.resolve({ ok: true, status: 200, data: {} }),
-    ) as CodebuffApiClient['logout'],
+    ) as NexusApiClient['logout'],
     feedback: mock(() =>
       Promise.resolve({ ok: true, status: 200, data: {} }),
-    ) as CodebuffApiClient['feedback'],
-    baseUrl: 'https://test.codebuff.com',
+    ) as NexusApiClient['feedback'],
+    baseUrl: 'https://test.nexus.com',
     authToken: 'test-auth-token',
   })
 

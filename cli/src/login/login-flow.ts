@@ -1,7 +1,7 @@
-import { createCodebuffApiClient } from '../utils/nexus-api'
+import { createNexusApiClient } from '../utils/nexus-api'
 
 import type {
-  CodebuffApiClient,
+  NexusApiClient,
   LoginCodeResponse,
 } from '../utils/nexus-api'
 import type { Logger } from '@nexus/common/types/contracts/logger'
@@ -11,7 +11,7 @@ export type LoginUrlResponse = LoginCodeResponse
 
 export interface GenerateLoginUrlDeps {
   logger: Logger
-  apiClient?: CodebuffApiClient
+  apiClient?: NexusApiClient
 }
 
 export interface GenerateLoginUrlOptions {
@@ -28,7 +28,7 @@ export async function generateLoginUrl(
 
   const apiClient =
     providedApiClient ??
-    createCodebuffApiClient({
+    createNexusApiClient({
       baseUrl,
     })
 
@@ -60,7 +60,7 @@ interface PollLoginStatusDeps {
   sleep: (ms: number) => Promise<void>
   logger: Logger
   now?: () => number
-  apiClient?: CodebuffApiClient
+  apiClient?: NexusApiClient
 }
 
 interface PollLoginStatusOptions {
@@ -99,7 +99,7 @@ export async function pollLoginStatus(
 
   const apiClient =
     providedApiClient ??
-    createCodebuffApiClient({
+    createNexusApiClient({
       baseUrl,
     })
 

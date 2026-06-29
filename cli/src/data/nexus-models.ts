@@ -91,8 +91,8 @@ export const NEXUS_MODELS: readonly NexusModel[] = [
     tier: 'free',
   },
   {
-    id: 'nvidia/nemotron-3-super-120b-a12b:free',
-    label: 'Nemotron 3 Super (gratis)',
+    id: 'qwen/qwen3-next-80b-a3b-instruct:free',
+    label: 'Qwen3 Next 80B (gratis)',
     tagline: 'Gratis · grande y capaz',
     tier: 'free',
   },

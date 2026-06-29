@@ -3,7 +3,7 @@ import { getInitialSessionState } from '@nexus/common/types/session-state'
 import { getStubProjectFileContext } from '@nexus/common/util/file'
 import { afterEach, describe, expect, it, mock, spyOn } from 'bun:test'
 
-import { CodebuffClient } from '../client'
+import { NexusClient } from '../client'
 import * as mcpClientModule from '@nexus/common/mcp/client'
 import * as databaseModule from '../impl/database'
 
@@ -105,7 +105,7 @@ describe('MCP tool filtering', () => {
       },
     )
 
-    const client = new CodebuffClient({
+    const client = new NexusClient({
       apiKey: 'test-key',
       agentDefinitions: [TEST_AGENT],
     })

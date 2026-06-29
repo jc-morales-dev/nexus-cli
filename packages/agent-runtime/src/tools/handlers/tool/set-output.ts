@@ -3,10 +3,10 @@ import { jsonToolResult } from '@nexus/common/util/messages'
 import { getAgentTemplate } from '../../../templates/agent-registry'
 import { formatValueForError } from '../../../util/format-value'
 
-import type { CodebuffToolHandlerFunction } from '../handler-function-type'
+import type { NexusToolHandlerFunction } from '../handler-function-type'
 import type {
-  CodebuffToolCall,
-  CodebuffToolOutput,
+  NexusToolCall,
+  NexusToolOutput,
 } from '@nexus/common/tools/list'
 import type {
   AgentTemplate,
@@ -18,7 +18,7 @@ import type { AgentState } from '@nexus/common/types/session-state'
 type ToolName = 'set_output'
 export const handleSetOutput = (async (params: {
   previousToolCallFinished: Promise<void>
-  toolCall: CodebuffToolCall<ToolName>
+  toolCall: NexusToolCall<ToolName>
 
   agentState: AgentState
   apiKey: string
@@ -26,7 +26,7 @@ export const handleSetOutput = (async (params: {
   localAgentTemplates: Record<string, AgentTemplate>
   logger: Logger
   fetchAgentFromDatabase: FetchAgentFromDatabaseFn
-}): Promise<{ output: CodebuffToolOutput<ToolName> }> => {
+}): Promise<{ output: NexusToolOutput<ToolName> }> => {
   const { previousToolCallFinished, toolCall, agentState, logger } = params
   const output = toolCall.input
   const { data } = output ?? {}
@@ -89,7 +89,7 @@ export const handleSetOutput = (async (params: {
   agentState.output = finalOutput as Record<string, unknown>
 
   return { output: jsonToolResult({ message: 'Output set' }) }
-}) satisfies CodebuffToolHandlerFunction<ToolName>
+}) satisfies NexusToolHandlerFunction<ToolName>
 
 function getZodIssueCount(error: unknown): number {
   if (

@@ -18,7 +18,7 @@ export const getAgentStreamFromTemplate = (params: {
   apiKey: string
   clientSessionId: string
   costMode?: string
-  extraCodebuffMetadata?: Record<string, string>
+  extraNexusMetadata?: Record<string, string>
   fingerprintId: string
   includeCacheControl?: boolean
   localAgentTemplates: Record<string, AgentTemplate>
@@ -48,7 +48,7 @@ export const getAgentStreamFromTemplate = (params: {
     apiKey,
     clientSessionId,
     costMode,
-    extraCodebuffMetadata,
+    extraNexusMetadata,
     fingerprintId,
     includeCacheControl,
     localAgentTemplates,
@@ -80,7 +80,7 @@ export const getAgentStreamFromTemplate = (params: {
     apiKey,
     clientSessionId,
     costMode,
-    extraCodebuffMetadata,
+    extraNexusMetadata,
     fingerprintId,
     includeCacheControl,
     logger,
@@ -108,7 +108,7 @@ export const getAgentStreamFromTemplate = (params: {
   if (!aiSdkStreamParams.providerOptions) {
     aiSdkStreamParams.providerOptions = {}
   }
-  for (const provider of ['openrouter', 'codebuff'] as const) {
+  for (const provider of ['openrouter', 'nexus'] as const) {
     if (!aiSdkStreamParams.providerOptions[provider]) {
       aiSdkStreamParams.providerOptions[provider] = {}
     }

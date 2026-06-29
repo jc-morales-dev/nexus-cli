@@ -4,13 +4,13 @@ import { getInitialSessionState } from '@nexus/common/types/session-state'
 import { getStubProjectFileContext } from '@nexus/common/util/file'
 import { afterEach, describe, expect, it, mock, spyOn } from 'bun:test'
 
-import { CodebuffClient } from '../client'
+import { NexusClient } from '../client'
 import * as databaseModule from '../impl/database'
 
-import type { CodebuffClientOptions } from '../run'
+import type { NexusClientOptions } from '../run'
 import type { PrintModeEvent } from '@nexus/common/types/print-mode'
 
-describe('CodebuffClient handleEvent / handleStreamChunk', () => {
+describe('NexusClient handleEvent / handleStreamChunk', () => {
   afterEach(() => {
     mock.restore()
   })
@@ -105,13 +105,13 @@ describe('CodebuffClient handleEvent / handleStreamChunk', () => {
     )
 
     type StreamChunk = Parameters<
-      NonNullable<CodebuffClientOptions['handleStreamChunk']>
+      NonNullable<NexusClientOptions['handleStreamChunk']>
     >[0]
 
     const events: PrintModeEvent[] = []
     const streamChunks: StreamChunk[] = []
 
-    const client = new CodebuffClient({
+    const client = new NexusClient({
       apiKey: 'test-key',
     })
 

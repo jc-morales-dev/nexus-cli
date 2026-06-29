@@ -8,10 +8,10 @@
  *   bun scripts/test-fireworks.ts direct
  *
  *   # Test 2: Hit our chat completions endpoint (requires running web server + valid API key)
- *   CODEBUFF_API_KEY=<key> bun scripts/test-fireworks.ts endpoint
+ *   NEXUS_API_KEY=<key> bun scripts/test-fireworks.ts endpoint
  *
  *   # Run both tests
- *   CODEBUFF_API_KEY=<key> bun scripts/test-fireworks.ts both
+ *   NEXUS_API_KEY=<key> bun scripts/test-fireworks.ts both
  */
 
 export {}
@@ -175,14 +175,14 @@ async function testFireworksDirect() {
 // ─── Chat Completions Endpoint Test ─────────────────────────────────────────
 
 async function testChatCompletionsEndpoint() {
-  const codebuffApiKey = process.env.CODEBUFF_API_KEY
-  if (!codebuffApiKey) {
-    console.error('❌ CODEBUFF_API_KEY is not set. Pass it as an env var.')
-    console.error('   Example: CODEBUFF_API_KEY=<key> bun scripts/test-fireworks.ts endpoint')
+  const nexusApiKey = process.env.NEXUS_API_KEY
+  if (!nexusApiKey) {
+    console.error('❌ NEXUS_API_KEY is not set. Pass it as an env var.')
+    console.error('   Example: NEXUS_API_KEY=<key> bun scripts/test-fireworks.ts endpoint')
     process.exit(1)
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_CODEBUFF_APP_URL ?? 'http://localhost:3000'
+  const appUrl = process.env.NEXT_PUBLIC_NEXUS_APP_URL ?? 'http://localhost:3000'
   const endpoint = `${appUrl}/api/v1/chat/completions`
 
   console.log('── Test 2: Chat Completions Endpoint (non-streaming) ──')
@@ -200,7 +200,7 @@ async function testChatCompletionsEndpoint() {
   const response = await fetch(endpoint, {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${codebuffApiKey}`,
+      Authorization: `Bearer ${nexusApiKey}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -208,7 +208,7 @@ async function testChatCompletionsEndpoint() {
       messages: [{ role: 'user', content: testPrompt }],
       max_tokens: 64,
       stream: false,
-      codebuff_metadata: {
+      nexus_metadata: {
         run_id: runId,
         client_id: 'test-fireworks-script',
         cost_mode: 'free',
@@ -234,7 +234,7 @@ async function testChatCompletionsEndpoint() {
       console.log('   ℹ️  This is expected if you don\'t have a valid run_id.')
       console.log('   ℹ️  The request reached the endpoint successfully — routing is wired up.')
     } else if (response.status === 401) {
-      console.log('   ℹ️  Auth failed. Make sure CODEBUFF_API_KEY is valid.')
+      console.log('   ℹ️  Auth failed. Make sure NEXUS_API_KEY is valid.')
     }
   }
   console.log()
@@ -245,7 +245,7 @@ async function testChatCompletionsEndpoint() {
   const streamResponse = await fetch(endpoint, {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${codebuffApiKey}`,
+      Authorization: `Bearer ${nexusApiKey}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -253,7 +253,7 @@ async function testChatCompletionsEndpoint() {
       messages: [{ role: 'user', content: testPrompt }],
       max_tokens: 64,
       stream: true,
-      codebuff_metadata: {
+      nexus_metadata: {
         run_id: runId,
         client_id: 'test-fireworks-script',
         cost_mode: 'free',

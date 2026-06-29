@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "bin": {
-    "codebuff-tui": "./bin/codecane"
+    "nexus-tui": "./bin/codecane"
   },
   "exports": {
     ".": {
@@ -17,7 +17,7 @@
   "scripts": {
     "dev": "bun run prebuild:agents && bun --env-file=../.env run src/index.tsx --cwd ..",
     "prebuild:agents": "bun run scripts/prebuild-agents.ts",
-    "build:binary": "bun ./scripts/build-binary.ts codebuff $npm_package_version",
+    "build:binary": "bun ./scripts/build-binary.ts nexus $npm_package_version",
     "pack:npm": "bun ./scripts/pack-npm.ts",
     "release": "bun run scripts/release.ts",
     "test": "NODE_ENV=production bun test",

@@ -4,7 +4,7 @@ import path from 'path'
 
 import { API_KEY_ENV_VAR } from '@nexus/common/constants/paths'
 import {
-  CodebuffClient,
+  NexusClient,
   initialSessionState,
   withMessageHistory,
   type AgentDefinition,
@@ -311,7 +311,7 @@ describe('Base2-Free Summary Format Compliance', () => {
           await fs.promises.writeFile(fullPath, content, 'utf-8')
         }
 
-        const client = new CodebuffClient({
+        const client = new NexusClient({
           apiKey,
           cwd: tmpDir,
           projectFiles: PROJECT_FILES,
@@ -449,7 +449,7 @@ describe('Base2-Free Summary Format Compliance', () => {
           await fs.promises.writeFile(fullPath, content, 'utf-8')
         }
 
-        const client = new CodebuffClient({
+        const client = new NexusClient({
           apiKey,
           cwd: tmpDir,
           projectFiles: PROJECT_FILES,

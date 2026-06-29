@@ -91,9 +91,9 @@ const DEFAULT_RETRY_CONFIG: Required<RetryConfig> = {
 }
 
 /**
- * Configuration for creating a Codebuff API client
+ * Configuration for creating a Nexus API client
  */
-export interface CodebuffApiClientConfig {
+export interface NexusApiClientConfig {
   /** Base URL for API requests (defaults to WEBSITE_URL from SDK) */
   baseUrl?: string
   /** Auth token for Bearer authentication */
@@ -131,7 +131,7 @@ export interface RequestOptions {
   headers?: Record<string, string>
 }
 
-export interface CodebuffApiClient {
+export interface NexusApiClient {
   readonly baseUrl: string
   readonly authToken?: string
 
@@ -267,11 +267,11 @@ const isRetryableError = (error: unknown): boolean => {
 }
 
 /**
- * Create a Codebuff API client for making authenticated requests to the Codebuff API
+ * Create a Nexus API client for making authenticated requests to the Nexus API
  */
-export function createCodebuffApiClient(
-  config: CodebuffApiClientConfig = {},
-): CodebuffApiClient {
+export function createNexusApiClient(
+  config: NexusApiClientConfig = {},
+): NexusApiClient {
   const {
     baseUrl = WEBSITE_URL,
     authToken,
@@ -555,7 +555,7 @@ export function createCodebuffApiClient(
 // Shared singleton client
 // ============================================================================
 
-let sharedClient: CodebuffApiClient | null = null
+let sharedClient: NexusApiClient | null = null
 let sharedAuthToken: string | undefined
 // Track the token that was used to create the current client instance
 let clientCreatedWithToken: string | undefined
@@ -568,10 +568,10 @@ let clientCreatedWithToken: string | undefined
  * to ensure a specific auth token is used. The client is recreated whenever
  * the auth token changes.
  */
-export function getApiClient(): CodebuffApiClient {
+export function getApiClient(): NexusApiClient {
   // Recreate client if it doesn't exist or if the token has changed since creation
   if (!sharedClient || clientCreatedWithToken !== sharedAuthToken) {
-    sharedClient = createCodebuffApiClient({ authToken: sharedAuthToken })
+    sharedClient = createNexusApiClient({ authToken: sharedAuthToken })
     clientCreatedWithToken = sharedAuthToken
   }
   return sharedClient

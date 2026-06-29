@@ -4,17 +4,17 @@ import { jsonToolResult } from '@nexus/common/util/messages'
 import { callWebSearchAPI } from '../../../llm-api/nexus-web-api'
 import { keylessWebSearch } from '../../../llm-api/keyless-web-search'
 
-import type { CodebuffToolHandlerFunction } from '../handler-function-type'
+import type { NexusToolHandlerFunction } from '../handler-function-type'
 import type {
-  CodebuffToolCall,
-  CodebuffToolOutput,
+  NexusToolCall,
+  NexusToolOutput,
 } from '@nexus/common/tools/list'
 import type { ClientEnv, CiEnv } from '@nexus/common/types/contracts/env'
 import type { Logger } from '@nexus/common/types/contracts/logger'
 
 export const handleWebSearch = (async (params: {
   previousToolCallFinished: Promise<void>
-  toolCall: CodebuffToolCall<'web_search'>
+  toolCall: NexusToolCall<'web_search'>
   logger: Logger
   apiKey: string
 
@@ -30,7 +30,7 @@ export const handleWebSearch = (async (params: {
   clientEnv: ClientEnv
   ciEnv: CiEnv
 }): Promise<{
-  output: CodebuffToolOutput<'web_search'>
+  output: NexusToolOutput<'web_search'>
   creditsUsed: number
 }> => {
   const {
@@ -181,4 +181,4 @@ export const handleWebSearch = (async (params: {
     )
     return { output: jsonToolResult({ errorMessage }), creditsUsed }
   }
-}) satisfies CodebuffToolHandlerFunction<'web_search'>
+}) satisfies NexusToolHandlerFunction<'web_search'>

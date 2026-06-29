@@ -16,8 +16,8 @@ export function getBundledRgPath(
   env: SdkEnv = getSdkEnv(),
 ): string {
   // Allow override via environment variable
-  if (env.CODEBUFF_RG_PATH) {
-    return env.CODEBUFF_RG_PATH
+  if (env.NEXUS_RG_PATH) {
+    return env.NEXUS_RG_PATH
   }
 
   // Determine platform-specific directory name
@@ -120,7 +120,7 @@ export function getBundledRgPath(
   const distVendorPath = join(
     process.cwd(),
     'node_modules',
-    '@codebuff',
+    '@nexus',
     'sdk',
     'dist',
     'vendor',
@@ -136,6 +136,6 @@ export function getBundledRgPath(
   throw new Error(
     `Ripgrep binary not found for ${platform}-${arch}. ` +
       `Expected at: ${vendorPath} or ${distVendorPath}. ` +
-      `Please run 'npm run fetch-ripgrep' or set CODEBUFF_RG_PATH environment variable.`,
+      `Please run 'npm run fetch-ripgrep' or set NEXUS_RG_PATH environment variable.`,
   )
 }

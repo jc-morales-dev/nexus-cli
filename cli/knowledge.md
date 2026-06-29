@@ -66,7 +66,7 @@ See `scripts/tmux/README.md` for full documentation or `cli/tmux.knowledge.md` f
 ### Manual Pattern (Legacy)
 
 ```bash
-tmux new-session -d -s test-session 'cd /path/to/codebuff && bun --cwd=cli run dev 2>&1' && \
+tmux new-session -d -s test-session 'cd /path/to/nexus && bun --cwd=cli run dev 2>&1' && \
   sleep 2 && \
   echo '---AFTER 2 SECONDS---' && \
   tmux capture-pane -t test-session -p && \
@@ -111,7 +111,7 @@ tmux new-session -d -s test-session 'cd /path/to/codebuff && bun --cwd=cli run d
 
 ## Migration from Custom OpenTUI Fork
 
-**October 2024**: Migrated from custom `CodebuffAI/opentui#codebuff/custom` fork to official `@opentui/react@^0.1.27` and `@opentui/core@^0.1.27` packages. Updated to `^0.1.28` in February 2025.
+**October 2024**: Migrated from custom `NexusAI/opentui#nexus/custom` fork to official `@opentui/react@^0.1.27` and `@opentui/core@^0.1.27` packages. Updated to `^0.1.28` in February 2025.
 
 **Lost Features from Custom Fork:**
 

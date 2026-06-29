@@ -127,7 +127,7 @@ describe('Schema handling error recovery', () => {
       const transformed = tryTransformAgentToolCall({
         toolName: 'file_picker',
         input: { prompt: 'Find relevant files' },
-        spawnableAgents: ['codebuff/file-picker@1.0.0'],
+        spawnableAgents: ['nexus/file-picker@1.0.0'],
       })
 
       expect(transformed).toEqual({
@@ -135,7 +135,7 @@ describe('Schema handling error recovery', () => {
         input: {
           agents: [
             {
-              agent_type: 'codebuff/file-picker@1.0.0',
+              agent_type: 'nexus/file-picker@1.0.0',
               prompt: 'Find relevant files',
             },
           ],

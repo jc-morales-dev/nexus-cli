@@ -5,8 +5,8 @@ import { defineToolComponent } from './types'
 import { useTerminalDimensions } from '../../hooks/use-terminal-dimensions'
 import { useTheme } from '../../hooks/use-theme'
 import { getLatestFollowupToolCallId, useChatStore } from '../../state/chat-store'
-import { useFreebuffSessionStore } from '../../state/freetier-session-store'
-import { IS_FREEBUFF } from '../../utils/constants'
+import { useFreeTierSessionStore } from '../../state/freetier-session-store'
+import { IS_FREETIER } from '../../utils/constants'
 import { Button } from '../button'
 
 import type { ToolRenderConfig } from './types'
@@ -225,8 +225,8 @@ const SuggestFollowupsItem = ({
 }: SuggestFollowupsItemProps) => {
   const theme = useTheme()
   const inputFocused = useChatStore((state) => state.inputFocused)
-  const isFreebuffSessionOver = useFreebuffSessionStore(
-    (state) => IS_FREEBUFF && state.session?.status === 'ended',
+  const isFreeTierSessionOver = useFreeTierSessionStore(
+    (state) => IS_FREETIER && state.session?.status === 'ended',
   )
   const setSuggestedFollowups = useChatStore(
     (state) => state.setSuggestedFollowups,
@@ -310,7 +310,7 @@ const SuggestFollowupsItem = ({
             isHovered={hoveredIndex === index}
             onSendFollowup={onSendFollowup}
             onHover={setHoveredIndex}
-            disabled={!inputFocused || isFreebuffSessionOver}
+            disabled={!inputFocused || isFreeTierSessionOver}
             labelColumnWidth={labelColumnWidth}
           />
         ))}
@@ -350,7 +350,7 @@ export const SuggestFollowupsComponent = defineToolComponent({
     const handleSendFollowup = (prompt: string, index: number) => {
       // This gets called from the FollowupCard component
       // The actual logic is handled via the global followup handler
-      const event = new CustomEvent('codebuff:send-followup', {
+      const event = new CustomEvent('nexus:send-followup', {
         detail: { prompt, index, toolCallId },
       })
       globalThis.dispatchEvent(event)

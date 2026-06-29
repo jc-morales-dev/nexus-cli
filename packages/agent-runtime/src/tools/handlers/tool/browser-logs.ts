@@ -1,21 +1,21 @@
-import type { CodebuffToolHandlerFunction } from '../handler-function-type'
+import type { NexusToolHandlerFunction } from '../handler-function-type'
 import type {
   ClientToolCall,
-  CodebuffToolCall,
-  CodebuffToolOutput,
+  NexusToolCall,
+  NexusToolOutput,
 } from '@nexus/common/tools/list'
 
 export const handleBrowserLogs = (async (params: {
   previousToolCallFinished: Promise<void>
-  toolCall: CodebuffToolCall<'browser_logs'>
+  toolCall: NexusToolCall<'browser_logs'>
   requestClientToolCall: (
     toolCall: ClientToolCall<'browser_logs'>,
-  ) => Promise<CodebuffToolOutput<'browser_logs'>>
+  ) => Promise<NexusToolOutput<'browser_logs'>>
 }): Promise<{
-  output: CodebuffToolOutput<'browser_logs'>
+  output: NexusToolOutput<'browser_logs'>
 }> => {
   const { previousToolCallFinished, toolCall, requestClientToolCall } = params
 
   await previousToolCallFinished
   return { output: await requestClientToolCall(toolCall) }
-}) satisfies CodebuffToolHandlerFunction<'browser_logs'>
+}) satisfies NexusToolHandlerFunction<'browser_logs'>

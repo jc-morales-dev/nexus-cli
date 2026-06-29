@@ -2,7 +2,7 @@ import { describe, expect, it, afterEach, mock } from 'bun:test'
 
 import * as versionUtils from '../version-utils'
 
-import type { CodebuffPgDatabase } from '../../db/types'
+import type { NexusPgDatabase } from '../../db/types'
 
 const {
   versionOne,
@@ -135,7 +135,7 @@ describe('version-utils', () => {
             })),
           })),
         })),
-      } as unknown as CodebuffPgDatabase
+      } as unknown as NexusPgDatabase
 
       const result = await getLatestAgentVersion({
         agentId: 'test-agent',
@@ -159,7 +159,7 @@ describe('version-utils', () => {
             })),
           })),
         })),
-      } as unknown as CodebuffPgDatabase
+      } as unknown as NexusPgDatabase
 
       const result = await getLatestAgentVersion({
         agentId: 'test-agent',
@@ -183,7 +183,7 @@ describe('version-utils', () => {
             })),
           })),
         })),
-      } as unknown as CodebuffPgDatabase
+      } as unknown as NexusPgDatabase
 
       const result = await getLatestAgentVersion({
         agentId: 'test-agent',
@@ -208,7 +208,7 @@ describe('version-utils', () => {
             })),
           })),
         })),
-      } as unknown as CodebuffPgDatabase
+      } as unknown as NexusPgDatabase
 
       const result = await determineNextVersion({
         agentId: 'test-agent',
@@ -229,7 +229,7 @@ describe('version-utils', () => {
             })),
           })),
         })),
-      } as unknown as CodebuffPgDatabase
+      } as unknown as NexusPgDatabase
 
       const result = await determineNextVersion({
         agentId: 'test-agent',
@@ -253,7 +253,7 @@ describe('version-utils', () => {
             })),
           })),
         })),
-      } as unknown as CodebuffPgDatabase
+      } as unknown as NexusPgDatabase
 
       await expect(
         determineNextVersion({
@@ -280,7 +280,7 @@ describe('version-utils', () => {
             })),
           })),
         })),
-      } as unknown as CodebuffPgDatabase
+      } as unknown as NexusPgDatabase
 
       await expect(
         determineNextVersion({
@@ -305,7 +305,7 @@ describe('version-utils', () => {
             })),
           })),
         })),
-      } as unknown as CodebuffPgDatabase
+      } as unknown as NexusPgDatabase
 
       await expect(
         determineNextVersion({
@@ -329,7 +329,7 @@ describe('version-utils', () => {
             where: mock(() => Promise.resolve([{ id: 'test-agent' }])),
           })),
         })),
-      } as unknown as CodebuffPgDatabase
+      } as unknown as NexusPgDatabase
 
       const result = await versionExists({
         agentId: 'test-agent',
@@ -348,7 +348,7 @@ describe('version-utils', () => {
             where: mock(() => Promise.resolve([])),
           })),
         })),
-      } as unknown as CodebuffPgDatabase
+      } as unknown as NexusPgDatabase
 
       const result = await versionExists({
         agentId: 'test-agent',

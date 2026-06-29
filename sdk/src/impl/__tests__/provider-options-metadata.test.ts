@@ -2,62 +2,62 @@ import { describe, expect, it } from 'bun:test'
 
 import { getProviderOptions } from '../llm'
 
-describe('getProviderOptions — codebuff_metadata', () => {
+describe('getProviderOptions — nexus_metadata', () => {
   const baseParams = {
     model: 'openrouter/anthropic/claude-sonnet-4-5',
     runId: 'run-1',
     clientSessionId: 'session-1',
   }
 
-  it('includes run_id and client_id in codebuff_metadata', () => {
+  it('includes run_id and client_id in nexus_metadata', () => {
     const opts = getProviderOptions(baseParams)
-    const meta = (opts.codebuff as any).codebuff_metadata
+    const meta = (opts.nexus as any).nexus_metadata
     expect(meta).toMatchObject({
       run_id: 'run-1',
       client_id: 'session-1',
     })
   })
 
-  it('merges extraCodebuffMetadata into codebuff_metadata', () => {
+  it('merges extraNexusMetadata into nexus_metadata', () => {
     const opts = getProviderOptions({
       ...baseParams,
-      extraCodebuffMetadata: { freebuff_instance_id: 'abc-123' },
+      extraNexusMetadata: { freetier_instance_id: 'abc-123' },
     })
-    const meta = (opts.codebuff as any).codebuff_metadata
+    const meta = (opts.nexus as any).nexus_metadata
     expect(meta).toMatchObject({
       run_id: 'run-1',
       client_id: 'session-1',
-      freebuff_instance_id: 'abc-123',
+      freetier_instance_id: 'abc-123',
     })
   })
 
-  it('omits extra keys when extraCodebuffMetadata is undefined', () => {
+  it('omits extra keys when extraNexusMetadata is undefined', () => {
     const opts = getProviderOptions(baseParams)
-    const meta = (opts.codebuff as any).codebuff_metadata
+    const meta = (opts.nexus as any).nexus_metadata
     expect(Object.keys(meta)).toEqual(
       expect.arrayContaining(['run_id', 'client_id']),
     )
-    expect(meta.freebuff_instance_id).toBeUndefined()
+    expect(meta.freetier_instance_id).toBeUndefined()
   })
 
   it('cost_mode passes through alongside extra metadata', () => {
     const opts = getProviderOptions({
       ...baseParams,
       costMode: 'free',
-      extraCodebuffMetadata: { freebuff_instance_id: 'uuid-xyz' },
+      extraNexusMetadata: { freetier_instance_id: 'uuid-xyz' },
     })
-    const meta = (opts.codebuff as any).codebuff_metadata
+    const meta = (opts.nexus as any).nexus_metadata
     expect(meta).toMatchObject({
       cost_mode: 'free',
-      freebuff_instance_id: 'uuid-xyz',
+      freetier_instance_id: 'uuid-xyz',
     })
   })
 
-  it('extraCodebuffMetadata does not overwrite reserved keys', () => {
+  it('extraNexusMetadata does not overwrite reserved keys', () => {
     const opts = getProviderOptions({
       ...baseParams,
       costMode: 'free',
-      extraCodebuffMetadata: {
+      extraNexusMetadata: {
         // These are intentionally the same keys the function already sets —
         // make sure a misuse doesn't let callers override server-trusted
         // identifiers. The spread currently puts caller keys last, which
@@ -66,7 +66,7 @@ describe('getProviderOptions — codebuff_metadata', () => {
         run_id: 'evil-override',
       },
     })
-    const meta = (opts.codebuff as any).codebuff_metadata
+    const meta = (opts.nexus as any).nexus_metadata
     expect(meta.run_id).toBe('run-1')
   })
 })

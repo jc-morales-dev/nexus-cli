@@ -76,7 +76,7 @@ function shouldExitAlternateScreen(code, signal) {
 
 function createConfig(packageName) {
   const homeDir = os.homedir()
-  const configDir = path.join(homeDir, '.config', 'manicode')
+  const configDir = path.join(homeDir, '.config', 'nexus')
   const binaryName =
     process.platform === 'win32' ? `${packageName}.exe` : packageName
 
@@ -101,10 +101,10 @@ const { getProxyUrl, httpGet } = createReleaseHttpClient({
 
 function getPostHogConfig() {
   const apiKey =
-    process.env.CODEBUFF_POSTHOG_API_KEY ||
+    process.env.NEXUS_POSTHOG_API_KEY ||
     process.env.NEXT_PUBLIC_POSTHOG_API_KEY
   const host =
-    process.env.CODEBUFF_POSTHOG_HOST ||
+    process.env.NEXUS_POSTHOG_HOST ||
     process.env.NEXT_PUBLIC_POSTHOG_HOST_URL
 
   if (!apiKey || !host) {
@@ -127,7 +127,7 @@ function trackUpdateFailed(errorMessage, version, context = {}) {
 
     const payload = JSON.stringify({
       api_key: posthogConfig.apiKey,
-      event: 'cli.update_codebuff_failed',
+      event: 'cli.update_nexus_failed',
       properties: {
         distinct_id: `anonymous-${CONFIG.homeDir}`,
         error: errorMessage,
@@ -318,7 +318,7 @@ async function downloadBinary(version) {
   }
 
   const downloadUrl = `${
-    process.env.NEXT_PUBLIC_CODEBUFF_APP_URL || 'https://codebuff.com'
+    process.env.NEXT_PUBLIC_NEXUS_APP_URL || 'https://nexus.com'
   }/api/releases/download/${version}/${fileName}`
 
   // Ensure config directory exists
@@ -566,7 +566,7 @@ function printCrashDiagnostics(code, signal) {
   console.error(`  Binary:   ${CONFIG.binaryPath}`)
   console.error('')
   console.error('Please report this issue at:')
-  console.error('  https://github.com/CodebuffAI/codebuff/issues')
+  console.error('  https://github.com/NexusAI/nexus/issues')
   console.error('')
 }
 

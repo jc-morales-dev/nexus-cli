@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Centralized location for internal utilities, environment configuration, and select integrations used across the Codebuff monorepo (`web`, `cli`, and `sdk`).
+Centralized location for internal utilities, environment configuration, and select integrations used across the Nexus monorepo (`web`, `cli`, and `sdk`).
 
 ## Structure
 

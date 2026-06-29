@@ -204,12 +204,12 @@ async function getRelevantFiles(
     logger,
   })
   const start = performance.now()
-  let codebuffMessages = [systemMessage(system), ...messagesWithPrompt]
+  let nexusMessages = [systemMessage(system), ...messagesWithPrompt]
 
   // Converts assistant messages to user messages for finetuned model
-  codebuffMessages = codebuffMessages
+  nexusMessages = nexusMessages
     .map((msg, i) => {
-      if (msg.role === 'assistant' && i !== codebuffMessages.length - 1) {
+      if (msg.role === 'assistant' && i !== nexusMessages.length - 1) {
         return castAssistantMessage(msg)
       } else {
         return msg
@@ -220,7 +220,7 @@ async function getRelevantFiles(
 
   let response = await promptFlashWithFallbacks({
     ...params,
-    messages: codebuffMessages,
+    messages: nexusMessages,
     model: models.openrouter_gemini2_5_flash,
     useFinetunedModel: finetunedModel,
   })

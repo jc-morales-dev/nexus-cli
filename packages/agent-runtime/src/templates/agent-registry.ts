@@ -57,14 +57,14 @@ export async function getAgentTemplate(
 
   const parsed = parsePublishedAgentId(normalizedAgentId)
   if (!parsed) {
-    // If agentId doesn't parse as publisher/agent format, try as codebuff/agentId
-    const codebuffParsed = parsePublishedAgentId(
+    // If agentId doesn't parse as publisher/agent format, try as nexus/agentId
+    const nexusParsed = parsePublishedAgentId(
       `${DEFAULT_ORG_PREFIX}${normalizedAgentId}`,
     )
-    if (codebuffParsed) {
+    if (nexusParsed) {
       const dbAgent = await fetchAgentFromDatabase({
         ...params,
-        parsedAgentId: codebuffParsed,
+        parsedAgentId: nexusParsed,
       })
       if (dbAgent) {
         databaseAgentCache.set(dbAgent.id, dbAgent)

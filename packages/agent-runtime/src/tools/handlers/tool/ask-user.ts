@@ -1,7 +1,7 @@
-import type { CodebuffToolHandlerFunction } from '../handler-function-type'
+import type { NexusToolHandlerFunction } from '../handler-function-type'
 import type {
-  CodebuffToolCall,
-  CodebuffToolOutput,
+  NexusToolCall,
+  NexusToolOutput,
 } from '@nexus/common/tools/list'
 
 type ToolName = 'ask_user'
@@ -9,9 +9,9 @@ type ToolName = 'ask_user'
 // Handler for ask_user - delegates to client
 export const handleAskUser = (async (params: {
   previousToolCallFinished: Promise<void>
-  toolCall: CodebuffToolCall<ToolName>
+  toolCall: NexusToolCall<ToolName>
   requestClientToolCall: (toolCall: any) => Promise<any>
-}): Promise<{ output: CodebuffToolOutput<ToolName> }> => {
+}): Promise<{ output: NexusToolOutput<ToolName> }> => {
   const { previousToolCallFinished, toolCall, requestClientToolCall } = params
 
   await previousToolCallFinished
@@ -20,4 +20,4 @@ export const handleAskUser = (async (params: {
   return {
     output: result,
   }
-}) satisfies CodebuffToolHandlerFunction<ToolName>
+}) satisfies NexusToolHandlerFunction<ToolName>

@@ -10,26 +10,26 @@ import React, {
 
 import { Button } from './button'
 import {
-  FALLBACK_FREEBUFF_MODEL_ID,
-  getFreebuffDeploymentAvailabilityLabel,
-  getFreebuffModelsForAccessTier,
-  isFreebuffModelAvailable,
-  isFreebuffPremiumModelId,
+  FALLBACK_FREETIER_MODEL_ID,
+  getFreeTierDeploymentAvailabilityLabel,
+  getFreeTierModelsForAccessTier,
+  isFreeTierModelAvailable,
+  isFreeTierPremiumModelId,
 } from '@nexus/common/constants/freetier-models'
 import { getRateLimitsByModel } from '@nexus/common/types/freetier-session'
 
-import { joinFreebuffQueue } from '../hooks/use-freetier-session'
+import { joinFreeTierQueue } from '../hooks/use-freetier-session'
 import { useNow } from '../hooks/use-now'
-import { useFreebuffModelStore } from '../state/freetier-model-store'
-import { useFreebuffSessionStore } from '../state/freetier-session-store'
+import { useFreeTierModelStore } from '../state/freetier-model-store'
+import { useFreeTierSessionStore } from '../state/freetier-session-store'
 import { useTerminalDimensions } from '../hooks/use-terminal-dimensions'
 import { useTheme } from '../hooks/use-theme'
 import {
-  freebuffModelNavigationDirectionForKey,
-  nextFreebuffModelId,
+  freetierModelNavigationDirectionForKey,
+  nextFreeTierModelId,
 } from '../utils/freetier-model-navigation'
 
-import type { FreebuffModelOption } from '@nexus/common/constants/freetier-models'
+import type { FreeTierModelOption } from '@nexus/common/constants/freetier-models'
 import type { KeyEvent, ScrollBoxRenderable } from '@opentui/core'
 
 // Section grouping: premium models share one quota pool, unlimited has none.
@@ -45,7 +45,7 @@ import type { KeyEvent, ScrollBoxRenderable } from '@opentui/core'
 type Section = {
   key: 'premium' | 'unlimited' | 'limited'
   label: string
-  models: readonly FreebuffModelOption[]
+  models: readonly FreeTierModelOption[]
 }
 
 /**
@@ -70,14 +70,14 @@ type Section = {
  * models don't all fit, and Tab/arrow navigation keeps the focused row
  * scrolled into view.
  */
-interface FreebuffModelSelectorProps {
+interface FreeTierModelSelectorProps {
   /** Max vertical rows the picker may occupy. When the rendered rows exceed
    *  this, the list scrolls (scrollbar shown, focused row kept in view);
    *  otherwise the scrollbox shrinks to fit and no scrollbar appears. */
   maxHeight: number
 }
 
-export const FreebuffModelSelector: React.FC<FreebuffModelSelectorProps> = ({
+export const FreeTierModelSelector: React.FC<FreeTierModelSelectorProps> = ({
   maxHeight,
 }) => {
   const theme = useTheme()
@@ -86,14 +86,14 @@ export const FreebuffModelSelector: React.FC<FreebuffModelSelectorProps> = ({
   // box (capped at 80 cols), so a wide terminal doesn't actually let us
   // sprawl the buttons across it.
   const { contentMaxWidth } = useTerminalDimensions()
-  const selectedModel = useFreebuffModelStore((s) => s.selectedModel)
-  const setSelectedModel = useFreebuffModelStore((s) => s.setSelectedModel)
-  const session = useFreebuffSessionStore((s) => s.session)
+  const selectedModel = useFreeTierModelStore((s) => s.selectedModel)
+  const setSelectedModel = useFreeTierModelStore((s) => s.setSelectedModel)
+  const session = useFreeTierSessionStore((s) => s.session)
   const accessTier =
     session && 'accessTier' in session ? session.accessTier : 'full'
   const now = useNow(60_000)
   const deploymentAvailabilityLabel = useMemo(
-    () => getFreebuffDeploymentAvailabilityLabel(new Date(now)),
+    () => getFreeTierDeploymentAvailabilityLabel(new Date(now)),
     [now],
   )
   const [pending, setPending] = useState<string | null>(null)
@@ -104,7 +104,7 @@ export const FreebuffModelSelector: React.FC<FreebuffModelSelectorProps> = ({
   // or an external selectedModel update).
   const [focusedId, setFocusedId] = useState<string>(selectedModel)
   const availableModels = useMemo(
-    () => getFreebuffModelsForAccessTier(accessTier),
+    () => getFreeTierModelsForAccessTier(accessTier),
     [accessTier],
   )
   // Limited tier only ever surfaces one model, so a comparative tagline
@@ -130,13 +130,13 @@ export const FreebuffModelSelector: React.FC<FreebuffModelSelectorProps> = ({
         {
           key: 'premium',
           label: 'PREMIUM',
-          models: availableModels.filter((m) => isFreebuffPremiumModelId(m.id)),
+          models: availableModels.filter((m) => isFreeTierPremiumModelId(m.id)),
         },
         {
           key: 'unlimited',
           label: 'UNLIMITED',
           models: availableModels.filter(
-            (m) => !isFreebuffPremiumModelId(m.id),
+            (m) => !isFreeTierPremiumModelId(m.id),
           ),
         },
       ] satisfies readonly Section[]
@@ -159,9 +159,9 @@ export const FreebuffModelSelector: React.FC<FreebuffModelSelectorProps> = ({
     if (
       (session?.status === 'none' || !session) &&
       (!availableModelIds.includes(selectedModel) ||
-        !isFreebuffModelAvailable(selectedModel, new Date(now)))
+        !isFreeTierModelAvailable(selectedModel, new Date(now)))
     ) {
-      setSelectedModel(availableModelIds[0] ?? FALLBACK_FREEBUFF_MODEL_ID)
+      setSelectedModel(availableModelIds[0] ?? FALLBACK_FREETIER_MODEL_ID)
     }
   }, [availableModelIds, now, selectedModel, session, setSelectedModel])
 
@@ -176,10 +176,10 @@ export const FreebuffModelSelector: React.FC<FreebuffModelSelectorProps> = ({
   // deployment-hours/closed). Falls back to single-column mode on narrow
   // terminals where the secondary details spill to an indented second line.
   const { wrapDetails, buttonOuterWidth, nameColumnWidth } = useMemo(() => {
-    const nameLen = (m: FreebuffModelOption) => m.displayName.length
+    const nameLen = (m: FreeTierModelOption) => m.displayName.length
     const maxNameLen = Math.max(...availableModels.map(nameLen))
 
-    const detailsParts = (model: FreebuffModelOption): number[] => {
+    const detailsParts = (model: FreeTierModelOption): number[] => {
       const parts: number[] = []
       if (showTagline) parts.push(model.tagline.length)
       if (model.warning) parts.push(model.warning.length)
@@ -192,7 +192,7 @@ export const FreebuffModelSelector: React.FC<FreebuffModelSelectorProps> = ({
     const joinedLen = (parts: number[]): number =>
       parts.reduce((a, b) => a + b, 0) + Math.max(0, parts.length - 1) * 3 // " · "
 
-    const oneLineLen = (model: FreebuffModelOption): number =>
+    const oneLineLen = (model: FreeTierModelOption): number =>
       2 /* indicator + space */ +
       maxNameLen +
       NAME_GAP +
@@ -212,9 +212,9 @@ export const FreebuffModelSelector: React.FC<FreebuffModelSelectorProps> = ({
     // "  warning · hours". Compute the max of both so all buttons stay the
     // same width. When taglines are hidden (limited tier), line 1 is just
     // "indicator name" with no separator.
-    const labelLineLen = (m: FreebuffModelOption) =>
+    const labelLineLen = (m: FreeTierModelOption) =>
       2 + m.displayName.length + (showTagline ? 3 + m.tagline.length : 0)
-    const detailsLineLen = (m: FreebuffModelOption) => {
+    const detailsLineLen = (m: FreeTierModelOption) => {
       const parts: number[] = []
       if (m.warning) parts.push(m.warning.length)
       if (m.availability === 'deployment_hours') {
@@ -283,7 +283,7 @@ export const FreebuffModelSelector: React.FC<FreebuffModelSelectorProps> = ({
 
   const isJoinable = useCallback(
     (modelId: string) => {
-      if (!isFreebuffModelAvailable(modelId, new Date(now))) return false
+      if (!isFreeTierModelAvailable(modelId, new Date(now))) return false
       const rateLimit = rateLimitsByModel?.[modelId]
       return !rateLimit || rateLimit.recentCount < rateLimit.limit
     },
@@ -296,7 +296,7 @@ export const FreebuffModelSelector: React.FC<FreebuffModelSelectorProps> = ({
       if (modelId === committedModelId) return
       if (!isJoinable(modelId)) return
       setPending(modelId)
-      joinFreebuffQueue(modelId).finally(() => setPending(null))
+      joinFreeTierQueue(modelId).finally(() => setPending(null))
     },
     [pending, committedModelId, isJoinable],
   )
@@ -309,7 +309,7 @@ export const FreebuffModelSelector: React.FC<FreebuffModelSelectorProps> = ({
       (key: KeyEvent) => {
         if (pending) return
         const name = key.name ?? ''
-        const direction = freebuffModelNavigationDirectionForKey(key)
+        const direction = freetierModelNavigationDirectionForKey(key)
         const isCommit =
           name === 'return' || name === 'enter' || name === 'space'
         if (isCommit) {
@@ -321,7 +321,7 @@ export const FreebuffModelSelector: React.FC<FreebuffModelSelectorProps> = ({
           return
         }
         if (!direction) return
-        const targetId = nextFreebuffModelId({
+        const targetId = nextFreeTierModelId({
           modelIds: availableModelIds,
           focusedId,
           direction,
@@ -343,7 +343,7 @@ export const FreebuffModelSelector: React.FC<FreebuffModelSelectorProps> = ({
     ),
   )
 
-  const renderModelButton = (model: FreebuffModelOption) => {
+  const renderModelButton = (model: FreeTierModelOption) => {
     // Single visual state: the focused row IS the highlight. The user's
     // saved/committed pick is not shown separately — it just sets where
     // focus lands when the picker opens. Pressing Enter on the focused
@@ -370,7 +370,7 @@ export const FreebuffModelSelector: React.FC<FreebuffModelSelectorProps> = ({
         : theme.border
 
     // Deployment-hours rows show "until 5pm PT" while open and "opens 9am ET"
-    // while closed (the label flips inside getFreebuffDeploymentAvailabilityLabel),
+    // while closed (the label flips inside getFreeTierDeploymentAvailabilityLabel),
     // so the same string carries both the in-hours and out-of-hours signals
     // without a separate "Closed" chip. Greyed-out fgColor handles the rest.
     const hasHours = model.availability === 'deployment_hours'

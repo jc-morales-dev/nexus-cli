@@ -78,7 +78,7 @@ function expectedOpusCost(row: {
 
 async function main() {
   const { isProd, limit, modelFilter } = parseArgs()
-  const dataset = isProd ? 'codebuff_data' : 'codebuff_data_dev'
+  const dataset = isProd ? 'nexus_data' : 'nexus_data_dev'
   const table = `${dataset}.message`
 
   console.log(

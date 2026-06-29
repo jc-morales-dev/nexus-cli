@@ -1,13 +1,13 @@
 import { env, IS_DEV } from '@nexus/common/env'
 
-import { IS_FREEBUFF } from '../utils/constants'
+import { IS_FREETIER } from '../utils/constants'
 
 // Get the website URL from environment or use default
-export const WEBSITE_URL = env.NEXT_PUBLIC_CODEBUFF_APP_URL
+export const WEBSITE_URL = env.NEXT_PUBLIC_NEXUS_APP_URL
 
-// Freebuff login flow uses the freebuff web app instead of codebuff.com
-const FREEBUFF_WEB_URL = IS_DEV ? 'http://localhost:3002' : 'https://freebuff.com'
-export const LOGIN_WEBSITE_URL = IS_FREEBUFF ? FREEBUFF_WEB_URL : WEBSITE_URL
+// FreeTier login flow uses the freetier web app instead of nexus.com
+const FREETIER_WEB_URL = IS_DEV ? 'http://localhost:3002' : 'https://freetier.com'
+export const LOGIN_WEBSITE_URL = IS_FREETIER ? FREETIER_WEB_URL : WEBSITE_URL
 
 // NEXUS ASCII Logo - compact version for 80-width terminals
 const LOGO_NEXUS = `
@@ -28,8 +28,8 @@ const LOGO_SMALL_NEXUS = `
  ╚═╝  ╚═══╝╚═╝  ╚═╝
 `
 
-// Freebuff ASCII Logo
-const LOGO_FREEBUFF = `
+// FreeTier ASCII Logo
+const LOGO_FREETIER = `
  ███████╗██████╗ ███████╗███████╗██████╗ ██╗   ██╗███████╗███████╗
  ██╔════╝██╔══██╗██╔════╝██╔════╝██╔══██╗██║   ██║██╔════╝██╔════╝
  █████╗  ██████╔╝█████╗  █████╗  ██████╔╝██║   ██║█████╗  █████╗
@@ -38,7 +38,7 @@ const LOGO_FREEBUFF = `
  ╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝╚═════╝  ╚═════╝ ╚═╝     ╚═╝
 `
 
-const LOGO_SMALL_FREEBUFF = `
+const LOGO_SMALL_FREETIER = `
  ███████╗██████╗
  ██╔════╝██╔══██╗
  █████╗  ██████╔╝
@@ -47,8 +47,8 @@ const LOGO_SMALL_FREEBUFF = `
  ╚═╝     ╚═════╝
 `
 
-export const LOGO = IS_FREEBUFF ? LOGO_FREEBUFF : LOGO_NEXUS
-export const LOGO_SMALL = IS_FREEBUFF ? LOGO_SMALL_FREEBUFF : LOGO_SMALL_NEXUS
+export const LOGO = IS_FREETIER ? LOGO_FREETIER : LOGO_NEXUS
+export const LOGO_SMALL = IS_FREETIER ? LOGO_SMALL_FREETIER : LOGO_SMALL_NEXUS
 
 // Shadow/border characters that receive the sheen animation effect
 export const SHADOW_CHARS = new Set([

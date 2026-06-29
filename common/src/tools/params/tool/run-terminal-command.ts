@@ -60,8 +60,8 @@ When the user requests a new git commit, please follow these steps closely:
 
 4. **Create the commit, ending with this specific footer:**
    \`\`\`
-   Generated with Codebuff 🤖
-   Co-Authored-By: Codebuff <noreply@codebuff.com>
+   Generated with Nexus 🤖
+   Co-Authored-By: Nexus <noreply@nexus.com>
    \`\`\`
    To maintain proper formatting, use cross-platform compatible commit messages:
    
@@ -70,8 +70,8 @@ When the user requests a new git commit, please follow these steps closely:
    git commit -m "$(cat <<'EOF'
    Your commit message here.
 
-   🤖 Generated with Codebuff
-   Co-Authored-By: Codebuff <noreply@codebuff.com>
+   🤖 Generated with Nexus
+   Co-Authored-By: Nexus <noreply@nexus.com>
    EOF
    )"
    \`\`\`
@@ -80,8 +80,8 @@ When the user requests a new git commit, please follow these steps closely:
    \`\`\`
    git commit -m "Your commit message here.
 
-   🤖 Generated with Codebuff
-   Co-Authored-By: Codebuff <noreply@codebuff.com>"
+   🤖 Generated with Nexus
+   Co-Authored-By: Nexus <noreply@nexus.com>"
    \`\`\`
    
    Always detect the platform and use the appropriate syntax. HEREDOC syntax (\`<<'EOF'\`) only works in bash/Unix shells and will fail on Windows Command Prompt.
@@ -172,8 +172,8 @@ ${$getNativeToolCallExampleString({
   input: {
     command: `git commit -m "Your commit message here.
 
-🤖 Generated with Codebuff
-Co-Authored-By: Codebuff <noreply@codebuff.com>"`,
+🤖 Generated with Nexus
+Co-Authored-By: Nexus <noreply@nexus.com>"`,
   },
   endsAgentStep,
 })}

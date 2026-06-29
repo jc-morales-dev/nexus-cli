@@ -1,7 +1,7 @@
 # SPEC — ChatGPT Subscription OAuth Direct Routing
 
 ## Overview
-Implement an **experimental, default-disabled** ChatGPT subscription OAuth feature that allows the local CLI to route eligible OpenAI-model **streaming** requests directly to OpenAI instead of Codebuff backend routing, mirroring the prior Claude OAuth architecture pattern.
+Implement an **experimental, default-disabled** ChatGPT subscription OAuth feature that allows the local CLI to route eligible OpenAI-model **streaming** requests directly to OpenAI instead of Nexus backend routing, mirroring the prior Claude OAuth architecture pattern.
 
 ## Protocol Assumptions (Explicit)
 Because this is unofficial/experimental, this implementation proceeds under the following explicit assumptions:
@@ -40,10 +40,10 @@ If any assumption fails at runtime, the feature fails with explicit guidance and
 11. Unsupported model handling must be deterministic and prevalidated:
    - if model is not in allowlist/mapping for direct route, fail with explicit unsupported-model error (no fallback).
 12. Fallback policy:
-   - Rate-limit/overload classification: auto-fallback to Codebuff backend.
+   - Rate-limit/overload classification: auto-fallback to Nexus backend.
    - Auth errors (401/403): fail explicitly with reconnect guidance (no fallback).
    - All other direct errors: fail fast (no fallback), per user decision.
-13. Successful direct ChatGPT OAuth requests do **not** consume Codebuff credits.
+13. Successful direct ChatGPT OAuth requests do **not** consume Nexus credits.
 14. Add lightweight ChatGPT connection status surfacing in CLI (usage banner and/or bottom status line), without quota API dependency.
 15. Preserve existing Claude OAuth behavior unchanged.
 16. Add temporary OAuth validation script that tests auth URL generation + token exchange manually before/alongside full wiring.
@@ -54,7 +54,7 @@ If any assumption fails at runtime, the feature fails with explicit guidance and
 Before sending direct streaming requests to OpenAI, enforce strict sanitization:
 
 1. Rewrite `model` from `openai/*` format to provider-native mapped id.
-2. Remove provider-specific/non-OpenAI fields (e.g., codebuff metadata/provider routing payloads).
+2. Remove provider-specific/non-OpenAI fields (e.g., nexus metadata/provider routing payloads).
 3. Preserve fields known to be valid for OpenAI-compatible chat completions.
 4. Do not inject Codex-specific required prefix by default in v1 (user preference), but structure code so optional future injection is easy.
 
@@ -119,7 +119,7 @@ Before sending direct streaming requests to OpenAI, enforce strict sanitization:
 5. Rate-limited direct requests fallback to backend automatically.
 6. Auth failures produce reconnect guidance and do not fallback.
 7. Unsupported models fail immediately with explicit unsupported-model message.
-8. Successful direct requests skip Codebuff credit accounting path.
+8. Successful direct requests skip Nexus credit accounting path.
 9. Existing Claude OAuth flow remains behaviorally unchanged.
 10. New/updated tests pass for touched behavior.
 11. Temporary validation script can run and guide manual OAuth exchange checks.

@@ -1,6 +1,6 @@
 import { mock } from 'bun:test'
 
-import type { CodebuffApiClient } from '../../utils/nexus-api'
+import type { NexusApiClient } from '../../utils/nexus-api'
 
 export interface MockApiClientOverrides {
   get?: ReturnType<typeof mock>
@@ -29,36 +29,36 @@ const defaultOkResponse = () =>
   Promise.resolve({ ok: true as const, status: 200 })
 
 /**
- * Creates a mock CodebuffApiClient with sensible defaults.
+ * Creates a mock NexusApiClient with sensible defaults.
  * All methods return { ok: true, status: 200 } by default.
  * Pass overrides to customize specific methods.
  */
 export const createMockApiClient = (
   overrides: MockApiClientOverrides = {},
-): CodebuffApiClient => ({
-  get: (overrides.get ?? mock(defaultOkResponse)) as CodebuffApiClient['get'],
+): NexusApiClient => ({
+  get: (overrides.get ?? mock(defaultOkResponse)) as NexusApiClient['get'],
   post: (overrides.post ??
-    mock(defaultOkResponse)) as CodebuffApiClient['post'],
-  put: (overrides.put ?? mock(defaultOkResponse)) as CodebuffApiClient['put'],
+    mock(defaultOkResponse)) as NexusApiClient['post'],
+  put: (overrides.put ?? mock(defaultOkResponse)) as NexusApiClient['put'],
   patch: (overrides.patch ??
-    mock(defaultOkResponse)) as CodebuffApiClient['patch'],
+    mock(defaultOkResponse)) as NexusApiClient['patch'],
   delete: (overrides.delete ??
-    mock(defaultOkResponse)) as CodebuffApiClient['delete'],
+    mock(defaultOkResponse)) as NexusApiClient['delete'],
   request: (overrides.request ??
-    mock(defaultOkResponse)) as CodebuffApiClient['request'],
-  me: (overrides.me ?? mock(defaultOkResponse)) as CodebuffApiClient['me'],
+    mock(defaultOkResponse)) as NexusApiClient['request'],
+  me: (overrides.me ?? mock(defaultOkResponse)) as NexusApiClient['me'],
   usage: (overrides.usage ??
-    mock(defaultOkResponse)) as CodebuffApiClient['usage'],
+    mock(defaultOkResponse)) as NexusApiClient['usage'],
   loginCode: (overrides.loginCode ??
-    mock(defaultOkResponse)) as CodebuffApiClient['loginCode'],
+    mock(defaultOkResponse)) as NexusApiClient['loginCode'],
   loginStatus: (overrides.loginStatus ??
-    mock(defaultOkResponse)) as CodebuffApiClient['loginStatus'],
+    mock(defaultOkResponse)) as NexusApiClient['loginStatus'],
   publish: (overrides.publish ??
-    mock(defaultOkResponse)) as CodebuffApiClient['publish'],
+    mock(defaultOkResponse)) as NexusApiClient['publish'],
   logout: (overrides.logout ??
-    mock(defaultOkResponse)) as CodebuffApiClient['logout'],
+    mock(defaultOkResponse)) as NexusApiClient['logout'],
   feedback: (overrides.feedback ??
-    mock(defaultOkResponse)) as CodebuffApiClient['feedback'],
-  baseUrl: overrides.baseUrl ?? 'https://test.codebuff.com',
+    mock(defaultOkResponse)) as NexusApiClient['feedback'],
+  baseUrl: overrides.baseUrl ?? 'https://test.nexus.com',
   authToken: overrides.authToken,
 })

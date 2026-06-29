@@ -13,7 +13,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-import { CodebuffClient, loadLocalAgents } from '@nexus/sdk'
+import { NexusClient, loadLocalAgents } from '@nexus/sdk'
 
 import type { AgentDefinition } from '@nexus/sdk'
 
@@ -53,7 +53,7 @@ interface TraceEvent {
 }
 
 async function runTask(
-  client: CodebuffClient,
+  client: NexusClient,
   task: TaskDefinition,
   agentDefinitions: AgentDefinition[],
   taskIndex: number,
@@ -168,8 +168,8 @@ async function main() {
   }
   console.log(`Loaded browser-use agent (model: ${browserAgent.model})`)
 
-  const client = new CodebuffClient({
-    apiKey: process.env.CODEBUFF_API_KEY,
+  const client = new NexusClient({
+    apiKey: process.env.NEXUS_API_KEY,
     cwd: process.cwd(),
   })
 

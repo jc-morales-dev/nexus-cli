@@ -104,7 +104,7 @@ export async function getUserInfoFromApiKey<T extends UserColumn>(
 ): GetUserInfoFromApiKeyOutput<T> {
   const { apiKey, fields, logger } = params
 
-  // BYOK direct mode: no Codebuff backend/account. Return a local stub user so
+  // BYOK direct mode: no Nexus backend/account. Return a local stub user so
   // auth validation and run bookkeeping succeed without any /api/v1/me call.
   if (isByokDirectMode()) {
     return Object.fromEntries(
@@ -230,7 +230,7 @@ export async function fetchAgentFromDatabase(
   const { apiKey, parsedAgentId, logger } = params
   const { publisherId, agentId, version } = parsedAgentId
 
-  // BYOK direct mode: no Codebuff registry. Published-agent lookups return null
+  // BYOK direct mode: no Nexus registry. Published-agent lookups return null
   // so the caller falls back to local/builtin agents.
   if (isByokDirectMode()) return null
 

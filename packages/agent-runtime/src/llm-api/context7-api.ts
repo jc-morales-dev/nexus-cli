@@ -198,7 +198,7 @@ export async function fetchContext7LibraryDocumentation(
       fetch(url, {
         headers: {
           Authorization: `Bearer ${process.env['CONTEXT7_API_KEY']}`,
-          'X-Context7-Source': 'codebuff',
+          'X-Context7-Source': 'nexus',
         },
       }),
       FETCH_TIMEOUT_MS,

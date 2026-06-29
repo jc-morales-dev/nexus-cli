@@ -19,14 +19,14 @@ import {
   logoutUser,
 } from '../../utils/auth'
 import * as AuthModule from '../../utils/auth'
-import * as CodebuffApiModule from '../../utils/nexus-api'
+import * as NexusApiModule from '../../utils/nexus-api'
 
 type User = AuthModule.User
 
 const ORIGINAL_USER: User = {
   id: 'user-001',
   name: 'CLI Tester',
-  email: 'tester@codebuff.dev',
+  email: 'tester@nexus.dev',
   authToken: 'token-original',
   fingerprintId: 'fingerprint-original',
   fingerprintHash: 'fingerprint-hash-original',
@@ -43,7 +43,7 @@ describe('Logout and Re-login helpers', () => {
   let tempConfigDir: string
 
   beforeEach(() => {
-    tempConfigDir = fs.mkdtempSync(path.join(os.tmpdir(), 'manicode-logout-'))
+    tempConfigDir = fs.mkdtempSync(path.join(os.tmpdir(), 'nexus-logout-'))
     // Set project root to avoid "Project root not set" error in logger
     setProjectRoot(tempConfigDir)
   })
@@ -63,9 +63,9 @@ describe('Logout and Re-login helpers', () => {
   }
 
   const mockLogoutApi = () => {
-    spyOn(CodebuffApiModule, 'getApiClient').mockReturnValue({
+    spyOn(NexusApiModule, 'getApiClient').mockReturnValue({
       logout: async () => ({ ok: true, status: 200 }),
-    } as ReturnType<typeof CodebuffApiModule.getApiClient>)
+    } as ReturnType<typeof NexusApiModule.getApiClient>)
   }
 
   test('logoutUser removes credentials file and returns true', async () => {

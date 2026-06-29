@@ -44,7 +44,7 @@ describe('Returning User Authentication helpers', () => {
 
   beforeEach(() => {
     tempConfigDir = fs.mkdtempSync(
-      path.join(os.tmpdir(), 'manicode-returning-'),
+      path.join(os.tmpdir(), 'nexus-returning-'),
     )
     originalEnv[API_KEY_ENV_VAR] = process.env[API_KEY_ENV_VAR]
   })
@@ -70,7 +70,7 @@ describe('Returning User Authentication helpers', () => {
     expect(details.token).toBe(RETURNING_USER.authToken)
   })
 
-  test('should fall back to CODEBUFF_API_KEY when credentials are missing', () => {
+  test('should fall back to NEXUS_API_KEY when credentials are missing', () => {
     spyOn(AuthModule, 'getConfigDir').mockReturnValue(tempConfigDir)
     spyOn(AuthModule, 'getCredentialsPath').mockReturnValue(
       path.join(tempConfigDir, 'credentials.json'),

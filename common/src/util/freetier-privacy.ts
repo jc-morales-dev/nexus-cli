@@ -1,20 +1,20 @@
-import type { FreebuffIpPrivacySignal } from '../types/freetier-session'
+import type { FreeTierIpPrivacySignal } from '../types/freetier-session'
 
-export const FREEBUFF_HARD_BLOCKED_PRIVACY_SIGNALS = [
+export const FREETIER_HARD_BLOCKED_PRIVACY_SIGNALS = [
   'vpn',
   'proxy',
   'tor',
   'res_proxy',
-] as const satisfies readonly FreebuffIpPrivacySignal[]
+] as const satisfies readonly FreeTierIpPrivacySignal[]
 
-type FreebuffHardBlockedPrivacySignal =
-  (typeof FREEBUFF_HARD_BLOCKED_PRIVACY_SIGNALS)[number]
+type FreeTierHardBlockedPrivacySignal =
+  (typeof FREETIER_HARD_BLOCKED_PRIVACY_SIGNALS)[number]
 
-const FREEBUFF_HARD_BLOCKED_PRIVACY_SIGNAL_SET =
-  new Set<FreebuffIpPrivacySignal>(FREEBUFF_HARD_BLOCKED_PRIVACY_SIGNALS)
+const FREETIER_HARD_BLOCKED_PRIVACY_SIGNAL_SET =
+  new Set<FreeTierIpPrivacySignal>(FREETIER_HARD_BLOCKED_PRIVACY_SIGNALS)
 
-const FREEBUFF_HARD_BLOCKED_PRIVACY_SIGNAL_LABELS: Record<
-  FreebuffHardBlockedPrivacySignal,
+const FREETIER_HARD_BLOCKED_PRIVACY_SIGNAL_LABELS: Record<
+  FreeTierHardBlockedPrivacySignal,
   string
 > = {
   vpn: 'VPN',
@@ -23,20 +23,20 @@ const FREEBUFF_HARD_BLOCKED_PRIVACY_SIGNAL_LABELS: Record<
   tor: 'Tor',
 }
 
-export function isFreebuffHardBlockedPrivacySignal(
-  signal: FreebuffIpPrivacySignal,
-): signal is FreebuffHardBlockedPrivacySignal {
-  return FREEBUFF_HARD_BLOCKED_PRIVACY_SIGNAL_SET.has(signal)
+export function isFreeTierHardBlockedPrivacySignal(
+  signal: FreeTierIpPrivacySignal,
+): signal is FreeTierHardBlockedPrivacySignal {
+  return FREETIER_HARD_BLOCKED_PRIVACY_SIGNAL_SET.has(signal)
 }
 
-export function formatFreebuffHardBlockedPrivacySignals(
-  signals: readonly FreebuffIpPrivacySignal[] | null | undefined,
+export function formatFreeTierHardBlockedPrivacySignals(
+  signals: readonly FreeTierIpPrivacySignal[] | null | undefined,
 ): string {
   const labels = Array.from(
     new Set(
       (signals ?? []).flatMap((signal): string[] => {
-        if (!isFreebuffHardBlockedPrivacySignal(signal)) return []
-        return [FREEBUFF_HARD_BLOCKED_PRIVACY_SIGNAL_LABELS[signal]]
+        if (!isFreeTierHardBlockedPrivacySignal(signal)) return []
+        return [FREETIER_HARD_BLOCKED_PRIVACY_SIGNAL_LABELS[signal]]
       }),
     ),
   )
@@ -46,10 +46,10 @@ export function formatFreebuffHardBlockedPrivacySignals(
   return `${labels.slice(0, -1).join(', ')} or ${labels[labels.length - 1]}`
 }
 
-export function formatFreebuffHardBlockedMessage(
-  signals: readonly FreebuffIpPrivacySignal[] | null | undefined,
+export function formatFreeTierHardBlockedMessage(
+  signals: readonly FreeTierIpPrivacySignal[] | null | undefined,
 ): string {
-  return `Freebuff cannot be used from ${formatFreebuffHardBlockedPrivacySignals(
+  return `FreeTier cannot be used from ${formatFreeTierHardBlockedPrivacySignals(
     signals,
   )} traffic. Please disable it and try again.`
 }

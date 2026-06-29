@@ -1,22 +1,22 @@
 import { useNow } from './use-now'
-import { IS_FREEBUFF } from '../utils/constants'
+import { IS_FREETIER } from '../utils/constants'
 
-import type { FreebuffSessionResponse } from '../types/freetier-session'
+import type { FreeTierSessionResponse } from '../types/freetier-session'
 
-export interface FreebuffSessionProgress {
+export interface FreeTierSessionProgress {
   /** 0..1, fraction of the session remaining. 1 at admission, 0 at expiry. */
   fraction: number
   remainingMs: number
 }
 
 /**
- * Computes a live progress value for the active freebuff session, ticking at
- * 1Hz. Returns null outside of active state or in non-freebuff builds, so
+ * Computes a live progress value for the active freetier session, ticking at
+ * 1Hz. Returns null outside of active state or in non-freetier builds, so
  * callers can short-circuit their rendering.
  */
-export function useFreebuffSessionProgress(
-  session: FreebuffSessionResponse | null,
-): FreebuffSessionProgress | null {
+export function useFreeTierSessionProgress(
+  session: FreeTierSessionResponse | null,
+): FreeTierSessionProgress | null {
   const expiresAtMs =
     session?.status === 'active' ? Date.parse(session.expiresAt) : null
   const admittedAtMs =
@@ -24,7 +24,7 @@ export function useFreebuffSessionProgress(
 
   const nowMs = useNow(1000, expiresAtMs !== null)
 
-  if (!IS_FREEBUFF || !expiresAtMs || !admittedAtMs) return null
+  if (!IS_FREETIER || !expiresAtMs || !admittedAtMs) return null
 
   const totalMs = expiresAtMs - admittedAtMs
   if (totalMs <= 0) return null

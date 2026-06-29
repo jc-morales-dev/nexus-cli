@@ -9,10 +9,10 @@ import { generateText } from 'ai'
 
 const apiKey = '12345'
 
-const codebuffBackendModel = new OpenAICompatibleChatLanguageModel(
+const nexusBackendModel = new OpenAICompatibleChatLanguageModel(
   'anthropic/claude-sonnet-4.5',
   {
-    provider: 'codebuff.chat',
+    provider: 'nexus.chat',
     url: ({ path: endpoint }) =>
       new URL(path.join('/api/v1', endpoint), WEBSITE_URL).toString(),
     headers: () => ({
@@ -47,7 +47,7 @@ const codebuffBackendModel = new OpenAICompatibleChatLanguageModel(
 // const response = streamText({
 // const response = await generateObject({
 const response = await generateText({
-  model: codebuffBackendModel,
+  model: nexusBackendModel,
   messages: [
     {
       role: 'system',
@@ -72,10 +72,10 @@ const response = await generateText({
     },
   ],
   providerOptions: {
-    codebuff: {
+    nexus: {
       // all these get directly added to the body at the top level
       reasoningEffort: 'low',
-      codebuff_metadata: {
+      nexus_metadata: {
         run_id: '19b636d9-bfbf-40ff-b3e9-92dc86f4a8d0',
         client_id: 'test-client-id-123',
       },

@@ -1,15 +1,15 @@
-import type { CodebuffToolHandlerFunction } from '../handler-function-type'
+import type { NexusToolHandlerFunction } from '../handler-function-type'
 import type {
-  CodebuffToolCall,
-  CodebuffToolOutput,
+  NexusToolCall,
+  NexusToolOutput,
 } from '@nexus/common/tools/list'
 import type { Logger } from '@nexus/common/types/contracts/logger'
 
 export const handleThinkDeeply = (async (params: {
   previousToolCallFinished: Promise<any>
-  toolCall: CodebuffToolCall<'think_deeply'>
+  toolCall: NexusToolCall<'think_deeply'>
   logger: Logger
-}): Promise<{ output: CodebuffToolOutput<'think_deeply'> }> => {
+}): Promise<{ output: NexusToolOutput<'think_deeply'> }> => {
   const { previousToolCallFinished, toolCall, logger } = params
   const { thought } = toolCall.input
 
@@ -22,4 +22,4 @@ export const handleThinkDeeply = (async (params: {
 
   await previousToolCallFinished
   return { output: [{ type: 'json', value: { message: 'Thought logged.' } }] }
-}) satisfies CodebuffToolHandlerFunction<'think_deeply'>
+}) satisfies NexusToolHandlerFunction<'think_deeply'>

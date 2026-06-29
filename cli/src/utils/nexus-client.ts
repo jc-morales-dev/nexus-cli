@@ -1,6 +1,6 @@
 import { API_KEY_ENV_VAR } from '@nexus/common/old-constants'
 import { AskUserBridge } from '@nexus/common/utils/ask-user-bridge'
-import { CodebuffClient } from '@nexus/sdk'
+import { NexusClient } from '@nexus/sdk'
 
 import { getAuthTokenDetails } from './auth'
 import { getCliEnv, getSystemProcessEnv } from './env'
@@ -11,7 +11,7 @@ import { getProjectRoot } from '../project-files'
 
 import type { ClientToolCall } from '@nexus/common/tools/list'
 
-let clientInstance: CodebuffClient | null = null
+let clientInstance: NexusClient | null = null
 
 /**
  * Recursively removes undefined values from an object to ensure clean JSON serialization.
@@ -37,14 +37,14 @@ function removeUndefinedValues<T>(obj: T): T {
 }
 
 /**
- * Reset the cached CodebuffClient instance.
+ * Reset the cached NexusClient instance.
  * This should be called after login to ensure the client is re-initialized with new credentials.
  */
-export function resetCodebuffClient(): void {
+export function resetNexusClient(): void {
   clientInstance = null
 }
 
-export async function getCodebuffClient(): Promise<CodebuffClient | null> {
+export async function getNexusClient(): Promise<NexusClient | null> {
   if (!clientInstance) {
     const { token: apiKey } = getAuthTokenDetails()
 
@@ -60,11 +60,11 @@ export async function getCodebuffClient(): Promise<CodebuffClient | null> {
 
     // Set up ripgrep path for SDK to use
     const env = getCliEnv()
-    if (env.CODEBUFF_IS_BINARY) {
+    if (env.NEXUS_IS_BINARY) {
       try {
         const rgPath = await getRgPath()
         // Note: We still set process.env here because SDK reads from it
-        getSystemProcessEnv().CODEBUFF_RG_PATH = rgPath
+        getSystemProcessEnv().NEXUS_RG_PATH = rgPath
       } catch (error) {
         logger.error(error, 'Failed to set up ripgrep binary for SDK')
       }
@@ -72,7 +72,7 @@ export async function getCodebuffClient(): Promise<CodebuffClient | null> {
 
     try {
       const agentDefinitions = loadAgentDefinitions()
-      clientInstance = new CodebuffClient({
+      clientInstance = new NexusClient({
         apiKey,
         cwd: projectRoot,
         agentDefinitions,
@@ -97,7 +97,7 @@ export async function getCodebuffClient(): Promise<CodebuffClient | null> {
         },
       })
     } catch (error) {
-      logger.error(error, 'Failed to initialize CodebuffClient')
+      logger.error(error, 'Failed to initialize NexusClient')
       return null
     }
   }

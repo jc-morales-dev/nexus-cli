@@ -16,7 +16,7 @@ import type {
 } from '@nexus/common/types/contracts/bigquery'
 import type { Logger } from '@nexus/common/types/contracts/logger'
 
-const DATASET = IS_PROD ? 'codebuff_data' : 'codebuff_data_dev'
+const DATASET = IS_PROD ? 'nexus_data' : 'nexus_data_dev'
 
 const TRACES_TABLE = 'traces'
 const RELABELS_TABLE = 'relabels'

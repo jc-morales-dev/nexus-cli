@@ -1,15 +1,15 @@
-import type { CodebuffToolHandlerFunction } from '../handler-function-type'
+import type { NexusToolHandlerFunction } from '../handler-function-type'
 import type {
-  CodebuffToolCall,
-  CodebuffToolOutput,
+  NexusToolCall,
+  NexusToolOutput,
 } from '@nexus/common/tools/list'
 
 export const handleRenderUI = (async ({
   previousToolCallFinished,
 }: {
   previousToolCallFinished: Promise<unknown>
-  toolCall: CodebuffToolCall<'render_ui'>
-}): Promise<{ output: CodebuffToolOutput<'render_ui'> }> => {
+  toolCall: NexusToolCall<'render_ui'>
+}): Promise<{ output: NexusToolOutput<'render_ui'> }> => {
   await previousToolCallFinished
   return { output: [{ type: 'json', value: { message: 'UI rendered.' } }] }
-}) satisfies CodebuffToolHandlerFunction<'render_ui'>
+}) satisfies NexusToolHandlerFunction<'render_ui'>

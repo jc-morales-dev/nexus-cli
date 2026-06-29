@@ -1,5 +1,5 @@
 import { API_KEY_ENV_VAR } from '@nexus/common/old-constants'
-import { CodebuffClient } from '@nexus/sdk'
+import { NexusClient } from '@nexus/sdk'
 import { describe, expect, it } from 'bun:test'
 
 import fileListerDefinition from '../file-explorer/file-lister'
@@ -91,7 +91,7 @@ export interface User {
           '# Test Project\n\nA simple test project for integration testing.',
       }
 
-      const client = new CodebuffClient({
+      const client = new NexusClient({
         apiKey,
         cwd: '/tmp/test-project',
         projectFiles,
@@ -154,7 +154,7 @@ export interface User {
         'package.json': JSON.stringify({ name: 'mono-repo', version: '2.0.0' }),
       }
 
-      const client = new CodebuffClient({
+      const client = new NexusClient({
         apiKey,
         cwd: '/tmp/test-project',
         projectFiles,
@@ -206,7 +206,7 @@ export interface User {
         'package.json': JSON.stringify({ name: 'full-stack-app' }),
       }
 
-      const client = new CodebuffClient({
+      const client = new NexusClient({
         apiKey,
         cwd: '/tmp/test-project',
         projectFiles,
@@ -287,7 +287,7 @@ export class AuthService {
       const localFilePickerDef = filePickerDefinition
       const localFileListerDef = fileListerDefinition
 
-      const client = new CodebuffClient({
+      const client = new NexusClient({
         apiKey,
         cwd: '/tmp/test-project-picker',
         projectFiles,

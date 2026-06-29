@@ -3,7 +3,7 @@ import { isFileIgnored } from '@nexus/common/project-file-tree'
 
 import { resolveFilePathWithinProject } from './path-utils'
 
-import type { CodebuffFileSystem } from '@nexus/common/types/filesystem'
+import type { NexusFileSystem } from '@nexus/common/types/filesystem'
 
 export type FileFilterResult = {
   status: 'blocked' | 'allow-example' | 'allow'
@@ -14,7 +14,7 @@ export type FileFilter = (filePath: string) => FileFilterResult
 export async function getFiles(params: {
   filePaths: string[]
   cwd: string
-  fs: CodebuffFileSystem
+  fs: NexusFileSystem
   /**
    * Filter to classify files before reading.
    * If provided, the caller takes full control of filtering (no gitignore check).

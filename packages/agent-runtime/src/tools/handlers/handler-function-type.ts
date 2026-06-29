@@ -3,9 +3,9 @@ import type { ToolName } from '@nexus/common/tools/constants'
 import type {
   ClientToolCall,
   ClientToolName,
-  CodebuffToolCall,
-  CodebuffToolMessage,
-  CodebuffToolOutput,
+  NexusToolCall,
+  NexusToolMessage,
+  NexusToolOutput,
 } from '@nexus/common/tools/list'
 import type { AgentTemplate } from '@nexus/common/types/agent-template'
 import type {
@@ -24,10 +24,10 @@ type PresentOrAbsent<K extends PropertyKey, V> =
   | { [P in K]: V }
   | { [P in K]: never }
 
-export type CodebuffToolHandlerFunction<T extends ToolName = ToolName> = (
+export type NexusToolHandlerFunction<T extends ToolName = ToolName> = (
   params: {
     previousToolCallFinished: Promise<void>
-    toolCall: CodebuffToolCall<T>
+    toolCall: NexusToolCall<T>
 
     agentContext: Record<string, Subgoal>
     agentState: AgentState
@@ -59,11 +59,11 @@ export type CodebuffToolHandlerFunction<T extends ToolName = ToolName> = (
     'requestClientToolCall',
     (
       toolCall: ClientToolCall<T extends ClientToolName ? T : never>,
-    ) => Promise<CodebuffToolOutput<T extends ClientToolName ? T : never>>
+    ) => Promise<NexusToolOutput<T extends ClientToolName ? T : never>>
   > &
     AgentRuntimeDeps &
     AgentRuntimeScopedDeps,
 ) => Promise<{
-  output: CodebuffToolMessage<T>['content']
+  output: NexusToolMessage<T>['content']
   creditsUsed?: number
 }>

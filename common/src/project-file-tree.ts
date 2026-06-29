@@ -6,7 +6,7 @@ import { sortBy } from 'lodash'
 import { DEFAULT_IGNORED_PATHS } from './constants/paths'
 import { fileExists, isValidProjectRoot } from './util/file'
 
-import type { CodebuffFileSystem } from './types/filesystem'
+import type { NexusFileSystem } from './types/filesystem'
 import type { DirectoryNode, FileTreeNode } from './util/file'
 
 /**
@@ -23,7 +23,7 @@ function logFileTreeError(
   error: unknown,
 ): void {
   // Only log in debug mode to avoid noisy output
-  if (!process.env.DEBUG && !process.env.CODEBUFF_DEBUG) {
+  if (!process.env.DEBUG && !process.env.NEXUS_DEBUG) {
     return
   }
 
@@ -43,7 +43,7 @@ export const DEFAULT_MAX_FILES = 10_000
 export async function getProjectFileTree(params: {
   projectRoot: string
   maxFiles?: number
-  fs: CodebuffFileSystem
+  fs: NexusFileSystem
 }): Promise<FileTreeNode[]> {
   const withDefaults = { maxFiles: DEFAULT_MAX_FILES, ...params }
   const { projectRoot, fs } = withDefaults
@@ -192,7 +192,7 @@ function rebaseGitignorePattern(
 export async function parseGitignore(params: {
   fullDirPath: string
   projectRoot: string
-  fs: CodebuffFileSystem
+  fs: NexusFileSystem
 }): Promise<ignore.Ignore> {
   const { fullDirPath, projectRoot, fs } = params
 
@@ -201,7 +201,6 @@ export async function parseGitignore(params: {
   const ignoreFiles = [
     path.join(fullDirPath, '.gitignore'),
     path.join(fullDirPath, '.nexusignore'),
-    path.join(fullDirPath, '.manicodeignore'), // Legacy support
   ]
 
   for (const ignoreFilePath of ignoreFiles) {
@@ -289,7 +288,7 @@ export function getLastReadFilePaths(
 export async function isFileIgnored(params: {
   filePath: string
   projectRoot: string
-  fs: CodebuffFileSystem
+  fs: NexusFileSystem
 }): Promise<boolean> {
   const { filePath, projectRoot, fs } = params
 

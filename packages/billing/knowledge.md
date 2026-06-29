@@ -1,6 +1,6 @@
 # Billing Package
 
-This package contains Codebuff's billing and credit management system.
+This package contains Nexus's billing and credit management system.
 
 ## Overview
 

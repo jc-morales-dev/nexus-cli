@@ -29,13 +29,13 @@ export {
 import type { CustomToolDefinition } from './custom-tool'
 import type { AgentDefinition } from '@nexus/common/templates/initial-agents-dir/types/agent-definition'
 import type { Logger } from '@nexus/common/types/contracts/logger'
-import type { CodebuffFileSystem } from '@nexus/common/types/filesystem'
+import type { NexusFileSystem } from '@nexus/common/types/filesystem'
 import type { Message } from '@nexus/common/types/messages/nexus-message'
 import type {
   AgentOutput,
   SessionState,
 } from '@nexus/common/types/session-state'
-import type { CodebuffSpawn } from '@nexus/common/types/spawn'
+import type { NexusSpawn } from '@nexus/common/types/spawn'
 import type {
   CustomToolDefinitions,
   FileTreeNode,
@@ -76,8 +76,8 @@ export type InitialSessionStateOptions = {
   agentDefinitions?: AgentDefinition[]
   customToolDefinitions?: CustomToolDefinition[]
   maxAgentSteps?: number
-  fs?: CodebuffFileSystem
-  spawn?: CodebuffSpawn
+  fs?: NexusFileSystem
+  spawn?: NexusSpawn
   logger?: Logger
 }
 
@@ -169,7 +169,7 @@ async function computeProjectIndex(params: ProjectIndexInput): Promise<{
 
 function getProjectIndexInput(params: {
   cwd: string
-  fs?: CodebuffFileSystem
+  fs?: NexusFileSystem
   logger?: Logger
   projectFiles?: Record<string, string>
   discoveredProject?: { fileTree: FileTreeNode[]; filePaths: string[] }
@@ -202,7 +202,7 @@ function getProjectIndexInput(params: {
 
 function createDiscoveredProjectReader(params: {
   cwd: string
-  fs: CodebuffFileSystem
+  fs: NexusFileSystem
   logger: Logger
 }): (filePath: string) => Promise<string | null> {
   const { cwd, fs, logger } = params
@@ -225,7 +225,7 @@ function createDiscoveredProjectReader(params: {
   }
 }
 
-function getFileSize(stats: Awaited<ReturnType<CodebuffFileSystem['stat']>>) {
+function getFileSize(stats: Awaited<ReturnType<NexusFileSystem['stat']>>) {
   return typeof stats.size === 'number' ? stats.size : 0
 }
 
@@ -233,7 +233,7 @@ function getFileSize(stats: Awaited<ReturnType<CodebuffFileSystem['stat']>>) {
  * Helper to convert ChildProcess to Promise with stdout/stderr
  */
 function childProcessToPromise(
-  proc: ReturnType<CodebuffSpawn>,
+  proc: ReturnType<NexusSpawn>,
 ): Promise<{ stdout: string; stderr: string }> {
   return new Promise((resolve, reject) => {
     let stdout = ''
@@ -264,7 +264,7 @@ function childProcessToPromise(
  */
 async function getGitChanges(params: {
   cwd: string
-  spawn: CodebuffSpawn
+  spawn: NexusSpawn
   logger: Logger
 }): Promise<{
   status: string
@@ -329,7 +329,7 @@ async function getGitChanges(params: {
  */
 async function discoverProjectPaths(params: {
   cwd: string
-  fs: CodebuffFileSystem
+  fs: NexusFileSystem
 }): Promise<{ fileTree: FileTreeNode[]; filePaths: string[] }> {
   const { cwd, fs } = params
 
@@ -347,7 +347,7 @@ async function discoverProjectPaths(params: {
  * @internal Exported for testing
  */
 export async function loadUserKnowledgeFiles(params: {
-  fs: CodebuffFileSystem
+  fs: NexusFileSystem
   logger: Logger
   /** Optional home directory override for testing */
   homeDir?: string
@@ -455,7 +455,7 @@ function deriveKnowledgeFiles(
 async function loadKnowledgeFilesFromPaths(params: {
   cwd: string
   filePaths: string[]
-  fs: CodebuffFileSystem
+  fs: NexusFileSystem
   logger: Logger
 }): Promise<Record<string, string>> {
   const { cwd, filePaths, fs, logger } = params
@@ -503,7 +503,7 @@ export async function initialSessionState(
   }
   if (!spawn) {
     const { spawn: nodeSpawn } = require('child_process')
-    spawn = nodeSpawn as CodebuffSpawn
+    spawn = nodeSpawn as NexusSpawn
   }
   if (!logger) {
     logger = {
@@ -628,7 +628,7 @@ export async function generateInitialRunState({
   agentDefinitions?: AgentDefinition[]
   customToolDefinitions?: CustomToolDefinition[]
   maxAgentSteps?: number
-  fs: CodebuffFileSystem
+  fs: NexusFileSystem
 }): Promise<RunState> {
   return {
     traceSessionId: crypto.randomUUID(),

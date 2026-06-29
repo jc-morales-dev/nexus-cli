@@ -8,19 +8,19 @@ const require = createRequire(import.meta.url)
 
 const helperModules = [
   {
-    name: 'codebuff release helper',
+    name: 'nexus release helper',
     path: fileURLToPath(new URL('../../../release/http.js', import.meta.url)),
   },
   {
-    name: 'codebuff staging release helper',
+    name: 'nexus staging release helper',
     path: fileURLToPath(
       new URL('../../../release-staging/http.js', import.meta.url),
     ),
   },
   {
-    name: 'freebuff release helper',
+    name: 'freetier release helper',
     path: fileURLToPath(
-      new URL('../../../../freebuff/cli/release/http.js', import.meta.url),
+      new URL('../../../../freetier/cli/release/http.js', import.meta.url),
     ),
   },
 ]
@@ -123,7 +123,7 @@ for (const helperModule of helperModules) {
       })
 
       const response = await client.httpGet(
-        'https://registry.npmjs.org/freebuff/latest',
+        'https://registry.npmjs.org/freetier/latest',
       )
       response.resume()
 
@@ -143,7 +143,7 @@ for (const helperModule of helperModules) {
       expect(httpsGetCalls[0]?.agent).toBeDefined()
       expect(httpsGetCalls[0]).toMatchObject({
         hostname: 'registry.npmjs.org',
-        path: '/freebuff/latest',
+        path: '/freetier/latest',
         headers: {
           'User-Agent': 'release-test-agent',
         },
@@ -215,14 +215,14 @@ for (const helperModule of helperModules) {
       })
 
       const response = await client.httpGet(
-        'https://registry.npmjs.org/freebuff/latest',
+        'https://registry.npmjs.org/freetier/latest',
       )
       response.resume()
 
       expect(httpsGetCalls).toHaveLength(2)
       expect(httpsGetCalls[0]).toMatchObject({
         hostname: 'registry.npmjs.org',
-        path: '/freebuff/latest',
+        path: '/freetier/latest',
       })
       expect(httpsGetCalls[1]).toMatchObject({
         hostname: 'registry.npmjs.org',

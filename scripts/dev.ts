@@ -26,7 +26,7 @@ const PID_FILE = join(LOG_DIR, 'services.json')
 const BUN_PATH = join(PROJECT_ROOT, '.bin', 'bun')
 
 // Get config from environment (Bun loads .env files automatically)
-const APP_URL = process.env.NEXT_PUBLIC_CODEBUFF_APP_URL || 'http://localhost:3000'
+const APP_URL = process.env.NEXT_PUBLIC_NEXUS_APP_URL || 'http://localhost:3000'
 const PORT = process.env.NEXT_PUBLIC_WEB_PORT || '3000'
 
 const SPINNER = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']

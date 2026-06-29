@@ -6,7 +6,7 @@ import { getAdsEnabled } from '../commands/ads'
 import { useChatStore } from '../state/chat-store'
 import { isUserActive, subscribeToActivity } from '../utils/activity-tracker'
 import { getAuthToken } from '../utils/auth'
-import { IS_FREEBUFF } from '../utils/constants'
+import { IS_FREETIER } from '../utils/constants'
 import { getCliEnv } from '../utils/env'
 import { logger } from '../utils/logger'
 
@@ -89,7 +89,7 @@ function nextFromChoiceCache(ctrl: GravityController): AdResponse[] | null {
  */
 export const useGravityAd = (options?: {
   enabled?: boolean
-  /** Skip the "wait for first user message" gate. Used by the freebuff
+  /** Skip the "wait for first user message" gate. Used by the freetier
    *  waiting room, which has no conversation but still needs ads. */
   forceStart?: boolean
   /** Ad network to request first. The server owns fallback ordering. */
@@ -108,10 +108,10 @@ export const useGravityAd = (options?: {
   const { terminalHeight } = useTerminalLayout()
   const isVeryCompactHeight = terminalHeight <= 17
 
-  // Freebuff always shows ads even on compact screens (ads are mandatory there).
-  const isFreeMode = IS_FREEBUFF
+  // FreeTier always shows ads even on compact screens (ads are mandatory there).
+  const isFreeMode = IS_FREETIER
 
-  // Skip ads on very compact screens unless we're in Freebuff (where ads are mandatory)
+  // Skip ads on very compact screens unless we're in FreeTier (where ads are mandatory)
   // Also skip if explicitly disabled (e.g. user has a subscription)
   const shouldHideAds = !enabled || (isVeryCompactHeight && !isFreeMode)
 
@@ -156,7 +156,7 @@ export const useGravityAd = (options?: {
         return
       }
 
-      // Include mode in request - Freebuff should not grant credits (no balance concept).
+      // Include mode in request - FreeTier should not grant credits (no balance concept).
       const agentMode = useChatStore.getState().agentMode
 
       const res = await fetch(`${WEBSITE_URL}/api/v1/ads/impression`, {
@@ -513,7 +513,7 @@ function getAdUserAgent(): string {
 }
 
 function getCliAdRequestUserAgent(): string {
-  const product = IS_FREEBUFF ? 'Freebuff-CLI' : 'NEXUS-CLI'
-  const version = getCliEnv().CODEBUFF_CLI_VERSION ?? 'dev'
+  const product = IS_FREETIER ? 'FreeTier-CLI' : 'NEXUS-CLI'
+  const version = getCliEnv().NEXUS_CLI_VERSION ?? 'dev'
   return `${product}/${version}`
 }

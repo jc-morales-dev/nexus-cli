@@ -1,6 +1,6 @@
 # SDK Tests & Examples
 
-This folder contains end-to-end tests, integration tests, unit tests, and runnable examples for the Codebuff SDK.
+This folder contains end-to-end tests, integration tests, unit tests, and runnable examples for the Nexus SDK.
 
 ## Directory Structure
 
@@ -95,8 +95,8 @@ bun run test:e2e && bun run test:integration && bun run test:unit:e2e
 
 ## Prerequisites
 
-- **API Key**: Set `CODEBUFF_API_KEY` for E2E and integration tests
-- **Opt-in**: Set `RUN_CODEBUFF_E2E=true` for local live API runs (CI runs automatically)
+- **API Key**: Set `NEXUS_API_KEY` for E2E and integration tests
+- **Opt-in**: Set `RUN_NEXUS_E2E=true` for local live API runs (CI runs automatically)
 - Tests skip gracefully if API key is not set
 
 ## Writing Tests
@@ -104,15 +104,15 @@ bun run test:e2e && bun run test:integration && bun run test:unit:e2e
 ### E2E Test Pattern
 ```typescript
 import { describe, test, expect, beforeAll } from 'bun:test'
-import { CodebuffClient } from '../../src/client'
+import { NexusClient } from '../../src/client'
 import { EventCollector, getApiKey, skipIfNoApiKey, isAuthError, DEFAULT_AGENT, DEFAULT_TIMEOUT } from '../utils'
 
 describe('E2E: My Test', () => {
-  let client: CodebuffClient
+  let client: NexusClient
 
   beforeAll(() => {
     if (skipIfNoApiKey()) return
-    client = new CodebuffClient({ apiKey: getApiKey() })
+    client = new NexusClient({ apiKey: getApiKey() })
   })
 
   test('does something', async () => {

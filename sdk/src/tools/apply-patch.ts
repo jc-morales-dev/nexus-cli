@@ -3,10 +3,10 @@ import path from 'path'
 import { checkpoints } from '../checkpoints'
 
 import type { ApplyPatchOperation } from '@nexus/common/tools/params/tool/apply-patch'
-import type { CodebuffToolOutput } from '@nexus/common/tools/list'
-import type { CodebuffFileSystem } from '@nexus/common/types/filesystem'
+import type { NexusToolOutput } from '@nexus/common/tools/list'
+import type { NexusFileSystem } from '@nexus/common/types/filesystem'
 
-type ApplyPatchResult = CodebuffToolOutput<'apply_patch'>
+type ApplyPatchResult = NexusToolOutput<'apply_patch'>
 type ApplyPatchJson = ApplyPatchResult[number] & { type: 'json' }
 type PatchAction = 'add' | 'delete' | 'update'
 type DiffMode = 'default' | 'create'
@@ -603,7 +603,7 @@ function parseOperation(parameters: unknown): ApplyPatchOperation | null {
 export async function applyPatchTool(params: {
   parameters: unknown
   cwd: string
-  fs: CodebuffFileSystem
+  fs: NexusFileSystem
 }): Promise<ApplyPatchResult> {
   const { parameters, cwd, fs } = params
   const operation = parseOperation(parameters)

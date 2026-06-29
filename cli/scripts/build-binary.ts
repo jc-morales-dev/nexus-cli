@@ -158,13 +158,13 @@ async function main() {
 
   const defineFlags = [
     ['process.env.NODE_ENV', '"production"'],
-    ['process.env.CODEBUFF_IS_BINARY', '"true"'],
-    ['process.env.CODEBUFF_CLI_VERSION', `"${version}"`],
+    ['process.env.NEXUS_IS_BINARY', '"true"'],
+    ['process.env.NEXUS_CLI_VERSION', `"${version}"`],
     [
-      'process.env.CODEBUFF_CLI_TARGET',
+      'process.env.NEXUS_CLI_TARGET',
       `"${targetInfo.platform}-${targetInfo.arch}"`,
     ],
-    ['process.env.FREEBUFF_MODE', `"${process.env.FREEBUFF_MODE ?? 'false'}"`],
+    ['process.env.FREETIER_MODE', `"${process.env.FREETIER_MODE ?? 'false'}"`],
     ...nextPublicEnvVars,
   ]
 
@@ -329,7 +329,7 @@ async function ensureOpenTuiNativeBundle(targetInfo: TargetInfo) {
   }
 
   const registryBase =
-    process.env.CODEBUFF_NPM_REGISTRY ??
+    process.env.NEXUS_NPM_REGISTRY ??
     process.env.NPM_REGISTRY_URL ??
     'https://registry.npmjs.org'
   const metadataUrl = `${registryBase.replace(/\/$/, '')}/${encodeURIComponent(packageName)}`

@@ -3,12 +3,12 @@ import { useKeyboard } from '@opentui/react'
 import React, { useCallback, useRef, useState } from 'react'
 
 import { Button } from './button'
-import { joinFreebuffQueue } from '../hooks/use-freetier-session'
+import { joinFreeTierQueue } from '../hooks/use-freetier-session'
 import { useTerminalDimensions } from '../hooks/use-terminal-dimensions'
 import { useTheme } from '../hooks/use-theme'
 import {
-  getFreebuffModel,
-  LIMITED_FREEBUFF_MODEL_ID,
+  getFreeTierModel,
+  LIMITED_FREETIER_MODEL_ID,
 } from '@nexus/common/constants/freetier-models'
 
 import type { KeyEvent, ScrollBoxRenderable } from '@opentui/core'
@@ -49,7 +49,7 @@ export const LimitedLandingPanel: React.FC<LimitedLandingPanelProps> = ({
 }) => {
   const theme = useTheme()
   const { contentMaxWidth } = useTerminalDimensions()
-  const model = getFreebuffModel(LIMITED_FREEBUFF_MODEL_ID)
+  const model = getFreeTierModel(LIMITED_FREETIER_MODEL_ID)
   const [pending, setPending] = useState(false)
   const scrollRef = useRef<ScrollBoxRenderable | null>(null)
 
@@ -100,7 +100,7 @@ export const LimitedLandingPanel: React.FC<LimitedLandingPanelProps> = ({
   const start = useCallback(() => {
     if (!interactable) return
     setPending(true)
-    joinFreebuffQueue(LIMITED_FREEBUFF_MODEL_ID).finally(() =>
+    joinFreeTierQueue(LIMITED_FREETIER_MODEL_ID).finally(() =>
       setPending(false),
     )
   }, [interactable])

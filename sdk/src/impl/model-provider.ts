@@ -3,7 +3,7 @@
  *
  * This module handles:
  * - ChatGPT OAuth: Direct requests to OpenAI API using user's OAuth token
- * - Default: Requests through Codebuff backend (which routes to OpenRouter)
+ * - Default: Requests through Nexus backend (which routes to OpenRouter)
  */
 
 import path from 'path'
@@ -28,8 +28,6 @@ import {
   getByokOpenrouterApiKeyFromEnv,
   getCheapModelFromEnv,
   getForcedModelFromEnv,
-  getNvidiaApiBaseFromEnv,
-  getNvidiaApiKeyFromEnv,
   getOpenRouterApiKeyFromEnv,
   getStrongModelFromEnv,
   OPENROUTER_API_BASE,
@@ -50,7 +48,7 @@ let chatGptOAuthRateLimitedUntil: number | null = null
 
 /**
  * Mark ChatGPT OAuth as rate-limited. Subsequent requests will skip direct ChatGPT OAuth
- * and use Codebuff backend until the reset time.
+ * and use Nexus backend until the reset time.
  */
 export function markChatGptOAuthRateLimited(resetAt?: Date): void {
   const fiveMinutesFromNow = Date.now() + 5 * 60 * 1000
@@ -85,11 +83,11 @@ export function resetChatGptOAuthRateLimit(): void {
  * Parameters for requesting a model.
  */
 export interface ModelRequestParams {
-  /** Codebuff API key for backend authentication */
+  /** Nexus API key for backend authentication */
   apiKey: string
   /** Model ID (OpenRouter format, e.g., "anthropic/claude-sonnet-4") */
   model: string
-  /** If true, skip ChatGPT OAuth and use Codebuff backend (for fallback after rate limit) */
+  /** If true, skip ChatGPT OAuth and use Nexus backend (for fallback after rate limit) */
   skipChatGptOAuth?: boolean
   /** Cost mode (e.g. 'free') — affects fallback behavior for OAuth routes */
   costMode?: string
@@ -103,18 +101,6 @@ export interface ModelResult {
   model: LanguageModel
   /** Whether this model uses ChatGPT OAuth direct (affects cost tracking) */
   isChatGptOAuth: boolean
-  /** Whether this model routes directly to NVIDIA NIM (BYOK, bypasses backend) */
-  isNvidia: boolean
-}
-
-/**
- * Returns true when a model id should be routed directly to NVIDIA NIM instead
- * of the Codebuff backend. NVIDIA hosts these under their own catalog ids
- * (e.g. `z-ai/glm-5.1`), and we treat the `nvidia/` and `z-ai/` prefixes as the
- * opt-in markers. Routing only actually happens when a NVIDIA_API_KEY is set.
- */
-export function isNvidiaModel(model: string): boolean {
-  return model.startsWith('nvidia/') || model.startsWith('z-ai/')
 }
 
 /** Markers in a nominal model id that signal a cheap/fast/utility-tier model. */
@@ -122,9 +108,9 @@ const CHEAP_TIER_MODEL_RE = /(flash|lite|mini|nano|haiku)/i
 
 /**
  * Resolve which model id to actually call for a given agent's requested model:
- * 1. CODEBUFF_MODEL — a single forced model for everything (highest priority).
+ * 1. NEXUS_MODEL — a single forced model for everything (highest priority).
  * 2. Tiered map — classify the requested model (cheap markers -> CHEAP tier,
- *    otherwise STRONG tier) and use CODEBUFF_MODEL_CHEAP / CODEBUFF_MODEL_STRONG.
+ *    otherwise STRONG tier) and use NEXUS_MODEL_CHEAP / NEXUS_MODEL_STRONG.
  *    If only one tier is configured, it is used for both tiers.
  * 3. Otherwise the agent's own requested model (unchanged).
  */
@@ -141,7 +127,7 @@ function resolveModelOverride(requestedModel: string): string {
     : (strong ?? cheap ?? requestedModel)
 }
 
-// Usage accounting type for OpenRouter/Codebuff backend responses
+// Usage accounting type for OpenRouter/Nexus backend responses
 type OpenRouterUsageAccounting = {
   cost: number | null
   costDetails: {
@@ -153,7 +139,7 @@ type OpenRouterUsageAccounting = {
  * Get the appropriate model for a request.
  *
  * If ChatGPT OAuth credentials are available and the model is an OpenAI model,
- * returns an OpenAI direct model. Otherwise, returns the Codebuff backend model.
+ * returns an OpenAI direct model. Otherwise, returns the Nexus backend model.
  *
  * This function is async because it may need to refresh the OAuth token.
  */
@@ -167,28 +153,18 @@ export async function getModelForRequest(
   const model = resolveModelOverride(params.model)
 
   // Direct BYOK provider (highest priority): route straight to the user's own
-  // provider, bypassing the Codebuff backend entirely — no account or credits.
+  // provider, bypassing the Nexus backend entirely — no account or credits.
   // 1) OpenRouter (preferred): hosts the same model ids the agents already use.
   const openRouterApiKey = getOpenRouterApiKeyFromEnv()
   if (openRouterApiKey) {
     return {
       model: createOpenRouterDirectModel(model, openRouterApiKey),
       isChatGptOAuth: false,
-      isNvidia: false,
-    }
-  }
-  // 2) NVIDIA NIM: when only a NVIDIA_API_KEY is configured.
-  const nvidiaApiKey = getNvidiaApiKeyFromEnv()
-  if (nvidiaApiKey) {
-    return {
-      model: createNvidiaModel(model, nvidiaApiKey),
-      isChatGptOAuth: false,
-      isNvidia: true,
     }
   }
 
   // NEXUS is account-less: if no provider key is set yet, guide the user to add
-  // one instead of silently failing against a Codebuff backend that isn't there.
+  // one instead of silently failing against a Nexus backend that isn't there.
   if (process.env.NEXUS_MODE) {
     throw new Error(
       'No OpenRouter API key set. Run "/key sk-or-..." to add yours (get a free key at https://openrouter.ai/keys).',
@@ -204,7 +180,7 @@ export async function getModelForRequest(
     isChatGptOAuthModelAllowed(model)
   ) {
     // In free mode, rate-limited ChatGPT OAuth must not silently fall through to
-    // the Codebuff backend — freebuff should only use the direct OpenAI route or fail.
+    // the Nexus backend — freetier should only use the direct OpenAI route or fail.
     if (isChatGptOAuthRateLimited()) {
       if (isFreeMode(costMode)) {
         throw new Error(
@@ -221,7 +197,6 @@ export async function getModelForRequest(
             chatGptOAuthCredentials.accessToken,
           ),
           isChatGptOAuth: true,
-          isNvidia: false,
         }
       }
 
@@ -234,11 +209,10 @@ export async function getModelForRequest(
     }
   }
 
-  // Default: use Codebuff backend
+  // Default: use Nexus backend
   return {
-    model: createCodebuffBackendModel(apiKey, model),
+    model: createNexusBackendModel(apiKey, model),
     isChatGptOAuth: false,
-    isNvidia: false,
   }
 }
 
@@ -273,8 +247,8 @@ function createOpenAIOAuthModel(
 
 /**
  * Create a model that routes directly to OpenRouter's OpenAI-compatible API
- * using the user's own OPENROUTER_API_KEY (BYOK). Bypasses the Codebuff backend
- * entirely, so it works with no Codebuff account or credits. OpenRouter hosts
+ * using the user's own OPENROUTER_API_KEY (BYOK). Bypasses the Nexus backend
+ * entirely, so it works with no Nexus account or credits. OpenRouter hosts
  * the same model ids the agents already use (anthropic/*, deepseek/*, etc.).
  */
 function createOpenRouterDirectModel(
@@ -287,8 +261,8 @@ function createOpenRouterDirectModel(
     headers: () => ({
       Authorization: `Bearer ${openRouterApiKey}`,
       'Content-Type': 'application/json',
-      'HTTP-Referer': 'https://github.com/CodebuffAI/codebuff',
-      'X-Title': 'Codebuff CLI',
+      'HTTP-Referer': 'https://github.com/NexusAI/nexus',
+      'X-Title': 'Nexus CLI',
       'user-agent': `ai-sdk/openai-compatible/${VERSION}/nexus-openrouter`,
     }),
     fetch: undefined,
@@ -298,35 +272,10 @@ function createOpenRouterDirectModel(
 }
 
 /**
- * Create a model that routes directly to NVIDIA NIM's OpenAI-compatible API.
- * Uses the user's personal NVIDIA_API_KEY (BYOK) and bypasses the Codebuff
- * backend entirely, so it works with no Codebuff account or credits.
+ * Create a model that routes through the Nexus backend.
+ * This is the existing behavior - requests go to Nexus backend which forwards to OpenRouter.
  */
-function createNvidiaModel(
-  model: string,
-  nvidiaApiKey: string,
-): LanguageModel {
-  const baseUrl = getNvidiaApiBaseFromEnv()
-
-  return new OpenAICompatibleChatLanguageModel(model, {
-    provider: 'nvidia',
-    url: ({ path: endpoint }) => `${baseUrl}${endpoint}`,
-    headers: () => ({
-      Authorization: `Bearer ${nvidiaApiKey}`,
-      'Content-Type': 'application/json',
-      'user-agent': `ai-sdk/openai-compatible/${VERSION}/nexus-nvidia`,
-    }),
-    fetch: undefined,
-    includeUsage: undefined,
-    supportsStructuredOutputs: true,
-  })
-}
-
-/**
- * Create a model that routes through the Codebuff backend.
- * This is the existing behavior - requests go to Codebuff backend which forwards to OpenRouter.
- */
-function createCodebuffBackendModel(
+function createNexusBackendModel(
   apiKey: string,
   model: string,
 ): LanguageModel {
@@ -340,18 +289,18 @@ function createCodebuffBackendModel(
   const openrouterApiKey = getByokOpenrouterApiKeyFromEnv()
 
   return new OpenAICompatibleChatLanguageModel(model, {
-    provider: 'codebuff',
+    provider: 'nexus',
     url: ({ path: endpoint }) =>
       new URL(path.join('/api/v1', endpoint), WEBSITE_URL).toString(),
     headers: () => ({
       Authorization: `Bearer ${apiKey}`,
-      'user-agent': `ai-sdk/openai-compatible/${VERSION}/codebuff`,
+      'user-agent': `ai-sdk/openai-compatible/${VERSION}/nexus`,
       ...(openrouterApiKey && { [BYOK_OPENROUTER_HEADER]: openrouterApiKey }),
     }),
     metadataExtractor: {
       extractMetadata: async ({ parsedBody }: { parsedBody: any }) => {
         if (openrouterApiKey !== undefined) {
-          return { codebuff: { usage: openrouterUsage } }
+          return { nexus: { usage: openrouterUsage } }
         }
 
         if (typeof parsedBody?.usage?.cost === 'number') {
@@ -364,7 +313,7 @@ function createCodebuffBackendModel(
           openrouterUsage.costDetails.upstreamInferenceCost =
             parsedBody.usage.cost_details.upstream_inference_cost
         }
-        return { codebuff: { usage: openrouterUsage } }
+        return { nexus: { usage: openrouterUsage } }
       },
       createStreamExtractor: () => ({
         processChunk: (parsedChunk: any) => {
@@ -384,7 +333,7 @@ function createCodebuffBackendModel(
           }
         },
         buildMetadata: () => {
-          return { codebuff: { usage: openrouterUsage } }
+          return { nexus: { usage: openrouterUsage } }
         },
       }),
     },

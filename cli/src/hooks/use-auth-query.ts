@@ -18,7 +18,7 @@ import {
   logoutUser as logoutUserUtil,
   type User,
 } from '../utils/auth'
-import { resetCodebuffClient } from '../utils/nexus-client'
+import { resetNexusClient } from '../utils/nexus-client'
 import { logger as defaultLogger, loggerContext } from '../utils/logger'
 
 import type { GetUserInfoFromApiKeyFn } from '@nexus/common/types/contracts/database'
@@ -133,7 +133,7 @@ export function useAuthQuery(deps: UseAuthQueryDeps = {}) {
   } = deps
 
   const userCredentials = getUserCredentials()
-  const apiKey = userCredentials?.authToken || getCiEnv().CODEBUFF_API_KEY || ''
+  const apiKey = userCredentials?.authToken || getCiEnv().NEXUS_API_KEY || ''
 
   return useQuery({
     queryKey: authQueryKeys.validation(apiKey),
@@ -234,7 +234,7 @@ export function useLogoutMutation(deps: UseLogoutMutationDeps = {}) {
     mutationFn: logoutUser,
     onSuccess: () => {
       // Reset the SDK client after logout
-      resetCodebuffClient()
+      resetNexusClient()
       // Clear all auth-related cache
       queryClient.removeQueries({ queryKey: authQueryKeys.all })
       // Clear logger context

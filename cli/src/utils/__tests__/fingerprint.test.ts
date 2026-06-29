@@ -69,7 +69,7 @@ describe('fingerprint utilities', () => {
       test('should be case-sensitive', () => {
         expect(getFingerprintType('Enhanced-abc123')).toBe('unknown')
         expect(getFingerprintType('ENHANCED-abc123')).toBe('unknown')
-        expect(getFingerprintType('Codebuff-cli-abc123')).toBe('unknown')
+        expect(getFingerprintType('Nexus-cli-abc123')).toBe('unknown')
         expect(getFingerprintType('LEGACY-abc123')).toBe('unknown')
       })
     })

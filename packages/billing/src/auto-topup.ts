@@ -56,7 +56,7 @@ export async function validateAutoTopupStatus(params: {
 
     if (!user?.stripe_customer_id) {
       throw new AutoTopupValidationError(
-        `You don't have a valid account with us. Please log in at ${env.NEXT_PUBLIC_CODEBUFF_APP_URL}/login`,
+        `You don't have a valid account with us. Please log in at ${env.NEXT_PUBLIC_NEXUS_APP_URL}/login`,
       )
     }
 

@@ -1,4 +1,4 @@
-import { getFreebuffModel } from '@nexus/common/constants/freetier-models'
+import { getFreeTierModel } from '@nexus/common/constants/freetier-models'
 import { TextAttributes } from '@opentui/core'
 import React, { useEffect, useState } from 'react'
 
@@ -6,11 +6,11 @@ import { Button } from './button'
 import { ScrollToBottomButton } from './scroll-to-bottom-button'
 import { ShimmerText } from './shimmer-text'
 
-import { useFreebuffSessionProgress } from '../hooks/use-freetier-session-progress'
+import { useFreeTierSessionProgress } from '../hooks/use-freetier-session-progress'
 import { useTheme } from '../hooks/use-theme'
 import { formatElapsedTime } from '../utils/format-elapsed-time'
 
-import type { FreebuffSessionResponse } from '../types/freetier-session'
+import type { FreeTierSessionResponse } from '../types/freetier-session'
 import type { StatusIndicatorState } from '../utils/status-indicator-state'
 
 /** A small status-bar action button with hover-bold styling. */
@@ -73,7 +73,7 @@ interface StatusBarProps {
   statusIndicatorState: StatusIndicatorState
   onStop?: () => void
   onEndSession?: () => void
-  freebuffSession: FreebuffSessionResponse | null
+  freetierSession: FreeTierSessionResponse | null
 }
 
 export const StatusBar = ({
@@ -83,7 +83,7 @@ export const StatusBar = ({
   statusIndicatorState,
   onStop,
   onEndSession,
-  freebuffSession,
+  freetierSession,
 }: StatusBarProps) => {
   const theme = useTheme()
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
@@ -122,7 +122,7 @@ export const StatusBar = ({
     return () => clearInterval(interval)
   }, [timerStartTime, shouldShowTimer, statusIndicatorState?.kind])
 
-  const sessionProgress = useFreebuffSessionProgress(freebuffSession)
+  const sessionProgress = useFreeTierSessionProgress(freetierSession)
 
   const renderStatusIndicator = () => {
     switch (statusIndicatorState.kind) {
@@ -173,8 +173,8 @@ export const StatusBar = ({
         if (sessionProgress !== null) {
           const isUrgent = sessionProgress.remainingMs < COUNTDOWN_VISIBLE_MS
           const modelName =
-            freebuffSession?.status === 'active'
-              ? getFreebuffModel(freebuffSession.model).displayName
+            freetierSession?.status === 'active'
+              ? getFreeTierModel(freetierSession.model).displayName
               : null
           return (
             <span fg={isUrgent ? theme.warning : theme.secondary}>
@@ -199,7 +199,7 @@ export const StatusBar = ({
   const elapsedTimeContent = renderElapsedTime()
 
   // Show gray background when there's status indicator, timer, or when the
-  // freebuff session fill is visible (otherwise the fill would float over
+  // freetier session fill is visible (otherwise the fill would float over
   // transparent space).
   const hasContent =
     statusIndicatorContent || elapsedTimeContent || sessionProgress !== null
@@ -263,7 +263,7 @@ export const StatusBar = ({
           )}
         {onEndSession &&
           statusIndicatorState.kind === 'idle' &&
-          freebuffSession?.status === 'active' && (
+          freetierSession?.status === 'active' && (
             <StatusActionButton onClick={onEndSession}>
               ✕ End session
             </StatusActionButton>

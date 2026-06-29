@@ -26,7 +26,7 @@ export type CreateRunConfigParams = {
   eventHandlerState: EventHandlerState
   signal: AbortSignal
   costMode?: 'free' | 'lite' | 'normal' | 'max' | 'experimental' | 'ask'
-  extraCodebuffMetadata?: Record<string, string>
+  extraNexusMetadata?: Record<string, string>
 }
 
 const SENSITIVE_EXTENSIONS = new Set([
@@ -103,7 +103,7 @@ export const createRunConfig = (params: CreateRunConfigParams) => {
     agentDefinitions,
     eventHandlerState,
     costMode,
-    extraCodebuffMetadata,
+    extraNexusMetadata,
   } = params
 
   return {
@@ -118,7 +118,7 @@ export const createRunConfig = (params: CreateRunConfigParams) => {
     handleEvent: createEventHandler(eventHandlerState),
     signal: params.signal,
     costMode,
-    extraCodebuffMetadata,
+    extraNexusMetadata,
     fileFilter: ((filePath: string) => {
       if (isSensitiveFile(filePath)) return { status: 'blocked' }
       if (isEnvTemplateFile(filePath)) return { status: 'allow-example' }

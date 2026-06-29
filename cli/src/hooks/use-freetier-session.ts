@@ -1,31 +1,31 @@
 import { env } from '@nexus/common/env'
 import {
-  FALLBACK_FREEBUFF_MODEL_ID,
-  LIMITED_FREEBUFF_MODEL_ID,
-  resolveFreebuffModel,
+  FALLBACK_FREETIER_MODEL_ID,
+  LIMITED_FREETIER_MODEL_ID,
+  resolveFreeTierModel,
 } from '@nexus/common/constants/freetier-models'
 import { getRateLimitsByModel } from '@nexus/common/types/freetier-session'
 import { useEffect } from 'react'
 
 import {
-  getSelectedFreebuffModel,
-  useFreebuffModelStore,
+  getSelectedFreeTierModel,
+  useFreeTierModelStore,
 } from '../state/freetier-model-store'
-import { useFreebuffSessionStore } from '../state/freetier-session-store'
+import { useFreeTierSessionStore } from '../state/freetier-session-store'
 import { getAuthTokenDetails } from '../utils/auth'
-import { IS_FREEBUFF } from '../utils/constants'
+import { IS_FREETIER } from '../utils/constants'
 import {
-  isFreebuffInstanceOwnedByDeadLocalProcess,
-  recordFreebuffInstanceOwner,
+  isFreeTierInstanceOwnedByDeadLocalProcess,
+  recordFreeTierInstanceOwner,
 } from '../utils/freetier-instance-owner'
 import { logger } from '../utils/logger'
-import { saveFreebuffModelPreference } from '../utils/settings'
+import { saveFreeTierModelPreference } from '../utils/settings'
 
-import type { FreebuffSessionResponse } from '../types/freetier-session'
+import type { FreeTierSessionResponse } from '../types/freetier-session'
 import type {
-  FreebuffCountryBlockReason,
-  FreebuffIpPrivacySignal,
-  FreebuffSessionServerResponse,
+  FreeTierCountryBlockReason,
+  FreeTierIpPrivacySignal,
+  FreeTierSessionServerResponse,
 } from '@nexus/common/types/freetier-session'
 
 const POLL_INTERVAL_QUEUED_MS = 5_000
@@ -34,10 +34,10 @@ const POLL_INTERVAL_ERROR_MS = 10_000
 
 /** Header sent on GET so the server can detect when another CLI on the same
  *  account has rotated the id and respond with `{ status: 'superseded' }`. */
-const FREEBUFF_INSTANCE_HEADER = 'x-freetier-instance-id'
+const FREETIER_INSTANCE_HEADER = 'x-freetier-instance-id'
 
 /** Header sent on POST telling the server which model's queue to join. */
-const FREEBUFF_MODEL_HEADER = 'x-freetier-model'
+const FREETIER_MODEL_HEADER = 'x-freetier-model'
 
 /** Play the terminal bell so users get an audible notification on admission. */
 const playAdmissionSound = () => {
@@ -50,22 +50,22 @@ const playAdmissionSound = () => {
 
 const sessionEndpoint = (): string => {
   const base = (
-    env.NEXT_PUBLIC_CODEBUFF_APP_URL || 'https://codebuff.com'
+    env.NEXT_PUBLIC_NEXUS_APP_URL || 'https://nexus.com'
   ).replace(/\/$/, '')
-  return `${base}/api/v1/freebuff/session`
+  return `${base}/api/v1/freetier/session`
 }
 
 async function callSession(
   method: 'POST' | 'GET' | 'DELETE',
   token: string,
   opts: { instanceId?: string; model?: string; signal?: AbortSignal } = {},
-): Promise<FreebuffSessionServerResponse> {
+): Promise<FreeTierSessionServerResponse> {
   const headers: Record<string, string> = { Authorization: `Bearer ${token}` }
   if (method === 'GET' && opts.instanceId) {
-    headers[FREEBUFF_INSTANCE_HEADER] = opts.instanceId
+    headers[FREETIER_INSTANCE_HEADER] = opts.instanceId
   }
   if (method === 'POST' && opts.model) {
-    headers[FREEBUFF_MODEL_HEADER] = opts.model
+    headers[FREETIER_MODEL_HEADER] = opts.model
   }
   const resp = await fetch(sessionEndpoint(), {
     method,
@@ -88,7 +88,7 @@ async function callSession(
   if (resp.status === 403) {
     const body = (await resp
       .json()
-      .catch(() => null)) as FreebuffSessionServerResponse | null
+      .catch(() => null)) as FreeTierSessionServerResponse | null
     if (
       body &&
       (body.status === 'country_blocked' || body.status === 'banned')
@@ -103,7 +103,7 @@ async function callSession(
   if (resp.status === 409 && method === 'POST') {
     const body = (await resp
       .json()
-      .catch(() => null)) as FreebuffSessionServerResponse | null
+      .catch(() => null)) as FreeTierSessionServerResponse | null
     if (
       body &&
       (body.status === 'model_locked' || body.status === 'model_unavailable')
@@ -119,7 +119,7 @@ async function callSession(
   if (resp.status === 429 && method === 'POST') {
     const body = (await resp
       .json()
-      .catch(() => null)) as FreebuffSessionServerResponse | null
+      .catch(() => null)) as FreeTierSessionServerResponse | null
     if (body && body.status === 'rate_limited') {
       return body
     }
@@ -127,15 +127,15 @@ async function callSession(
   if (!resp.ok) {
     const text = await resp.text().catch(() => '')
     throw new Error(
-      `freebuff session ${method} failed: ${resp.status} ${text.slice(0, 200)}`,
+      `freetier session ${method} failed: ${resp.status} ${text.slice(0, 200)}`,
     )
   }
-  return (await resp.json()) as FreebuffSessionServerResponse
+  return (await resp.json()) as FreeTierSessionServerResponse
 }
 
 /** Picks the poll delay after a successful tick. Returns null when the state
  *  is terminal (no further polling). */
-function nextDelayMs(next: FreebuffSessionResponse): number | null {
+function nextDelayMs(next: FreeTierSessionResponse): number | null {
   switch (next.status) {
     case 'queued':
       return POLL_INTERVAL_QUEUED_MS
@@ -181,7 +181,7 @@ type RestartMode = 'rejoin' | 'landing'
 interface PollController {
   /** Cancel the in-flight tick + timer and start a fresh one in `mode`. */
   restart: (mode: RestartMode) => Promise<void>
-  apply: (next: FreebuffSessionResponse) => void
+  apply: (next: FreeTierSessionResponse) => void
   abort: () => void
 }
 
@@ -190,8 +190,8 @@ let controller: PollController | null = null
 /** Read the current instance id for outgoing chat requests. Includes `ended`
  *  so in-flight agent work can keep streaming during the server-side grace
  *  window (server keeps the row alive until `expires_at + grace`). */
-export function getFreebuffInstanceId(): string | undefined {
-  const current = useFreebuffSessionStore.getState().session
+export function getFreeTierInstanceId(): string | undefined {
+  const current = useFreeTierSessionStore.getState().session
   if (!current) return undefined
   switch (current.status) {
     case 'queued':
@@ -207,7 +207,7 @@ export function getFreebuffInstanceId(): string | undefined {
  *  holding (queued, active, or in the post-expiry grace window with a live
  *  instance id). DELETE only matters in those states; otherwise we'd fire a
  *  spurious request the server has nothing to act on. */
-function shouldReleaseSlot(current: FreebuffSessionResponse | null): boolean {
+function shouldReleaseSlot(current: FreeTierSessionResponse | null): boolean {
   if (!current) return false
   return (
     current.status === 'queued' ||
@@ -217,8 +217,8 @@ function shouldReleaseSlot(current: FreebuffSessionResponse | null): boolean {
 }
 
 function toLandingSession(
-  current: FreebuffSessionResponse | null,
-): Extract<FreebuffSessionResponse, { status: 'none' }> {
+  current: FreeTierSessionResponse | null,
+): Extract<FreeTierSessionResponse, { status: 'none' }> {
   const accessTier =
     current && 'accessTier' in current ? current.accessTier : undefined
   const queueDepthByModel =
@@ -252,8 +252,8 @@ function toLandingSession(
  *  one. Used both by exit paths and any flow that wants the next POST to
  *  start clean (rejoin, return-to-landing). Always swallows errors — the
  *  server-side sweep is the backstop. */
-async function releaseFreebuffSlot(): Promise<void> {
-  const current = useFreebuffSessionStore.getState().session
+async function releaseFreeTierSlot(): Promise<void> {
+  const current = useFreeTierSessionStore.getState().session
   if (!shouldReleaseSlot(current)) return
   const { token } = getAuthTokenDetails()
   if (!token) return
@@ -275,11 +275,11 @@ interface RestartOpts {
   releaseSlot?: boolean
 }
 
-async function restartFreebuffSession(
+async function restartFreeTierSession(
   mode: RestartMode,
   opts: RestartOpts = {},
 ): Promise<void> {
-  if (!IS_FREEBUFF) return
+  if (!IS_FREETIER) return
   // Halt the running poll loop before we touch local stores or DELETE the
   // slot. Otherwise an in-flight GET could land mid-reset and overwrite
   // state, or the next scheduled tick could fire between DELETE and
@@ -287,7 +287,7 @@ async function restartFreebuffSession(
   // below; the extra abort here is cheap.
   controller?.abort()
   if (opts.resetChat) await resetChatStore()
-  if (opts.releaseSlot) await releaseFreebuffSlot()
+  if (opts.releaseSlot) await releaseFreeTierSlot()
   await controller?.restart(mode)
 }
 
@@ -296,10 +296,10 @@ async function restartFreebuffSession(
  * Pass `resetChat: true` to also wipe local chat history — used when
  * rejoining after a session ended so the next admitted session starts fresh.
  */
-export function refreshFreebuffSession(
+export function refreshFreeTierSession(
   opts: { resetChat?: boolean } = {},
 ): Promise<void> {
-  return restartFreebuffSession('rejoin', { resetChat: opts.resetChat })
+  return restartFreeTierSession('rejoin', { resetChat: opts.resetChat })
 }
 
 /**
@@ -308,10 +308,10 @@ export function refreshFreebuffSession(
  * they consciously choose a model and hit Enter to join, rather than being
  * silently re-queued for whatever model they last used.
  */
-export function returnToFreebuffLanding(
+export function returnToFreeTierLanding(
   opts: { resetChat?: boolean } = {},
 ): Promise<void> {
-  return restartFreebuffSession('landing', {
+  return restartFreeTierSession('landing', {
     resetChat: opts.resetChat,
     releaseSlot: true,
   })
@@ -320,8 +320,8 @@ export function returnToFreebuffLanding(
 /** Refresh picker-only metadata (quota and queue depths) while staying on the
  * model selection screen. Used when a midnight-Pacific premium quota reset
  * passes while the landing screen is open. */
-export function refreshFreebuffLandingMetadata(): Promise<void> {
-  return restartFreebuffSession('landing')
+export function refreshFreeTierLandingMetadata(): Promise<void> {
+  return restartFreeTierSession('landing')
 }
 
 /**
@@ -336,24 +336,24 @@ export function refreshFreebuffLandingMetadata(): Promise<void> {
  * the locked model so the active session stays intact. Users who really want
  * to switch can /end-session deliberately.
  */
-export function joinFreebuffQueue(model: string): Promise<void> {
-  if (!IS_FREEBUFF) return Promise.resolve()
+export function joinFreeTierQueue(model: string): Promise<void> {
+  if (!IS_FREETIER) return Promise.resolve()
   // This is the only explicit user-pick path (called from the picker on
   // click / Enter), so persistence belongs here — and ONLY here. Server-
   // driven flips (`model_locked`, `model_unavailable`, takeover) go
   // through `setSelectedModel` directly, which never writes to disk.
-  const resolved = resolveFreebuffModel(model)
-  useFreebuffModelStore.getState().setSelectedModel(resolved)
-  saveFreebuffModelPreference(resolved)
-  return restartFreebuffSession('rejoin')
+  const resolved = resolveFreeTierModel(model)
+  useFreeTierModelStore.getState().setSelectedModel(resolved)
+  saveFreeTierModelPreference(resolved)
+  return restartFreeTierSession('rejoin')
 }
 
-export function takeOverFreebuffSession(): Promise<void> {
-  if (!IS_FREEBUFF) return Promise.resolve()
-  const current = useFreebuffSessionStore.getState().session
+export function takeOverFreeTierSession(): Promise<void> {
+  if (!IS_FREETIER) return Promise.resolve()
+  const current = useFreeTierSessionStore.getState().session
   if (current?.status !== 'takeover_prompt') return Promise.resolve()
-  useFreebuffModelStore.getState().setSelectedModel(current.model)
-  return restartFreebuffSession('rejoin')
+  useFreeTierModelStore.getState().setSelectedModel(current.model)
+  return restartFreeTierSession('rejoin')
 }
 
 /**
@@ -361,13 +361,13 @@ export function takeOverFreebuffSession(): Promise<void> {
  * skip React unmount (process.exit on Ctrl+C) so the seat frees up quickly
  * instead of waiting for the server-side expiry sweep.
  */
-export async function endFreebuffSessionBestEffort(): Promise<void> {
-  if (!IS_FREEBUFF) return
-  await releaseFreebuffSlot()
+export async function endFreeTierSessionBestEffort(): Promise<void> {
+  if (!IS_FREETIER) return
+  await releaseFreeTierSlot()
 }
 
-export function markFreebuffSessionSuperseded(): void {
-  if (!IS_FREEBUFF) return
+export function markFreeTierSessionSuperseded(): void {
+  if (!IS_FREETIER) return
   controller?.abort()
   controller?.apply({ status: 'superseded' })
 }
@@ -378,27 +378,27 @@ export function markFreebuffSessionSuperseded(): void {
  *  Transitioning the session state here unmounts the Chat surface in favor of
  *  the waiting-room's country_blocked message, so the user can't keep typing
  *  and sending doomed requests. */
-export function markFreebuffSessionCountryBlocked(params: {
+export function markFreeTierSessionCountryBlocked(params: {
   countryCode: string
-  countryBlockReason?: FreebuffCountryBlockReason
-  ipPrivacySignals?: FreebuffIpPrivacySignal[]
+  countryBlockReason?: FreeTierCountryBlockReason
+  ipPrivacySignals?: FreeTierIpPrivacySignal[]
 }): void {
-  if (!IS_FREEBUFF) return
+  if (!IS_FREETIER) return
   controller?.abort()
   controller?.apply({ status: 'country_blocked', ...params })
   // Best-effort DELETE so we don't hold a waiting-room seat on a session the
   // server is already refusing to serve at chat time.
-  releaseFreebuffSlot().catch(() => {})
+  releaseFreeTierSlot().catch(() => {})
 }
 
 /** Flip into the local `ended` state without an instanceId (server has lost
  *  our row). The chat surface stays mounted with the rejoin banner.
  *  Preserves any `rateLimitsByModel` snapshot from the prior session so the
  *  banner can show today's premium-session count without an extra fetch. */
-export function markFreebuffSessionEnded(): void {
-  if (!IS_FREEBUFF) return
+export function markFreeTierSessionEnded(): void {
+  if (!IS_FREETIER) return
   controller?.abort()
-  const current = useFreebuffSessionStore.getState().session
+  const current = useFreeTierSessionStore.getState().session
   const rateLimitsByModel = getRateLimitsByModel(current)
   controller?.apply({
     status: 'ended',
@@ -408,15 +408,15 @@ export function markFreebuffSessionEnded(): void {
   })
 }
 
-interface UseFreebuffSessionResult {
-  session: FreebuffSessionResponse | null
+interface UseFreeTierSessionResult {
+  session: FreeTierSessionResponse | null
   error: string | null
 }
 
 /**
- * Manages the freebuff waiting-room session lifecycle:
+ * Manages the freetier waiting-room session lifecycle:
  *   - GET on mount to probe state (no auto-join; the user picks a model in
- *     the landing screen, which calls joinFreebuffQueue)
+ *     the landing screen, which calls joinFreeTierQueue)
  *   - if the probe sees an existing seat, auto-takes-over when the prior
  *     local owner process is gone; otherwise asks before POSTing to rotate
  *     the instance id so any other CLI on the same account is superseded
@@ -426,14 +426,14 @@ interface UseFreebuffSessionResult {
  *   - DELETE on unmount so the slot frees up for the next user
  *   - plays a bell on transition from queued → active
  */
-export function useFreebuffSession(): UseFreebuffSessionResult {
-  const session = useFreebuffSessionStore((s) => s.session)
-  const error = useFreebuffSessionStore((s) => s.error)
+export function useFreeTierSession(): UseFreeTierSessionResult {
+  const session = useFreeTierSessionStore((s) => s.session)
+  const error = useFreeTierSessionStore((s) => s.error)
 
   useEffect(() => {
-    const { setSession, setError } = useFreebuffSessionStore.getState()
+    const { setSession, setError } = useFreeTierSessionStore.getState()
 
-    if (!IS_FREEBUFF) {
+    if (!IS_FREETIER) {
       setSession({ status: 'disabled' })
       return
     }
@@ -451,7 +451,7 @@ export function useFreebuffSession(): UseFreebuffSessionResult {
     let cancelled = false
     let abortController = new AbortController()
     let timer: ReturnType<typeof setTimeout> | null = null
-    let previousStatus: FreebuffSessionResponse['status'] | null = null
+    let previousStatus: FreeTierSessionResponse['status'] | null = null
     let restartGeneration = 0
     // Method for the NEXT tick. GET is read-only; POST claims/rotates a seat.
     // Startup is GET (probe before committing). After any POST completes we
@@ -459,14 +459,14 @@ export function useFreebuffSession(): UseFreebuffSessionResult {
     // the startup takeover branch does the same when the probe finds a seat.
     let nextMethod: 'GET' | 'POST' = 'GET'
 
-    const apply = (next: FreebuffSessionResponse) => {
+    const apply = (next: FreeTierSessionResponse) => {
       if (next.status === 'queued' || next.status === 'active') {
-        useFreebuffModelStore.getState().setSelectedModel(next.model)
-        recordFreebuffInstanceOwner(next.instanceId)
+        useFreeTierModelStore.getState().setSelectedModel(next.model)
+        recordFreeTierInstanceOwner(next.instanceId)
       } else if (next.status === 'none' && next.accessTier === 'limited') {
-        useFreebuffModelStore
+        useFreeTierModelStore
           .getState()
-          .setSelectedModel(LIMITED_FREEBUFF_MODEL_ID)
+          .setSelectedModel(LIMITED_FREETIER_MODEL_ID)
       }
       setSession(next)
       setError(null)
@@ -489,8 +489,8 @@ export function useFreebuffSession(): UseFreebuffSessionResult {
     const tick = async () => {
       if (cancelled) return
       const method = nextMethod
-      const instanceId = getFreebuffInstanceId()
-      const model = getSelectedFreebuffModel()
+      const instanceId = getFreeTierInstanceId()
+      const model = getSelectedFreeTierModel()
       try {
         const next = await callSession(method, token, {
           signal: abortController.signal,
@@ -509,7 +509,7 @@ export function useFreebuffSession(): UseFreebuffSessionResult {
         // (a GET) lands the actual active session. Users who really want to
         // switch can /end-session deliberately.
         if (next.status === 'model_locked') {
-          useFreebuffModelStore.getState().setSelectedModel(next.currentModel)
+          useFreeTierModelStore.getState().setSelectedModel(next.currentModel)
           schedule(0)
           return
         }
@@ -518,9 +518,9 @@ export function useFreebuffSession(): UseFreebuffSessionResult {
           // to the always-available fallback for this run. In-memory only —
           // `setSelectedModel` doesn't persist, so the user's saved preference
           // is preserved for their next launch.
-          useFreebuffModelStore
+          useFreeTierModelStore
             .getState()
-            .setSelectedModel(FALLBACK_FREEBUFF_MODEL_ID)
+            .setSelectedModel(FALLBACK_FREETIER_MODEL_ID)
           // The unavailable response came from a POST attempt. Re-POST with
           // the fallback model; a GET would only redisplay the old ended row
           // and leave the restart banner stuck in its pending state.
@@ -531,7 +531,7 @@ export function useFreebuffSession(): UseFreebuffSessionResult {
 
         // Startup takeover: the initial probe GET saw we already hold a seat
         // (from a prior CLI instance). Stop here and ask before POSTing to
-        // rotate our instance id; otherwise opening a second freebuff would
+        // rotate our instance id; otherwise opening a second freetier would
         // immediately supersede the first one.
         // `previousStatus === null` fences this to the very first tick only.
         // Pin the selected model to whatever the server thinks we're on so
@@ -542,11 +542,11 @@ export function useFreebuffSession(): UseFreebuffSessionResult {
           previousStatus === null &&
           (next.status === 'queued' || next.status === 'active')
         ) {
-          useFreebuffModelStore.getState().setSelectedModel(next.model)
+          useFreeTierModelStore.getState().setSelectedModel(next.model)
           // A fast restart after Ctrl+C can observe the old server row before
           // best-effort DELETE lands. If the row belongs to a dead local
           // process, silently do the same POST as the Take over button.
-          if (isFreebuffInstanceOwnedByDeadLocalProcess(next.instanceId)) {
+          if (isFreeTierInstanceOwnedByDeadLocalProcess(next.instanceId)) {
             nextMethod = 'POST'
             schedule(0)
             return
@@ -570,7 +570,7 @@ export function useFreebuffSession(): UseFreebuffSessionResult {
           (previousStatus === 'active' || previousStatus === 'ended') &&
           next.status === 'none'
         ) {
-          const current = useFreebuffSessionStore.getState().session
+          const current = useFreeTierSessionStore.getState().session
           const rateLimitsByModel =
             next.rateLimitsByModel ?? getRateLimitsByModel(current)
           apply({
@@ -618,9 +618,9 @@ export function useFreebuffSession(): UseFreebuffSessionResult {
           // snapshots, so kick off a fire-and-forget GET and extract only
           // picker metadata from the response, ignoring whatever status it
           // claims. Polling resumes when the user commits to a model via
-          // joinFreebuffQueue.
+          // joinFreeTierQueue.
           const landingSession = toLandingSession(
-            useFreebuffSessionStore.getState().session,
+            useFreeTierSessionStore.getState().session,
           )
           apply(landingSession)
           const fetchController = abortController
@@ -675,7 +675,7 @@ export function useFreebuffSession(): UseFreebuffSessionResult {
       cancelled = true
       abortController.abort()
       clearTimer()
-      const current = useFreebuffSessionStore.getState().session
+      const current = useFreeTierSessionStore.getState().session
       controller = null
 
       // Fire-and-forget DELETE. Only release if we actually held a slot so

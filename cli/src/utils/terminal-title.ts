@@ -11,11 +11,11 @@
 
 import { closeSync, constants, openSync, writeSync } from 'fs'
 
-import { IS_FREEBUFF } from './constants'
+import { IS_FREETIER } from './constants'
 import { getCliEnv } from './env'
 
 const MAX_TITLE_LENGTH = 60
-const TITLE_PREFIX = IS_FREEBUFF ? 'Freebuff: ' : 'NEXUS: '
+const TITLE_PREFIX = IS_FREETIER ? 'FreeTier: ' : 'NEXUS: '
 const OSC_TERMINATOR = '\x07' // BEL
 
 function isInTmux(env: ReturnType<typeof getCliEnv>): boolean {

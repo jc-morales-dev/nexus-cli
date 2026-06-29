@@ -8,10 +8,10 @@ import {
   extractSubagentContextParams,
 } from './spawn-agent-utils'
 
-import type { CodebuffToolHandlerFunction } from '../handler-function-type'
+import type { NexusToolHandlerFunction } from '../handler-function-type'
 import type {
-  CodebuffToolCall,
-  CodebuffToolOutput,
+  NexusToolCall,
+  NexusToolOutput,
 } from '@nexus/common/tools/list'
 import type { AgentTemplate } from '@nexus/common/types/agent-template'
 import type { Logger } from '@nexus/common/types/contracts/logger'
@@ -25,7 +25,7 @@ type ToolName = 'spawn_agent_inline'
 export const handleSpawnAgentInline = (async (
   params: {
     previousToolCallFinished: Promise<void>
-    toolCall: CodebuffToolCall<ToolName>
+    toolCall: NexusToolCall<ToolName>
 
     agentState: AgentState
     agentTemplate: AgentTemplate
@@ -53,7 +53,7 @@ export const handleSpawnAgentInline = (async (
     | 'clearUserPromptMessagesAfterResponse'
     | 'fingerprintId'
   >,
-): Promise<{ output: CodebuffToolOutput<ToolName> }> => {
+): Promise<{ output: NexusToolOutput<ToolName> }> => {
   const {
     previousToolCallFinished,
     toolCall,
@@ -139,4 +139,4 @@ export const handleSpawnAgentInline = (async (
   parentAgentState.messageHistory = result.agentState.messageHistory
 
   return { output: [{ type: 'json', value: { message: 'Agent spawned.' } }] }
-}) satisfies CodebuffToolHandlerFunction<ToolName>
+}) satisfies NexusToolHandlerFunction<ToolName>

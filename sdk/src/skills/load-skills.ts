@@ -162,17 +162,17 @@ function discoverSkillsFromDirectory(
  * 
  * Order (later overrides earlier):
  * - ~/.claude/skills/ (global Claude-compatible)
- * - ~/.agents/skills/ (global Codebuff)
+ * - ~/.agents/skills/ (global Nexus)
  * - {cwd}/.claude/skills/ (project Claude-compatible)
- * - {cwd}/.agents/skills/ (project Codebuff)
+ * - {cwd}/.agents/skills/ (project Nexus)
  */
 function getDefaultSkillsDirs(cwd: string): string[] {
   const home = os.homedir()
   return [
-    // Global directories (Claude-compatible first, then Codebuff)
+    // Global directories (Claude-compatible first, then Nexus)
     path.join(home, '.claude', SKILLS_DIR_NAME),
     path.join(home, '.agents', SKILLS_DIR_NAME),
-    // Project directories (Claude-compatible first, then Codebuff)
+    // Project directories (Claude-compatible first, then Nexus)
     path.join(cwd, '.claude', SKILLS_DIR_NAME),
     path.join(cwd, '.agents', SKILLS_DIR_NAME),
   ]

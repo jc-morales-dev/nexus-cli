@@ -75,8 +75,8 @@ export function getProviderOptions(params: {
   n?: number
   costMode?: string
   cacheDebugCorrelation?: string
-  extraCodebuffMetadata?: Record<string, string>
-}): { codebuff: JSONObject } {
+  extraNexusMetadata?: Record<string, string>
+}): { nexus: JSONObject } {
   const {
     model,
     runId,
@@ -86,7 +86,7 @@ export function getProviderOptions(params: {
     n,
     costMode,
     cacheDebugCorrelation,
-    extraCodebuffMetadata,
+    extraNexusMetadata,
   } = params
 
   let providerConfig: Record<string, any>
@@ -106,14 +106,14 @@ export function getProviderOptions(params: {
 
   return {
     ...providerOptions,
-    // Could either be "codebuff" or "openaiCompatible"
-    codebuff: {
-      ...providerOptions?.codebuff,
+    // Could either be "nexus" or "openaiCompatible"
+    nexus: {
+      ...providerOptions?.nexus,
       // All values here get appended to the request body
-      codebuff_metadata: {
+      nexus_metadata: {
         // Caller-supplied keys go first so they can't override reserved
         // identifiers like run_id/client_id/cost_mode that the server trusts.
-        ...(extraCodebuffMetadata ?? {}),
+        ...(extraNexusMetadata ?? {}),
         run_id: runId,
         client_id: clientSessionId,
         ...(n && { n }),
@@ -127,7 +127,7 @@ export function getProviderOptions(params: {
   }
 }
 
-// Usage accounting type for OpenRouter/Codebuff backend responses
+// Usage accounting type for OpenRouter/Nexus backend responses
 // Forked from https://github.com/OpenRouterTeam/ai-sdk-provider/
 type OpenRouterUsageAccounting = {
   cost: number | null
@@ -342,7 +342,7 @@ export async function* promptAiSdkStream(
     // OpenRouter routes get a higher retry budget so transient 429/5xx from
     // cheap providers self-heal instead of surfacing as a hard error.
     maxRetries: isChatGptOAuth ? 0 : 4,
-    // For ChatGPT OAuth direct, don't send codebuff metadata/provider options to OpenAI
+    // For ChatGPT OAuth direct, don't send nexus metadata/provider options to OpenAI
     ...(isChatGptOAuth
       ? {}
       : {
@@ -555,7 +555,7 @@ export async function* promptAiSdkStream(
 
         markChatGptOAuthRateLimited()
 
-        // In free mode, don't fall back to Codebuff backend — fail instead
+        // In free mode, don't fall back to Nexus backend — fail instead
         if (isFreeMode(params.costMode)) {
           throw new Error(
             `ChatGPT rate limit reached. Please wait a few minutes and try again. (${rateLimitErrorDetails})`,
@@ -606,14 +606,14 @@ export async function* promptAiSdkStream(
         }
 
         // Refresh failed or already retried
-        // In free mode, don't fall back to Codebuff backend — fail instead
+        // In free mode, don't fall back to Nexus backend — fail instead
         if (isFreeMode(params.costMode)) {
           throw new Error(
             'ChatGPT OAuth authentication failed. Please reconnect with /connect:chatgpt and try again.',
           )
         }
 
-        // Fall back to Codebuff backend
+        // Fall back to Nexus backend
         const fallbackResult = yield* promptAiSdkStream({
           ...params,
           skipChatGptOAuth: true,
@@ -634,7 +634,7 @@ export async function* promptAiSdkStream(
       throw chunkValue.error
     }
     if (chunkValue.type === 'reasoning-delta') {
-      const reasoningExcluded = (['openrouter', 'codebuff'] as const).some(
+      const reasoningExcluded = (['openrouter', 'nexus'] as const).some(
         (p) =>
           (params.providerOptions?.[p] as OpenRouterProviderOptions | undefined)
             ?.reasoning?.exclude,
@@ -704,9 +704,9 @@ export async function* promptAiSdkStream(
     const providerMetadata = providerMetadataResult ?? {}
 
     let costOverrideDollars: number | undefined
-    if (providerMetadata.codebuff) {
-      if (providerMetadata.codebuff.usage) {
-        const openrouterUsage = providerMetadata.codebuff
+    if (providerMetadata.nexus) {
+      if (providerMetadata.nexus.usage) {
+        const openrouterUsage = providerMetadata.nexus
           .usage as OpenRouterUsageAccounting
 
         costOverrideDollars =
@@ -745,7 +745,7 @@ export async function promptAiSdk(
   const modelParams: ModelRequestParams = {
     apiKey: params.apiKey,
     model: params.model,
-    skipChatGptOAuth: true, // Always use Codebuff backend for non-streaming
+    skipChatGptOAuth: true, // Always use Nexus backend for non-streaming
   }
   const { model: aiSDKModel } = await getModelForRequest(modelParams)
 
@@ -773,9 +773,9 @@ export async function promptAiSdk(
 
   const providerMetadata = response.providerMetadata ?? {}
   let costOverrideDollars: number | undefined
-  if (providerMetadata.codebuff) {
-    if (providerMetadata.codebuff.usage) {
-      const openrouterUsage = providerMetadata.codebuff
+  if (providerMetadata.nexus) {
+    if (providerMetadata.nexus.usage) {
+      const openrouterUsage = providerMetadata.nexus
         .usage as OpenRouterUsageAccounting
 
       costOverrideDollars =
@@ -812,7 +812,7 @@ export async function promptAiSdkStructured<T>(
   const modelParams: ModelRequestParams = {
     apiKey: params.apiKey,
     model: params.model,
-    skipChatGptOAuth: true, // Always use Codebuff backend for non-streaming
+    skipChatGptOAuth: true, // Always use Nexus backend for non-streaming
   }
   const { model: aiSDKModel } = await getModelForRequest(modelParams)
 
@@ -843,9 +843,9 @@ export async function promptAiSdkStructured<T>(
 
   const providerMetadata = response.providerMetadata ?? {}
   let costOverrideDollars: number | undefined
-  if (providerMetadata.codebuff) {
-    if (providerMetadata.codebuff.usage) {
-      const openrouterUsage = providerMetadata.codebuff
+  if (providerMetadata.nexus) {
+    if (providerMetadata.nexus.usage) {
+      const openrouterUsage = providerMetadata.nexus
         .usage as OpenRouterUsageAccounting
 
       costOverrideDollars =

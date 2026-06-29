@@ -3,10 +3,10 @@ import { jsonToolResult } from '@nexus/common/util/messages'
 import { callDocsSearchAPI } from '../../../llm-api/nexus-web-api'
 
 import type { fetchContext7LibraryDocumentation } from '../../../llm-api/context7-api'
-import type { CodebuffToolHandlerFunction } from '../handler-function-type'
+import type { NexusToolHandlerFunction } from '../handler-function-type'
 import type {
-  CodebuffToolCall,
-  CodebuffToolOutput,
+  NexusToolCall,
+  NexusToolOutput,
 } from '@nexus/common/tools/list'
 import type { ClientEnv, CiEnv } from '@nexus/common/types/contracts/env'
 import type { Logger } from '@nexus/common/types/contracts/logger'
@@ -15,7 +15,7 @@ import type { ParamsExcluding } from '@nexus/common/types/function-params'
 export const handleReadDocs = (async (
   params: {
     previousToolCallFinished: Promise<void>
-    toolCall: CodebuffToolCall<'read_docs'>
+    toolCall: NexusToolCall<'read_docs'>
 
     agentStepId: string
     clientSessionId: string
@@ -31,7 +31,7 @@ export const handleReadDocs = (async (
     'query' | 'topic' | 'tokens'
   >,
 ): Promise<{
-  output: CodebuffToolOutput<'read_docs'>
+  output: NexusToolOutput<'read_docs'>
   creditsUsed: number
 }> => {
   const {
@@ -157,4 +157,4 @@ export const handleReadDocs = (async (
       creditsUsed,
     }
   }
-}) satisfies CodebuffToolHandlerFunction<'read_docs'>
+}) satisfies NexusToolHandlerFunction<'read_docs'>

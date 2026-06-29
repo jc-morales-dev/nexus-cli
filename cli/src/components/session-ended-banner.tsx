@@ -5,11 +5,11 @@ import React, { useCallback, useState } from 'react'
 
 import { Button } from './button'
 import {
-  refreshFreebuffSession,
-  returnToFreebuffLanding,
+  refreshFreeTierSession,
+  returnToFreeTierLanding,
 } from '../hooks/use-freetier-session'
 import { useTheme } from '../hooks/use-theme'
-import { useFreebuffSessionStore } from '../state/freetier-session-store'
+import { useFreeTierSessionStore } from '../state/freetier-session-store'
 import { formatSessionUnits } from '../utils/format-session-units'
 import { isPlainEnterKey } from '../utils/terminal-enter-detection'
 import { BORDER_CHARS } from '../utils/ui-constants'
@@ -24,7 +24,7 @@ interface SessionEndedBannerProps {
 }
 
 /**
- * Replaces the chat input when the freebuff session has ended. Captures
+ * Replaces the chat input when the freetier session has ended. Captures
  * Enter to start a new same-chat session. Esc returns to model selection
  * once no in-flight work needs the global stream-interrupt handler.
  */
@@ -39,13 +39,13 @@ export const SessionEndedBanner: React.FC<SessionEndedBannerProps> = ({
   // All premium models share one daily pool; the server replicates the same
   // snapshot under each premium model id, so the first entry has the right
   // count.
-  const premiumQuota = useFreebuffSessionStore(
+  const premiumQuota = useFreeTierSessionStore(
     (s) => Object.values(getRateLimitsByModel(s.session) ?? {})[0] ?? null,
   )
   const isQuotaExhausted = premiumQuota
     ? premiumQuota.recentCount >= premiumQuota.limit
     : false
-  const accessTier = useFreebuffSessionStore((s) =>
+  const accessTier = useFreeTierSessionStore((s) =>
     s.session && 'accessTier' in s.session ? s.session.accessTier : 'full',
   )
   const quotaLabel =
@@ -73,7 +73,7 @@ export const SessionEndedBanner: React.FC<SessionEndedBannerProps> = ({
     // re-queued. app.tsx swaps us into <WaitingRoomScreen> on the
     // transition, unmounting this banner — no need to clear the pending state on
     // success.
-    returnToFreebuffLanding({ resetChat: true }).catch(() =>
+    returnToFreeTierLanding({ resetChat: true }).catch(() =>
       setPendingAction(null),
     )
   }, [canRestart])
@@ -83,7 +83,7 @@ export const SessionEndedBanner: React.FC<SessionEndedBannerProps> = ({
     setPendingAction('same-chat')
     // Re-POST with the currently selected model and keep the chat/run state
     // intact so the next prompt continues the same conversation.
-    refreshFreebuffSession().catch(() => setPendingAction(null))
+    refreshFreeTierSession().catch(() => setPendingAction(null))
   }, [canRestart])
 
   useKeyboard(

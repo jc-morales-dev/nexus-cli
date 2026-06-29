@@ -4,14 +4,14 @@ import { useShallow } from 'zustand/react/shallow'
 
 import { Chat } from './chat'
 import { ChatHistoryScreen } from './components/chat-history-screen'
-import { FreebuffSupersededScreen } from './components/freetier-superseded-screen'
+import { FreeTierSupersededScreen } from './components/freetier-superseded-screen'
 import { LoginModal } from './components/login-modal'
 import { ProjectPickerScreen } from './components/project-picker-screen'
 import { TerminalLink } from './components/terminal-link'
 import { WaitingRoomScreen } from './components/waiting-room-screen'
 import { useAuthQuery } from './hooks/use-auth-query'
 import { useAuthState } from './hooks/use-auth-state'
-import { useFreebuffSession } from './hooks/use-freetier-session'
+import { useFreeTierSession } from './hooks/use-freetier-session'
 import { useLogo } from './hooks/use-logo'
 import { useSheenAnimation } from './hooks/use-sheen-animation'
 import { useTerminalDimensions } from './hooks/use-terminal-dimensions'
@@ -21,7 +21,7 @@ import { getProjectRoot } from './project-files'
 import { useChatHistoryStore } from './state/chat-history-store'
 import { useChatStore } from './state/chat-store'
 import type { TopBannerType } from './types/store'
-import { IS_FREEBUFF } from './utils/constants'
+import { IS_FREETIER } from './utils/constants'
 import { findGitRoot } from './utils/git'
 import { openFileAtPath } from './utils/open-file'
 import { formatCwd } from './utils/path-helpers'
@@ -226,7 +226,7 @@ export const App = ({
         <text
           style={{ wrapMode: 'word', marginBottom: 1, fg: theme.foreground }}
         >
-          {IS_FREEBUFF ? 'Freebuff' : 'NEXUS'} will run commands on your behalf to help you build.
+          {IS_FREETIER ? 'FreeTier' : 'NEXUS'} will run commands on your behalf to help you build.
         </text>
         <text
           style={{ wrapMode: 'word', marginBottom: 1, fg: theme.foreground }}
@@ -269,7 +269,7 @@ export const App = ({
   // Render project picker FIRST when at home directory or outside a project.
   // This deliberately precedes the login/auth and waiting-room gates so the
   // user always gets to pick a working directory before anything else — auth
-  // failures or a banned/queued freebuff session would otherwise replace the
+  // failures or a banned/queued freetier session would otherwise replace the
   // picker mid-flash and look like being kicked out of the app.
   if (showProjectPicker) {
     return (
@@ -346,8 +346,8 @@ interface AuthedSurfaceProps {
 }
 
 /**
- * Rendered only after auth is confirmed. Owns the freebuff waiting-room gate
- * so `useFreebuffSession` runs exactly once per authed session (not before
+ * Rendered only after auth is confirmed. Owns the freetier waiting-room gate
+ * so `useFreeTierSession` runs exactly once per authed session (not before
  * we have a token).
  */
 const AuthedSurface = ({
@@ -371,13 +371,13 @@ const AuthedSurface = ({
   onCancelChatHistory,
   onNewChat,
 }: AuthedSurfaceProps) => {
-  const { session, error: sessionError } = useFreebuffSession()
+  const { session, error: sessionError } = useFreeTierSession()
 
   // Terminal state: a 409 from the gate means another CLI rotated our
   // instance id. Show a dedicated screen and stop polling — don't fall back
   // into the waiting room, which would look like normal queued progress.
-  if (IS_FREEBUFF && session?.status === 'superseded') {
-    return <FreebuffSupersededScreen />
+  if (IS_FREETIER && session?.status === 'superseded') {
+    return <FreeTierSupersededScreen />
   }
 
   // Route every non-admitted state through the pre-chat screen:
@@ -393,7 +393,7 @@ const AuthedSurface = ({
   // finishing work under the server-side grace period, and the chat surface
   // itself swaps the input box for the session-ended banner.
   if (
-    IS_FREEBUFF &&
+    IS_FREETIER &&
     (session === null ||
       session.status === 'queued' ||
       session.status === 'none' ||
@@ -405,7 +405,7 @@ const AuthedSurface = ({
     return <WaitingRoomScreen session={session} error={sessionError} />
   }
 
-  // Chat history renders inside AuthedSurface so the freebuff session stays
+  // Chat history renders inside AuthedSurface so the freetier session stays
   // mounted while the user browses history. Unmounting this surface would
   // DELETE the session row and drop the user back into the waiting room on
   // return.
@@ -436,7 +436,7 @@ const AuthedSurface = ({
       initialMode={initialMode}
       gitRoot={gitRoot}
       onSwitchToGitRoot={onSwitchToGitRoot}
-      freebuffSession={session}
+      freetierSession={session}
     />
   )
 }

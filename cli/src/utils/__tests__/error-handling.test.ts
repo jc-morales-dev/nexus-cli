@@ -1,14 +1,14 @@
 import { describe, test, expect } from 'bun:test'
 
 import {
-  getFreebuffRateLimitErrorMessage,
+  getFreeTierRateLimitErrorMessage,
   getFreeModeUnavailableErrorMessage,
   isOutOfCreditsError,
   isFreeModeUnavailableError,
   getCountryBlockFromFreeModeError,
   OUT_OF_CREDITS_MESSAGE,
   FREE_MODE_UNAVAILABLE_MESSAGE,
-  FREEBUFF_RATE_LIMIT_MESSAGE,
+  FREETIER_RATE_LIMIT_MESSAGE,
   createErrorMessage,
 } from '../error-handling'
 
@@ -88,7 +88,7 @@ describe('error-handling', () => {
           statusCode: 403,
           responseBody: JSON.stringify({
             error: 'free_mode_unavailable',
-            message: 'Freebuff cannot be used from VPN traffic.',
+            message: 'FreeTier cannot be used from VPN traffic.',
           }),
         }),
       ).toBe(true)
@@ -130,44 +130,44 @@ describe('error-handling', () => {
     })
   })
 
-  describe('getFreebuffRateLimitErrorMessage', () => {
+  describe('getFreeTierRateLimitErrorMessage', () => {
     test('returns the generic message for untyped 429 errors', () => {
       expect(
-        getFreebuffRateLimitErrorMessage({
+        getFreeTierRateLimitErrorMessage({
           statusCode: 429,
           message: 'Too Many Requests',
         }),
-      ).toBe(FREEBUFF_RATE_LIMIT_MESSAGE)
+      ).toBe(FREETIER_RATE_LIMIT_MESSAGE)
     })
 
     test('returns the generic message for thrown API errors with status 429', () => {
       expect(
-        getFreebuffRateLimitErrorMessage({
+        getFreeTierRateLimitErrorMessage({
           status: 429,
           message: 'Too Many Requests',
         }),
-      ).toBe(FREEBUFF_RATE_LIMIT_MESSAGE)
+      ).toBe(FREETIER_RATE_LIMIT_MESSAGE)
     })
 
     test('returns the generic message for retry-wrapped untyped 429 errors', () => {
       expect(
-        getFreebuffRateLimitErrorMessage({
+        getFreeTierRateLimitErrorMessage({
           message: 'Failed after 4 attempts. Last error: Too Many Requests',
           lastError: {
             statusCode: 429,
             message: 'Too Many Requests',
           },
         }),
-      ).toBe(FREEBUFF_RATE_LIMIT_MESSAGE)
+      ).toBe(FREETIER_RATE_LIMIT_MESSAGE)
     })
 
     test('returns null for non-429 status codes', () => {
-      expect(getFreebuffRateLimitErrorMessage({ statusCode: 402 })).toBe(null)
-      expect(getFreebuffRateLimitErrorMessage({ statusCode: 500 })).toBe(null)
+      expect(getFreeTierRateLimitErrorMessage({ statusCode: 402 })).toBe(null)
+      expect(getFreeTierRateLimitErrorMessage({ statusCode: 500 })).toBe(null)
     })
 
     test('returns null for string statusCode', () => {
-      expect(getFreebuffRateLimitErrorMessage({ statusCode: '429' })).toBe(
+      expect(getFreeTierRateLimitErrorMessage({ statusCode: '429' })).toBe(
         null,
       )
     })
@@ -177,7 +177,7 @@ describe('error-handling', () => {
         'Free mode rate limit exceeded (1 minute limit). Try again in 30 seconds.'
 
       expect(
-        getFreebuffRateLimitErrorMessage({
+        getFreeTierRateLimitErrorMessage({
           statusCode: 429,
           error: 'free_mode_rate_limited',
           message,
@@ -190,7 +190,7 @@ describe('error-handling', () => {
         'Free mode rate limit exceeded (1 minute limit). Try again in 30 seconds.'
 
       expect(
-        getFreebuffRateLimitErrorMessage({
+        getFreeTierRateLimitErrorMessage({
           statusCode: 429,
           message: 'Too Many Requests',
           responseBody: JSON.stringify({
@@ -206,7 +206,7 @@ describe('error-handling', () => {
         'Free mode rate limit exceeded (1 minute limit). Try again in 30 seconds.'
 
       expect(
-        getFreebuffRateLimitErrorMessage({
+        getFreeTierRateLimitErrorMessage({
           message: 'Failed after 4 attempts. Last error: Too Many Requests',
           lastError: {
             statusCode: 429,
@@ -222,11 +222,11 @@ describe('error-handling', () => {
 
     test('falls back to the generic message when typed quota errors have no message', () => {
       expect(
-        getFreebuffRateLimitErrorMessage({
+        getFreeTierRateLimitErrorMessage({
           statusCode: 429,
           error: 'free_mode_rate_limited',
         }),
-      ).toBe(FREEBUFF_RATE_LIMIT_MESSAGE)
+      ).toBe(FREETIER_RATE_LIMIT_MESSAGE)
     })
   })
 
@@ -348,9 +348,9 @@ describe('error-handling', () => {
     })
   })
 
-  describe('FREEBUFF_RATE_LIMIT_MESSAGE', () => {
+  describe('FREETIER_RATE_LIMIT_MESSAGE', () => {
     test('encourages retry without mentioning credits or payment', () => {
-      const message = FREEBUFF_RATE_LIMIT_MESSAGE.toLowerCase()
+      const message = FREETIER_RATE_LIMIT_MESSAGE.toLowerCase()
       expect(message).toContain('try again')
       expect(message).not.toContain('credit')
       expect(message).not.toContain('pay')

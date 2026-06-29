@@ -46,7 +46,7 @@ import type { AgentDefinition } from '@nexus/common/templates/initial-agents-dir
 import type { ToolName } from '@nexus/common/tools/constants'
 import type { PublishedClientToolName } from '@nexus/common/tools/list'
 import type { Logger } from '@nexus/common/types/contracts/logger'
-import type { CodebuffFileSystem } from '@nexus/common/types/filesystem'
+import type { NexusFileSystem } from '@nexus/common/types/filesystem'
 import type { ToolMessage } from '@nexus/common/types/messages/nexus-message'
 import type {
   ImagePart,
@@ -56,7 +56,7 @@ import type {
 import type { PrintModeEvent } from '@nexus/common/types/print-mode'
 import type { SessionState } from '@nexus/common/types/session-state'
 import type { Source } from '@nexus/common/types/source'
-import type { CodebuffSpawn } from '@nexus/common/types/spawn'
+import type { NexusSpawn } from '@nexus/common/types/spawn'
 
 /**
  * Wraps content for user messages, ensuring text is wrapped in <user_message> tags.
@@ -81,7 +81,7 @@ type OverrideToolHandlers = {
   }) => Promise<Record<string, string | null>>
 }
 
-export type CodebuffClientOptions = {
+export type NexusClientOptions = {
   apiKey?: string
 
   cwd?: string
@@ -117,8 +117,8 @@ export type CodebuffClientOptions = {
   overrideTools?: OverrideToolHandlers
   customToolDefinitions?: CustomToolDefinition[]
 
-  fsSource?: Source<CodebuffFileSystem>
-  spawnSource?: Source<CodebuffSpawn>
+  fsSource?: Source<NexusFileSystem>
+  spawnSource?: Source<NexusSpawn>
   logger?: Logger
 }
 
@@ -145,10 +145,10 @@ export type RunOptions = {
   extraToolResults?: ToolMessage[]
   signal?: AbortSignal
   costMode?: string
-  /** Extra key/values merged into each LLM request's `codebuff_metadata`.
+  /** Extra key/values merged into each LLM request's `nexus_metadata`.
    *  Used by hosts (e.g. the CLI) to forward client-scoped identifiers like
-   *  `freebuff_instance_id` that server-side gates read from the request body. */
-  extraCodebuffMetadata?: Record<string, string>
+   *  `freetier_instance_id` that server-side gates read from the request body. */
+  extraNexusMetadata?: Record<string, string>
 }
 
 const createAbortError = (signal?: AbortSignal) => {
@@ -161,7 +161,7 @@ const createAbortError = (signal?: AbortSignal) => {
 }
 
 type RunExecutionOptions = RunOptions &
-  CodebuffClientOptions & {
+  NexusClientOptions & {
     apiKey: string
     fingerprintId: string
   }
@@ -217,7 +217,7 @@ async function runOnce({
   extraToolResults,
   signal,
   costMode,
-  extraCodebuffMetadata,
+  extraNexusMetadata,
 }: RunExecutionOptions): Promise<RunState> {
   // Open a new undo checkpoint for this turn's edits, labeled with the prompt.
   // Materialized lazily on the first edit, so prompts that don't edit anything
@@ -226,12 +226,12 @@ async function runOnce({
 
   const fsSourceValue = typeof fsSource === 'function' ? fsSource() : fsSource
   const fs = await fsSourceValue
-  let spawn: CodebuffSpawn
+  let spawn: NexusSpawn
   if (spawnSource) {
     const spawnSourceValue = await spawnSource
-    spawn = spawnSourceValue as CodebuffSpawn
+    spawn = spawnSourceValue as NexusSpawn
   } else {
-    spawn = require('child_process').spawn as CodebuffSpawn
+    spawn = require('child_process').spawn as NexusSpawn
   }
   const preparedContent = wrapContentForUserMessage(content)
   let activeCustomToolDefinitions = customToolDefinitions ?? []
@@ -543,8 +543,8 @@ async function runOnce({
     repoId: undefined,
     clientSessionId: promptId,
     userId,
-    extraCodebuffMetadata: {
-      ...(extraCodebuffMetadata ?? {}),
+    extraNexusMetadata: {
+      ...(extraNexusMetadata ?? {}),
       trace_session_id: traceSessionId,
     },
     signal: signal ?? new AbortController().signal,
@@ -585,7 +585,7 @@ async function runOnce({
 function requireCwd(cwd: string | undefined, toolName: string): string {
   if (!cwd) {
     throw new Error(
-      `cwd is required for the ${toolName} tool. Please provide cwd in CodebuffClientOptions or override the ${toolName} tool.`,
+      `cwd is required for the ${toolName} tool. Please provide cwd in NexusClientOptions or override the ${toolName} tool.`,
     )
   }
   return cwd
@@ -600,11 +600,11 @@ async function readFiles({
 }: {
   filePaths: string[]
   override?: NonNullable<
-    Required<CodebuffClientOptions>['overrideTools']['read_files']
+    Required<NexusClientOptions>['overrideTools']['read_files']
   >
   fileFilter?: FileFilter
   cwd?: string
-  fs: CodebuffFileSystem
+  fs: NexusFileSystem
 }) {
   if (override) {
     return await override({ filePaths })
@@ -627,10 +627,10 @@ async function handleToolCall({
   apiKey,
 }: {
   action: ServerAction<'tool-call-request'>
-  overrides: NonNullable<CodebuffClientOptions['overrideTools']>
+  overrides: NonNullable<NexusClientOptions['overrideTools']>
   customToolDefinitions: Record<string, CustomToolDefinition>
   cwd?: string
-  fs: CodebuffFileSystem
+  fs: NexusFileSystem
   env?: Record<string, string>
   apiKey: string
 }): Promise<{ output: ToolResultOutput[] }> {
@@ -881,7 +881,7 @@ async function handlePromptResponse({
       const message = [
         'Received invalid prompt response from server:',
         JSON.stringify(parsedOutput.error.issues),
-        'If this issues persists, please contact support@codebuff.com',
+        'If this issues persists, please contact support@nexus.com',
       ].join('\n')
       onError({ message })
       resolve({

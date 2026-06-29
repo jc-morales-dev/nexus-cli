@@ -10,9 +10,9 @@ import {
 
 import type { MCPConfig } from '@nexus/common/types/mcp'
 
-import { getSelectedFreebuffModel } from '../state/freetier-model-store'
+import { getSelectedFreeTierModel } from '../state/freetier-model-store'
 import { getProjectRoot } from '../project-files'
-import { IS_FREEBUFF, type AgentMode } from './constants'
+import { IS_FREETIER, type AgentMode } from './constants'
 import { getAgentIdForMode } from './freetier-agent-selection'
 import { logger } from './logger'
 import * as bundledAgentsModule from '../agents/bundled-agents.generated'
@@ -29,7 +29,7 @@ export interface LocalAgentInfo {
   id: string
   displayName: string
   filePath: string
-  /** True if this is a bundled Codebuff agent (not user-created) */
+  /** True if this is a bundled Nexus agent (not user-created) */
   isBundled?: boolean
 }
 
@@ -244,16 +244,16 @@ const cachedAgentsByMode: Map<string, LocalAgentInfo[]> = new Map()
 export const loadLocalAgents = (
   currentAgentMode?: AgentMode,
 ): LocalAgentInfo[] => {
-  const selectedFreebuffModel = IS_FREEBUFF ? getSelectedFreebuffModel() : null
-  const cacheKey = selectedFreebuffModel
-    ? `${currentAgentMode ?? 'all'}:${selectedFreebuffModel}`
+  const selectedFreeTierModel = IS_FREETIER ? getSelectedFreeTierModel() : null
+  const cacheKey = selectedFreeTierModel
+    ? `${currentAgentMode ?? 'all'}:${selectedFreeTierModel}`
     : (currentAgentMode ?? 'all')
   const cached = cachedAgentsByMode.get(cacheKey)
   if (cached) {
     return cached
   }
 
-  // Get bundled agents - these are the default Codebuff agents
+  // Get bundled agents - these are the default Nexus agents
   // compiled into the CLI binary at build time
   const bundledAgentsInfo = getBundledAgentsAsLocalInfo()
   const bundledAgents = getBundledAgents()
@@ -320,7 +320,7 @@ export const loadLocalAgents = (
  * their custom agents without needing to modify the base agent definition.
  */
 export const loadAgentDefinitions = (): AgentDefinition[] => {
-  // Start with bundled agents - these are the default Codebuff agents
+  // Start with bundled agents - these are the default Nexus agents
   const bundledAgents = getBundledAgents()
   const definitions: AgentDefinition[] = Object.values(bundledAgents).map(
     (def) => ({ ...def }),

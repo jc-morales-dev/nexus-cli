@@ -5,8 +5,8 @@ import { useAuthQuery, useLogoutMutation } from './use-auth-query'
 import { useLoginStore } from '../state/login-store'
 import { identifyUser, trackEvent } from '../utils/analytics'
 import { getUserCredentials } from '../utils/auth'
-import { resetCodebuffClient } from '../utils/nexus-client'
-import { IS_FREEBUFF } from '../utils/constants'
+import { resetNexusClient } from '../utils/nexus-client'
+import { IS_FREETIER } from '../utils/constants'
 import { loggerContext } from '../utils/logger'
 
 import type { MultilineInputHandle } from '../components/multiline-input'
@@ -15,7 +15,7 @@ import type { User } from '../utils/auth'
 const setAuthLoggerContext = (params: { userId: string; email: string }) => {
   loggerContext.userId = params.userId
   loggerContext.userEmail = params.email
-  identifyUser(params.userId, { email: params.email, freebuff: IS_FREEBUFF })
+  identifyUser(params.userId, { email: params.email, freetier: IS_FREETIER })
 }
 
 const clearAuthLoggerContext = () => {
@@ -90,7 +90,7 @@ export const useAuthState = ({
       })
 
       // Reset the SDK client to pick up new credentials
-      resetCodebuffClient()
+      resetNexusClient()
       resetChatStore()
       resetLoginState()
       setInputFocused(true)

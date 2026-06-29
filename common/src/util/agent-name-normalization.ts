@@ -1,4 +1,4 @@
-export const DEFAULT_ORG_PREFIX = 'codebuff/'
+export const DEFAULT_ORG_PREFIX = 'nexus/'
 
 /**
  * Resolves an agent ID by trying multiple strategies:

@@ -40,7 +40,7 @@ export const useAgentValidation = (): UseAgentValidationResult => {
     try {
       const agentDefinitions = loadAgentDefinitions()
 
-      // In BYOK direct mode there is no Codebuff backend, so validate locally
+      // In BYOK direct mode there is no Nexus backend, so validate locally
       // only (remote validation would hit the backend and throw -> blocks send).
       const validationResult = await validateAgents(agentDefinitions, {
         remote: !isByokDirectMode(),

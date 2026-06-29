@@ -75,8 +75,8 @@ export const testFetch = Object.assign(
 
 export const testClientEnv = {
   NEXT_PUBLIC_CB_ENVIRONMENT: 'test' as const,
-  NEXT_PUBLIC_CODEBUFF_APP_URL: 'https://test.codebuff.com',
-  NEXT_PUBLIC_SUPPORT_EMAIL: 'support@codebuff.test',
+  NEXT_PUBLIC_NEXUS_APP_URL: 'https://test.nexus.com',
+  NEXT_PUBLIC_SUPPORT_EMAIL: 'support@nexus.test',
   NEXT_PUBLIC_POSTHOG_API_KEY: 'test-posthog-key',
   NEXT_PUBLIC_POSTHOG_HOST_URL: 'https://test.posthog.com',
   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: 'pk_test_123',
@@ -90,8 +90,8 @@ export const testCiEnv = {
   GITHUB_ACTIONS: undefined,
   RENDER: undefined,
   IS_PULL_REQUEST: undefined,
-  CODEBUFF_GITHUB_TOKEN: undefined,
-  CODEBUFF_API_KEY: 'test-api-key',
+  NEXUS_GITHUB_TOKEN: undefined,
+  NEXUS_API_KEY: 'test-api-key',
 }
 
 /** @deprecated Use createTestAgentRuntimeParams() */

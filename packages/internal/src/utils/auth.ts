@@ -4,7 +4,7 @@ import db from '@nexus/internal/db'
 import * as schema from '@nexus/internal/db/schema'
 
 // List of admin user emails - single source of truth
-const CODEBUFF_ADMIN_USER_EMAILS = [
+const NEXUS_ADMIN_USER_EMAILS = [
   'venkateshrameshkumar+1@gmail.com',
   'brandonchenjiacheng@gmail.com',
   'jahooma@gmail.com',
@@ -12,10 +12,10 @@ const CODEBUFF_ADMIN_USER_EMAILS = [
 ]
 
 /**
- * Check if an email corresponds to a Codebuff admin
+ * Check if an email corresponds to a Nexus admin
  */
-export function isCodebuffAdmin(email: string): boolean {
-  return CODEBUFF_ADMIN_USER_EMAILS.includes(email)
+export function isNexusAdmin(email: string): boolean {
+  return NEXUS_ADMIN_USER_EMAILS.includes(email)
 }
 
 export interface AdminUser {
@@ -38,7 +38,7 @@ export interface AuthResult {
 }
 
 /**
- * Check if the current user session corresponds to a Codebuff admin
+ * Check if the current user session corresponds to a Nexus admin
  * Returns the admin user if authorized, null if not
  * This is a generic version that can be used with any session object
  */
@@ -49,15 +49,15 @@ export async function checkSessionIsAdmin(
     return null
   }
 
-  const result = await checkUserIsCodebuffAdmin(session.user.id)
+  const result = await checkUserIsNexusAdmin(session.user.id)
   return result
 }
 
 /**
- * Check if a user ID corresponds to a Codebuff admin
+ * Check if a user ID corresponds to a Nexus admin
  * Returns the admin user if authorized, null if not
  */
-export async function checkUserIsCodebuffAdmin(
+export async function checkUserIsNexusAdmin(
   userId: string,
 ): Promise<AdminUser | null> {
   try {
@@ -76,7 +76,7 @@ export async function checkUserIsCodebuffAdmin(
       return null
     }
 
-    const isAdmin = isCodebuffAdmin(user.email)
+    const isAdmin = isNexusAdmin(user.email)
     if (!isAdmin) {
       return null
     }
@@ -87,7 +87,7 @@ export async function checkUserIsCodebuffAdmin(
       name: user.name,
     }
   } catch (error) {
-    console.error('checkUserIsCodebuffAdmin: Database error', error)
+    console.error('checkUserIsNexusAdmin: Database error', error)
     return null
   }
 }

@@ -1,6 +1,6 @@
 import { API_KEY_ENV_VAR } from '@nexus/common/old-constants'
 import {
-  CodebuffClient,
+  NexusClient,
   initialSessionState,
   withMessageHistory,
   type AgentDefinition,
@@ -143,7 +143,7 @@ Do not do anything else. Just spawn context-pruner and then report the result.`,
         createMessage('user', 'Now spawn the context-pruner'),
       ]
 
-      const client = new CodebuffClient({
+      const client = new NexusClient({
         apiKey,
         agentDefinitions: [testAgent],
       })
@@ -274,7 +274,7 @@ Do not do anything else. Just spawn context-pruner and then report the result.`,
         createMessage('user', 'Now prune the context'),
       ]
 
-      const client = new CodebuffClient({
+      const client = new NexusClient({
         apiKey,
         agentDefinitions: [testAgent],
       })

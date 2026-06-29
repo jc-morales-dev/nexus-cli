@@ -12,7 +12,7 @@ const MAX_RETRIES = 3
 const RETRY_BASE_DELAY_MS = 1000
 const RETRYABLE_STATUS_CODES = new Set([408, 429, 500, 502, 503, 504])
 
-interface CodebuffWebApiEnv {
+interface NexusWebApiEnv {
   clientEnv: ClientEnv
   ciEnv: CiEnv
 }
@@ -39,7 +39,7 @@ const getNumberField = (value: unknown, key: string): number | undefined => {
   return typeof field === 'number' ? field : undefined
 }
 
-const callCodebuffV1 = async (params: {
+const callNexusV1 = async (params: {
   endpoint:
     | '/api/v1/web-search'
     | '/api/v1/docs-search'
@@ -47,28 +47,28 @@ const callCodebuffV1 = async (params: {
   payload: unknown
   fetch: typeof globalThis.fetch
   logger: Logger
-  env: CodebuffWebApiEnv
+  env: NexusWebApiEnv
   baseUrl?: string
   apiKey?: string
   requestName: 'web-search' | 'docs-search' | 'gravity-index'
 }): Promise<{ json?: unknown; error?: string; creditsUsed?: number }> => {
   const { endpoint, payload, fetch, logger, env, requestName } = params
 
-  // BYOK direct mode: these features are backed by the Codebuff service, which
+  // BYOK direct mode: these features are backed by the Nexus service, which
   // isn't running. Fail fast with a clear message (no network call / retries) so
   // the agent gets a clean signal instead of a confusing ConnectionRefused loop.
   // TODO: wire web-search directly to Serper (SERPER_API_KEY) for a real result.
   if (isByokDirectMode()) {
     return {
-      error: `"${requestName}" no está disponible en modo BYOK local (sin backend Codebuff).`,
+      error: `"${requestName}" no está disponible en modo BYOK local (sin backend Nexus).`,
     }
   }
 
-  const baseUrl = params.baseUrl ?? env.clientEnv.NEXT_PUBLIC_CODEBUFF_APP_URL
-  const apiKey = params.apiKey ?? env.ciEnv.CODEBUFF_API_KEY
+  const baseUrl = params.baseUrl ?? env.clientEnv.NEXT_PUBLIC_NEXUS_APP_URL
+  const apiKey = params.apiKey ?? env.ciEnv.NEXUS_API_KEY
 
   if (!baseUrl || !apiKey) {
-    return { error: 'Missing Codebuff base URL or API key' }
+    return { error: 'Missing Nexus base URL or API key' }
   }
 
   const url = `${baseUrl}${endpoint}`
@@ -178,14 +178,14 @@ export async function callWebSearchAPI(params: {
   repoUrl?: string | null
   fetch: typeof globalThis.fetch
   logger: Logger
-  env: CodebuffWebApiEnv
+  env: NexusWebApiEnv
   baseUrl?: string
   apiKey?: string
 }): Promise<{ result?: string; error?: string; creditsUsed?: number }> {
   const { query, depth = 'standard', repoUrl, fetch, logger, env } = params
   const payload = { query, depth, ...(repoUrl ? { repoUrl } : {}) }
 
-  const res = await callCodebuffV1({
+  const res = await callNexusV1({
     endpoint: '/api/v1/web-search',
     payload,
     fetch,
@@ -213,7 +213,7 @@ export async function callDocsSearchAPI(params: {
   repoUrl?: string | null
   fetch: typeof globalThis.fetch
   logger: Logger
-  env: CodebuffWebApiEnv
+  env: NexusWebApiEnv
   baseUrl?: string
   apiKey?: string
 }): Promise<{ documentation?: string; error?: string; creditsUsed?: number }> {
@@ -223,7 +223,7 @@ export async function callDocsSearchAPI(params: {
   if (typeof maxTokens === 'number') payload.maxTokens = maxTokens
   if (repoUrl) payload.repoUrl = repoUrl
 
-  const res = await callCodebuffV1({
+  const res = await callNexusV1({
     endpoint: '/api/v1/docs-search',
     payload,
     fetch,
@@ -248,7 +248,7 @@ export async function callGravityIndexAPI(params: {
   input: JSONObject
   fetch: typeof globalThis.fetch
   logger: Logger
-  env: CodebuffWebApiEnv
+  env: NexusWebApiEnv
   baseUrl?: string
   apiKey?: string
 }): Promise<{
@@ -258,7 +258,7 @@ export async function callGravityIndexAPI(params: {
 }> {
   const { input, fetch, logger, env } = params
 
-  const res = await callCodebuffV1({
+  const res = await callNexusV1({
     endpoint: '/api/v1/gravity-index',
     payload: input,
     fetch,
@@ -288,13 +288,13 @@ export async function callTokenCountAPI(params: {
   tools?: Array<{ name: string; description?: string; input_schema?: unknown }>
   fetch: typeof globalThis.fetch
   logger: Logger
-  env: CodebuffWebApiEnv
+  env: NexusWebApiEnv
   baseUrl?: string
   apiKey?: string
 }): Promise<{ inputTokens?: number; error?: string }> {
   const { messages, system, model, tools, fetch, logger, env } = params
 
-  // BYOK direct mode: no Codebuff backend. Estimate input tokens locally so the
+  // BYOK direct mode: no Nexus backend. Estimate input tokens locally so the
   // context-window math keeps working without the (always-failing) network call.
   if (isByokDirectMode()) {
     let inputTokens = 0
@@ -304,11 +304,11 @@ export async function callTokenCountAPI(params: {
     return { inputTokens }
   }
 
-  const baseUrl = params.baseUrl ?? env.clientEnv.NEXT_PUBLIC_CODEBUFF_APP_URL
-  const apiKey = params.apiKey ?? env.ciEnv.CODEBUFF_API_KEY
+  const baseUrl = params.baseUrl ?? env.clientEnv.NEXT_PUBLIC_NEXUS_APP_URL
+  const apiKey = params.apiKey ?? env.ciEnv.NEXUS_API_KEY
 
   if (!baseUrl || !apiKey) {
-    return { error: 'Missing Codebuff base URL or API key' }
+    return { error: 'Missing Nexus base URL or API key' }
   }
 
   const url = `${baseUrl}/api/v1/token-count`

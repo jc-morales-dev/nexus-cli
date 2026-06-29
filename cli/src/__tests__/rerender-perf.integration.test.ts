@@ -117,7 +117,7 @@ describe.skipIf(!tmuxAvailable || !sdkBuilt)(
           ),
         )
         // Enable performance testing
-        await tmux(['set-environment', '-g', 'CODEBUFF_PERF_TEST', 'true'])
+        await tmux(['set-environment', '-g', 'NEXUS_PERF_TEST', 'true'])
       }
     })
 
@@ -140,7 +140,7 @@ describe.skipIf(!tmuxAvailable || !sdkBuilt)(
             '120',
             '-y',
             '30',
-            `CODEBUFF_PERF_TEST=true bun run ${CLI_PATH}`,
+            `NEXUS_PERF_TEST=true bun run ${CLI_PATH}`,
           ])
 
           // Wait for CLI to initialize
@@ -229,7 +229,7 @@ describe.skipIf(!tmuxAvailable || !sdkBuilt)(
             '120',
             '-y',
             '30',
-            `CODEBUFF_PERF_TEST=true bun run ${CLI_PATH}`,
+            `NEXUS_PERF_TEST=true bun run ${CLI_PATH}`,
           ])
 
           await sleep(5000)

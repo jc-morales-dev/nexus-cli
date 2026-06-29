@@ -1,20 +1,20 @@
 import { buildArray } from '@nexus/common/util/array'
 import { jsonToolResult } from '@nexus/common/util/messages'
 
-import type { CodebuffToolHandlerFunction } from '../handler-function-type'
+import type { NexusToolHandlerFunction } from '../handler-function-type'
 import type {
-  CodebuffToolCall,
-  CodebuffToolOutput,
+  NexusToolCall,
+  NexusToolOutput,
 } from '@nexus/common/tools/list'
 import type { Subgoal } from '@nexus/common/types/session-state'
 
 export const handleAddSubgoal = (async (params: {
   previousToolCallFinished: Promise<void>
-  toolCall: CodebuffToolCall<'add_subgoal'>
+  toolCall: NexusToolCall<'add_subgoal'>
 
   agentContext: Record<string, Subgoal>
 }): Promise<{
-  output: CodebuffToolOutput<'add_subgoal'>
+  output: NexusToolOutput<'add_subgoal'>
 }> => {
   const { previousToolCallFinished, toolCall, agentContext } = params
 
@@ -27,4 +27,4 @@ export const handleAddSubgoal = (async (params: {
 
   await previousToolCallFinished
   return { output: jsonToolResult({ message: 'Successfully added subgoal' }) }
-}) satisfies CodebuffToolHandlerFunction<'add_subgoal'>
+}) satisfies NexusToolHandlerFunction<'add_subgoal'>

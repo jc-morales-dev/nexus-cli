@@ -20,7 +20,7 @@ import { mockFileContext } from './test-utils'
 import * as runAgentStep from '../run-agent-step'
 import { handleSpawnAgents } from '../tools/handlers/tool/spawn-agents'
 
-import type { CodebuffToolCall } from '@nexus/common/tools/list'
+import type { NexusToolCall } from '@nexus/common/tools/list'
 import type { AgentTemplate } from '@nexus/common/types/agent-template'
 import type { ParamsExcluding } from '@nexus/common/types/function-params'
 
@@ -107,7 +107,7 @@ describe('Spawn Agents Message History', () => {
   const createSpawnToolCall = (
     agentType: string,
     prompt = 'test prompt',
-  ): CodebuffToolCall<'spawn_agents'> => ({
+  ): NexusToolCall<'spawn_agents'> => ({
     toolName: 'spawn_agents' as const,
     toolCallId: 'test-tool-call-id',
     input: {

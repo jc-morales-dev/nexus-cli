@@ -1,16 +1,16 @@
 import { env } from '@nexus/common/env'
 import { extractApiErrorDetails } from '@nexus/common/util/error'
-import { formatFreebuffHardBlockedPrivacySignals } from '@nexus/common/util/freetier-privacy'
+import { formatFreeTierHardBlockedPrivacySignals } from '@nexus/common/util/freetier-privacy'
 
 import type { ChatMessage } from '../types/chat'
 import type {
-  FreebuffCountryBlockReason,
-  FreebuffIpPrivacySignal,
+  FreeTierCountryBlockReason,
+  FreeTierIpPrivacySignal,
 } from '@nexus/common/types/freetier-session'
 
-import { IS_FREEBUFF } from './constants'
+import { IS_FREETIER } from './constants'
 
-const defaultAppUrl = env.NEXT_PUBLIC_CODEBUFF_APP_URL || 'https://codebuff.com'
+const defaultAppUrl = env.NEXT_PUBLIC_NEXUS_APP_URL || 'https://nexus.com'
 
 // Normalize unknown errors to a user-facing string.
 const extractErrorMessage = (error: unknown, fallback: string): string => {
@@ -115,23 +115,23 @@ const getCliApiErrorDetails = (error: unknown) => {
   }
 }
 
-export const getFreebuffRateLimitErrorMessage = (
+export const getFreeTierRateLimitErrorMessage = (
   error: unknown,
 ): string | null => {
   const details = getCliApiErrorDetails(error)
   if (details.statusCode !== 429) return null
   if (details.errorCode === 'free_mode_rate_limited') {
-    return details.message ?? FREEBUFF_RATE_LIMIT_MESSAGE
+    return details.message ?? FREETIER_RATE_LIMIT_MESSAGE
   }
-  return FREEBUFF_RATE_LIMIT_MESSAGE
+  return FREETIER_RATE_LIMIT_MESSAGE
 }
 
 export const getCountryBlockFromFreeModeError = (
   error: unknown,
 ): {
   countryCode: string
-  countryBlockReason?: FreebuffCountryBlockReason
-  ipPrivacySignals?: FreebuffIpPrivacySignal[]
+  countryBlockReason?: FreeTierCountryBlockReason
+  ipPrivacySignals?: FreeTierIpPrivacySignal[]
 } | null => {
   if (!isFreeModeUnavailableError(error)) return null
   const errorDetails = getCliApiErrorDetails(error)
@@ -145,10 +145,10 @@ export const getCountryBlockFromFreeModeError = (
     countryCode,
     countryBlockReason:
       typeof errorDetails.countryBlockReason === 'string'
-        ? (errorDetails.countryBlockReason as FreebuffCountryBlockReason)
+        ? (errorDetails.countryBlockReason as FreeTierCountryBlockReason)
         : undefined,
     ipPrivacySignals: errorDetails.ipPrivacySignals as
-      | FreebuffIpPrivacySignal[]
+      | FreeTierIpPrivacySignal[]
       | undefined,
   }
 }
@@ -159,7 +159,7 @@ export const getFreeModeUnavailableErrorMessage = (
   const details = getCliApiErrorDetails(error)
   const block = getCountryBlockFromFreeModeError(error)
   if (block?.countryBlockReason === 'anonymous_network') {
-    return `${IS_FREEBUFF ? 'Freebuff' : 'Free mode'} cannot be used from ${formatFreebuffHardBlockedPrivacySignals(
+    return `${IS_FREETIER ? 'FreeTier' : 'Free mode'} cannot be used from ${formatFreeTierHardBlockedPrivacySignals(
       block.ipPrivacySignals,
     )} traffic. Please disable it and try again.`
   }
@@ -167,7 +167,7 @@ export const getFreeModeUnavailableErrorMessage = (
 }
 
 /**
- * Freebuff waiting-room gate errors returned by /api/v1/chat/completions.
+ * FreeTier waiting-room gate errors returned by /api/v1/chat/completions.
  *
  * Contract (see docs/freetier-waiting-room.md):
  *   - 428 `waiting_room_required`   — no session row exists; POST /session to join.
@@ -176,14 +176,14 @@ export const getFreeModeUnavailableErrorMessage = (
  *   - 409 `session_model_mismatch`  — session tier/model no longer matches.
  *   - 410 `session_expired`         — active session's expires_at has passed.
  */
-export type FreebuffGateErrorKind =
+export type FreeTierGateErrorKind =
   | 'waiting_room_required'
   | 'waiting_room_queued'
   | 'session_superseded'
   | 'session_model_mismatch'
   | 'session_expired'
 
-const FREEBUFF_GATE_STATUS: Record<FreebuffGateErrorKind, number> = {
+const FREETIER_GATE_STATUS: Record<FreeTierGateErrorKind, number> = {
   waiting_room_required: 428,
   waiting_room_queued: 429,
   session_superseded: 409,
@@ -191,25 +191,25 @@ const FREEBUFF_GATE_STATUS: Record<FreebuffGateErrorKind, number> = {
   session_expired: 410,
 }
 
-export const getFreebuffGateErrorKind = (
+export const getFreeTierGateErrorKind = (
   error: unknown,
-): FreebuffGateErrorKind | null => {
+): FreeTierGateErrorKind | null => {
   if (!error || typeof error !== 'object') return null
   const errorCode = (error as { error?: unknown }).error
   const statusCode = (error as { statusCode?: unknown }).statusCode
   if (typeof errorCode !== 'string') return null
-  const expected = FREEBUFF_GATE_STATUS[errorCode as FreebuffGateErrorKind]
+  const expected = FREETIER_GATE_STATUS[errorCode as FreeTierGateErrorKind]
   if (expected === undefined || statusCode !== expected) return null
-  return errorCode as FreebuffGateErrorKind
+  return errorCode as FreeTierGateErrorKind
 }
 
 export const OUT_OF_CREDITS_MESSAGE = `Out of credits. Please add credits at ${defaultAppUrl}/usage`
 
-export const FREEBUFF_RATE_LIMIT_MESSAGE =
-  'Freebuff is temporarily busy. Please try again in a moment.'
+export const FREETIER_RATE_LIMIT_MESSAGE =
+  'FreeTier is temporarily busy. Please try again in a moment.'
 
-export const FREE_MODE_UNAVAILABLE_MESSAGE = IS_FREEBUFF
-  ? 'Freebuff is not available in your country.'
+export const FREE_MODE_UNAVAILABLE_MESSAGE = IS_FREETIER
+  ? 'FreeTier is not available in your country.'
   : 'Free mode is not available in your country. You can use another mode to continue.'
 
 export const createErrorMessage = (

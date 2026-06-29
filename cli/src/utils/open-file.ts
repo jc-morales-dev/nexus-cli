@@ -35,8 +35,8 @@ const buildEditorCommands = (
 
   // Check custom editor env vars
   const editorValues = [
-    env.CODEBUFF_CLI_EDITOR,
-    env.CODEBUFF_EDITOR,
+    env.NEXUS_CLI_EDITOR,
+    env.NEXUS_EDITOR,
     env.VISUAL,
     env.EDITOR,
   ]

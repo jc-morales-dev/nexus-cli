@@ -86,7 +86,7 @@ export async function sendSignupEventToLoops(params: {
   email: string | null
   name: string | null
   logger: Logger
-  signupSource?: 'codebuff' | 'freebuff'
+  signupSource?: 'nexus' | 'freetier'
 }): Promise<void> {
   const { userId, email, name, logger, signupSource } = params
 
@@ -109,7 +109,7 @@ export async function sendSignupEventToLoops(params: {
       userId,
       contactProperties: {
         firstName: name?.split(' ')[0] ?? '',
-        signupSource: signupSource ?? 'codebuff',
+        signupSource: signupSource ?? 'nexus',
       },
     })
 
@@ -217,7 +217,7 @@ export async function sendDisputeNotificationEmail(params: {
   const subject = "We noticed a dispute on your account - let's resolve this together"
   const message = `Hi ${firstName},
 
-We noticed that a dispute was filed for a ${disputeAmount} charge on your Codebuff account. We're sorry to hear you had an issue and we'd love the opportunity to make things right.
+We noticed that a dispute was filed for a ${disputeAmount} charge on your Nexus account. We're sorry to hear you had an issue and we'd love the opportunity to make things right.
 
 If there was a problem with your experience or a charge you didn't recognize, please reach out to us directly and we'll be happy to:
 
@@ -230,7 +230,7 @@ Working with us directly is often faster than going through your bank, and it he
 Just reply to this email - we're here to help!
 
 Best regards,
-The Codebuff Team`
+The Nexus Team`
 
   return sendBasicEmail({
     email,

@@ -1,5 +1,5 @@
 import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
-import { shouldUseLocalTokenCountForFreebuffDeepseekFlash } from '@nexus/common/constants/free-agents'
+import { shouldUseLocalTokenCountForFreeTierDeepseekFlash } from '@nexus/common/constants/free-agents'
 import { supportsCacheControl } from '@nexus/common/old-constants'
 import { TOOLS_WHICH_WONT_FORCE_NEXT_STEP } from '@nexus/common/tools/constants'
 import { buildArray } from '@nexus/common/util/array'
@@ -950,7 +950,7 @@ export async function loopAgentSteps(
         countTokensJson(toolsForTokenCount)
 
       if (
-        shouldUseLocalTokenCountForFreebuffDeepseekFlash({
+        shouldUseLocalTokenCountForFreeTierDeepseekFlash({
           agentId: agentTemplate.id,
           model: agentTemplate.model,
         })

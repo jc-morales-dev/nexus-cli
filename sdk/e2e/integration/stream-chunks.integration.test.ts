@@ -9,7 +9,7 @@
 
 import { describe, test, expect, beforeAll } from 'bun:test'
 
-import { CodebuffClient } from '../../src/client'
+import { NexusClient } from '../../src/client'
 import {
   EventCollector,
   getApiKey,
@@ -19,11 +19,11 @@ import {
 } from '../utils'
 
 describe('Integration: Stream Chunks', () => {
-  let client: CodebuffClient
+  let client: NexusClient
 
   beforeAll(() => {
     if (skipIfNoApiKey()) return
-    client = new CodebuffClient({ apiKey: getApiKey() })
+    client = new NexusClient({ apiKey: getApiKey() })
   })
 
   test(

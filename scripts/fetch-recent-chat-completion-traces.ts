@@ -69,7 +69,7 @@ Usage:
   bun scripts/fetch-recent-chat-completion-traces.ts [options]
 
 Options:
-  --prod                 Use codebuff_data instead of codebuff_data_dev.
+  --prod                 Use nexus_data instead of nexus_data_dev.
   --dataset name         Explicit BigQuery dataset name.
   --limit n              Number of recent trace sessions to fetch. Default: 3.
   --lookback-hours n     Recent window to scan and reconstruct. Default: 24.
@@ -114,7 +114,7 @@ function parseArgs(): Args {
   return {
     dataset:
       readStringFlag(argv, '--dataset', null) ??
-      (argv.includes('--prod') ? 'codebuff_data' : 'codebuff_data_dev'),
+      (argv.includes('--prod') ? 'nexus_data' : 'nexus_data_dev'),
     limit: readNumberFlag(argv, '--limit', 3),
     lookbackHours: readNumberFlag(argv, '--lookback-hours', 24),
     traceSessionId: readStringFlag(argv, '--trace-session-id', null),

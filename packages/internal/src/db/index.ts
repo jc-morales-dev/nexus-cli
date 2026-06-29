@@ -5,11 +5,11 @@ import { env } from '@nexus/internal/env'
 
 import * as schema from './schema'
 
-import type { CodebuffPgDatabase } from './types'
+import type { NexusPgDatabase } from './types'
 
 const client = postgres(env.DATABASE_URL)
 
-export const db: CodebuffPgDatabase = drizzle(client, { schema })
+export const db: NexusPgDatabase = drizzle(client, { schema })
 export default db
 
 // Re-export advisory lock utilities

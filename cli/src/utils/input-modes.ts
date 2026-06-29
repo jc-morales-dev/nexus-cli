@@ -1,4 +1,4 @@
-import { IS_FREEBUFF } from './constants'
+import { IS_FREETIER } from './constants'
 
 // Input mode types and configurations
 // To add a new mode:
@@ -173,8 +173,8 @@ export const INPUT_MODE_CONFIGS: Record<InputMode, InputModeConfig> = {
   },
 }
 
-// In Freebuff, never show the agent mode toggle
-if (IS_FREEBUFF) {
+// In FreeTier, never show the agent mode toggle
+if (IS_FREETIER) {
   for (const key of Object.keys(INPUT_MODE_CONFIGS) as InputMode[]) {
     INPUT_MODE_CONFIGS[key].showAgentModeToggle = false
   }

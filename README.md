@@ -1,21 +1,21 @@
-# Codebuff & Freebuff
+# Nexus & FreeTier
 
 English | [简体中文](./README.zh-CN.md)
 
-**[Codebuff](https://codebuff.com)** is an open-source AI coding assistant that edits your codebase through natural language instructions. **[Freebuff](https://www.npmjs.com/package/freebuff)** is the free, ad-supported version — no subscription, no credits, no configuration.
+**[Nexus](https://nexus.com)** is an open-source AI coding assistant that edits your codebase through natural language instructions. **[FreeTier](https://www.npmjs.com/package/freetier)** is the free, ad-supported version — no subscription, no credits, no configuration.
 
-Instead of using one model for everything, Codebuff coordinates specialized agents that work together to understand your project and make precise changes.
+Instead of using one model for everything, Nexus coordinates specialized agents that work together to understand your project and make precise changes.
 
 <div align="center">
-  <img src="./assets/codebuff-vs-claude-code.png" alt="Codebuff vs Claude Code" width="400">
+  <img src="./assets/nexus-vs-claude-code.png" alt="Nexus vs Claude Code" width="400">
 </div>
 
-Codebuff beats Claude Code at 61% vs 53% on [our evals](evals/README.md) across 175+ coding tasks over multiple open-source repos that simulate real-world tasks.
+Nexus beats Claude Code at 61% vs 53% on [our evals](evals/README.md) across 175+ coding tasks over multiple open-source repos that simulate real-world tasks.
 
 
 ## How it works
 
-When you ask Codebuff to "add authentication to my API," it might invoke:
+When you ask Nexus to "add authentication to my API," it might invoke:
 
 1. A **File Picker Agent** to scan your codebase to understand the architecture and find relevant files
 2. A **Planner Agent** to plan which files need changes and in what order
@@ -23,7 +23,7 @@ When you ask Codebuff to "add authentication to my API," it might invoke:
 4. A **Reviewer Agent** to validate changes
 
 <div align="center">
-  <img src="./assets/multi-agents.png" alt="Codebuff Multi-Agents" width="250">
+  <img src="./assets/multi-agents.png" alt="Nexus Multi-Agents" width="250">
 </div>
 
 This multi-agent approach gives you better context understanding, more accurate edits, and fewer errors compared to single-model tools.
@@ -33,30 +33,30 @@ This multi-agent approach gives you better context understanding, more accurate 
 Install:
 
 ```bash
-npm install -g codebuff
+npm install -g nexus
 ```
 
 Run:
 
 ```bash
 cd your-project
-codebuff
+nexus
 ```
 
-Then just tell Codebuff what you want and it handles the rest:
+Then just tell Nexus what you want and it handles the rest:
 
 - "Fix the SQL injection vulnerability in user registration"
 - "Add rate limiting to all API endpoints"
 - "Refactor the database connection code for better performance"
 
-Codebuff will find the right files, makes changes across your codebase, and runs tests to make sure nothing breaks.
+Nexus will find the right files, makes changes across your codebase, and runs tests to make sure nothing breaks.
 
 ## Create custom agents
 
-To get started building your own agents, start Codebuff and run the `/init` command:
+To get started building your own agents, start Nexus and run the `/init` command:
 
 ```bash
-codebuff
+nexus
 ```
 
 Then inside the CLI:
@@ -67,7 +67,7 @@ Then inside the CLI:
 
 This creates:
 ```
-knowledge.md               # Project context for Codebuff
+knowledge.md               # Project context for Nexus
 .agents/
 └── types/                 # TypeScript type definitions
     ├── agent-definition.ts
@@ -104,7 +104,7 @@ export default {
 
 ## SDK: Run agents in production
 
-Install the [SDK package](https://www.npmjs.com/package/@nexus/sdk) -- note this is different than the CLI codebuff package.
+Install the [SDK package](https://www.npmjs.com/package/@nexus/sdk) -- note this is different than the CLI nexus package.
 
 ```bash
 npm install @nexus/sdk
@@ -113,18 +113,18 @@ npm install @nexus/sdk
 Import the client and run agents!
 
 ```typescript
-import { CodebuffClient } from '@nexus/sdk'
+import { NexusClient } from '@nexus/sdk'
 
 // 1. Initialize the client
-const client = new CodebuffClient({
+const client = new NexusClient({
   apiKey: 'your-api-key',
   cwd: '/path/to/your/project',
-  onError: (error) => console.error('Codebuff error:', error.message),
+  onError: (error) => console.error('Nexus error:', error.message),
 })
 
 // 2. Do a coding task...
 const result = await client.run({
-  agent: 'base', // Codebuff's base coding agent
+  agent: 'base', // Nexus's base coding agent
   prompt: 'Add error handling to all API endpoints',
   handleEvent: (event) => {
     console.log('Progress', event)
@@ -151,27 +151,27 @@ await client.run({
 
 Learn more about the SDK [here](https://www.npmjs.com/package/@nexus/sdk).
 
-## Freebuff: The free coding agent
+## FreeTier: The free coding agent
 
-Don't want a subscription? **[Freebuff](https://www.npmjs.com/package/freebuff)** is a free variant of Codebuff — no subscription, no credits, no configuration. Just install and start coding.
+Don't want a subscription? **[FreeTier](https://www.npmjs.com/package/freetier)** is a free variant of Nexus — no subscription, no credits, no configuration. Just install and start coding.
 
 ```bash
-npm install -g freebuff
+npm install -g freetier
 cd your-project
-freebuff
+freetier
 ```
 
-Freebuff is ad-supported and uses models optimized for fast, high-quality assistance. It includes built-in web research, browser use, and more. Learn more in the [Freebuff README](./freebuff/README.md).
+FreeTier is ad-supported and uses models optimized for fast, high-quality assistance. It includes built-in web research, browser use, and more. Learn more in the [FreeTier README](./freetier/README.md).
 
-## Why choose Codebuff
+## Why choose Nexus
 
 **Custom workflows**: TypeScript generators let you mix AI generation with programmatic control. Agents can spawn subagents, branch on conditions, and run multi-step processes.
 
-**Any model on OpenRouter**: Unlike Claude Code which locks you into Anthropic's models, Codebuff supports any model available on [OpenRouter](https://openrouter.ai/models) - from Claude and GPT to specialized models like Qwen, DeepSeek, and others. Switch models for different tasks or use the latest releases without waiting for platform updates.
+**Any model on OpenRouter**: Unlike Claude Code which locks you into Anthropic's models, Nexus supports any model available on [OpenRouter](https://openrouter.ai/models) - from Claude and GPT to specialized models like Qwen, DeepSeek, and others. Switch models for different tasks or use the latest releases without waiting for platform updates.
 
-**Reuse any published agent**: Compose existing [published agents](https://www.codebuff.com/store) to get a leg up. Codebuff agents are the new MCP!
+**Reuse any published agent**: Compose existing [published agents](https://www.nexus.com/store) to get a leg up. Nexus agents are the new MCP!
 
-**SDK**: Build Codebuff into your applications. Create custom tools, integrate with CI/CD, or embed coding assistance into your products.
+**SDK**: Build Nexus into your applications. Create custom tools, integrate with CI/CD, or embed coding assistance into your products.
 
 ## Advanced Usage
 
@@ -180,13 +180,13 @@ Freebuff is ad-supported and uses models optimized for fast, high-quality assist
 Create your own agents with specialized workflows using the `/init` command:
 
 ```bash
-codebuff
+nexus
 /init
 ```
 
 This creates a custom agent structure in `.agents/` that you can customize.
 
-## Contributing to Codebuff
+## Contributing to Nexus
 
 We ❤️ contributions from the community - whether you're fixing bugs, tweaking our agents, or improving documentation.
 
@@ -222,30 +222,30 @@ Some ways you can help:
 - 🐛 **Fix bugs** or add features
 - 🤖 **Create specialized agents** and publish them to the Agent Store
 - 📚 **Improve documentation** or write tutorials
-- 💡 **Share ideas** in our [GitHub Issues](https://github.com/CodebuffAI/codebuff/issues)
+- 💡 **Share ideas** in our [GitHub Issues](https://github.com/NexusAI/nexus/issues)
 
 ## Get started
 
 ### Install
 
-**CLI**: `npm install -g codebuff`
+**CLI**: `npm install -g nexus`
 
 **SDK**: `npm install @nexus/sdk`
 
-**Freebuff (free)**: `npm install -g freebuff`
+**FreeTier (free)**: `npm install -g freetier`
 
 ### Resources
 
-**Documentation**: [codebuff.com/docs](https://codebuff.com/docs)
+**Documentation**: [nexus.com/docs](https://nexus.com/docs)
 
-**Community**: [Discord](https://codebuff.com/discord)
+**Community**: [Discord](https://nexus.com/discord)
 
-**Issues & Ideas**: [GitHub Issues](https://github.com/CodebuffAI/codebuff/issues)
+**Issues & Ideas**: [GitHub Issues](https://github.com/NexusAI/nexus/issues)
 
 **Contributing**: [CONTRIBUTING.md](./CONTRIBUTING.md) - Start here to contribute!
 
-**Support**: [support@codebuff.com](mailto:support@codebuff.com)
+**Support**: [support@nexus.com](mailto:support@nexus.com)
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=CodebuffAI/codebuff&type=Date)](https://www.star-history.com/#CodebuffAI/codebuff&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=NexusAI/nexus&type=Date)](https://www.star-history.com/#NexusAI/nexus&Date)

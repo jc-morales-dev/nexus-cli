@@ -3,7 +3,7 @@ import { promptSuccess } from '@nexus/common/util/error'
 import { spyOn } from 'bun:test'
 import z from 'zod/v4'
 
-import { CodebuffClient } from '../../src/client'
+import { NexusClient } from '../../src/client'
 import * as databaseModule from '../../src/impl/database'
 import * as llmModule from '../../src/impl/llm'
 
@@ -20,7 +20,7 @@ export const E2E_MOCK_API_KEY = 'nexus-e2e-mock'
 
 const MOCK_USER = {
   id: 'e2e-user',
-  email: 'e2e-user@codebuff.test',
+  email: 'e2e-user@nexus.test',
   discord_id: null,
   referral_code: null,
   stripe_customer_id: null,
@@ -453,5 +453,5 @@ export function setupE2eMocks(): void {
     promptAiSdkStructuredMock as typeof llmModule.promptAiSdkStructured,
   )
 
-  spyOn(CodebuffClient.prototype, 'checkConnection').mockResolvedValue(true)
+  spyOn(NexusClient.prototype, 'checkConnection').mockResolvedValue(true)
 }

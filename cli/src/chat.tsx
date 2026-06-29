@@ -59,11 +59,11 @@ import { reportActivity } from './utils/activity-tracker'
 import { trackEvent } from './utils/analytics'
 import { showClipboardMessage } from './utils/clipboard'
 import { readClipboardImage } from './utils/clipboard-image'
-import { returnToFreebuffLanding } from './hooks/use-freetier-session'
-import { END_SESSION_MESSAGE, IS_FREEBUFF } from './utils/constants'
+import { returnToFreeTierLanding } from './hooks/use-freetier-session'
+import { END_SESSION_MESSAGE, IS_FREETIER } from './utils/constants'
 import { getSystemMessage } from './utils/message-history'
 import { getInputModeConfig } from './utils/input-modes'
-import { resetCodebuffClient } from './utils/nexus-client'
+import { resetNexusClient } from './utils/nexus-client'
 import {
   loadOpenRouterApiKey,
   saveOpenRouterApiKey,
@@ -96,7 +96,7 @@ import { computeInputLayoutMetrics } from './utils/text-layout'
 import type { CommandResult } from './commands/command-registry'
 import type { MultilineInputHandle } from './components/multiline-input'
 import type { MatchedSlashCommand } from './hooks/use-suggestion-engine'
-import type { FreebuffSessionResponse } from './types/freetier-session'
+import type { FreeTierSessionResponse } from './types/freetier-session'
 import type { User } from './utils/auth'
 import type { AgentMode } from './utils/constants'
 import type { FileTreeNode } from '@nexus/common/util/file'
@@ -119,7 +119,7 @@ export const Chat = ({
   initialMode,
   gitRoot,
   onSwitchToGitRoot,
-  freebuffSession,
+  freetierSession,
 }: {
   headerContent: React.ReactNode
   initialPrompt: string | null
@@ -135,7 +135,7 @@ export const Chat = ({
   initialMode?: AgentMode
   gitRoot?: string | null
   onSwitchToGitRoot?: () => void
-  freebuffSession: FreebuffSessionResponse | null
+  freetierSession: FreeTierSessionResponse | null
 }) => {
   const [forceFileOnlyMentions, setForceFileOnlyMentions] = useState(false)
 
@@ -186,7 +186,7 @@ export const Chat = ({
   const hasSubscription = subscriptionData?.hasSubscription ?? false
 
   const { ads, recordClick, recordImpression } = useGravityAd({
-    enabled: IS_FREEBUFF || !hasSubscription,
+    enabled: IS_FREETIER || !hasSubscription,
     provider: 'gravity',
   })
 
@@ -580,10 +580,10 @@ export const Chat = ({
         })
     }
 
-    globalThis.addEventListener('codebuff:send-followup', handleFollowupClick)
+    globalThis.addEventListener('nexus:send-followup', handleFollowupClick)
     return () => {
       globalThis.removeEventListener(
-        'codebuff:send-followup',
+        'nexus:send-followup',
         handleFollowupClick,
       )
     }
@@ -895,7 +895,7 @@ export const Chat = ({
     (key: string) => {
       saveOpenRouterApiKey(key)
       process.env.OPENROUTER_API_KEY = key
-      resetCodebuffClient()
+      resetNexusClient()
       closeKeyModal()
       setInputFocused(true)
       const masked =
@@ -914,7 +914,7 @@ export const Chat = ({
   const handleClearKey = useCallback(() => {
     clearOpenRouterApiKey()
     delete process.env.OPENROUTER_API_KEY
-    resetCodebuffClient()
+    resetNexusClient()
     closeKeyModal()
     setInputFocused(true)
     setMessages((prev) => [...prev, getSystemMessage('🔑 Key borrada.')])
@@ -929,8 +929,8 @@ export const Chat = ({
   const handleSelectModel = useCallback(
     (modelId: string) => {
       saveNexusModel(modelId)
-      process.env.CODEBUFF_MODEL_STRONG = modelId
-      resetCodebuffClient()
+      process.env.NEXUS_MODEL_STRONG = modelId
+      resetNexusClient()
       closeModelSelector()
       setInputFocused(true)
       setMessages((prev) => [
@@ -1440,16 +1440,16 @@ export const Chat = ({
     return ` ${segments.join('   ')} `
   }, [queuePreviewTitle, pausedQueueText])
 
-  const hasActiveFreebuffSession =
-    IS_FREEBUFF && freebuffSession?.status === 'active'
-  const isFreebuffSessionOver =
-    IS_FREEBUFF && freebuffSession?.status === 'ended'
+  const hasActiveFreeTierSession =
+    IS_FREETIER && freetierSession?.status === 'active'
+  const isFreeTierSessionOver =
+    IS_FREETIER && freetierSession?.status === 'ended'
   const shouldShowStatusLine =
     !feedbackMode &&
     (hasStatusIndicatorContent ||
       shouldShowQueuePreview ||
       !isAtBottom ||
-      hasActiveFreebuffSession)
+      hasActiveFreeTierSession)
 
   // Track mouse movement for ad activity (throttled)
   const lastMouseActivityRef = useRef<number>(0)
@@ -1479,7 +1479,7 @@ export const Chat = ({
   if (modelSelectorOpen) {
     return (
       <NexusModelSelector
-        currentModel={process.env.CODEBUFF_MODEL_STRONG || NEXUS_DEFAULT_MODEL}
+        currentModel={process.env.NEXUS_MODEL_STRONG || NEXUS_DEFAULT_MODEL}
         onSelect={handleSelectModel}
         onCancel={handleCancelModel}
       />
@@ -1581,13 +1581,13 @@ export const Chat = ({
                 ...prev,
                 getSystemMessage(END_SESSION_MESSAGE),
               ])
-              returnToFreebuffLanding({ resetChat: true }).catch(() => {})
+              returnToFreeTierLanding({ resetChat: true }).catch(() => {})
             }}
-            freebuffSession={freebuffSession}
+            freetierSession={freetierSession}
           />
         )}
 
-        {ads && (IS_FREEBUFF || getAdsEnabled()) && (
+        {ads && (IS_FREETIER || getAdsEnabled()) && (
           <ChoiceAdBanner
             ads={ads}
             onClick={recordClick}
@@ -1606,7 +1606,7 @@ export const Chat = ({
             onCustom={handleReviewCustom}
             onCancel={handleCloseReviewScreen}
           />
-        ) : isFreebuffSessionOver && !askUserState ? (
+        ) : isFreeTierSessionOver && !askUserState ? (
           <SessionEndedBanner
             isStreaming={isStreaming || isWaitingForResponse}
           />

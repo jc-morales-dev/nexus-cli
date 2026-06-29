@@ -14,7 +14,7 @@ import {
   loadPermissionsConfig,
 } from './command-permissions'
 
-import type { CodebuffToolOutput } from '../../../common/src/tools/list'
+import type { NexusToolOutput } from '../../../common/src/tools/list'
 
 const COMMAND_OUTPUT_LIMIT = 50_000
 
@@ -35,7 +35,7 @@ const WSL_BASH_PATH_PATTERNS = [
 /**
  * Find bash executable on Windows.
  * Priority:
- * 1. CODEBUFF_GIT_BASH_PATH environment variable (user override)
+ * 1. NEXUS_GIT_BASH_PATH environment variable (user override)
  * 2. Common Git Bash installation locations (most reliable)
  * 3. Non-WSL bash in PATH (e.g., Git Bash added to PATH)
  * 4. WSL bash in PATH (last resort - System32, WindowsApps)
@@ -47,7 +47,7 @@ const WSL_BASH_PATH_PATTERNS = [
  */
 function findWindowsBash(env: NodeJS.ProcessEnv): string | null {
   // Check for user-specified path via environment variable
-  const customPath = env.CODEBUFF_GIT_BASH_PATH
+  const customPath = env.NEXUS_GIT_BASH_PATH
   if (customPath && fs.existsSync(customPath)) {
     return customPath
   }
@@ -113,11 +113,11 @@ To fix this, you have several options:
 
 2. Use WSL (Windows Subsystem for Linux):
    Run in PowerShell (Admin): wsl --install
-   Then run Codebuff inside WSL.
+   Then run Nexus inside WSL.
 
 3. Set a custom bash path:
-   Set the CODEBUFF_GIT_BASH_PATH environment variable to your bash.exe location.
-   Example: set CODEBUFF_GIT_BASH_PATH=C:\\path\\to\\bash.exe`,
+   Set the NEXUS_GIT_BASH_PATH environment variable to your bash.exe location.
+   Example: set NEXUS_GIT_BASH_PATH=C:\\path\\to\\bash.exe`,
   )
 }
 
@@ -133,7 +133,7 @@ export function runTerminalCommand({
   cwd: string
   timeout_seconds: number
   env?: NodeJS.ProcessEnv
-}): Promise<CodebuffToolOutput<'run_terminal_command'>> {
+}): Promise<NexusToolOutput<'run_terminal_command'>> {
   // Safety gate: block catastrophic / denied commands before anything runs
   // (covers both SYNC and BACKGROUND). See command-permissions.ts.
   const decision = classifyCommand(
@@ -286,7 +286,7 @@ function runBackgroundCommand({
   command: string
   cwd: string
   env?: NodeJS.ProcessEnv
-}): CodebuffToolOutput<'run_terminal_command'> {
+}): NexusToolOutput<'run_terminal_command'> {
   const isWindows = os.platform() === 'win32'
   const processEnv = {
     ...getSystemProcessEnv(),

@@ -5,7 +5,7 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "setup": "mkdir -p node_modules/@codebuff && cp -r ../../dist node_modules/@nexus/sdk && cp ../../package.json node_modules/@nexus/sdk/",
+    "setup": "mkdir -p node_modules/@nexus && cp -r ../../dist node_modules/@nexus/sdk && cp ../../package.json node_modules/@nexus/sdk/",
     "test": "node test-ripgrep.js",
     "test:types": "npx tsc --noEmit --skipLibCheck --module ESNext --moduleResolution bundler --target ES2022 test-ripgrep-types.ts",
     "test:compile": "tsc test-ripgrep-types.ts --outDir ./dist --skipLibCheck --module ESNext --target ES2022 --moduleResolution bundler && node ./dist/test-ripgrep-types.js",

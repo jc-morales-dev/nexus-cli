@@ -19,7 +19,7 @@ const LOG_DIR = join(PROJECT_ROOT, 'debug', 'console')
 const PID_FILE = join(LOG_DIR, 'services.json')
 
 // Get config from environment (Bun loads .env files automatically)
-const APP_URL = process.env.NEXT_PUBLIC_CODEBUFF_APP_URL || 'http://localhost:3000'
+const APP_URL = process.env.NEXT_PUBLIC_NEXUS_APP_URL || 'http://localhost:3000'
 const PORT = process.env.NEXT_PUBLIC_WEB_PORT || '3000'
 const STUDIO_PORT = '4983' // Drizzle Studio default port
 
@@ -80,7 +80,7 @@ function getProcessesOnPort(port: string): number[] {
 
 function isDockerDbRunning(): boolean {
   try {
-    const result = spawnSync('docker', ['ps', '--filter', 'name=manicode-db', '--format', '{{.Status}}'], {
+    const result = spawnSync('docker', ['ps', '--filter', 'name=nexus-db', '--format', '{{.Status}}'], {
       encoding: 'utf-8',
     })
     return result.stdout.includes('Up')

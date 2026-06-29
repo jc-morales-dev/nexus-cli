@@ -23,7 +23,7 @@ const ALWAYS_TRACK_EVENTS = new Set<AnalyticsEvent>([
   AnalyticsEvent.KNOWLEDGE_FILE_UPDATED,
   AnalyticsEvent.LOGIN,
   AnalyticsEvent.TERMINAL_COMMAND_COMPLETED,
-  AnalyticsEvent.UPDATE_CODEBUFF_FAILED,
+  AnalyticsEvent.UPDATE_NEXUS_FAILED,
   AnalyticsEvent.USER_INPUT,
   AnalyticsEvent.USER_INPUT_COMPLETE,
 ])
@@ -73,13 +73,13 @@ export function isFullTelemetryEnabled(params: {
   distinctId?: string
   properties?: AnalyticsProperties
 }): boolean {
-  if (isTruthyEnv(process.env.CODEBUFF_FULL_TELEMETRY)) {
+  if (isTruthyEnv(process.env.NEXUS_FULL_TELEMETRY)) {
     return true
   }
 
   const ids = splitEnvList(
-    process.env.CODEBUFF_FULL_TELEMETRY_IDS ??
-      process.env.CODEBUFF_FULL_TELEMETRY_USER_IDS,
+    process.env.NEXUS_FULL_TELEMETRY_IDS ??
+      process.env.NEXUS_FULL_TELEMETRY_USER_IDS,
   )
   if (ids.size === 0) {
     return false

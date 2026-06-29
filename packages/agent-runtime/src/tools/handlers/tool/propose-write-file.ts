@@ -5,10 +5,10 @@ import {
   setProposedContent,
 } from './proposed-content-store'
 
-import type { CodebuffToolHandlerFunction } from '../handler-function-type'
+import type { NexusToolHandlerFunction } from '../handler-function-type'
 import type {
-  CodebuffToolCall,
-  CodebuffToolOutput,
+  NexusToolCall,
+  NexusToolOutput,
 } from '@nexus/common/tools/list'
 import type { RequestOptionalFileFn } from '@nexus/common/types/contracts/client'
 import type { Logger } from '@nexus/common/types/contracts/logger'
@@ -22,14 +22,14 @@ import type { ParamsExcluding } from '@nexus/common/types/function-params'
 export const handleProposeWriteFile = (async (
   params: {
     previousToolCallFinished: Promise<void>
-    toolCall: CodebuffToolCall<'propose_write_file'>
+    toolCall: NexusToolCall<'propose_write_file'>
 
     logger: Logger
     runId: string
 
     requestOptionalFile: RequestOptionalFileFn
   } & ParamsExcluding<RequestOptionalFileFn, 'filePath'>,
-): Promise<{ output: CodebuffToolOutput<'propose_write_file'> }> => {
+): Promise<{ output: NexusToolOutput<'propose_write_file'> }> => {
   const {
     previousToolCallFinished,
     toolCall,
@@ -84,4 +84,4 @@ export const handleProposeWriteFile = (async (
       },
     ],
   }
-}) as CodebuffToolHandlerFunction<'propose_write_file'>
+}) as NexusToolHandlerFunction<'propose_write_file'>

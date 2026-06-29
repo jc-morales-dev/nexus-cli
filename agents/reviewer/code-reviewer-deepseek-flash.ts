@@ -1,4 +1,4 @@
-import { FREEBUFF_DEEPSEEK_V4_FLASH_MODEL_ID } from '@nexus/common/constants/freetier-models'
+import { FREETIER_DEEPSEEK_V4_FLASH_MODEL_ID } from '@nexus/common/constants/freetier-models'
 
 import { publisher } from '../constants'
 import type { SecretAgentDefinition } from '../types/secret-agent-definition'
@@ -7,7 +7,7 @@ import { createReviewer } from './code-reviewer'
 const definition: SecretAgentDefinition = {
   id: 'code-reviewer-deepseek-flash',
   publisher,
-  ...createReviewer(FREEBUFF_DEEPSEEK_V4_FLASH_MODEL_ID),
+  ...createReviewer(FREETIER_DEEPSEEK_V4_FLASH_MODEL_ID),
 }
 
 export default definition

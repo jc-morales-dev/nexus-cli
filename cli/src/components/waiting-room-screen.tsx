@@ -4,40 +4,40 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { Button } from './button'
 import { ChoiceAdBanner, CHOICE_AD_BANNER_HEIGHT } from './choice-ad-banner'
-import { FreebuffModelSelector } from './freetier-model-selector'
+import { FreeTierModelSelector } from './freetier-model-selector'
 import { LimitedLandingPanel } from './limited-landing-panel'
 import { ShimmerText } from './shimmer-text'
 import {
-  refreshFreebuffLandingMetadata,
-  takeOverFreebuffSession,
+  refreshFreeTierLandingMetadata,
+  takeOverFreeTierSession,
 } from '../hooks/use-freetier-session'
-import { useFreebuffCtrlCExit } from '../hooks/use-freetier-ctrl-c-exit'
+import { useFreeTierCtrlCExit } from '../hooks/use-freetier-ctrl-c-exit'
 import { useGravityAd } from '../hooks/use-gravity-ad'
 import { useLogo } from '../hooks/use-logo'
 import { useNow } from '../hooks/use-now'
 import { useSheenAnimation } from '../hooks/use-sheen-animation'
 import { useTerminalDimensions } from '../hooks/use-terminal-dimensions'
 import { useTheme } from '../hooks/use-theme'
-import { exitFreebuffCleanly } from '../utils/freetier-exit'
+import { exitFreeTierCleanly } from '../utils/freetier-exit'
 import {
-  formatFreebuffPremiumResetCountdown,
-  getFreebuffPremiumResetAt,
+  formatFreeTierPremiumResetCountdown,
+  getFreeTierPremiumResetAt,
 } from '../utils/freetier-premium-reset'
 import { formatSessionUnits } from '../utils/format-session-units'
 import { getLogoAccentColor, getLogoBlockColor } from '../utils/theme-system'
 import {
-  FREEBUFF_LIMITED_SESSION_LIMIT,
-  FREEBUFF_PREMIUM_SESSION_LIMIT,
+  FREETIER_LIMITED_SESSION_LIMIT,
+  FREETIER_PREMIUM_SESSION_LIMIT,
 } from '@nexus/common/constants/freetier-models'
 import { getRateLimitsByModel } from '@nexus/common/types/freetier-session'
-import { formatFreebuffHardBlockedPrivacySignals } from '@nexus/common/util/freetier-privacy'
+import { formatFreeTierHardBlockedPrivacySignals } from '@nexus/common/util/freetier-privacy'
 
-import type { FreebuffSessionResponse } from '../types/freetier-session'
-import type { FreebuffIpPrivacySignal } from '@nexus/common/types/freetier-session'
+import type { FreeTierSessionResponse } from '../types/freetier-session'
+import type { FreeTierIpPrivacySignal } from '@nexus/common/types/freetier-session'
 import type { KeyEvent } from '@opentui/core'
 
 interface WaitingRoomScreenProps {
-  session: FreebuffSessionResponse | null
+  session: FreeTierSessionResponse | null
   error: string | null
 }
 
@@ -73,7 +73,7 @@ const formatRetryAfter = (ms: number): string => {
   return rem === 0 ? `${hours}h` : `${hours}h ${rem}m`
 }
 
-const PRIVACY_SIGNAL_LABELS: Partial<Record<FreebuffIpPrivacySignal, string>> =
+const PRIVACY_SIGNAL_LABELS: Partial<Record<FreeTierIpPrivacySignal, string>> =
 {
   anonymous: 'anonymized network',
   proxy: 'proxy',
@@ -86,7 +86,7 @@ const PRIVACY_SIGNAL_LABELS: Partial<Record<FreebuffIpPrivacySignal, string>> =
 }
 
 const formatPrivacySignalList = (
-  signals: FreebuffIpPrivacySignal[] | undefined,
+  signals: FreeTierIpPrivacySignal[] | undefined,
 ): string => {
   const labels = Array.from(
     new Set(
@@ -105,7 +105,7 @@ const formatPrivacySignalList = (
 }
 
 const getLimitedModeReason = (
-  session: FreebuffSessionResponse | null,
+  session: FreeTierSessionResponse | null,
 ): string | null => {
   if (!session || !('countryBlockReason' in session)) {
     return 'reduced free model access'
@@ -144,7 +144,7 @@ const TakeoverPrompt: React.FC = () => {
   const handleTakeover = useCallback(() => {
     if (pending) return
     setPending(true)
-    takeOverFreebuffSession().finally(() => setPending(false))
+    takeOverFreeTierSession().finally(() => setPending(false))
   }, [pending])
 
   useKeyboard(
@@ -160,7 +160,7 @@ const TakeoverPrompt: React.FC = () => {
 
         if (isExit) {
           key.preventDefault?.()
-          exitFreebuffCleanly()
+          exitFreeTierCleanly()
           return
         }
 
@@ -169,7 +169,7 @@ const TakeoverPrompt: React.FC = () => {
           if (focusedIndex === 0) {
             handleTakeover()
           } else {
-            exitFreebuffCleanly()
+            exitFreeTierCleanly()
           }
           return
         }
@@ -203,11 +203,11 @@ const TakeoverPrompt: React.FC = () => {
       }}
     >
       <text style={{ fg: theme.foreground }} attributes={TextAttributes.BOLD}>
-        Freebuff is already running
+        FreeTier is already running
       </text>
 
       <text style={{ fg: theme.muted }}>
-        Only one freebuff instance is allowed at a time.
+        Only one freetier instance is allowed at a time.
       </text>
 
       <box style={{ flexDirection: 'row', gap: 2, marginTop: 1 }}>
@@ -230,7 +230,7 @@ const TakeoverPrompt: React.FC = () => {
           </text>
         </Button>
         <Button
-          onClick={exitFreebuffCleanly}
+          onClick={exitFreeTierCleanly}
           onMouseOver={() => setFocusedIndex(1)}
           style={{ paddingLeft: 1, paddingRight: 1 }}
           border={['top', 'bottom', 'left', 'right']}
@@ -306,7 +306,7 @@ export const WaitingRoomScreen: React.FC<WaitingRoomScreenProps> = ({
     surface: 'waiting_room',
   })
 
-  useFreebuffCtrlCExit()
+  useFreeTierCtrlCExit()
 
   const [exitHover, setExitHover] = useState(false)
 
@@ -317,7 +317,7 @@ export const WaitingRoomScreen: React.FC<WaitingRoomScreenProps> = ({
     accessTier === 'limited' ? getLimitedModeReason(session) : null
   // 'none' = user hasn't joined any queue yet. We're in the pre-chat landing
   // state: show the picker with live N-in-line hints and a prompt. Picking a
-  // model triggers joinFreebuffQueue, which POSTs and transitions us to
+  // model triggers joinFreeTierQueue, which POSTs and transitions us to
   // 'queued' (waiting room) or straight to 'active' (chat) if no wait.
   const isLanding = session?.status === 'none'
   // Elapsed-in-queue timer. Starts from `queuedAt` so it keeps ticking even if
@@ -342,15 +342,15 @@ export const WaitingRoomScreen: React.FC<WaitingRoomScreenProps> = ({
   const isPremiumExhausted =
     sharedPremiumUsed >=
     (accessTier === 'limited'
-      ? FREEBUFF_LIMITED_SESSION_LIMIT
-      : FREEBUFF_PREMIUM_SESSION_LIMIT)
+      ? FREETIER_LIMITED_SESSION_LIMIT
+      : FREETIER_PREMIUM_SESSION_LIMIT)
   const premiumUsedColor = isPremiumExhausted ? theme.secondary : theme.muted
   // Pad the used count so the title's centered container doesn't shift width
   // as the count ticks from "0" → "1.3" → "2" while loading.
   const sessionLimit =
     accessTier === 'limited'
-      ? FREEBUFF_LIMITED_SESSION_LIMIT
-      : FREEBUFF_PREMIUM_SESSION_LIMIT
+      ? FREETIER_LIMITED_SESSION_LIMIT
+      : FREETIER_PREMIUM_SESSION_LIMIT
   // Limited-tier users don't see any premium models, so calling these "limited
   // sessions" leaks the tier name without informing the user — just "sessions"
   // reads naturally next to the count and reset countdown.
@@ -359,12 +359,12 @@ export const WaitingRoomScreen: React.FC<WaitingRoomScreenProps> = ({
   const sessionUnitWidth = String(sessionLimit).length + 2
   const formattedSharedPremiumUsed =
     formatSessionUnits(sharedPremiumUsed).padStart(sessionUnitWidth)
-  const premiumResetAt = getFreebuffPremiumResetAt({
+  const premiumResetAt = getFreeTierPremiumResetAt({
     rateLimitsByModel,
     nowMs: now,
   })
   const premiumResetAtMs = premiumResetAt.getTime()
-  const premiumResetCountdown = formatFreebuffPremiumResetCountdown(
+  const premiumResetCountdown = formatFreeTierPremiumResetCountdown(
     premiumResetAt,
     now,
   )
@@ -416,7 +416,7 @@ export const WaitingRoomScreen: React.FC<WaitingRoomScreenProps> = ({
 
     const delayMs = Math.max(0, premiumResetAtMs - Date.now() + 1_000)
     const timer = setTimeout(() => {
-      refreshFreebuffLandingMetadata().catch(() => { })
+      refreshFreeTierLandingMetadata().catch(() => { })
     }, delayMs)
 
     return () => clearTimeout(timer)
@@ -456,7 +456,7 @@ export const WaitingRoomScreen: React.FC<WaitingRoomScreenProps> = ({
           )}
         </box>
         <Button
-          onClick={exitFreebuffCleanly}
+          onClick={exitFreeTierCleanly}
           onMouseOver={() => setExitHover(true)}
           onMouseOut={() => setExitHover(false)}
           style={{ paddingLeft: 1, paddingRight: 1 }}
@@ -570,7 +570,7 @@ export const WaitingRoomScreen: React.FC<WaitingRoomScreenProps> = ({
                   resets in {premiumResetCountdown}
                 </span>
               </text>
-              <FreebuffModelSelector maxHeight={selectorMaxHeight} />
+              <FreeTierModelSelector maxHeight={selectorMaxHeight} />
             </box>
           )}
 
@@ -593,7 +593,7 @@ export const WaitingRoomScreen: React.FC<WaitingRoomScreenProps> = ({
                   : "You're in the waiting room"}
               </text>
 
-              <FreebuffModelSelector maxHeight={selectorMaxHeight} />
+              <FreeTierModelSelector maxHeight={selectorMaxHeight} />
 
               <box
                 style={{
@@ -643,7 +643,7 @@ export const WaitingRoomScreen: React.FC<WaitingRoomScreenProps> = ({
                 {session.countryBlockReason === 'anonymous_network' ? (
                   <>
                     We detected{' '}
-                    {formatFreebuffHardBlockedPrivacySignals(
+                    {formatFreeTierHardBlockedPrivacySignals(
                       session.ipPrivacySignals,
                     )}{' '}
                     traffic
@@ -656,20 +656,20 @@ export const WaitingRoomScreen: React.FC<WaitingRoomScreenProps> = ({
                         <span fg={theme.foreground}>{session.countryCode}</span>
                       </>
                     )}
-                    . Freebuff can't be used from VPN, proxy, or Tor traffic.
-                    Disable it and restart Freebuff to try again.
+                    . FreeTier can't be used from VPN, proxy, or Tor traffic.
+                    Disable it and restart FreeTier to try again.
                   </>
                 ) : session.countryCode === 'UNKNOWN' ? (
                   <>
                     We couldn't verify an eligible location for this request.
                     VPN, Tor, proxy, or unknown-location traffic can't use
-                    freebuff. Press Ctrl+C to exit.
+                    freetier. Press Ctrl+C to exit.
                   </>
                 ) : (
                   <>
                     We detected your location as{' '}
                     <span fg={theme.foreground}>{session.countryCode}</span>,
-                    which is outside the countries where freebuff is currently
+                    which is outside the countries where freetier is currently
                     offered. Press Ctrl+C to exit.
                   </>
                 )}
@@ -686,8 +686,8 @@ export const WaitingRoomScreen: React.FC<WaitingRoomScreenProps> = ({
                 ⚠ Account unavailable
               </text>
               <text style={{ fg: theme.muted, wrapMode: 'word' }}>
-                This account has been suspended and can't use freebuff. If you
-                think this is a mistake, contact support@codebuff.com. Press
+                This account has been suspended and can't use freetier. If you
+                think this is a mistake, contact support@nexus.com. Press
                 Ctrl+C to exit.
               </text>
             </>

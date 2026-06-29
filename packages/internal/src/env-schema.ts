@@ -21,7 +21,7 @@ export const serverEnvSchema = clientEnvSchema.extend({
   COMPOSIO_API_KEY: z.string().min(1).optional(),
   // ZeroClick tenant API key used for server-side offer fallback requests.
   ZEROCLICK_API_KEY: z.string().min(1).optional(),
-  // BuySellAds (Carbon) zone key used for the Freebuff waiting-room ad.
+  // BuySellAds (Carbon) zone key used for the FreeTier waiting-room ad.
   // Optional: when unset the Carbon provider returns no ad and callers fall
   // back to their cached ads / fallback content. `CVADC53U` is the public
   // test key from BSA docs and is safe to use in dev.
@@ -30,10 +30,10 @@ export const serverEnvSchema = clientEnvSchema.extend({
 
   // Web/Database variables
   DATABASE_URL: z.string().min(1),
-  CODEBUFF_GITHUB_ID: z.string().min(1),
-  CODEBUFF_GITHUB_SECRET: z.string().min(1),
-  FREEBUFF_GITHUB_ID: z.string().min(1).optional(),
-  FREEBUFF_GITHUB_SECRET: z.string().min(1).optional(),
+  NEXUS_GITHUB_ID: z.string().min(1),
+  NEXUS_GITHUB_SECRET: z.string().min(1),
+  FREETIER_GITHUB_ID: z.string().min(1).optional(),
+  FREETIER_GITHUB_SECRET: z.string().min(1).optional(),
   NEXTAUTH_URL: z.url().optional(),
   NEXTAUTH_SECRET: z.string().min(1),
   STRIPE_SECRET_KEY: z.string().min(1),
@@ -59,15 +59,15 @@ export const serverEnvSchema = clientEnvSchema.extend({
   // sweep but risks rate-limiting.
   BOT_SWEEP_GITHUB_TOKEN: z.string().min(1).optional(),
 
-  // Freebuff waiting room. Defaults to OFF so the feature requires explicit
+  // FreeTier waiting room. Defaults to OFF so the feature requires explicit
   // opt-in per environment — the CLI/SDK do not yet send
-  // freebuff_instance_id, so enabling this before they ship would reject
+  // freetier_instance_id, so enabling this before they ship would reject
   // every free-mode request with 428 waiting_room_required.
-  FREEBUFF_WAITING_ROOM_ENABLED: z
+  FREETIER_WAITING_ROOM_ENABLED: z
     .enum(['true', 'false'])
     .default('false')
     .transform((v) => v === 'true'),
-  FREEBUFF_SESSION_LENGTH_MS: z.coerce
+  FREETIER_SESSION_LENGTH_MS: z.coerce
     .number()
     .int()
     .positive()
@@ -76,7 +76,7 @@ export const serverEnvSchema = clientEnvSchema.extend({
   // Dev-only override: when 'true', force free-mode requests to the 'limited'
   // access tier so the limited UX (single DeepSeek Flash model) can be
   // exercised on localhost. Ignored unless NEXT_PUBLIC_CB_ENVIRONMENT === 'dev'.
-  FREEBUFF_DEV_FORCE_LIMITED: z
+  FREETIER_DEV_FORCE_LIMITED: z
     .enum(['true', 'false'])
     .default('false')
     .transform((v) => v === 'true'),
@@ -90,7 +90,7 @@ export type ServerEnv = z.infer<typeof serverEnvSchema>
 
 // CI-only env vars that are NOT in the typed schema
 // These are injected for SDK tests but should never be accessed via env.* in code
-export const ciOnlyEnvVars = ['CODEBUFF_API_KEY'] as const
+export const ciOnlyEnvVars = ['NEXUS_API_KEY'] as const
 export type CiOnlyEnvVar = (typeof ciOnlyEnvVars)[number]
 
 // Bun will inject all these values, so we need to reference them individually (no for-loops)
@@ -120,10 +120,10 @@ export const serverProcessEnv: ServerInput = {
 
   // Web/Database variables
   DATABASE_URL: process.env.DATABASE_URL,
-  CODEBUFF_GITHUB_ID: process.env.CODEBUFF_GITHUB_ID,
-  CODEBUFF_GITHUB_SECRET: process.env.CODEBUFF_GITHUB_SECRET,
-  FREEBUFF_GITHUB_ID: process.env.FREEBUFF_GITHUB_ID,
-  FREEBUFF_GITHUB_SECRET: process.env.FREEBUFF_GITHUB_SECRET,
+  NEXUS_GITHUB_ID: process.env.NEXUS_GITHUB_ID,
+  NEXUS_GITHUB_SECRET: process.env.NEXUS_GITHUB_SECRET,
+  FREETIER_GITHUB_ID: process.env.FREETIER_GITHUB_ID,
+  FREETIER_GITHUB_SECRET: process.env.FREETIER_GITHUB_SECRET,
   NEXTAUTH_URL: process.env.NEXTAUTH_URL,
   NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
   STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
@@ -142,8 +142,8 @@ export const serverProcessEnv: ServerInput = {
   BOT_SWEEP_SECRET: process.env.BOT_SWEEP_SECRET,
   BOT_SWEEP_GITHUB_TOKEN: process.env.BOT_SWEEP_GITHUB_TOKEN,
 
-  // Freebuff waiting room
-  FREEBUFF_WAITING_ROOM_ENABLED: process.env.FREEBUFF_WAITING_ROOM_ENABLED,
-  FREEBUFF_SESSION_LENGTH_MS: process.env.FREEBUFF_SESSION_LENGTH_MS,
-  FREEBUFF_DEV_FORCE_LIMITED: process.env.FREEBUFF_DEV_FORCE_LIMITED,
+  // FreeTier waiting room
+  FREETIER_WAITING_ROOM_ENABLED: process.env.FREETIER_WAITING_ROOM_ENABLED,
+  FREETIER_SESSION_LENGTH_MS: process.env.FREETIER_SESSION_LENGTH_MS,
+  FREETIER_DEV_FORCE_LIMITED: process.env.FREETIER_DEV_FORCE_LIMITED,
 }

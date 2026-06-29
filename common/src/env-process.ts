@@ -67,19 +67,19 @@ export const getProcessEnv = (): ProcessEnv => ({
   // Editor preferences
   VISUAL: process.env.VISUAL,
   EDITOR: process.env.EDITOR,
-  CODEBUFF_CLI_EDITOR: process.env.CODEBUFF_CLI_EDITOR,
-  CODEBUFF_EDITOR: process.env.CODEBUFF_EDITOR,
+  NEXUS_CLI_EDITOR: process.env.NEXUS_CLI_EDITOR,
+  NEXUS_EDITOR: process.env.NEXUS_EDITOR,
 
   // Theme preferences
   OPEN_TUI_THEME: process.env.OPEN_TUI_THEME,
   OPENTUI_THEME: process.env.OPENTUI_THEME,
 
-  // Codebuff CLI-specific
-  CODEBUFF_IS_BINARY: process.env.CODEBUFF_IS_BINARY,
-  CODEBUFF_CLI_VERSION: process.env.CODEBUFF_CLI_VERSION,
-  CODEBUFF_CLI_TARGET: process.env.CODEBUFF_CLI_TARGET,
-  CODEBUFF_RG_PATH: process.env.CODEBUFF_RG_PATH,
-  CODEBUFF_WASM_DIR: process.env.CODEBUFF_WASM_DIR,
+  // Nexus CLI-specific
+  NEXUS_IS_BINARY: process.env.NEXUS_IS_BINARY,
+  NEXUS_CLI_VERSION: process.env.NEXUS_CLI_VERSION,
+  NEXUS_CLI_TARGET: process.env.NEXUS_CLI_TARGET,
+  NEXUS_RG_PATH: process.env.NEXUS_RG_PATH,
+  NEXUS_WASM_DIR: process.env.NEXUS_WASM_DIR,
 
   // Build/CI flags
   VERBOSE: process.env.VERBOSE,

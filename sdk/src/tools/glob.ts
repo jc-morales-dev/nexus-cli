@@ -4,15 +4,15 @@ import {
 } from '@nexus/common/project-file-tree'
 import micromatch from 'micromatch'
 
-import type { CodebuffToolOutput } from '@nexus/common/tools/list'
-import type { CodebuffFileSystem } from '@nexus/common/types/filesystem'
+import type { NexusToolOutput } from '@nexus/common/tools/list'
+import type { NexusFileSystem } from '@nexus/common/types/filesystem'
 
 export async function glob(params: {
   pattern: string
   projectPath: string
   cwd?: string
-  fs: CodebuffFileSystem
-}): Promise<CodebuffToolOutput<'glob'>> {
+  fs: NexusFileSystem
+}): Promise<NexusToolOutput<'glob'>> {
   const { pattern, projectPath, cwd, fs } = params
 
   try {

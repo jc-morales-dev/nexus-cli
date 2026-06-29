@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 
 /**
- * E2E test for CanopyWave integration via the Codebuff SDK.
+ * E2E test for CanopyWave integration via the Nexus SDK.
  *
  * Creates a real agent run using the minimax model so the request
  * flows through our chat completions endpoint → CanopyWave → back with usage data.
@@ -10,7 +10,7 @@
  *   bun scripts/test-canopywave-e2e.ts
  */
 
-import { CodebuffClient } from '@nexus/sdk'
+import { NexusClient } from '@nexus/sdk'
 
 import type { AgentDefinition } from '@nexus/sdk'
 import type { PrintModeEvent } from '@nexus/common/types/print-mode'
@@ -24,21 +24,21 @@ const minimaxAgent: AgentDefinition = {
 }
 
 async function main() {
-  const apiKey = process.env.CODEBUFF_API_KEY
+  const apiKey = process.env.NEXUS_API_KEY
   if (!apiKey) {
-    console.error('❌ CODEBUFF_API_KEY is not set.')
-    console.error('   Example: CODEBUFF_API_KEY=<key> bun scripts/test-canopywave-e2e.ts')
+    console.error('❌ NEXUS_API_KEY is not set.')
+    console.error('   Example: NEXUS_API_KEY=<key> bun scripts/test-canopywave-e2e.ts')
     process.exit(1)
   }
 
-  console.log('🔌 CanopyWave E2E Test via Codebuff SDK')
+  console.log('🔌 CanopyWave E2E Test via Nexus SDK')
   console.log('='.repeat(50))
   console.log()
   console.log(`Model: ${minimaxAgent.model}`)
   console.log(`Agent: ${minimaxAgent.id}`)
   console.log()
 
-  const client = new CodebuffClient({
+  const client = new NexusClient({
     apiKey,
     cwd: process.cwd(),
   })

@@ -3,7 +3,7 @@ import os from 'os'
 import path from 'path'
 
 import { API_KEY_ENV_VAR } from '@nexus/common/constants/paths'
-import { CodebuffClient, type AgentDefinition } from '@nexus/sdk'
+import { NexusClient, type AgentDefinition } from '@nexus/sdk'
 import { describe, expect, it } from 'bun:test'
 
 import base2Free from '../base2/base2-free'
@@ -40,7 +40,7 @@ For this E2E test, use the gravity_index tool when asked to recommend third-part
       } satisfies AgentDefinition
 
       try {
-        const client = new CodebuffClient({
+        const client = new NexusClient({
           apiKey,
           cwd: tmpDir,
           projectFiles: {

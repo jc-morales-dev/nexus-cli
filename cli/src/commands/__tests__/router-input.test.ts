@@ -286,14 +286,14 @@ describe('command-registry', () => {
       }
     })
 
-    test('connect command is not available in codebuff (freetier-only)', () => {
+    test('connect command is not available in nexus (freetier-only)', () => {
       const hasConnectSlashCommand = SLASH_COMMANDS.some(
         (cmd) => cmd.id === 'connect',
       )
       expect(hasConnectSlashCommand).toBe(false)
     })
 
-    test('connect:chatgpt command is not available in codebuff (freetier-only)', () => {
+    test('connect:chatgpt command is not available in nexus (freetier-only)', () => {
       const command = findCommand('connect:chatgpt')
       expect(command).toBeUndefined()
     })

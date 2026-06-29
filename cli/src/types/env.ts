@@ -59,21 +59,21 @@ export type CliEnv = BaseEnv & {
   // Editor preferences
   VISUAL?: string
   EDITOR?: string
-  CODEBUFF_CLI_EDITOR?: string
-  CODEBUFF_EDITOR?: string
+  NEXUS_CLI_EDITOR?: string
+  NEXUS_EDITOR?: string
 
   // Theme preferences
   OPEN_TUI_THEME?: string
   OPENTUI_THEME?: string
 
-  // Codebuff CLI-specific (set during binary build)
-  CODEBUFF_IS_BINARY?: string
-  CODEBUFF_CLI_VERSION?: string
-  CODEBUFF_CLI_TARGET?: string
-  CODEBUFF_RG_PATH?: string
-  CODEBUFF_SCROLL_MULTIPLIER?: string
-  CODEBUFF_PERF_TEST?: string
-  FREEBUFF_MODE?: string
+  // Nexus CLI-specific (set during binary build)
+  NEXUS_IS_BINARY?: string
+  NEXUS_CLI_VERSION?: string
+  NEXUS_CLI_TARGET?: string
+  NEXUS_RG_PATH?: string
+  NEXUS_SCROLL_MULTIPLIER?: string
+  NEXUS_PERF_TEST?: string
+  FREETIER_MODE?: string
 }
 
 /**

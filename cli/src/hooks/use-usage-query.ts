@@ -44,9 +44,9 @@ export async function fetchUsageData({
   logger = defaultLogger,
   clientEnv = env,
 }: FetchUsageParams): Promise<UsageResponse> {
-  const appUrl = clientEnv.NEXT_PUBLIC_CODEBUFF_APP_URL
+  const appUrl = clientEnv.NEXT_PUBLIC_NEXUS_APP_URL
   if (!appUrl) {
-    throw new Error('NEXT_PUBLIC_CODEBUFF_APP_URL is not set')
+    throw new Error('NEXT_PUBLIC_NEXUS_APP_URL is not set')
   }
 
   const response = await fetch(`${appUrl}/api/v1/usage`, {
@@ -103,7 +103,7 @@ export function useUsageQuery(deps: UseUsageQueryDeps = {}) {
   return useActivityQuery({
     queryKey: usageQueryKeys.current(),
     queryFn: () => fetchUsageData({ authToken: authToken!, logger }),
-    // BYOK direct mode has no Codebuff account/credits backend — skip the call.
+    // BYOK direct mode has no Nexus account/credits backend — skip the call.
     enabled: enabled && !!authToken && !isByokDirectMode(),
     staleTime: 0, // Always consider data stale for immediate refetching
     gcTime: 5 * 60 * 1000, // 5 minutes

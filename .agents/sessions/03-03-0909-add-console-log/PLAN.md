@@ -1,7 +1,7 @@
 # PLAN
 
 ## Implementation Steps
-1. Update `cli/src/index.tsx` by adding `console.log('Codebuff CLI starting')` as the first statement in `main()`.
+1. Update `cli/src/index.tsx` by adding `console.log('Nexus CLI starting')` as the first statement in `main()`.
 2. Inspect the diff to confirm scope: exactly one new `console.log` line in `cli/src/index.tsx` and no unintended edits.
 3. Run lightweight validation for CLI startup behavior:
    - Run a non-interactive path (`--help`) and confirm the line appears once.

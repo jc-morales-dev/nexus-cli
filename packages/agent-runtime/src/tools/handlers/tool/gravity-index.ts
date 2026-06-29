@@ -2,10 +2,10 @@ import { jsonToolResult } from '@nexus/common/util/messages'
 
 import { callGravityIndexAPI } from '../../../llm-api/nexus-web-api'
 
-import type { CodebuffToolHandlerFunction } from '../handler-function-type'
+import type { NexusToolHandlerFunction } from '../handler-function-type'
 import type {
-  CodebuffToolCall,
-  CodebuffToolOutput,
+  NexusToolCall,
+  NexusToolOutput,
 } from '@nexus/common/tools/list'
 import type { ClientEnv, CiEnv } from '@nexus/common/types/contracts/env'
 import type { JSONObject } from '@nexus/common/types/json'
@@ -13,7 +13,7 @@ import type { Logger } from '@nexus/common/types/contracts/logger'
 
 export const handleGravityIndex = (async (params: {
   previousToolCallFinished: Promise<void>
-  toolCall: CodebuffToolCall<'gravity_index'>
+  toolCall: NexusToolCall<'gravity_index'>
   logger: Logger
   apiKey: string
 
@@ -28,7 +28,7 @@ export const handleGravityIndex = (async (params: {
   clientEnv: ClientEnv
   ciEnv: CiEnv
 }): Promise<{
-  output: CodebuffToolOutput<'gravity_index'>
+  output: NexusToolOutput<'gravity_index'>
   creditsUsed: number
 }> => {
   const {
@@ -134,4 +134,4 @@ export const handleGravityIndex = (async (params: {
     )
     return { output: jsonToolResult({ errorMessage }), creditsUsed }
   }
-}) satisfies CodebuffToolHandlerFunction<'gravity_index'>
+}) satisfies NexusToolHandlerFunction<'gravity_index'>

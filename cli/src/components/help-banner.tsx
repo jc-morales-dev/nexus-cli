@@ -3,7 +3,7 @@ import React from 'react'
 import { BottomBanner } from './bottom-banner'
 import { useSubscriptionQuery } from '../hooks/use-subscription-query'
 import { useTheme } from '../hooks/use-theme'
-import { IS_FREEBUFF } from '../utils/constants'
+import { IS_FREETIER } from '../utils/constants'
 import { useChatStore } from '../state/chat-store'
 import { getChatGptOAuthStatus } from '../utils/chatgpt-oauth'
 
@@ -80,12 +80,12 @@ export const HelpBanner = () => {
         <box style={{ flexDirection: 'column', gap: 0 }}>
           <SectionHeader>Tips</SectionHeader>
           <box style={{ flexDirection: 'column', paddingLeft: 2 }}>
-            {IS_FREEBUFF && !chatGptOAuth.connected && (
+            {IS_FREETIER && !chatGptOAuth.connected && (
               <text style={{ fg: theme.muted }}>
                 Connect via /connect to unlock /plan & /review
               </text>
             )}
-            {IS_FREEBUFF && chatGptOAuth.connected && (
+            {IS_FREETIER && chatGptOAuth.connected && (
               <text style={{ fg: theme.muted }}>
                 Try workflow: /interview → /plan → implement → /review
               </text>
@@ -99,8 +99,8 @@ export const HelpBanner = () => {
           </box>
         </box>
 
-        {/* Credits Section — hidden in Freebuff */}
-        {!IS_FREEBUFF && (
+        {/* Credits Section — hidden in FreeTier */}
+        {!IS_FREETIER && (
           <box style={{ flexDirection: 'column', gap: 0 }}>
             <SectionHeader>Credits</SectionHeader>
             <box style={{ flexDirection: 'column', paddingLeft: 2 }}>

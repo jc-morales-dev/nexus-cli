@@ -74,7 +74,7 @@ bun run start
 Or use the binary directly:
 
 ```bash
-codebuff-tui
+nexus-tui
 ```
 
 ## Features

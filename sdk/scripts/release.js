@@ -29,10 +29,10 @@ function formatTimestamp() {
 }
 
 function checkGitHubToken() {
-  const token = process.env.CODEBUFF_GITHUB_TOKEN
+  const token = process.env.NEXUS_GITHUB_TOKEN
   if (!token) {
     error(
-      'CODEBUFF_GITHUB_TOKEN environment variable is required but not set.\n' +
+      'NEXUS_GITHUB_TOKEN environment variable is required but not set.\n' +
       'Please set it with your GitHub personal access token or use the infisical setup.'
     )
   }
@@ -53,7 +53,7 @@ async function triggerWorkflow(versionType) {
       -H "Accept: application/vnd.github.v3+json" \
       -H "Authorization: token ${process.env.GITHUB_TOKEN}" \
       -H "Content-Type: application/json" \
-      https://api.github.com/repos/CodebuffAI/codebuff/actions/workflows/sdk-release.yml/dispatches \
+      https://api.github.com/repos/NexusAI/nexus/actions/workflows/sdk-release.yml/dispatches \
       -d '{"ref":"main","inputs":{"version_type":"${versionType}"}}'`
 
     const response = execSync(triggerCmd, { encoding: 'utf8' })
@@ -63,7 +63,7 @@ async function triggerWorkflow(versionType) {
       log(`⚠️  Workflow dispatch failed: ${response}`)
       log('The workflow may need to be updated on GitHub. Continuing anyway...')
       log(
-        'Please manually trigger the workflow at: https://github.com/CodebuffAI/codebuff/actions/workflows/sdk-release.yml',
+        'Please manually trigger the workflow at: https://github.com/NexusAI/nexus/actions/workflows/sdk-release.yml',
       )
     } else {
       log('🎉 SDK release workflow triggered!')
@@ -71,7 +71,7 @@ async function triggerWorkflow(versionType) {
   } catch (err) {
     log(`⚠️  Failed to trigger workflow automatically: ${err.message}`)
     log(
-      'You may need to trigger it manually at: https://github.com/CodebuffAI/codebuff/actions/workflows/sdk-release.yml',
+      'You may need to trigger it manually at: https://github.com/NexusAI/nexus/actions/workflows/sdk-release.yml',
     )
   }
 }
@@ -82,7 +82,7 @@ async function main() {
 
   // Check for local GitHub token
   checkGitHubToken()
-  log('✅ Using local CODEBUFF_GITHUB_TOKEN')
+  log('✅ Using local NEXUS_GITHUB_TOKEN')
 
   log(`Version bump type: ${versionType}`)
 
@@ -90,7 +90,7 @@ async function main() {
   await triggerWorkflow(versionType)
 
   log('')
-  log('Monitor progress at: https://github.com/CodebuffAI/codebuff/actions')
+  log('Monitor progress at: https://github.com/NexusAI/nexus/actions')
 }
 
 main().catch((err) => {

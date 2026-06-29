@@ -134,9 +134,9 @@ function getWorktreePorts(worktreePath: string): WorktreePorts {
           ports.webPort = parseInt(webPortMatch[1], 10)
         }
 
-        // Parse backend port from NEXT_PUBLIC_CODEBUFF_BACKEND_URL
+        // Parse backend port from NEXT_PUBLIC_NEXUS_BACKEND_URL
         const backendUrlMatch = content.match(
-          /^NEXT_PUBLIC_CODEBUFF_BACKEND_URL=.*:(\d+)/m,
+          /^NEXT_PUBLIC_NEXUS_BACKEND_URL=.*:(\d+)/m,
         )
         if (backendUrlMatch) {
           ports.backendPort = parseInt(backendUrlMatch[1], 10)
@@ -329,7 +329,7 @@ function getExistingWorktrees(): string[] {
 
 async function main(): Promise<void> {
   try {
-    console.log('Codebuff Worktree Cleanup')
+    console.log('Nexus Worktree Cleanup')
     console.log('=========================')
 
     const args = parseArgs()

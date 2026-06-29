@@ -8,7 +8,7 @@ const path = require('path');
 const binaryPath = path.join(
   os.homedir(),
   '.config',
-  'manicode',
+  'nexus',
   process.platform === 'win32' ? 'codecane.exe' : 'codecane'
 );
 
@@ -32,5 +32,5 @@ console.log('Example:');
 console.log('  $ cd ~/my-project');
 console.log('  $ codecane');
 console.log('\n');
-console.log('For more information, visit: https://codebuff.com/docs');
+console.log('For more information, visit: https://nexus.com/docs');
 console.log('\n');

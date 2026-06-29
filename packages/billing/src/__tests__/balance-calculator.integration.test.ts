@@ -232,7 +232,7 @@ describe('Balance Calculator - Integration Tests (Real DB)', () => {
     try {
       await testDb.insert(schema.user).values({
         id: TEST_USER_ID,
-        email: 'integration-test@codebuff.test',
+        email: 'integration-test@nexus.test',
         name: 'Integration Test User',
       })
     } catch {

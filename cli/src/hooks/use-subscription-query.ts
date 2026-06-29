@@ -1,6 +1,6 @@
 import { useActivityQuery } from './use-activity-query'
 import { getAuthToken } from '../utils/auth'
-import { IS_FREEBUFF } from '../utils/constants'
+import { IS_FREETIER } from '../utils/constants'
 import { getApiClient } from '../utils/nexus-api'
 import { logger as defaultLogger } from '../utils/logger'
 
@@ -58,7 +58,7 @@ export function useSubscriptionQuery(deps: UseSubscriptionQueryDeps = {}) {
   return useActivityQuery({
     queryKey: subscriptionQueryKeys.current(),
     queryFn: () => fetchSubscriptionData(logger),
-    enabled: enabled && !!authToken && !IS_FREEBUFF,
+    enabled: enabled && !!authToken && !IS_FREETIER,
     staleTime: 30 * 1000,
     gcTime: 5 * 60 * 1000,
     retry: 1,

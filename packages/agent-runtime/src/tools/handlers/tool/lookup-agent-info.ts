@@ -4,10 +4,10 @@ import z from 'zod/v4'
 
 import { getAgentTemplate } from '../../../templates/agent-registry'
 
-import type { CodebuffToolHandlerFunction } from '../handler-function-type'
+import type { NexusToolHandlerFunction } from '../handler-function-type'
 import type {
-  CodebuffToolCall,
-  CodebuffToolOutput,
+  NexusToolCall,
+  NexusToolOutput,
 } from '@nexus/common/tools/list'
 import type {
   AgentTemplate,
@@ -16,7 +16,7 @@ import type {
 import type { FetchAgentFromDatabaseFn } from '@nexus/common/types/contracts/database'
 
 export const handleLookupAgentInfo = (async (params: {
-  toolCall: CodebuffToolCall<'lookup_agent_info'>
+  toolCall: NexusToolCall<'lookup_agent_info'>
   previousToolCallFinished: Promise<void>
 
   apiKey: string
@@ -24,7 +24,7 @@ export const handleLookupAgentInfo = (async (params: {
   localAgentTemplates: Record<string, AgentTemplate>
   logger: Logger
   fetchAgentFromDatabase: FetchAgentFromDatabaseFn
-}): Promise<{ output: CodebuffToolOutput<'lookup_agent_info'> }> => {
+}): Promise<{ output: NexusToolOutput<'lookup_agent_info'> }> => {
   const { toolCall, previousToolCallFinished } = params
   const { agentId } = toolCall.input
 
@@ -80,7 +80,7 @@ export const handleLookupAgentInfo = (async (params: {
       },
     }),
   }
-}) satisfies CodebuffToolHandlerFunction<'lookup_agent_info'>
+}) satisfies NexusToolHandlerFunction<'lookup_agent_info'>
 
 const toJSONSchema = (schema: z.ZodSchema) => {
   try {

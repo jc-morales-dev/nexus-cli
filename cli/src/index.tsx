@@ -35,9 +35,9 @@ import { initializeApp } from './init/init-app'
 import { getProjectRoot, setProjectRoot } from './project-files'
 import { trackEvent } from './utils/analytics'
 import { getAuthToken, getAuthTokenDetails } from './utils/auth'
-import { resetCodebuffClient } from './utils/nexus-client'
+import { resetNexusClient } from './utils/nexus-client'
 import { setApiClientAuthToken } from './utils/nexus-api'
-import { IS_FREEBUFF } from './utils/constants'
+import { IS_FREETIER } from './utils/constants'
 import { getCliEnv } from './utils/env'
 import { initializeAgentRegistry } from './utils/local-agent-registry'
 import { clearLogFile, logger } from './utils/logger'
@@ -55,8 +55,8 @@ const require = createRequire(import.meta.url)
 
 function loadPackageVersion(): string {
   const env = getCliEnv()
-  if (env.CODEBUFF_CLI_VERSION) {
-    return env.CODEBUFF_CLI_VERSION
+  if (env.NEXUS_CLI_VERSION) {
+    return env.NEXUS_CLI_VERSION
   }
 
   try {
@@ -111,11 +111,11 @@ type ParsedArgs = {
 function parseArgs(): ParsedArgs {
   const program = new Command()
 
-  if (IS_FREEBUFF) {
-    // Freebuff: simplified CLI - no prompt args, no agent override, no clear-logs
+  if (IS_FREETIER) {
+    // FreeTier: simplified CLI - no prompt args, no agent override, no clear-logs
     program
-      .name('freebuff')
-      .description('Freebuff - Free AI coding assistant')
+      .name('freetier')
+      .description('FreeTier - Free AI coding assistant')
       .version(loadPackageVersion(), '-v, --version', 'Print the CLI version')
       .option(
         '--continue [conversation-id]',
@@ -129,9 +129,9 @@ function parseArgs(): ParsedArgs {
       .helpOption('-h, --help', 'Show this help message')
       .parse(process.argv)
   } else {
-    // Codebuff: full CLI with all options
+    // Nexus: full CLI with all options
     program
-      .name('codebuff')
+      .name('nexus')
       .description('NEXUS CLI - AI-powered coding assistant')
       .version(loadPackageVersion(), '-v, --version', 'Print the CLI version')
       .option(
@@ -164,9 +164,9 @@ function parseArgs(): ParsedArgs {
   const continueFlag = options.continue
 
   // Determine initial mode from flags (last flag wins if multiple specified)
-  // Freebuff always uses LITE mode
+  // FreeTier always uses LITE mode
   let initialMode: AgentMode | undefined
-  if (IS_FREEBUFF) {
+  if (IS_FREETIER) {
     initialMode = 'LITE'
   } else {
     if (options.free || options.lite) initialMode = 'LITE'
@@ -196,11 +196,11 @@ async function main(): Promise<void> {
   // still ran first and rejected the unknown flag).
   if (process.argv.includes('--smoke-tree-sitter')) {
     const wasmBinary = (
-      globalThis as { __CODEBUFF_TREE_SITTER_WASM_BINARY__?: Uint8Array }
-    ).__CODEBUFF_TREE_SITTER_WASM_BINARY__
+      globalThis as { __NEXUS_TREE_SITTER_WASM_BINARY__?: Uint8Array }
+    ).__NEXUS_TREE_SITTER_WASM_BINARY__
     const wasmPath = (
-      globalThis as { __CODEBUFF_TREE_SITTER_WASM_PATH__?: string }
-    ).__CODEBUFF_TREE_SITTER_WASM_PATH__
+      globalThis as { __NEXUS_TREE_SITTER_WASM_PATH__?: string }
+    ).__NEXUS_TREE_SITTER_WASM_PATH__
 
     // Diagnostic dump so CI logs (and bug reports) show exactly what
     // the runtime saw when smoke fails. process.execPath, the
@@ -319,7 +319,7 @@ async function main(): Promise<void> {
     hasAgentOverride: hasAgentOverride,
     continueChat,
     initialMode: initialMode ?? 'DEFAULT',
-    isFreeBuff: IS_FREEBUFF,
+    isFreeTier: IS_FREETIER,
   })
 
   // Initialize agent registry (loads user agents via SDK).
@@ -420,7 +420,7 @@ async function main(): Promise<void> {
         // Update the project root in the module state
         setProjectRoot(newProjectPath)
         // Reset client to ensure tools use the updated project root
-        resetCodebuffClient()
+        resetNexusClient()
         // Save to recent projects list
         saveRecentProject(newProjectPath)
         // Update local state

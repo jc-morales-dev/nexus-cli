@@ -89,7 +89,7 @@ const db = drizzle(client, { schema })
 try {
   await migrate(db, { migrationsFolder: path.join(here, 'migrations') })
 
-  const userEmail = 'e2e@codebuff.com'
+  const userEmail = 'e2e@nexus.com'
   const fallbackUserId = 'e2e-user'
 
   await db
@@ -109,13 +109,13 @@ try {
     .limit(1)
 
   const userId = userRow?.id ?? fallbackUserId
-  const publisherId = 'codebuff'
+  const publisherId = 'nexus'
 
   await db
     .insert(schema.publisher)
     .values({
       id: publisherId,
-      name: 'Codebuff',
+      name: 'Nexus',
       verified: true,
       user_id: userId,
       created_by: userId,

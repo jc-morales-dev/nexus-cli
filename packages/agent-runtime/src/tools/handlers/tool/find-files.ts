@@ -9,10 +9,10 @@ import { getSearchSystemPrompt } from '../../../system-prompt/search-system-prom
 import { renderReadFilesResult } from '../../../util/render-read-files-result'
 import { countTokens, countTokensJson } from '../../../util/token-counter'
 
-import type { CodebuffToolHandlerFunction } from '../handler-function-type'
+import type { NexusToolHandlerFunction } from '../handler-function-type'
 import type {
-  CodebuffToolCall,
-  CodebuffToolOutput,
+  NexusToolCall,
+  NexusToolOutput,
 } from '@nexus/common/tools/list'
 import type { RequestFilesFn } from '@nexus/common/types/contracts/client'
 import type { Logger } from '@nexus/common/types/contracts/logger'
@@ -30,7 +30,7 @@ const COLLECT_FULL_FILE_CONTEXT = false
 export const handleFindFiles = (async (
   params: {
     previousToolCallFinished: Promise<any>
-    toolCall: CodebuffToolCall<'find_files'>
+    toolCall: NexusToolCall<'find_files'>
     logger: Logger
 
     agentState: AgentState
@@ -50,7 +50,7 @@ export const handleFindFiles = (async (
       'messages' | 'system' | 'assistantPrompt'
     > &
     ParamsExcluding<typeof getFileReadingUpdates, 'requestedFiles'>,
-): Promise<{ output: CodebuffToolOutput<'find_files'> }> => {
+): Promise<{ output: NexusToolOutput<'find_files'> }> => {
   const {
     previousToolCallFinished,
     toolCall,
@@ -128,7 +128,7 @@ export const handleFindFiles = (async (
       }),
     }
   }
-}) satisfies CodebuffToolHandlerFunction<'find_files'>
+}) satisfies NexusToolHandlerFunction<'find_files'>
 
 async function uploadExpandedFileContextForTraining(
   params: {

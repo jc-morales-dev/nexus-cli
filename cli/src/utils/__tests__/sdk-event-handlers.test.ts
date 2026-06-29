@@ -197,7 +197,7 @@ describe('sdk-event-handlers', () => {
     const startEvent: SubagentStartEvent = {
       type: 'subagent_start',
       agentId: 'agent-real',
-      agentType: 'codebuff/file-picker@1.0.0',
+      agentType: 'nexus/file-picker@1.0.0',
       displayName: 'Agent',
       onlyChild: false,
       parentAgentId: undefined,

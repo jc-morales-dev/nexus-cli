@@ -1,7 +1,7 @@
 import { TextAttributes } from '@opentui/core'
 import React from 'react'
 
-import { useFreebuffCtrlCExit } from '../hooks/use-freetier-ctrl-c-exit'
+import { useFreeTierCtrlCExit } from '../hooks/use-freetier-ctrl-c-exit'
 import { useLogo } from '../hooks/use-logo'
 import { useTerminalDimensions } from '../hooks/use-terminal-dimensions'
 import { useTheme } from '../hooks/use-theme'
@@ -12,7 +12,7 @@ import { getLogoAccentColor, getLogoBlockColor } from '../utils/theme-system'
  * the same account rotated our instance id and we've stopped polling — the
  * user needs to close the other instance and restart.
  */
-export const FreebuffSupersededScreen: React.FC = () => {
+export const FreeTierSupersededScreen: React.FC = () => {
   const theme = useTheme()
   const { contentMaxWidth } = useTerminalDimensions()
   const blockColor = getLogoBlockColor(theme.name)
@@ -23,7 +23,7 @@ export const FreebuffSupersededScreen: React.FC = () => {
     blockColor,
   })
 
-  useFreebuffCtrlCExit()
+  useFreeTierCtrlCExit()
 
   return (
     <box
@@ -44,13 +44,13 @@ export const FreebuffSupersededScreen: React.FC = () => {
         style={{ fg: theme.foreground, marginBottom: 1 }}
         attributes={TextAttributes.BOLD}
       >
-        Another freebuff instance took over this account.
+        Another freetier instance took over this account.
       </text>
       <text style={{ fg: theme.muted, wrapMode: 'word' }}>
         Only one CLI per account can be active at a time.
       </text>
       <text style={{ fg: theme.muted, wrapMode: 'word' }}>
-        Close the other instance, then restart freebuff here.
+        Close the other instance, then restart freetier here.
       </text>
       <box style={{ marginTop: 1 }}>
         <text style={{ fg: theme.muted }}>

@@ -84,21 +84,21 @@ export const toolParams = {
 }
 
 // Tool call from LLM after parsing
-export type CodebuffToolCall<T extends ToolName = ToolName> = {
+export type NexusToolCall<T extends ToolName = ToolName> = {
   [K in ToolName]: {
     toolName: K
     input: z.infer<(typeof toolParams)[K]['inputSchema']>
   } & Omit<ToolCallPart, 'type'>
 }[T]
 
-export type CodebuffToolOutput<T extends ToolName = ToolName> = {
+export type NexusToolOutput<T extends ToolName = ToolName> = {
   [K in ToolName]: K extends ToolName
     ? z.infer<(typeof toolParams)[K]['outputSchema']>
     : never
 }[T]
 
-export type CodebuffToolMessage<T extends ToolName = ToolName> = ToolMessage & {
-  content: CodebuffToolOutput<T>
+export type NexusToolMessage<T extends ToolName = ToolName> = ToolMessage & {
+  content: NexusToolOutput<T>
 }
 
 // Tool call to send to client

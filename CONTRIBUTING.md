@@ -1,6 +1,6 @@
-# Contributing to Codebuff
+# Contributing to Nexus
 
-Hey there! 👋 Thanks for contributing to Codebuff. Bug fixes, features, and documentation improvements are welcome.
+Hey there! 👋 Thanks for contributing to Nexus. Bug fixes, features, and documentation improvements are welcome.
 
 ## Getting Started
 
@@ -16,8 +16,8 @@ Before you begin, you'll need to install a few tools:
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/CodebuffAI/codebuff.git
-   cd codebuff
+   git clone https://github.com/NexusAI/nexus.git
+   cd nexus
    ```
 
 2. **Set up environment variables**:
@@ -27,7 +27,7 @@ Before you begin, you'll need to install a few tools:
    cp .env.example .env.local
 
    # Edit .env.local and update DATABASE_URL to match Docker:
-   # DATABASE_URL=postgresql://manicode_user_local:secretpassword_local@localhost:5432/manicode_db_local
+   # DATABASE_URL=postgresql://nexus_user_local:secretpassword_local@localhost:5432/nexus_db_local
    ```
 
 ### Required local env changes
@@ -39,10 +39,10 @@ The `.env.example` provides defaults. When you create ` .env.local` make sure to
 - **GRAVITY_API_KEY**: optional; use `test` for ad/analytics testing in dev.
 - **PORT**: the example defaults to `4242`. This repo commonly runs on `3000` during development — set `PORT=3000` if you want the web app on `http://localhost:3000`.
 - **NEXTAUTH_URL**: when using port 3000 set `NEXTAUTH_URL=http://localhost:3000` to ensure OAuth callbacks work.
-- **CODEBUFF_GITHUB_ID** / **CODEBUFF_GITHUB_SECRET**: your GitHub OAuth app credentials — required to sign in locally via GitHub.
+- **NEXUS_GITHUB_ID** / **NEXUS_GITHUB_SECRET**: your GitHub OAuth app credentials — required to sign in locally via GitHub.
 - **DATABASE_URL**: confirm this points to your local Docker Postgres (default is fine for the built-in Docker setup):
-  - `DATABASE_URL=postgresql://manicode_user_local:secretpassword_local@localhost:5432/manicode_db_local`
-- **CODEBUFF_API_KEY**: optional CLI fallback — you can `export CODEBUFF_API_KEY=<your-key>` for CLI commands.
+  - `DATABASE_URL=postgresql://nexus_user_local:secretpassword_local@localhost:5432/nexus_db_local`
+- **NEXUS_API_KEY**: optional CLI fallback — you can `export NEXUS_API_KEY=<your-key>` for CLI commands.
 
 Notes / gotchas:
 
@@ -66,8 +66,8 @@ Notes / gotchas:
    2. Add your Github client ID and secret to `.env.local`:
 
    ```bash
-   CODEBUFF_GITHUB_ID=<your-github-app-id-here>
-   CODEBUFF_GITHUB_SECRET=<your-github-app-secret-here>
+   NEXUS_GITHUB_ID=<your-github-app-id-here>
+   NEXUS_GITHUB_SECRET=<your-github-app-secret-here>
    ```
 
 5. **Start development services**:
@@ -79,13 +79,13 @@ Notes / gotchas:
 
    # Terminal 2 - Start the CLI (requires web server to be running)
    bun run start-cli
-   # Expected: Welcome to Codebuff! + agent list
+   # Expected: Welcome to Nexus! + agent list
    ```
 
    Now, you should be able to run the CLI and send commands, but it will error out because you don't have any credits.
 
 6. **Giving yourself credits**:
-   1. Log into Codebuff at [http://localhost:3000/login](http://localhost:3000/login)
+   1. Log into Nexus at [http://localhost:3000/login](http://localhost:3000/login)
 
    2. Then give yourself lots of credits. Be generous, you're the boss now!
 
@@ -97,13 +97,13 @@ Notes / gotchas:
 
    Edit your row in the `credit_ledger` table to set the `principal` to whatever you like and the `balance` to equal it.
 
-   Now, you should be able to run the CLI commands locally from within the `codebuff` directory.
+   Now, you should be able to run the CLI commands locally from within the `nexus` directory.
 
 7. **Running in other directories**:
 
 In order to run the CLI from other directories, you need to first publish the agents to the database.
 
-- First, create a publisher profile at http://localhost:3000/publishers. Make sure the `publisher_id` is `codebuff`.
+- First, create a publisher profile at http://localhost:3000/publishers. Make sure the `publisher_id` is `nexus`.
 
 - Run:
 
@@ -132,7 +132,7 @@ In order to run the CLI from other directories, you need to first publish the ag
 
 ## Understanding the Codebase
 
-Codebuff is organized as a monorepo with these main packages:
+Nexus is organized as a monorepo with these main packages:
 
 - **web/**: Next.js web application and dashboard
 - **cli/**: CLI application that users interact with
@@ -152,7 +152,7 @@ Not sure where to start? Here are some great ways to jump in:
 - **New here?** Look for issues labeled `good first issue` - they're perfect for getting familiar with the codebase
 - **Ready for more?** Check out `help wanted` issues where we could really use your expertise
 - **Have an idea?** Browse open issues or create a new one to discuss it
-- **Want to chat?** Join our [Discord](https://codebuff.com/discord) - the team loves discussing new ideas!
+- **Want to chat?** Join our [Discord](https://nexus.com/discord) - the team loves discussing new ideas!
 
 ### Development Workflow
 
@@ -251,16 +251,16 @@ Improve `web/`: agent management, project templates, analytics.
 
 - **Script errors?** Double-check you're using bun for all commands
 - **Database connection errors?** If you see `password authentication failed for user "postgres"` errors:
-  1. Ensure DATABASE_URL in `.env.local` uses the correct credentials: `postgresql://manicode_user_local:secretpassword_local@localhost:5432/manicode_db_local`
+  1. Ensure DATABASE_URL in `.env.local` uses the correct credentials: `postgresql://nexus_user_local:secretpassword_local@localhost:5432/nexus_db_local`
   2. Run the database migration: `bun run db:migrate`
   3. Restart your development services
 - **Using Infisical?** See the [Infisical Setup Guide](./INFISICAL_SETUP_GUIDE.md) for team secrets management
 - **Empty Agent Store in dev mode?** This is expected behavior - agents from `.agents/` directory need to be published to the database to appear in the marketplace
 
-**Questions?** Jump into our [Discord community](https://codebuff.com/discord) - we're friendly and always happy to help!
+**Questions?** Jump into our [Discord community](https://nexus.com/discord) - we're friendly and always happy to help!
 
 ## Resources
 
-- **Documentation**: [codebuff.com/docs](https://codebuff.com/docs)
-- **Community Discord**: [codebuff.com/discord](https://codebuff.com/discord)
-- **Report issues**: [GitHub Issues](https://github.com/CodebuffAI/codebuff/issues)
+- **Documentation**: [nexus.com/docs](https://nexus.com/docs)
+- **Community Discord**: [nexus.com/discord](https://nexus.com/discord)
+- **Report issues**: [GitHub Issues](https://github.com/NexusAI/nexus/issues)

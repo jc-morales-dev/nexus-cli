@@ -20,7 +20,7 @@ import type { CustomToolCall, ExecuteToolCallParams } from './tool-executor'
 import type { AgentTemplate } from '../templates/types'
 import type { FileProcessingState } from './handlers/tool/write-file'
 import type { ToolName } from '@nexus/common/tools/constants'
-import type { CodebuffToolCall } from '@nexus/common/tools/list'
+import type { NexusToolCall } from '@nexus/common/tools/list'
 import type { Logger } from '@nexus/common/types/contracts/logger'
 import type { ParamsExcluding } from '@nexus/common/types/function-params'
 import type {
@@ -88,8 +88,8 @@ export async function processStream(
   // === MUTABLE STATE ===
   const toolResults: ToolMessage[] = []
   const toolResultsToAddToMessageHistory: ToolMessage[] = []
-  const toolCalls: (CodebuffToolCall | CustomToolCall)[] = []
-  const toolCallsToAddToMessageHistory: (CodebuffToolCall | CustomToolCall)[] = []
+  const toolCalls: (NexusToolCall | CustomToolCall)[] = []
+  const toolCallsToAddToMessageHistory: (NexusToolCall | CustomToolCall)[] = []
   const assistantMessages: Message[] = []
   let hadToolCallError = false
   const errorMessages: Message[] = []

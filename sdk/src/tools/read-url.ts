@@ -1,12 +1,12 @@
-import type { CodebuffToolOutput } from '../../../common/src/tools/list'
+import type { NexusToolOutput } from '../../../common/src/tools/list'
 
 const DEFAULT_MAX_CHARS = 20_000
 const MAX_RESPONSE_BYTES = 2_000_000
 const FETCH_TIMEOUT_MS = 20_000
 const USER_AGENT =
-  'Mozilla/5.0 (compatible; CodebuffResearchBot/1.0; +https://codebuff.com)'
+  'Mozilla/5.0 (compatible; NexusResearchBot/1.0; +https://nexus.com)'
 
-type ReadUrlOutput = CodebuffToolOutput<'read_url'>
+type ReadUrlOutput = NexusToolOutput<'read_url'>
 type FetchLike = (
   input: string | URL | Request,
   init?: RequestInit,

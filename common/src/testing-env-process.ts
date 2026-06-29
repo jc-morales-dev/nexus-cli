@@ -55,19 +55,19 @@ export const createTestProcessEnv = (
   // Editor preferences
   VISUAL: undefined,
   EDITOR: undefined,
-  CODEBUFF_CLI_EDITOR: undefined,
-  CODEBUFF_EDITOR: undefined,
+  NEXUS_CLI_EDITOR: undefined,
+  NEXUS_EDITOR: undefined,
 
   // Theme preferences
   OPEN_TUI_THEME: undefined,
   OPENTUI_THEME: undefined,
 
-  // Codebuff CLI-specific
-  CODEBUFF_IS_BINARY: undefined,
-  CODEBUFF_CLI_VERSION: undefined,
-  CODEBUFF_CLI_TARGET: undefined,
-  CODEBUFF_RG_PATH: undefined,
-  CODEBUFF_WASM_DIR: undefined,
+  // Nexus CLI-specific
+  NEXUS_IS_BINARY: undefined,
+  NEXUS_CLI_VERSION: undefined,
+  NEXUS_CLI_TARGET: undefined,
+  NEXUS_RG_PATH: undefined,
+  NEXUS_WASM_DIR: undefined,
 
   // Build/CI flags
   VERBOSE: undefined,

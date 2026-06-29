@@ -11,8 +11,8 @@ import { countTokensJson } from './token-counter'
 
 import type { System } from '../llm-api/claude'
 import type {
-  CodebuffToolMessage,
-  CodebuffToolOutput,
+  NexusToolMessage,
+  NexusToolOutput,
 } from '@nexus/common/tools/list'
 import type { Logger } from '@nexus/common/types/contracts/logger'
 import type { Message } from '@nexus/common/types/messages/nexus-message'
@@ -138,10 +138,10 @@ export function castAssistantMessage(message: Message): Message | null {
 const numTerminalCommandsToKeep = 5
 
 function simplifyTerminalHelper(params: {
-  toolResult: CodebuffToolOutput<'run_terminal_command'>
+  toolResult: NexusToolOutput<'run_terminal_command'>
   numKept: number
   logger: Logger
-}): { result: CodebuffToolOutput<'run_terminal_command'>; numKept: number } {
+}): { result: NexusToolOutput<'run_terminal_command'>; numKept: number } {
   const { toolResult, numKept, logger } = params
   const simplified = simplifyTerminalCommandResults({
     messageContent: toolResult,
@@ -211,7 +211,7 @@ export function trimMessagesToFitTokenLimit(params: {
 
       const terminalResultMessage = cloneDeep(
         m,
-      ) as CodebuffToolMessage<'run_terminal_command'>
+      ) as NexusToolMessage<'run_terminal_command'>
 
       const result = simplifyTerminalHelper({
         toolResult: terminalResultMessage.content,
@@ -274,7 +274,7 @@ export function getMessagesSubset(params: {
 
   // Remove cache_control from all messages
   for (const message of messagesSubset) {
-    for (const provider of ['anthropic', 'openrouter', 'codebuff'] as const) {
+    for (const provider of ['anthropic', 'openrouter', 'nexus'] as const) {
       delete message.providerOptions?.[provider]?.cacheControl
     }
   }
@@ -368,7 +368,7 @@ export function getEditedFiles(params: {
       .filter(
         (
           m,
-        ): m is CodebuffToolMessage<
+        ): m is NexusToolMessage<
           'create_plan' | 'str_replace' | 'write_file'
         > => {
           return (
@@ -413,7 +413,7 @@ export function getPreviouslyReadFiles(params: {
       try {
         files.push(
           ...(
-            message as CodebuffToolMessage<'read_files'>
+            message as NexusToolMessage<'read_files'>
           ).content[0].value.filter(
             (
               file,
@@ -431,7 +431,7 @@ export function getPreviouslyReadFiles(params: {
 
     if (message.toolName === 'find_files') {
       try {
-        const v = (message as CodebuffToolMessage<'find_files'>).content[0]
+        const v = (message as NexusToolMessage<'find_files'>).content[0]
           .value
         if ('message' in v) {
           continue

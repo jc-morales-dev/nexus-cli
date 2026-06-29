@@ -1,17 +1,17 @@
 // Test TypeScript type resolution in CommonJS environment
 import {
-  CodebuffClient as ClientClass,
+  NexusClient as ClientClass,
   getCustomToolDefinition,
 } from '@nexus/sdk'
 
 import type {
-  CodebuffClient,
+  NexusClient,
   CustomToolDefinition,
   RunState,
 } from '@nexus/sdk'
 
 // Test 1: Type imports work correctly
-const testClient: CodebuffClient = {} as any
+const testClient: NexusClient = {} as any
 const testTool: CustomToolDefinition = {} as any
 const testState: RunState = {} as any
 
@@ -47,7 +47,7 @@ console.log('✅ Custom tool definition types work correctly')
 
 // Test 5: CommonJS import syntax also works in TypeScript
 const SDKRequire = require('@nexus/sdk')
-const ClientFromRequire: typeof ClientClass = SDKRequire.CodebuffClient
+const ClientFromRequire: typeof ClientClass = SDKRequire.NexusClient
 
 console.log('✅ CommonJS require syntax works in TypeScript')
 

@@ -2,14 +2,14 @@
 
 ## What went well
 
-- The SDK-driven harness made it straightforward to collect full event streams, stream chunks, structured outputs, and tmux capture paths for repeated `codebuff-local-cli` runs.
+- The SDK-driven harness made it straightforward to collect full event streams, stream chunks, structured outputs, and tmux capture paths for repeated `nexus-local-cli` runs.
 - The baseline runs clearly exposed behavior patterns instead of relying on intuition.
-- The Codebuff CLI itself was capable and informative during implementation-oriented runs; most inefficiency came from the tester agent’s workflow rather than the CLI under test.
+- The Nexus CLI itself was capable and informative during implementation-oriented runs; most inefficiency came from the tester agent’s workflow rather than the CLI under test.
 
 ## What was tricky
 
-- The `codebuff-local-cli` agent uses only `run_terminal_command`, `add_message`, and `set_output`, so all tester intelligence has to come from prompt/instruction quality rather than richer tooling.
-- Long Codebuff CLI responses live in a scrollable viewport. The tester spent many extra steps trying to recover hidden content even when the visible portion already contained enough evidence.
+- The `nexus-local-cli` agent uses only `run_terminal_command`, `add_message`, and `set_output`, so all tester intelligence has to come from prompt/instruction quality rather than richer tooling.
+- Long Nexus CLI responses live in a scrollable viewport. The tester spent many extra steps trying to recover hidden content even when the visible portion already contained enough evidence.
 - One smoke run silently started a second tmux session mid-run, showing that the current guidance was too weak about preserving session continuity and treating failure recovery explicitly.
 - Reading tmux capture artifacts from inside the tester run is ineffective because the agent does not have `read_files`; attempts to recover more evidence should therefore be avoided unless the current viewport is truly insufficient.
 
@@ -38,7 +38,7 @@
 - Smoke runs were mostly efficient, but their capture labels were generic and the agent did not explicitly reason about why each capture was worth taking.
 - One smoke run restarted the session instead of treating the original session as canonical, inflating event/tool counts.
 - Implementation runs showed the biggest inefficiency: excessive viewport recovery actions (page up/down, arrow keys, extra captures, direct tmux scrollback commands) after the key recommendation was already visible.
-- The tester lacked Codebuff-specific guidance about:
+- The tester lacked Nexus-specific guidance about:
   - what the ready state looks like,
   - when `/help` is especially valuable,
   - how to structure a good implementation-oriented test,
@@ -49,13 +49,13 @@
 - Adding a canonical-session instruction prevented silent session replacement behavior and made failure handling expectations explicit.
 - Adding the shared “high-value capture” heuristic reduced redundant captures and discouraged overlapping progress snapshots.
 - Adding explicit guidance to stop chasing hidden viewport text eliminated the biggest source of waste in implementation-oriented runs.
-- Adding Codebuff-specific flow guidance improved follow-up quality and reduced exploratory key usage.
+- Adding Nexus-specific flow guidance improved follow-up quality and reduced exploratory key usage.
 
 ## Changes made from baseline evidence
 
 - Added shared operating heuristics to bias CLI testers toward fewer, higher-value captures and away from unnecessary UI mutation.
 - Added explicit guidance to avoid `read_files` on tmux artifacts from inside the tester run.
-- Added Codebuff-specific testing guidance covering ready state, smoke-test flow, implementation-test flow, long-response behavior, and session continuity expectations.
+- Added Nexus-specific testing guidance covering ready state, smoke-test flow, implementation-test flow, long-response behavior, and session continuity expectations.
 - Added best-effort harness cleanup when a run throws after a tmux session has already been created.
 
 ## Cautionary note

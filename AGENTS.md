@@ -1,7 +1,7 @@
-# Codebuff
+# Nexus
 
-Codebuff is an advanced coding agent with a composable agent framework. It also includes:
-- freebuff, the free coding agent
+Nexus is an advanced coding agent with a composable agent framework. It also includes:
+- freetier, the free coding agent
 
 ## Goal
 
@@ -21,9 +21,9 @@ Make an efficient learning agent that can do anything.
 - `web/` — Next.js app + API routes (the "web API")
 - `packages/agent-runtime/` — agent runtime + tool handling (server-side)
 - `common/` — shared types, tools, schemas, utilities
-- `agents/` — main agents shipped with codebuff
+- `agents/` — main agents shipped with nexus
 - `.agents/` — local agent templates (prompt + programmatic agents)
-- `freebuff/` - a free coding agent built from configuring codebuff cli
+- `freetier/` - a free coding agent built from configuring nexus cli
 
 ## Conventions
 

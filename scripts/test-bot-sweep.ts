@@ -15,7 +15,7 @@ import {
 } from '../web/src/server/free-session/abuse-detection'
 import { reviewSuspects } from '../web/src/server/free-session/abuse-review'
 
-const RECIPIENT = process.env.BOT_SWEEP_TEST_RECIPIENT ?? 'james@codebuff.com'
+const RECIPIENT = process.env.BOT_SWEEP_TEST_RECIPIENT ?? 'james@nexus.com'
 
 const logger = {
   debug: (...args: any[]) => console.log('[debug]', ...args),

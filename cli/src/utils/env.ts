@@ -59,21 +59,21 @@ export const getCliEnv = (): CliEnv => ({
   // Editor preferences
   VISUAL: process.env.VISUAL,
   EDITOR: process.env.EDITOR,
-  CODEBUFF_CLI_EDITOR: process.env.CODEBUFF_CLI_EDITOR,
-  CODEBUFF_EDITOR: process.env.CODEBUFF_EDITOR,
+  NEXUS_CLI_EDITOR: process.env.NEXUS_CLI_EDITOR,
+  NEXUS_EDITOR: process.env.NEXUS_EDITOR,
 
   // Theme preferences
   OPEN_TUI_THEME: process.env.OPEN_TUI_THEME,
   OPENTUI_THEME: process.env.OPENTUI_THEME,
 
   // Binary build configuration
-  CODEBUFF_IS_BINARY: process.env.CODEBUFF_IS_BINARY,
-  CODEBUFF_CLI_VERSION: process.env.CODEBUFF_CLI_VERSION,
-  CODEBUFF_CLI_TARGET: process.env.CODEBUFF_CLI_TARGET,
-  CODEBUFF_RG_PATH: process.env.CODEBUFF_RG_PATH,
-  CODEBUFF_SCROLL_MULTIPLIER: process.env.CODEBUFF_SCROLL_MULTIPLIER,
-  CODEBUFF_PERF_TEST: process.env.CODEBUFF_PERF_TEST,
-  FREEBUFF_MODE: process.env.FREEBUFF_MODE,
+  NEXUS_IS_BINARY: process.env.NEXUS_IS_BINARY,
+  NEXUS_CLI_VERSION: process.env.NEXUS_CLI_VERSION,
+  NEXUS_CLI_TARGET: process.env.NEXUS_CLI_TARGET,
+  NEXUS_RG_PATH: process.env.NEXUS_RG_PATH,
+  NEXUS_SCROLL_MULTIPLIER: process.env.NEXUS_SCROLL_MULTIPLIER,
+  NEXUS_PERF_TEST: process.env.NEXUS_PERF_TEST,
+  FREETIER_MODE: process.env.FREETIER_MODE,
 })
 
 /**

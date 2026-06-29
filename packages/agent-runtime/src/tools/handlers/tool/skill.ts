@@ -6,10 +6,10 @@ import path from 'path'
 import os from 'os'
 import matter from 'gray-matter'
 
-import type { CodebuffToolHandlerFunction } from '../handler-function-type'
+import type { NexusToolHandlerFunction } from '../handler-function-type'
 import type {
-  CodebuffToolCall,
-  CodebuffToolOutput,
+  NexusToolCall,
+  NexusToolOutput,
 } from '@nexus/common/tools/list'
 import type { ProjectFileContext } from '@nexus/common/util/file'
 
@@ -84,9 +84,9 @@ type ToolName = 'skill'
 
 export const handleSkill = (async (params: {
   previousToolCallFinished: Promise<void>
-  toolCall: CodebuffToolCall<ToolName>
+  toolCall: NexusToolCall<ToolName>
   fileContext: ProjectFileContext
-}): Promise<{ output: CodebuffToolOutput<ToolName> }> => {
+}): Promise<{ output: NexusToolOutput<ToolName> }> => {
   const { previousToolCallFinished, toolCall, fileContext } = params
   const { name } = toolCall.input
 
@@ -133,4 +133,4 @@ export const handleSkill = (async (params: {
   return {
     output: jsonToolResult(result),
   }
-}) satisfies CodebuffToolHandlerFunction<ToolName>
+}) satisfies NexusToolHandlerFunction<ToolName>

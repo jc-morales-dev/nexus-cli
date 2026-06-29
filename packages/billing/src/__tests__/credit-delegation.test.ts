@@ -22,8 +22,8 @@ describe('Credit Delegation', () => {
     await mockModule('@nexus/billing/org-billing', () => ({
       normalizeRepositoryUrl: mock((url: string) => url.toLowerCase().trim()),
       extractOwnerAndRepo: mock((url: string) => {
-        if (url.includes('codebuffai/codebuff')) {
-          return { owner: 'codebuffai', repo: 'codebuff' }
+        if (url.includes('nexusai/nexus')) {
+          return { owner: 'nexusai', repo: 'nexus' }
         }
         return null
       }),
@@ -41,8 +41,8 @@ describe('Credit Delegation', () => {
                   Promise.resolve([
                     {
                       orgId: 'org-123',
-                      orgName: 'CodebuffAI',
-                      orgSlug: 'codebuffai',
+                      orgName: 'NexusAI',
+                      orgSlug: 'nexusai',
                     },
                   ]),
               }),
@@ -56,8 +56,8 @@ describe('Credit Delegation', () => {
               where: () =>
                 Promise.resolve([
                   {
-                    repoUrl: 'https://github.com/codebuffai/codebuff',
-                    repoName: 'codebuff',
+                    repoUrl: 'https://github.com/nexusai/nexus',
+                    repoName: 'nexus',
                     isActive: true,
                   },
                 ]),
@@ -87,7 +87,7 @@ describe('Credit Delegation', () => {
   describe('findOrganizationForRepository', () => {
     it('should find organization for matching repository', async () => {
       const userId = 'user-123'
-      const repositoryUrl = 'https://github.com/codebuffai/codebuff'
+      const repositoryUrl = 'https://github.com/nexusai/nexus'
 
       const result = await findOrganizationForRepository({
         userId,
@@ -97,7 +97,7 @@ describe('Credit Delegation', () => {
 
       expect(result.found).toBe(true)
       expect(result.organizationId).toBe('org-123')
-      expect(result.organizationName).toBe('CodebuffAI')
+      expect(result.organizationName).toBe('NexusAI')
     })
 
     it('should return not found for non-matching repository', async () => {

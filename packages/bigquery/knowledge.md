@@ -1,6 +1,6 @@
 # BigQuery Integration
 
-This package provides integration with Google BigQuery for storing and analyzing Codebuff usage data.
+This package provides integration with Google BigQuery for storing and analyzing Nexus usage data.
 
 ## Key Components
 
@@ -11,8 +11,8 @@ This package provides integration with Google BigQuery for storing and analyzing
 
 Dataset name determined by `NEXT_PUBLIC_CB_ENVIRONMENT`:
 
-- Production: `codebuff_data`
-- Development: `codebuff_data_dev`
+- Production: `nexus_data`
+- Development: `nexus_data_dev`
 
 ## Tables
 

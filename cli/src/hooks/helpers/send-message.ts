@@ -1,21 +1,21 @@
 import { getErrorObject } from '@nexus/common/util/error'
 
 import {
-  markFreebuffSessionCountryBlocked,
-  markFreebuffSessionEnded,
-  markFreebuffSessionSuperseded,
-  refreshFreebuffSession,
+  markFreeTierSessionCountryBlocked,
+  markFreeTierSessionEnded,
+  markFreeTierSessionSuperseded,
+  refreshFreeTierSession,
 } from '../use-freetier-session'
 import { getProjectRoot } from '../../project-files'
 import { useChatStore } from '../../state/chat-store'
-import { IS_FREEBUFF } from '../../utils/constants'
+import { IS_FREETIER } from '../../utils/constants'
 import { processBashContext } from '../../utils/bash-context-processor'
 import { markRunningAgentsAsCancelled } from '../../utils/block-operations'
 import {
   getCountryBlockFromFreeModeError,
   getFreeModeUnavailableErrorMessage,
-  getFreebuffGateErrorKind,
-  getFreebuffRateLimitErrorMessage,
+  getFreeTierGateErrorKind,
+  getFreeTierRateLimitErrorMessage,
   isOutOfCreditsError,
   isFreeModeUnavailableError,
   OUT_OF_CREDITS_MESSAGE,
@@ -429,8 +429,8 @@ export const handleRunCompletion = (params: {
 
     if (isFreeModeUnavailableError(output)) {
       updater.setError(getFreeModeUnavailableErrorMessage(output))
-      if (IS_FREEBUFF) {
-        markFreebuffSessionCountryBlocked(
+      if (IS_FREETIER) {
+        markFreeTierSessionCountryBlocked(
           getCountryBlockFromFreeModeError(output) ?? {
             countryCode: 'UNKNOWN',
           },
@@ -440,18 +440,18 @@ export const handleRunCompletion = (params: {
       return
     }
 
-    const gateKind = getFreebuffGateErrorKind(output)
+    const gateKind = getFreeTierGateErrorKind(output)
     if (gateKind) {
-      handleFreebuffGateError(gateKind, updater)
+      handleFreeTierGateError(gateKind, updater)
       finalizeAfterError()
       return
     }
 
-    const freebuffRateLimitMessage = IS_FREEBUFF
-      ? getFreebuffRateLimitErrorMessage(output)
+    const freetierRateLimitMessage = IS_FREETIER
+      ? getFreeTierRateLimitErrorMessage(output)
       : null
-    if (freebuffRateLimitMessage) {
-      updater.setError(freebuffRateLimitMessage)
+    if (freetierRateLimitMessage) {
+      updater.setError(freetierRateLimitMessage)
       finalizeAfterError()
       return
     }
@@ -568,8 +568,8 @@ export const handleRunError = (params: {
 
   if (isFreeModeUnavailableError(error)) {
     updater.setError(getFreeModeUnavailableErrorMessage(error))
-    if (IS_FREEBUFF) {
-      markFreebuffSessionCountryBlocked(
+    if (IS_FREETIER) {
+      markFreeTierSessionCountryBlocked(
         getCountryBlockFromFreeModeError(error) ?? {
           countryCode: 'UNKNOWN',
         },
@@ -578,17 +578,17 @@ export const handleRunError = (params: {
     return
   }
 
-  const gateKind = getFreebuffGateErrorKind(error)
+  const gateKind = getFreeTierGateErrorKind(error)
   if (gateKind) {
-    handleFreebuffGateError(gateKind, updater)
+    handleFreeTierGateError(gateKind, updater)
     return
   }
 
-  const freebuffRateLimitMessage = IS_FREEBUFF
-    ? getFreebuffRateLimitErrorMessage(error)
+  const freetierRateLimitMessage = IS_FREETIER
+    ? getFreeTierRateLimitErrorMessage(error)
     : null
-  if (freebuffRateLimitMessage) {
-    updater.setError(freebuffRateLimitMessage)
+  if (freetierRateLimitMessage) {
+    updater.setError(freetierRateLimitMessage)
     return
   }
 
@@ -602,8 +602,8 @@ export const handleRunError = (params: {
  * the request because our seat is no longer valid; update local state so the
  * UI reflects reality and we stop sending requests until we re-admit.
  */
-function handleFreebuffGateError(
-  kind: ReturnType<typeof getFreebuffGateErrorKind>,
+function handleFreeTierGateError(
+  kind: ReturnType<typeof getFreeTierGateErrorKind>,
   updater: BatchedMessageUpdater,
 ) {
   switch (kind) {
@@ -620,7 +620,7 @@ function handleFreebuffGateError(
       // mounted so any in-flight agent work can finish under the server-side
       // grace period, and the session-ended banner prompts the user to press
       // Enter when they're ready to rejoin.
-      markFreebuffSessionEnded()
+      markFreeTierSessionEnded()
       return
     case 'waiting_room_queued':
       updater.setError(
@@ -628,15 +628,15 @@ function handleFreebuffGateError(
       )
       // Re-sync without resetting chat — this is a "we'll wait", not a
       // "let's start fresh".
-      refreshFreebuffSession().catch(() => {})
+      refreshFreeTierSession().catch(() => {})
       return
     case 'session_superseded':
       updater.setError(
-        'Another freebuff CLI took over this account. Close the other instance, then restart.',
+        'Another freetier CLI took over this account. Close the other instance, then restart.',
       )
       // Terminal state: stop polling and flip UI to a "please restart" screen
       // so we don't silently fight the other instance for the seat.
-      markFreebuffSessionSuperseded()
+      markFreeTierSessionSuperseded()
       return
     default:
       return

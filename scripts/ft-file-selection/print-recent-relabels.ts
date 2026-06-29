@@ -2,7 +2,7 @@ import { getRecentRelabels, setupBigQuery } from '@nexus/bigquery'
 
 // Parse command line arguments to check for --prod flag
 const isProd = process.argv.includes('--prod')
-const DATASET = isProd ? 'codebuff_data' : 'codebuff_data_dev'
+const DATASET = isProd ? 'nexus_data' : 'nexus_data_dev'
 
 async function printRecentRelabels() {
   try {

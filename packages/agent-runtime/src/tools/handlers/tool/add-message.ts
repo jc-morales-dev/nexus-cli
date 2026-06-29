@@ -1,19 +1,19 @@
 import { assistantMessage, userMessage } from '@nexus/common/util/messages'
 
-import type { CodebuffToolHandlerFunction } from '../handler-function-type'
+import type { NexusToolHandlerFunction } from '../handler-function-type'
 import type {
-  CodebuffToolCall,
-  CodebuffToolOutput,
+  NexusToolCall,
+  NexusToolOutput,
 } from '@nexus/common/tools/list'
 import type { AgentState } from '@nexus/common/types/session-state'
 
 export const handleAddMessage = (async (params: {
   previousToolCallFinished: Promise<void>
-  toolCall: CodebuffToolCall<'add_message'>
+  toolCall: NexusToolCall<'add_message'>
 
   agentState: AgentState
 }): Promise<{
-  output: CodebuffToolOutput<'add_message'>
+  output: NexusToolOutput<'add_message'>
 }> => {
   const {
     previousToolCallFinished,
@@ -31,4 +31,4 @@ export const handleAddMessage = (async (params: {
   )
 
   return { output: [{ type: 'json', value: { message: 'Message added.' } }] }
-}) satisfies CodebuffToolHandlerFunction<'add_message'>
+}) satisfies NexusToolHandlerFunction<'add_message'>

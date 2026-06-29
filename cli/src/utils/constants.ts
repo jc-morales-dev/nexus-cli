@@ -3,17 +3,17 @@ import type { ToolName } from '@nexus/sdk'
 import { getCliEnv } from './env'
 
 /**
- * Freebuff build-time flag. When true, the CLI is built as Freebuff (free-only variant).
+ * FreeTier build-time flag. When true, the CLI is built as FreeTier (free-only variant).
  * Injected via --define at compile time; enables dead-code elimination by the bundler.
  */
-export const IS_FREEBUFF = getCliEnv().FREEBUFF_MODE === 'true'
+export const IS_FREETIER = getCliEnv().FREETIER_MODE === 'true'
 
-/** Message shown when the user ends a freebuff session early. */
+/** Message shown when the user ends a freetier session early. */
 export const END_SESSION_MESSAGE =
   'Ending session and returning to the model picker…'
 
 // Agent IDs that should not be rendered in the CLI UI
-export const HIDDEN_AGENT_IDS = ['codebuff/context-pruner'] as const
+export const HIDDEN_AGENT_IDS = ['nexus/context-pruner'] as const
 
 // Tool names that should be collapsed by default when rendered
 // Uses ToolName type to ensure only valid tool names are added
@@ -127,13 +127,13 @@ export const MAIN_AGENT_ID = 'main-agent'
  * Mapping from agent mode to agent ID.
  * Single source of truth for all agent modes (order = cycling order).
  *
- * Freebuff resolves LITE through the selected freebuff model at send time;
+ * FreeTier resolves LITE through the selected freetier model at send time;
  * this fallback stays on base2-free for non-runtime callers. Regular
- * Codebuff maps LITE to base2-lite which charges credits normally.
+ * Nexus maps LITE to base2-lite which charges credits normally.
  */
 export const AGENT_MODE_TO_ID = {
   DEFAULT: 'base2',
-  LITE: IS_FREEBUFF ? 'base2-free' : 'base2-lite',
+  LITE: IS_FREETIER ? 'base2-free' : 'base2-lite',
   MAX: 'base2-max',
   PLAN: 'base2-plan',
 } as const
@@ -144,13 +144,13 @@ export const AGENT_MODES = Object.keys(AGENT_MODE_TO_ID) as AgentMode[]
 /**
  * Maps CLI agent mode to cost mode for billing.
  *
- * Freebuff's LITE maps to 'free' cost mode (waiting room, rate limits, 0 credits
- * for allowlisted agent+model combos). Regular Codebuff's LITE maps to 'lite' —
+ * FreeTier's LITE maps to 'free' cost mode (waiting room, rate limits, 0 credits
+ * for allowlisted agent+model combos). Regular Nexus's LITE maps to 'lite' —
  * a normal paid mode (charges credits, no waiting room, no country restrictions).
  */
 export const AGENT_MODE_TO_COST_MODE = {
   DEFAULT: 'normal',
-  LITE: IS_FREEBUFF ? 'free' : 'lite',
+  LITE: IS_FREETIER ? 'free' : 'lite',
   MAX: 'max',
   PLAN: 'normal',
 } as const satisfies Record<

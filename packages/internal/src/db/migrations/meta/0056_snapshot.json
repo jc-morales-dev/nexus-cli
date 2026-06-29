@@ -1508,7 +1508,7 @@
         },
         "access_tier": {
           "name": "access_tier",
-          "type": "freebuff_access_tier",
+          "type": "freetier_access_tier",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
@@ -1679,7 +1679,7 @@
         },
         "access_tier": {
           "name": "access_tier",
-          "type": "freebuff_access_tier",
+          "type": "freetier_access_tier",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
@@ -3581,8 +3581,8 @@
         "active"
       ]
     },
-    "public.freebuff_access_tier": {
-      "name": "freebuff_access_tier",
+    "public.freetier_access_tier": {
+      "name": "freetier_access_tier",
       "schema": "public",
       "values": [
         "full",

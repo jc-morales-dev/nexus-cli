@@ -17,7 +17,7 @@ export type {
 export { getFiles } from './tools/read-files'
 export type { FileFilter, FileFilterResult } from './tools/read-files'
 export type {
-  CodebuffClientOptions,
+  NexusClientOptions,
   RunOptions,
   MessageContent,
   TextContent,
@@ -31,7 +31,7 @@ export type { ToolName } from '@nexus/common/tools/constants'
 export type {
   ClientToolCall,
   ClientToolName,
-  CodebuffToolOutput,
+  NexusToolOutput,
 } from '@nexus/common/tools/list'
 export * from './client'
 export * from './custom-tool'
@@ -86,7 +86,7 @@ export {
   RECONNECTION_RETRY_DELAY_MS,
 } from './retry-config'
 
-export type { CodebuffFileSystem } from '@nexus/common/types/filesystem'
+export type { NexusFileSystem } from '@nexus/common/types/filesystem'
 
 // Tree-sitter / code-map exports
 export {

@@ -43,7 +43,7 @@ export type SubagentContextParams = AgentRuntimeDeps &
   AgentRuntimeScopedDeps & {
     clientSessionId: string
     costMode?: string
-    extraCodebuffMetadata?: Record<string, string>
+    extraNexusMetadata?: Record<string, string>
     fileContext: ProjectFileContext
     localAgentTemplates: Record<string, AgentTemplate>
     repoId: string | undefined
@@ -97,7 +97,7 @@ export function extractSubagentContextParams(
     // Core context params
     clientSessionId: params.clientSessionId,
     costMode: params.costMode,
-    extraCodebuffMetadata: params.extraCodebuffMetadata,
+    extraNexusMetadata: params.extraNexusMetadata,
     fileContext: params.fileContext,
     localAgentTemplates: params.localAgentTemplates,
     repoId: params.repoId,

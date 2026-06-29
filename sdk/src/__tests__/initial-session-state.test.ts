@@ -9,10 +9,10 @@ import { initialSessionState } from '../run-state'
 
 import type { MockStatResult } from '@nexus/common/testing/mock-types'
 import type { Logger } from '@nexus/common/types/contracts/logger'
-import type { CodebuffFileSystem } from '@nexus/common/types/filesystem'
+import type { NexusFileSystem } from '@nexus/common/types/filesystem'
 
 describe('Initial Session State', () => {
-  let mockFs: CodebuffFileSystem
+  let mockFs: NexusFileSystem
   let mockLogger: Logger
 
   beforeEach(() => {
@@ -36,7 +36,7 @@ describe('Initial Session State', () => {
         if (path.includes('.nexusignore')) {
           return ''
         }
-        if (path.includes('.manicodeignore')) {
+        if (path.includes('.nexusignore')) {
           return ''
         }
         throw new Error(`File not found: ${path}`)
@@ -74,7 +74,7 @@ describe('Initial Session State', () => {
       exists: async (path: string) => {
         if (path.includes('.gitignore')) return true
         if (path.includes('.nexusignore')) return true
-        if (path.includes('.manicodeignore')) return true
+        if (path.includes('.nexusignore')) return true
         if (path.includes('src')) return true
         if (path.includes('.git')) return true
         if (path.includes('knowledge.md')) return true
@@ -83,7 +83,7 @@ describe('Initial Session State', () => {
       },
       mkdir: async () => {},
       writeFile: async () => {},
-    } as unknown as CodebuffFileSystem
+    } as unknown as NexusFileSystem
 
     mockLogger = {
       debug: () => {},
@@ -124,7 +124,7 @@ describe('Initial Session State', () => {
         return ['index.ts', 'utils.ts', 'generated.ts']
       }
       return []
-    }) as CodebuffFileSystem['readdir']
+    }) as NexusFileSystem['readdir']
     mockFs.stat = (async (filePath: string) =>
       ({
         isDirectory: () =>
@@ -132,14 +132,14 @@ describe('Initial Session State', () => {
         isFile: () =>
           filePath !== '/test-project/src' && filePath !== '/test-project/.git',
         size: filePath.endsWith('generated.ts') ? 1_000_001 : 100,
-      }) as MockStatResult & { size: number }) as CodebuffFileSystem['stat']
+      }) as MockStatResult & { size: number }) as NexusFileSystem['stat']
 
     const readFilePaths: string[] = []
     const originalReadFile = mockFs.readFile
     mockFs.readFile = (async (filePath: string, encoding?: BufferEncoding) => {
       readFilePaths.push(filePath)
       return originalReadFile(filePath, encoding)
-    }) as CodebuffFileSystem['readFile']
+    }) as NexusFileSystem['readFile']
 
     const sessionState = await initialSessionState({
       cwd: '/test-project',

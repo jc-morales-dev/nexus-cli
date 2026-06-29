@@ -1,20 +1,20 @@
 /**
  * Integration Test: Connection Check
  *
- * Tests the checkConnection() method of CodebuffClient.
+ * Tests the checkConnection() method of NexusClient.
  */
 
 import { describe, test, expect, beforeAll } from 'bun:test'
 
-import { CodebuffClient } from '../../src/client'
+import { NexusClient } from '../../src/client'
 import { getApiKey, skipIfNoApiKey } from '../utils'
 
 describe('Integration: Connection Check', () => {
-  let client: CodebuffClient
+  let client: NexusClient
 
   beforeAll(() => {
     if (skipIfNoApiKey()) return
-    client = new CodebuffClient({ apiKey: getApiKey() })
+    client = new NexusClient({ apiKey: getApiKey() })
   })
 
   test('checkConnection returns true when backend is reachable', async () => {

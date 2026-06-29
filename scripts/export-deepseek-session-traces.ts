@@ -5,7 +5,7 @@
  * the full request, so the latest/highest-context request in a client session
  * contains the conversation so far: system prompt, user messages, assistant
  * tool calls, and tool results. This script groups those rows by
- * `request.codebuff_metadata.client_id` and emits final session-level traces.
+ * `request.nexus_metadata.client_id` and emits final session-level traces.
  *
  * Usage:
  *   bun scripts/export-deepseek-session-traces.ts --prod
@@ -75,7 +75,7 @@ const TARGETS: Target[] = [
   },
 ]
 
-const OUTPUT_DATASET_NAME = 'freebuff_data'
+const OUTPUT_DATASET_NAME = 'freetier_data'
 
 function printHelp() {
   console.log(`Export reconstructed multi-turn DeepSeek V4 free-mode sessions.
@@ -84,7 +84,7 @@ Usage:
   bun scripts/export-deepseek-session-traces.ts [options]
 
 Options:
-  --prod                  Use codebuff_data instead of codebuff_data_dev.
+  --prod                  Use nexus_data instead of nexus_data_dev.
   --sessions-per-agent n  Sessions to export per target agent. Default: 1.
   --total-sessions n      Export n sessions total across DeepSeek Pro and Flash, newest first.
   --sample-mode mode      With --total-sessions: newest, random, or even. Default: newest.
@@ -142,7 +142,7 @@ function parseArgs(): Args {
   }
 
   return {
-    dataset: argv.includes('--prod') ? 'codebuff_data' : 'codebuff_data_dev',
+    dataset: argv.includes('--prod') ? 'nexus_data' : 'nexus_data_dev',
     sessionsPerAgent: readNumberFlag(argv, '--sessions-per-agent', 1),
     totalSessions: argv.includes('--total-sessions')
       ? readNumberFlag(argv, '--total-sessions', 1)
@@ -318,7 +318,7 @@ async function fetchCandidateSessions(args: Args): Promise<CandidateRow[]> {
     ),
     rows_with_full_messages AS (
       SELECT
-        JSON_VALUE(m.request, '$.codebuff_metadata.client_id') AS client_id,
+        JSON_VALUE(m.request, '$.nexus_metadata.client_id') AS client_id,
         t.agent_id AS target_agent_id,
         JSON_VALUE(m.request, '$.model') AS model,
         m.id,
@@ -330,11 +330,11 @@ async function fetchCandidateSessions(args: Args): Promise<CandidateRow[]> {
         ON JSON_VALUE(m.request, '$.model') = t.model_id
       WHERE TRUE
         ${datePredicate}
-        AND JSON_VALUE(m.request, '$.codebuff_metadata.cost_mode') = 'free'
-        AND JSON_VALUE(m.request, '$.codebuff_metadata.client_id') IS NOT NULL
+        AND JSON_VALUE(m.request, '$.nexus_metadata.cost_mode') = 'free'
+        AND JSON_VALUE(m.request, '$.nexus_metadata.client_id') IS NOT NULL
         AND JSON_QUERY_ARRAY(m.request, '$.messages') IS NOT NULL
         AND COALESCE(JSON_VALUE(m.request, '$.messages_omitted'), 'false') != 'true'
-        ${args.clientId ? "AND JSON_VALUE(m.request, '$.codebuff_metadata.client_id') = @clientId" : ''}
+        ${args.clientId ? "AND JSON_VALUE(m.request, '$.nexus_metadata.client_id') = @clientId" : ''}
     ),
     session_summary AS (
       SELECT
@@ -381,14 +381,14 @@ async function fetchRepresentativeRows(args: Args, messageIds: string[]) {
     SELECT
       id,
       finished_at,
-      JSON_VALUE(request, '$.codebuff_metadata.run_id') AS run_id,
+      JSON_VALUE(request, '$.nexus_metadata.run_id') AS run_id,
       ARRAY_LENGTH(JSON_QUERY_ARRAY(request, '$.messages')) AS message_count,
       request AS request_json,
       response,
       reasoning_text
     FROM \`${args.dataset}.message\`
     WHERE id IN UNNEST(@messageIds)
-      AND JSON_VALUE(request, '$.codebuff_metadata.cost_mode') = 'free'
+      AND JSON_VALUE(request, '$.nexus_metadata.cost_mode') = 'free'
       AND JSON_QUERY_ARRAY(request, '$.messages') IS NOT NULL
       AND COALESCE(JSON_VALUE(request, '$.messages_omitted'), 'false') != 'true'
   `

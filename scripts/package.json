@@ -1,7 +1,7 @@
 {
   "name": "@nexus/scripts",
   "version": "1.0.0",
-  "description": "Scripts package for Codebuff",
+  "description": "Scripts package for Nexus",
   "private": true,
   "type": "module",
   "exports": {

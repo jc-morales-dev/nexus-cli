@@ -11,8 +11,8 @@ export const createTestSdkEnv = (
   ...createTestBaseEnv(),
 
   // SDK-specific defaults
-  CODEBUFF_RG_PATH: undefined,
-  CODEBUFF_WASM_DIR: undefined,
+  NEXUS_RG_PATH: undefined,
+  NEXUS_WASM_DIR: undefined,
   VERBOSE: undefined,
   OVERRIDE_TARGET: undefined,
   OVERRIDE_PLATFORM: undefined,

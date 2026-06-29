@@ -1,27 +1,27 @@
 import { postStreamProcessing } from './write-file'
 
-import type { CodebuffToolHandlerFunction } from '../handler-function-type'
+import type { NexusToolHandlerFunction } from '../handler-function-type'
 import type { FileProcessingState } from './write-file'
 import type {
   ClientToolCall,
-  CodebuffToolCall,
-  CodebuffToolOutput,
+  NexusToolCall,
+  NexusToolOutput,
 } from '@nexus/common/tools/list'
 import type { Logger } from '@nexus/common/types/contracts/logger'
 
 export const handleCreatePlan = (async (params: {
   previousToolCallFinished: Promise<void>
-  toolCall: CodebuffToolCall<'create_plan'>
+  toolCall: NexusToolCall<'create_plan'>
 
   fileProcessingState: FileProcessingState
   logger: Logger
 
   requestClientToolCall: (
     toolCall: ClientToolCall<'create_plan'>,
-  ) => Promise<CodebuffToolOutput<'create_plan'>>
+  ) => Promise<NexusToolOutput<'create_plan'>>
   writeToClient: (chunk: string) => void
 }): Promise<{
-  output: CodebuffToolOutput<'create_plan'>
+  output: NexusToolOutput<'create_plan'>
 }> => {
   const {
     fileProcessingState,
@@ -60,4 +60,4 @@ export const handleCreatePlan = (async (params: {
       requestClientToolCall,
     ),
   }
-}) satisfies CodebuffToolHandlerFunction<'create_plan'>
+}) satisfies NexusToolHandlerFunction<'create_plan'>

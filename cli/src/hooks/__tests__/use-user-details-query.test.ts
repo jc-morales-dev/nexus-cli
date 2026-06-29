@@ -9,7 +9,7 @@ import {
 } from 'bun:test'
 
 import { createMockApiClient } from '../../__tests__/helpers/mock-api-client'
-import * as CodebuffApiModule from '../../utils/nexus-api'
+import * as NexusApiModule from '../../utils/nexus-api'
 import { fetchUserDetails } from '../use-user-details-query'
 
 import type { Logger } from '@nexus/common/types/contracts/logger'
@@ -22,14 +22,14 @@ describe('fetchUserDetails', () => {
     debug: mock(() => {}),
   }
 
-  const originalEnv = process.env.NEXT_PUBLIC_CODEBUFF_APP_URL
+  const originalEnv = process.env.NEXT_PUBLIC_NEXUS_APP_URL
 
   beforeEach(() => {
-    process.env.NEXT_PUBLIC_CODEBUFF_APP_URL = 'https://test.codebuff.com'
+    process.env.NEXT_PUBLIC_NEXUS_APP_URL = 'https://test.nexus.com'
   })
 
   afterEach(() => {
-    process.env.NEXT_PUBLIC_CODEBUFF_APP_URL = originalEnv
+    process.env.NEXT_PUBLIC_NEXUS_APP_URL = originalEnv
   })
 
   describe('API failure handling', () => {
@@ -176,10 +176,10 @@ describe('fetchUserDetails', () => {
       const apiClient = createMockApiClient({ me: meMock })
 
       const setTokenSpy = spyOn(
-        CodebuffApiModule,
+        NexusApiModule,
         'setApiClientAuthToken',
       )
-      spyOn(CodebuffApiModule, 'getApiClient').mockReturnValue(apiClient as ReturnType<typeof CodebuffApiModule.getApiClient>)
+      spyOn(NexusApiModule, 'getApiClient').mockReturnValue(apiClient as ReturnType<typeof NexusApiModule.getApiClient>)
 
       await expect(
         fetchUserDetails({

@@ -1,15 +1,15 @@
 import { buildArray } from '@nexus/common/util/array'
 import { COMPOSIO_META_TOOL_NAMES } from '@nexus/common/constants/composio'
 import {
-  FREEBUFF_GEMINI_THINKER_AGENT_ID,
-  FREEBUFF_GEMINI_THINKER_INSTRUCTIONS_PROMPT,
-  FREEBUFF_GEMINI_THINKER_STEP_PROMPT,
-  FREEBUFF_GEMINI_THINKER_SYSTEM_INSTRUCTION,
+  FREETIER_GEMINI_THINKER_AGENT_ID,
+  FREETIER_GEMINI_THINKER_INSTRUCTIONS_PROMPT,
+  FREETIER_GEMINI_THINKER_STEP_PROMPT,
+  FREETIER_GEMINI_THINKER_SYSTEM_INSTRUCTION,
 } from '@nexus/common/constants/freetier-gemini-thinker'
-import { FREEBUFF_REVIEWER_AGENT_ID_BY_MODEL } from '@nexus/common/constants/free-agents'
+import { FREETIER_REVIEWER_AGENT_ID_BY_MODEL } from '@nexus/common/constants/free-agents'
 import {
-  canFreebuffModelSpawnGeminiThinker,
-  FREEBUFF_MINIMAX_MODEL_ID,
+  canFreeTierModelSpawnGeminiThinker,
+  FREETIER_MINIMAX_MODEL_ID,
 } from '@nexus/common/constants/freetier-models'
 
 import { publisher } from '../constants'
@@ -43,23 +43,23 @@ export function createBase2(
   const isFree = mode === 'free' || mode === 'lite'
 
   const isSonnet = false
-  // Lite (paid Codebuff) defaults to Kimi: no data-retention surface in the
-  // CLI today, so we don't want to silently route Codebuff prompts through a
-  // model whose provider trains on user data. Free (freebuff) defaults to
+  // Lite (paid Nexus) defaults to Kimi: no data-retention surface in the
+  // CLI today, so we don't want to silently route Nexus prompts through a
+  // model whose provider trains on user data. Free (freetier) defaults to
   // MiniMax M2.7; Kimi and DeepSeek are separate free agent variants.
   const model =
     modelOverride ??
     (mode === 'lite'
       ? 'moonshotai/kimi-k2.6'
       : mode === 'free'
-        ? FREEBUFF_MINIMAX_MODEL_ID
+        ? FREETIER_MINIMAX_MODEL_ID
         : 'anthropic/claude-opus-4.7')
-  // Smart freebuff model variants (Kimi, DeepSeek) can offload deeper
+  // Smart freetier model variants (Kimi, DeepSeek) can offload deeper
   // reasoning. Fast MiniMax omits the extra round trip by construction.
   const hasFreeGeminiThinker =
-    isFree && canFreebuffModelSpawnGeminiThinker(model)
+    isFree && canFreeTierModelSpawnGeminiThinker(model)
   const freeCodeReviewerAgentId =
-    FREEBUFF_REVIEWER_AGENT_ID_BY_MODEL[model] ?? 'code-reviewer-lite'
+    FREETIER_REVIEWER_AGENT_ID_BY_MODEL[model] ?? 'code-reviewer-lite'
   const defaultProviderOptions = isFree
     ? {
         data_collection: 'deny' as const,
@@ -127,12 +127,12 @@ export function createBase2(
       isFree && freeCodeReviewerAgentId,
       isDefault && 'code-reviewer',
       isMax && 'code-reviewer-multi-prompt',
-      hasFreeGeminiThinker && FREEBUFF_GEMINI_THINKER_AGENT_ID,
+      hasFreeGeminiThinker && FREETIER_GEMINI_THINKER_AGENT_ID,
       'thinker-gpt',
       'context-pruner',
     ),
 
-    systemPrompt: `You are Buffy, a strategic assistant that orchestrates complex coding tasks through specialized sub-agents. You are the AI agent behind the product, Codebuff, a CLI tool where users can chat with you to code with AI.
+    systemPrompt: `You are Buffy, a strategic assistant that orchestrates complex coding tasks through specialized sub-agents. You are the AI agent behind the product, Nexus, a CLI tool where users can chat with you to code with AI.
 
 Current date: ${PLACEHOLDER.CURRENT_DATE}.
 
@@ -198,8 +198,8 @@ Use the spawn_agents tool to spawn specialized agents to help you complete the u
   ${buildArray(
     '- Spawn context-gathering agents (file pickers, code searchers, and web/docs researchers) before making edits. Use the list_directory and glob tools directly for searching and exploring the codebase.',
     isFree &&
-      'Do not spawn the thinker-gpt agent, unless the user asks. Not everyone has connected their ChatGPT subscription to Codebuff to allow for it.',
-    hasFreeGeminiThinker && FREEBUFF_GEMINI_THINKER_SYSTEM_INSTRUCTION,
+      'Do not spawn the thinker-gpt agent, unless the user asks. Not everyone has connected their ChatGPT subscription to Nexus to allow for it.',
+    hasFreeGeminiThinker && FREETIER_GEMINI_THINKER_SYSTEM_INSTRUCTION,
     isDefault &&
       '- Spawn the editor agent to implement the changes after you have gathered all the context you need.',
     (isDefault || isMax) &&
@@ -217,7 +217,7 @@ Use the spawn_agents tool to spawn specialized agents to help you complete the u
 - **No need to include context:** When prompting an agent, realize that many agents can already see the entire conversation history, so you can be brief in prompting them without needing to include context.
 - **Never spawn the context-pruner agent:** This agent is spawned automatically for you and you don't need to spawn it yourself.
 
-# Codebuff Meta-information
+# Nexus Meta-information
 
 You are running on the ${model} model.
 
@@ -227,7 +227,7 @@ Every prompt sent consumes the user's credits, which is calculated based on the 
 
 The user can use the "/usage" command to see how many credits they have used and have left, so you can tell them to check their usage this way.
 
-For other questions, you can direct them to codebuff.com, or especially codebuff.com/docs for detailed information about the product.
+For other questions, you can direct them to nexus.com, or especially nexus.com/docs for detailed information about the product.
 
 # Other response guidelines
 
@@ -419,7 +419,7 @@ ${buildArray(
     'After getting context on the user request from the codebase or from research, use the ask_user tool to ask the user for important clarifications on their request or alternate implementation strategies. You should skip this step if the choice is obvious -- only ask the user if you need their help making the best choice.',
   (isDefault || isMax || isFree) &&
     `- For any task requiring 3+ steps, use the write_todos tool to write out your step-by-step implementation plan. Include ALL of the applicable tasks in the list.${isFast ? '' : ' You should include a step to review the changes after you have implemented the changes.'}:${hasNoValidation ? '' : ' You should include at least one step to validate/test your changes: be specific about whether to typecheck, run tests, run lints, etc.'} You may be able to do reviewing and validation in parallel in the same step. Skip write_todos for simple tasks like quick edits or answering questions.`,
-  hasFreeGeminiThinker && FREEBUFF_GEMINI_THINKER_INSTRUCTIONS_PROMPT,
+  hasFreeGeminiThinker && FREETIER_GEMINI_THINKER_INSTRUCTIONS_PROMPT,
   (isDefault || isMax) &&
     `- For quick problems, briefly explain your reasoning to the user. If you need to think longer, write your thoughts within the <think> tags. Finally, for complex problems, spawn the thinker agent to help find the best solution. (gpt-5-agent is a last resort for complex problems)`,
   isDefault &&
@@ -468,7 +468,7 @@ function buildImplementationStepPrompt({
     isMax &&
       `Keep working until the user's request is completely satisfied${!hasNoValidation ? ' and validated' : ''}, or until you require more information from the user.`,
     'Consider loading relevant skills with the skill tool if they might help with the current task. Do not reload skills that were already loaded earlier in this conversation.',
-    hasFreeGeminiThinker && FREEBUFF_GEMINI_THINKER_STEP_PROMPT,
+    hasFreeGeminiThinker && FREETIER_GEMINI_THINKER_STEP_PROMPT,
     isMax &&
       `You must spawn the 'editor-multi-prompt' agent to implement code changes rather than using the str_replace or write_file tools, since it will generate the best code changes.`,
     (isDefault || isMax) &&

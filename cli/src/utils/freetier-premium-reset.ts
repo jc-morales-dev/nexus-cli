@@ -1,10 +1,10 @@
-import { FREEBUFF_PREMIUM_SESSION_RESET_TIMEZONE } from '@nexus/common/constants/freetier-models'
+import { FREETIER_PREMIUM_SESSION_RESET_TIMEZONE } from '@nexus/common/constants/freetier-models'
 import { getZonedDayBounds } from '@nexus/common/util/zoned-time'
 
-import type { FreebuffSessionRateLimitByModel } from '@nexus/common/types/freetier-session'
+import type { FreeTierSessionRateLimitByModel } from '@nexus/common/types/freetier-session'
 
-export function getFreebuffPremiumResetAt(params: {
-  rateLimitsByModel?: FreebuffSessionRateLimitByModel
+export function getFreeTierPremiumResetAt(params: {
+  rateLimitsByModel?: FreeTierSessionRateLimitByModel
   nowMs: number
 }): Date {
   const { rateLimitsByModel, nowMs } = params
@@ -22,11 +22,11 @@ export function getFreebuffPremiumResetAt(params: {
 
   return getZonedDayBounds(
     new Date(nowMs),
-    FREEBUFF_PREMIUM_SESSION_RESET_TIMEZONE,
+    FREETIER_PREMIUM_SESSION_RESET_TIMEZONE,
   ).resetsAt
 }
 
-export function formatFreebuffPremiumResetCountdown(
+export function formatFreeTierPremiumResetCountdown(
   resetAt: Date,
   nowMs: number,
 ): string {

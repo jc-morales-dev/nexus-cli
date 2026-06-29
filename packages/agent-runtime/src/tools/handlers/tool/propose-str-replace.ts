@@ -4,10 +4,10 @@ import {
 } from './proposed-content-store'
 import { processStrReplace } from '../../../process-str-replace'
 
-import type { CodebuffToolHandlerFunction } from '../handler-function-type'
+import type { NexusToolHandlerFunction } from '../handler-function-type'
 import type {
-  CodebuffToolCall,
-  CodebuffToolOutput,
+  NexusToolCall,
+  NexusToolOutput,
 } from '@nexus/common/tools/list'
 import type { RequestOptionalFileFn } from '@nexus/common/types/contracts/client'
 import type { Logger } from '@nexus/common/types/contracts/logger'
@@ -17,7 +17,7 @@ import type { AgentState } from '@nexus/common/types/session-state'
 export const handleProposeStrReplace = (async (
   params: {
     previousToolCallFinished: Promise<void>
-    toolCall: CodebuffToolCall<'propose_str_replace'>
+    toolCall: NexusToolCall<'propose_str_replace'>
 
     logger: Logger
     agentState: AgentState
@@ -25,7 +25,7 @@ export const handleProposeStrReplace = (async (
 
     requestOptionalFile: RequestOptionalFileFn
   } & ParamsExcluding<RequestOptionalFileFn, 'filePath'>,
-): Promise<{ output: CodebuffToolOutput<'propose_str_replace'> }> => {
+): Promise<{ output: NexusToolOutput<'propose_str_replace'> }> => {
   const {
     previousToolCallFinished,
     toolCall,
@@ -105,4 +105,4 @@ export const handleProposeStrReplace = (async (
       },
     ],
   }
-}) satisfies CodebuffToolHandlerFunction<'propose_str_replace'>
+}) satisfies NexusToolHandlerFunction<'propose_str_replace'>

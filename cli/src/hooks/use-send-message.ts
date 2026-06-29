@@ -3,9 +3,9 @@ import { useCallback, useEffect, useRef } from 'react'
 import { setCurrentChatId } from '../project-files'
 import { createStreamController } from './stream-state'
 import { useChatStore } from '../state/chat-store'
-import { getFreebuffInstanceId } from './use-freetier-session'
-import { getCodebuffClient } from '../utils/nexus-client'
-import { AGENT_MODE_TO_COST_MODE, IS_FREEBUFF } from '../utils/constants'
+import { getFreeTierInstanceId } from './use-freetier-session'
+import { getNexusClient } from '../utils/nexus-client'
+import { AGENT_MODE_TO_COST_MODE, IS_FREETIER } from '../utils/constants'
 import { createEventHandlerState } from '../utils/create-event-handler-state'
 import { createRunConfig } from '../utils/create-run-config'
 import { getAgentIdForMode } from '../utils/freetier-agent-selection'
@@ -357,15 +357,15 @@ export const useSendMessage = ({
       inputRef.current?.focus()
 
       // Get SDK client
-      const client = await getCodebuffClient()
+      const client = await getNexusClient()
 
       if (!client) {
         logger.error(
           {},
-          '[send-message] No Codebuff client available. Please ensure you are authenticated.',
+          '[send-message] No Nexus client available. Please ensure you are authenticated.',
         )
         // Show error to user instead of silently failing
-        const brandName = IS_FREEBUFF ? 'Freebuff' : 'NEXUS'
+        const brandName = IS_FREETIER ? 'FreeTier' : 'NEXUS'
         setMessages((prev) => [
           ...prev,
           createErrorChatMessage(
@@ -450,7 +450,7 @@ export const useSendMessage = ({
           },
         })
 
-        const freebuffInstanceId = getFreebuffInstanceId()
+        const freetierInstanceId = getFreeTierInstanceId()
         const runConfig = createRunConfig({
           logger,
           agent: resolvedAgent,
@@ -461,9 +461,9 @@ export const useSendMessage = ({
           eventHandlerState,
           signal: abortController.signal,
           costMode: AGENT_MODE_TO_COST_MODE[agentMode],
-          extraCodebuffMetadata:
-            IS_FREEBUFF && freebuffInstanceId
-              ? { freebuff_instance_id: freebuffInstanceId }
+          extraNexusMetadata:
+            IS_FREETIER && freetierInstanceId
+              ? { freetier_instance_id: freetierInstanceId }
               : undefined,
         })
 

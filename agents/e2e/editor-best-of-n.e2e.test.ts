@@ -1,5 +1,5 @@
 import { API_KEY_ENV_VAR } from '@nexus/common/old-constants'
-import { CodebuffClient } from '@nexus/sdk'
+import { NexusClient } from '@nexus/sdk'
 import { describe, expect, it } from 'bun:test'
 
 
@@ -46,7 +46,7 @@ console.log(subtract(5, 3))
         }),
       }
 
-      const client = new CodebuffClient({
+      const client = new NexusClient({
         apiKey,
         cwd: '/tmp/test-best-of-n-project',
         projectFiles,

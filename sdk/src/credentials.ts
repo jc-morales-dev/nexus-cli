@@ -24,7 +24,7 @@ const chatGptOAuthSchema = z.object({
 
 /**
  * Unified schema for the credentials file.
- * Contains both Codebuff user credentials and ChatGPT OAuth credentials.
+ * Contains both Nexus user credentials and ChatGPT OAuth credentials.
  */
 const credentialsFileSchema = z.object({
   default: userSchema.optional(),
@@ -56,7 +56,7 @@ export const getConfigDir = (clientEnv: ClientEnv = env): string => {
     clientEnv.NEXT_PUBLIC_CB_ENVIRONMENT !== 'prod'
       ? `-${clientEnv.NEXT_PUBLIC_CB_ENVIRONMENT}`
       : ''
-  return path.join(os.homedir(), '.config', `manicode${envSuffix}`)
+  return path.join(os.homedir(), '.config', `nexus${envSuffix}`)
 }
 
 /**
@@ -110,7 +110,7 @@ export const getChatGptOAuthCredentials = (
     }
   }
 
-  // 2. Codebuff's own stored credentials
+  // 2. Nexus's own stored credentials
   const credentialsPath = getCredentialsPath(clientEnv)
   if (fs.existsSync(credentialsPath)) {
     try {

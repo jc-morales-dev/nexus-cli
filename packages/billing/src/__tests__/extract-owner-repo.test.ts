@@ -6,70 +6,70 @@ describe('extractOwnerAndRepo', () => {
   describe('GitHub HTTPS URLs', () => {
     it('should extract owner and repo from standard GitHub HTTPS URL', () => {
       const result = extractOwnerAndRepo(
-        'https://github.com/codebuffai/codebuff',
+        'https://github.com/nexusai/nexus',
       )
-      expect(result).toEqual({ owner: 'codebuffai', repo: 'codebuff' })
+      expect(result).toEqual({ owner: 'nexusai', repo: 'nexus' })
     })
 
     it('should extract owner and repo from GitHub HTTPS URL with .git suffix', () => {
       const result = extractOwnerAndRepo(
-        'https://github.com/codebuffai/codebuff.git',
+        'https://github.com/nexusai/nexus.git',
       )
-      expect(result).toEqual({ owner: 'codebuffai', repo: 'codebuff' })
+      expect(result).toEqual({ owner: 'nexusai', repo: 'nexus' })
     })
 
     it('should handle mixed case URLs', () => {
       const result = extractOwnerAndRepo(
-        'https://github.com/CodebuffAI/Codebuff',
+        'https://github.com/NexusAI/Nexus',
       )
-      expect(result).toEqual({ owner: 'codebuffai', repo: 'codebuff' })
+      expect(result).toEqual({ owner: 'nexusai', repo: 'nexus' })
     })
 
     it('should handle URLs with extra path segments', () => {
       const result = extractOwnerAndRepo(
-        'https://github.com/codebuffai/codebuff/tree/main',
+        'https://github.com/nexusai/nexus/tree/main',
       )
-      expect(result).toEqual({ owner: 'codebuffai', repo: 'codebuff' })
+      expect(result).toEqual({ owner: 'nexusai', repo: 'nexus' })
     })
 
     it('should handle URLs with query parameters', () => {
       const result = extractOwnerAndRepo(
-        'https://github.com/codebuffai/codebuff?tab=readme-ov-file',
+        'https://github.com/nexusai/nexus?tab=readme-ov-file',
       )
-      expect(result).toEqual({ owner: 'codebuffai', repo: 'codebuff' })
+      expect(result).toEqual({ owner: 'nexusai', repo: 'nexus' })
     })
   })
 
   describe('GitHub SSH URLs', () => {
     it('should extract owner and repo from SSH URL', () => {
       const result = extractOwnerAndRepo(
-        'git@github.com:CodebuffAI/codebuff.git',
+        'git@github.com:NexusAI/nexus.git',
       )
-      expect(result).toEqual({ owner: 'codebuffai', repo: 'codebuff' })
+      expect(result).toEqual({ owner: 'nexusai', repo: 'nexus' })
     })
 
     it('should extract owner and repo from SSH URL without .git suffix', () => {
-      const result = extractOwnerAndRepo('git@github.com:codebuffai/codebuff')
-      expect(result).toEqual({ owner: 'codebuffai', repo: 'codebuff' })
+      const result = extractOwnerAndRepo('git@github.com:nexusai/nexus')
+      expect(result).toEqual({ owner: 'nexusai', repo: 'nexus' })
     })
 
     it('should handle SSH URLs with mixed case', () => {
       const result = extractOwnerAndRepo(
-        'git@github.com:CODEBUFFAI/CODEBUFF.git',
+        'git@github.com:NEXUSAI/NEXUS.git',
       )
-      expect(result).toEqual({ owner: 'codebuffai', repo: 'codebuff' })
+      expect(result).toEqual({ owner: 'nexusai', repo: 'nexus' })
     })
   })
 
   describe('URLs without protocol', () => {
     it('should handle GitHub URLs without protocol', () => {
-      const result = extractOwnerAndRepo('github.com/codebuffai/codebuff')
-      expect(result).toEqual({ owner: 'codebuffai', repo: 'codebuff' })
+      const result = extractOwnerAndRepo('github.com/nexusai/nexus')
+      expect(result).toEqual({ owner: 'nexusai', repo: 'nexus' })
     })
 
     it('should handle GitHub URLs without protocol with .git suffix', () => {
-      const result = extractOwnerAndRepo('github.com/codebuffai/codebuff.git')
-      expect(result).toEqual({ owner: 'codebuffai', repo: 'codebuff' })
+      const result = extractOwnerAndRepo('github.com/nexusai/nexus.git')
+      expect(result).toEqual({ owner: 'nexusai', repo: 'nexus' })
     })
   })
 
@@ -123,16 +123,16 @@ describe('extractOwnerAndRepo', () => {
 
     it('should handle URLs with trailing slashes', () => {
       const result = extractOwnerAndRepo(
-        'https://github.com/codebuffai/codebuff/',
+        'https://github.com/nexusai/nexus/',
       )
-      expect(result).toEqual({ owner: 'codebuffai', repo: 'codebuff' })
+      expect(result).toEqual({ owner: 'nexusai', repo: 'nexus' })
     })
 
     it('should handle URLs with multiple trailing slashes', () => {
       const result = extractOwnerAndRepo(
-        'https://github.com/codebuffai/codebuff///',
+        'https://github.com/nexusai/nexus///',
       )
-      expect(result).toEqual({ owner: 'codebuffai', repo: 'codebuff' })
+      expect(result).toEqual({ owner: 'nexusai', repo: 'nexus' })
     })
 
     it('should handle malformed SSH URLs gracefully', () => {

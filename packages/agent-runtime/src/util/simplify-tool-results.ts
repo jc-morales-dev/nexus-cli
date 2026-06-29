@@ -1,12 +1,12 @@
 import { getErrorObject } from '@nexus/common/util/error'
 import { cloneDeep } from 'lodash'
 
-import type { CodebuffToolOutput } from '@nexus/common/tools/list'
+import type { NexusToolOutput } from '@nexus/common/tools/list'
 import type { Logger } from '@nexus/common/types/contracts/logger'
 
 export function simplifyReadFileResults(
-  messageContent: CodebuffToolOutput<'read_files'>,
-): CodebuffToolOutput<'read_files'> {
+  messageContent: NexusToolOutput<'read_files'>,
+): NexusToolOutput<'read_files'> {
   return [
     {
       type: 'json',
@@ -21,9 +21,9 @@ export function simplifyReadFileResults(
 }
 
 export function simplifyTerminalCommandResults(params: {
-  messageContent: CodebuffToolOutput<'run_terminal_command'>
+  messageContent: NexusToolOutput<'run_terminal_command'>
   logger: Logger
-}): CodebuffToolOutput<'run_terminal_command'> {
+}): NexusToolOutput<'run_terminal_command'> {
   const { messageContent, logger } = params
   try {
     const clone = cloneDeep(messageContent)

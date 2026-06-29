@@ -6,7 +6,7 @@ import { getApiClient, setApiClientAuthToken } from '../utils/nexus-api'
 import { logger as defaultLogger } from '../utils/logger'
 
 import type {
-  CodebuffApiClient,
+  NexusApiClient,
   UserField,
   UserDetails,
 } from '../utils/nexus-api'
@@ -26,7 +26,7 @@ interface FetchUserDetailsParams<T extends UserField> {
   authToken: string
   fields: readonly T[]
   logger?: Logger
-  apiClient?: CodebuffApiClient
+  apiClient?: NexusApiClient
 }
 
 /**
@@ -38,7 +38,7 @@ export async function fetchUserDetails<T extends UserField>({
   logger = defaultLogger,
   apiClient: providedApiClient,
 }: FetchUserDetailsParams<T>): Promise<UserDetails<T> | null> {
-  let apiClient: CodebuffApiClient
+  let apiClient: NexusApiClient
   if (providedApiClient) {
     apiClient = providedApiClient
   } else {
@@ -83,7 +83,7 @@ export function useUserDetailsQuery<T extends UserField>({
       }
       return fetchUserDetails({ authToken, fields, logger })
     },
-    // BYOK direct mode has no Codebuff /api/v1/me backend — skip the call.
+    // BYOK direct mode has no Nexus /api/v1/me backend — skip the call.
     enabled: enabled && !!authToken && !isByokDirectMode(),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 30 * 60 * 1000, // 30 minutes

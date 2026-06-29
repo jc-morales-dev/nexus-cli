@@ -20,7 +20,7 @@ import { handleSpawnAgents } from '../tools/handlers/tool/spawn-agents'
 
 import type { AgentTemplate } from '../templates/types'
 import type { SendSubagentChunk } from '../tools/handlers/tool/spawn-agents'
-import type { CodebuffToolCall } from '@nexus/common/tools/list'
+import type { NexusToolCall } from '@nexus/common/tools/list'
 import type { ParamsExcluding } from '@nexus/common/types/function-params'
 import type { Mock } from 'bun:test'
 
@@ -135,7 +135,7 @@ describe('Subagent Streaming', () => {
       spawnableAgents: ['thinker'],
     } as unknown as AgentTemplate
 
-    const toolCall: CodebuffToolCall<'spawn_agents'> = {
+    const toolCall: NexusToolCall<'spawn_agents'> = {
       toolName: 'spawn_agents' as const,
       toolCallId: 'test-tool-call-id',
       input: {
@@ -184,7 +184,7 @@ describe('Subagent Streaming', () => {
       spawnableAgents: ['thinker'],
     } as unknown as AgentTemplate
 
-    const toolCall: CodebuffToolCall<'spawn_agents'> = {
+    const toolCall: NexusToolCall<'spawn_agents'> = {
       toolName: 'spawn_agents' as const,
       toolCallId: 'test-tool-call-id-2',
       input: {

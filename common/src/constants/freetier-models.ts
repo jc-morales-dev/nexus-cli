@@ -6,13 +6,13 @@ import {
 } from '../util/zoned-time'
 
 /**
- * Models a freebuff user can pick between in the waiting-room model selector.
+ * Models a freetier user can pick between in the waiting-room model selector.
  *
  * Each model has its own queue (server keys queue position by `model`), so the
  * list here is effectively the set of separate waiting lines. Order is the
  * order shown in the UI.
  */
-export interface FreebuffModelOption {
+export interface FreeTierModelOption {
   /** Stable ID used in the wire protocol and DB. Matches the model id passed
    *  to the chat-completions endpoint. */
   id: string
@@ -30,194 +30,194 @@ export interface FreebuffModelOption {
 
 /** Server-facing fallback copy for APIs and provider errors that can't know
  *  the caller's local timezone. The CLI should render
- *  `getFreebuffDeploymentAvailabilityLabel()` instead. */
-export const FREEBUFF_DEPLOYMENT_HOURS_LABEL = '9am ET-5pm PT every day'
-export const FREEBUFF_GEMINI_PRO_MODEL_ID = 'google/gemini-3.1-pro-preview'
-export const FREEBUFF_DEEPSEEK_V4_PRO_MODEL_ID = 'deepseek/deepseek-v4-pro'
-export const FREEBUFF_DEEPSEEK_V4_FLASH_MODEL_ID = 'deepseek/deepseek-v4-flash'
-export const FREEBUFF_KIMI_MODEL_ID = 'moonshotai/kimi-k2.6'
-export const FREEBUFF_MINIMAX_MODEL_ID = 'minimax/minimax-m2.7'
-export const FREEBUFF_PREMIUM_SESSION_LIMIT = 5
-export const FREEBUFF_LIMITED_SESSION_LIMIT = 5
-export const FREEBUFF_PREMIUM_SESSION_RESET_TIMEZONE = 'America/Los_Angeles'
-export const FREEBUFF_PREMIUM_SESSION_PERIOD = 'pacific_day'
-export const FREEBUFF_LIMITED_SESSION_RESET_TIMEZONE =
-  FREEBUFF_PREMIUM_SESSION_RESET_TIMEZONE
-export const FREEBUFF_LIMITED_SESSION_PERIOD = FREEBUFF_PREMIUM_SESSION_PERIOD
+ *  `getFreeTierDeploymentAvailabilityLabel()` instead. */
+export const FREETIER_DEPLOYMENT_HOURS_LABEL = '9am ET-5pm PT every day'
+export const FREETIER_GEMINI_PRO_MODEL_ID = 'google/gemini-3.1-pro-preview'
+export const FREETIER_DEEPSEEK_V4_PRO_MODEL_ID = 'deepseek/deepseek-v4-pro'
+export const FREETIER_DEEPSEEK_V4_FLASH_MODEL_ID = 'deepseek/deepseek-v4-flash'
+export const FREETIER_KIMI_MODEL_ID = 'moonshotai/kimi-k2.6'
+export const FREETIER_MINIMAX_MODEL_ID = 'minimax/minimax-m2.7'
+export const FREETIER_PREMIUM_SESSION_LIMIT = 5
+export const FREETIER_LIMITED_SESSION_LIMIT = 5
+export const FREETIER_PREMIUM_SESSION_RESET_TIMEZONE = 'America/Los_Angeles'
+export const FREETIER_PREMIUM_SESSION_PERIOD = 'pacific_day'
+export const FREETIER_LIMITED_SESSION_RESET_TIMEZONE =
+  FREETIER_PREMIUM_SESSION_RESET_TIMEZONE
+export const FREETIER_LIMITED_SESSION_PERIOD = FREETIER_PREMIUM_SESSION_PERIOD
 /** Deprecated wire compatibility field. Premium usage now resets at midnight
  *  Pacific time rather than using a rolling hourly window. */
-export const FREEBUFF_PREMIUM_SESSION_WINDOW_HOURS = 24
-export const FREEBUFF_LIMITED_SESSION_WINDOW_HOURS =
-  FREEBUFF_PREMIUM_SESSION_WINDOW_HOURS
-const FREEBUFF_EASTERN_TIMEZONE = 'America/New_York'
-const FREEBUFF_PACIFIC_TIMEZONE = 'America/Los_Angeles'
+export const FREETIER_PREMIUM_SESSION_WINDOW_HOURS = 24
+export const FREETIER_LIMITED_SESSION_WINDOW_HOURS =
+  FREETIER_PREMIUM_SESSION_WINDOW_HOURS
+const FREETIER_EASTERN_TIMEZONE = 'America/New_York'
+const FREETIER_PACIFIC_TIMEZONE = 'America/Los_Angeles'
 
 interface LocalTimeFormatOptions {
   locale?: string
   timeZone?: string
 }
 
-/** Smart freebuff models that benefit from spawning the gemini-thinker
+/** Smart freetier models that benefit from spawning the gemini-thinker
  *  subagent for deeper reasoning. Fast models (e.g. MiniMax) skip it because
  *  the extra round-trip would defeat the "fastest" tier. Used by the CLI to
  *  toggle the gemini-thinker spawnable + prompts based on the user's pick,
  *  and by the server to admit gemini-thinker child requests against a parent
  *  session bound to one of these models. */
-export const FREEBUFF_GEMINI_THINKER_PARENT_MODELS = new Set<string>([
-  FREEBUFF_KIMI_MODEL_ID,
-  FREEBUFF_DEEPSEEK_V4_PRO_MODEL_ID,
+export const FREETIER_GEMINI_THINKER_PARENT_MODELS = new Set<string>([
+  FREETIER_KIMI_MODEL_ID,
+  FREETIER_DEEPSEEK_V4_PRO_MODEL_ID,
 ])
 
-export function canFreebuffModelSpawnGeminiThinker(modelId: string): boolean {
-  return FREEBUFF_GEMINI_THINKER_PARENT_MODELS.has(modelId)
+export function canFreeTierModelSpawnGeminiThinker(modelId: string): boolean {
+  return FREETIER_GEMINI_THINKER_PARENT_MODELS.has(modelId)
 }
 
-export const FREEBUFF_MODELS = [
+export const FREETIER_MODELS = [
   {
-    id: FREEBUFF_DEEPSEEK_V4_PRO_MODEL_ID,
+    id: FREETIER_DEEPSEEK_V4_PRO_MODEL_ID,
     displayName: 'DeepSeek V4 Pro',
     tagline: 'Smartest',
     availability: 'always',
     warning: 'Collects data for training',
   },
   {
-    id: FREEBUFF_KIMI_MODEL_ID,
+    id: FREETIER_KIMI_MODEL_ID,
     displayName: 'Kimi K2.6',
     tagline: 'Balanced',
     availability: 'always',
   },
   {
-    id: FREEBUFF_DEEPSEEK_V4_FLASH_MODEL_ID,
+    id: FREETIER_DEEPSEEK_V4_FLASH_MODEL_ID,
     displayName: 'DeepSeek V4 Flash',
     tagline: 'Most efficient',
     availability: 'always',
     warning: 'Collects data for training',
   },
   {
-    id: FREEBUFF_MINIMAX_MODEL_ID,
+    id: FREETIER_MINIMAX_MODEL_ID,
     displayName: 'MiniMax M2.7',
     tagline: 'Fastest',
     availability: 'always',
   },
-] as const satisfies readonly FreebuffModelOption[]
+] as const satisfies readonly FreeTierModelOption[]
 
-export const FREEBUFF_PREMIUM_MODEL_IDS = [
-  FREEBUFF_DEEPSEEK_V4_PRO_MODEL_ID,
-  FREEBUFF_KIMI_MODEL_ID,
+export const FREETIER_PREMIUM_MODEL_IDS = [
+  FREETIER_DEEPSEEK_V4_PRO_MODEL_ID,
+  FREETIER_KIMI_MODEL_ID,
 ] as const
 
-export const SUPPORTED_FREEBUFF_MODELS = FREEBUFF_MODELS
+export const SUPPORTED_FREETIER_MODELS = FREETIER_MODELS
 
-export type FreebuffModelId = (typeof FREEBUFF_MODELS)[number]['id']
-export type SupportedFreebuffModelId = FreebuffModelId
-export type FreebuffPremiumModelId = (typeof FREEBUFF_PREMIUM_MODEL_IDS)[number]
+export type FreeTierModelId = (typeof FREETIER_MODELS)[number]['id']
+export type SupportedFreeTierModelId = FreeTierModelId
+export type FreeTierPremiumModelId = (typeof FREETIER_PREMIUM_MODEL_IDS)[number]
 
-/** What new freebuff users see selected in the picker. MiniMax is the
+/** What new freetier users see selected in the picker. MiniMax is the
  *  fastest always-available option and backs the default base2-free agent.
  *  Callers that need a guaranteed-available id for resolution / auto-fallbacks
- *  should use FALLBACK_FREEBUFF_MODEL_ID instead. */
-export const DEFAULT_FREEBUFF_MODEL_ID: FreebuffModelId =
-  FREEBUFF_MINIMAX_MODEL_ID
+ *  should use FALLBACK_FREETIER_MODEL_ID instead. */
+export const DEFAULT_FREETIER_MODEL_ID: FreeTierModelId =
+  FREETIER_MINIMAX_MODEL_ID
 
 /** Always-available fallback used when the requested model can't be served
  *  right now (unknown id, deployment hours closed, etc.). Kept distinct from
- *  DEFAULT_FREEBUFF_MODEL_ID so a new user's "preferred default" can be the
+ *  DEFAULT_FREETIER_MODEL_ID so a new user's "preferred default" can be the
  *  smartest model without auto-flipping anyone to a closed serverless model. */
-export const FALLBACK_FREEBUFF_MODEL_ID: FreebuffModelId =
-  FREEBUFF_MINIMAX_MODEL_ID
+export const FALLBACK_FREETIER_MODEL_ID: FreeTierModelId =
+  FREETIER_MINIMAX_MODEL_ID
 
-export const LIMITED_FREEBUFF_MODEL_ID: FreebuffModelId =
-  FREEBUFF_DEEPSEEK_V4_FLASH_MODEL_ID
-export const LIMITED_FREEBUFF_MODELS = FREEBUFF_MODELS.filter(
-  (model) => model.id === LIMITED_FREEBUFF_MODEL_ID,
+export const LIMITED_FREETIER_MODEL_ID: FreeTierModelId =
+  FREETIER_DEEPSEEK_V4_FLASH_MODEL_ID
+export const LIMITED_FREETIER_MODELS = FREETIER_MODELS.filter(
+  (model) => model.id === LIMITED_FREETIER_MODEL_ID,
 )
 
-export type FreebuffAccessTier = 'full' | 'limited'
+export type FreeTierAccessTier = 'full' | 'limited'
 
-export function getFreebuffModelsForAccessTier(
-  accessTier: FreebuffAccessTier | null | undefined,
-): readonly FreebuffModelOption[] {
-  if (accessTier === 'limited') return LIMITED_FREEBUFF_MODELS
-  return FREEBUFF_MODELS
+export function getFreeTierModelsForAccessTier(
+  accessTier: FreeTierAccessTier | null | undefined,
+): readonly FreeTierModelOption[] {
+  if (accessTier === 'limited') return LIMITED_FREETIER_MODELS
+  return FREETIER_MODELS
 }
 
-export function isFreebuffModelAllowedForAccessTier(
+export function isFreeTierModelAllowedForAccessTier(
   model: string | null | undefined,
-  accessTier: FreebuffAccessTier | null | undefined,
+  accessTier: FreeTierAccessTier | null | undefined,
 ): boolean {
   if (!model) return false
-  if (accessTier !== 'limited') return isSupportedFreebuffModelId(model)
-  return model === LIMITED_FREEBUFF_MODEL_ID
+  if (accessTier !== 'limited') return isSupportedFreeTierModelId(model)
+  return model === LIMITED_FREETIER_MODEL_ID
 }
 
-export function isFreebuffModelId(
+export function isFreeTierModelId(
   id: string | null | undefined,
-): id is FreebuffModelId {
+): id is FreeTierModelId {
   if (!id) return false
-  return FREEBUFF_MODELS.some((m) => m.id === id)
+  return FREETIER_MODELS.some((m) => m.id === id)
 }
 
-export function resolveFreebuffModel(
+export function resolveFreeTierModel(
   id: string | null | undefined,
-): FreebuffModelId {
-  return isFreebuffModelId(id) ? id : FALLBACK_FREEBUFF_MODEL_ID
+): FreeTierModelId {
+  return isFreeTierModelId(id) ? id : FALLBACK_FREETIER_MODEL_ID
 }
 
-export function resolveFreebuffModelForAccessTier(
+export function resolveFreeTierModelForAccessTier(
   id: string | null | undefined,
-  accessTier: FreebuffAccessTier | null | undefined,
-): SupportedFreebuffModelId {
-  if (accessTier === 'limited') return LIMITED_FREEBUFF_MODEL_ID
-  const resolved = resolveSupportedFreebuffModel(id)
-  return isFreebuffModelAllowedForAccessTier(resolved, accessTier)
+  accessTier: FreeTierAccessTier | null | undefined,
+): SupportedFreeTierModelId {
+  if (accessTier === 'limited') return LIMITED_FREETIER_MODEL_ID
+  const resolved = resolveSupportedFreeTierModel(id)
+  return isFreeTierModelAllowedForAccessTier(resolved, accessTier)
     ? resolved
-    : FALLBACK_FREEBUFF_MODEL_ID
+    : FALLBACK_FREETIER_MODEL_ID
 }
 
-export function isSupportedFreebuffModelId(
+export function isSupportedFreeTierModelId(
   id: string | null | undefined,
-): id is SupportedFreebuffModelId {
+): id is SupportedFreeTierModelId {
   if (!id) return false
-  return SUPPORTED_FREEBUFF_MODELS.some((m) => m.id === id)
+  return SUPPORTED_FREETIER_MODELS.some((m) => m.id === id)
 }
 
-export function isFreebuffPremiumModelId(
+export function isFreeTierPremiumModelId(
   id: string | null | undefined,
-): id is FreebuffPremiumModelId {
+): id is FreeTierPremiumModelId {
   if (!id) return false
-  return FREEBUFF_PREMIUM_MODEL_IDS.some((modelId) => modelId === id)
+  return FREETIER_PREMIUM_MODEL_IDS.some((modelId) => modelId === id)
 }
 
-export function resolveSupportedFreebuffModel(
+export function resolveSupportedFreeTierModel(
   id: string | null | undefined,
-): SupportedFreebuffModelId {
-  return isSupportedFreebuffModelId(id) ? id : FALLBACK_FREEBUFF_MODEL_ID
+): SupportedFreeTierModelId {
+  return isSupportedFreeTierModelId(id) ? id : FALLBACK_FREETIER_MODEL_ID
 }
 
-export function getFreebuffModel(id: string): FreebuffModelOption {
+export function getFreeTierModel(id: string): FreeTierModelOption {
   return (
-    SUPPORTED_FREEBUFF_MODELS.find((m) => m.id === id) ??
-    FREEBUFF_MODELS.find((m) => m.id === FALLBACK_FREEBUFF_MODEL_ID)!
+    SUPPORTED_FREETIER_MODELS.find((m) => m.id === id) ??
+    FREETIER_MODELS.find((m) => m.id === FALLBACK_FREETIER_MODEL_ID)!
   )
 }
 
-function getNextFreebuffDeploymentStart(now: Date): Date {
-  const easternNow = getZonedParts(now, FREEBUFF_EASTERN_TIMEZONE)
+function getNextFreeTierDeploymentStart(now: Date): Date {
+  const easternNow = getZonedParts(now, FREETIER_EASTERN_TIMEZONE)
   const isBeforeTodayOpen = easternNow.hour < 9
 
   const offset = isBeforeTodayOpen ? 0 : 1
 
   return getUtcForZonedTime(
     addDaysToYmd(easternNow.year, easternNow.month, easternNow.day, offset),
-    FREEBUFF_EASTERN_TIMEZONE,
+    FREETIER_EASTERN_TIMEZONE,
     9,
     0,
   )
 }
 
-function getCurrentFreebuffDeploymentEnd(now: Date): Date {
-  const pacificNow = getZonedParts(now, FREEBUFF_PACIFIC_TIMEZONE)
-  return getUtcForZonedTime(pacificNow, FREEBUFF_PACIFIC_TIMEZONE, 17, 0)
+function getCurrentFreeTierDeploymentEnd(now: Date): Date {
+  const pacificNow = getZonedParts(now, FREETIER_PACIFIC_TIMEZONE)
+  return getUtcForZonedTime(pacificNow, FREETIER_PACIFIC_TIMEZONE, 17, 0)
 }
 
 function isSameLocalDay(left: Date, right: Date, timeZone?: string): boolean {
@@ -248,43 +248,43 @@ function formatLocalTime(
   }).format(date)
 }
 
-export function getFreebuffDeploymentAvailabilityLabel(
+export function getFreeTierDeploymentAvailabilityLabel(
   now: Date = new Date(),
   options: LocalTimeFormatOptions = {},
 ): string {
-  if (isFreebuffDeploymentHours(now)) {
-    const closesAt = getCurrentFreebuffDeploymentEnd(now)
+  if (isFreeTierDeploymentHours(now)) {
+    const closesAt = getCurrentFreeTierDeploymentEnd(now)
     return `until ${formatLocalTime(closesAt, now, options)}`
   }
 
-  const opensAt = getNextFreebuffDeploymentStart(now)
+  const opensAt = getNextFreeTierDeploymentStart(now)
   return `opens ${formatLocalTime(opensAt, now, options)}`
 }
 
-export function isFreebuffDeploymentHours(now: Date = new Date()): boolean {
-  const eastern = getZonedParts(now, FREEBUFF_EASTERN_TIMEZONE)
-  const pacific = getZonedParts(now, FREEBUFF_PACIFIC_TIMEZONE)
+export function isFreeTierDeploymentHours(now: Date = new Date()): boolean {
+  const eastern = getZonedParts(now, FREETIER_EASTERN_TIMEZONE)
+  const pacific = getZonedParts(now, FREETIER_PACIFIC_TIMEZONE)
   return (
     eastern.hour * 60 + eastern.minute >= 9 * 60 &&
     pacific.hour * 60 + pacific.minute < 17 * 60
   )
 }
 
-export function isFreebuffModelAvailable(
+export function isFreeTierModelAvailable(
   id: string,
   now: Date = new Date(),
 ): boolean {
-  const model = SUPPORTED_FREEBUFF_MODELS.find((m) => m.id === id)
+  const model = SUPPORTED_FREETIER_MODELS.find((m) => m.id === id)
   if (!model) return false
-  return model.availability === 'always' || isFreebuffDeploymentHours(now)
+  return model.availability === 'always' || isFreeTierDeploymentHours(now)
 }
 
-export function resolveAvailableFreebuffModel(
+export function resolveAvailableFreeTierModel(
   id: string | null | undefined,
   now: Date = new Date(),
-): FreebuffModelId {
-  const resolved = resolveFreebuffModel(id)
-  return isFreebuffModelAvailable(resolved, now)
+): FreeTierModelId {
+  const resolved = resolveFreeTierModel(id)
+  return isFreeTierModelAvailable(resolved, now)
     ? resolved
-    : FALLBACK_FREEBUFF_MODEL_ID
+    : FALLBACK_FREETIER_MODEL_ID
 }

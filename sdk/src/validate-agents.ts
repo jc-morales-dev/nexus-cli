@@ -24,9 +24,9 @@ export interface ValidateAgentsOptions {
   remote?: boolean
 
   /**
-   * The base URL of the Codebuff website API.
-   * Optional - defaults to NEXT_PUBLIC_CODEBUFF_APP_URL or environment-based URL.
-   * Example: 'https://codebuff.com'
+   * The base URL of the Nexus website API.
+   * Optional - defaults to NEXT_PUBLIC_NEXUS_APP_URL or environment-based URL.
+   * Example: 'https://nexus.com'
    */
   websiteUrl?: string
 }
@@ -49,7 +49,7 @@ export interface ValidateAgentsOptions {
  * // Remote validation
  * const result = await validateAgents(definitions, {
  *   remote: true,
- *   websiteUrl: 'https://codebuff.com'
+ *   websiteUrl: 'https://nexus.com'
  * })
  * ```
  */

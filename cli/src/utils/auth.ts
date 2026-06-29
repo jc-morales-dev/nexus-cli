@@ -36,7 +36,7 @@ export const getConfigDir = (): string => {
   return path.join(
     os.homedir(),
     '.config',
-    'manicode' +
+    'nexus' +
       // on a development stack?
       (env.NEXT_PUBLIC_CB_ENVIRONMENT !== 'prod'
         ? `-${env.NEXT_PUBLIC_CB_ENVIRONMENT}`
@@ -120,7 +120,7 @@ export const getAuthTokenDetails = (
     return { token: userCredentials.authToken, source: 'credentials' }
   }
 
-  const envToken = ciEnv.CODEBUFF_API_KEY
+  const envToken = ciEnv.NEXUS_API_KEY
   if (envToken) {
     return { token: envToken, source: 'environment' }
   }

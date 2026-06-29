@@ -12,11 +12,11 @@ ensureCliTestEnv()
 
 const { getConfigDir } = await import('../auth')
 const {
-  isFreebuffInstanceOwnedByDeadLocalProcess,
-  recordFreebuffInstanceOwner,
+  isFreeTierInstanceOwnedByDeadLocalProcess,
+  recordFreeTierInstanceOwner,
 } = await import('../freetier-instance-owner')
 
-describe('freebuff instance owner', () => {
+describe('freetier instance owner', () => {
   let originalHome: string | undefined
   let tempHome: string
 
@@ -38,10 +38,10 @@ describe('freebuff instance owner', () => {
   })
 
   test('does not classify the current process as dead', () => {
-    recordFreebuffInstanceOwner('inst-current')
+    recordFreeTierInstanceOwner('inst-current')
 
     expect(
-      isFreebuffInstanceOwnedByDeadLocalProcess('inst-current'),
+      isFreeTierInstanceOwnedByDeadLocalProcess('inst-current'),
     ).toBe(false)
   })
 
@@ -52,7 +52,7 @@ describe('freebuff instance owner', () => {
       JSON.stringify({ instanceId: 'inst-dead', pid: 2_147_483_647 }),
     )
 
-    expect(isFreebuffInstanceOwnedByDeadLocalProcess('inst-dead')).toBe(true)
+    expect(isFreeTierInstanceOwnedByDeadLocalProcess('inst-dead')).toBe(true)
   })
 
   test('ignores a dead pid for a different instance id', () => {
@@ -63,7 +63,7 @@ describe('freebuff instance owner', () => {
     )
 
     expect(
-      isFreebuffInstanceOwnedByDeadLocalProcess('inst-current'),
+      isFreeTierInstanceOwnedByDeadLocalProcess('inst-current'),
     ).toBe(false)
   })
 })

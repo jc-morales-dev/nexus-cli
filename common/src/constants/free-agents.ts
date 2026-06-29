@@ -1,13 +1,13 @@
 import { parseAgentId } from '../util/agent-id-parsing'
 
-import { FREEBUFF_GEMINI_THINKER_AGENT_ID } from './freetier-gemini-thinker'
+import { FREETIER_GEMINI_THINKER_AGENT_ID } from './freetier-gemini-thinker'
 import {
-  FREEBUFF_DEEPSEEK_V4_FLASH_MODEL_ID,
-  FREEBUFF_DEEPSEEK_V4_PRO_MODEL_ID,
-  FREEBUFF_GEMINI_PRO_MODEL_ID,
-  FREEBUFF_KIMI_MODEL_ID,
-  FREEBUFF_MINIMAX_MODEL_ID,
-  SUPPORTED_FREEBUFF_MODELS,
+  FREETIER_DEEPSEEK_V4_FLASH_MODEL_ID,
+  FREETIER_DEEPSEEK_V4_PRO_MODEL_ID,
+  FREETIER_GEMINI_PRO_MODEL_ID,
+  FREETIER_KIMI_MODEL_ID,
+  FREETIER_MINIMAX_MODEL_ID,
+  SUPPORTED_FREETIER_MODELS,
 } from './freetier-models'
 
 import type { CostMode } from './model-config'
@@ -19,40 +19,40 @@ import type { CostMode } from './model-config'
 export const FREE_COST_MODE = 'free' as const
 
 /**
- * Root-orchestrator agent IDs counted as "a freebuff session" for abuse
+ * Root-orchestrator agent IDs counted as "a freetier session" for abuse
  * detection and usage auditing. Subagents (file-picker, basher, etc.) are
  * excluded — they're spawned by the root, so counting them would inflate
  * every user's apparent activity.
  */
-export const FREEBUFF_ROOT_AGENT_IDS = [
+export const FREETIER_ROOT_AGENT_IDS = [
   'base2-free',
   'base2-free-kimi',
   'base2-free-deepseek',
   'base2-free-deepseek-flash',
 ] as const
-const FREEBUFF_ROOT_AGENT_ID_SET: ReadonlySet<string> = new Set(
-  FREEBUFF_ROOT_AGENT_IDS,
+const FREETIER_ROOT_AGENT_ID_SET: ReadonlySet<string> = new Set(
+  FREETIER_ROOT_AGENT_IDS,
 )
-const FREEBUFF_ALLOWED_MODEL_IDS = SUPPORTED_FREEBUFF_MODELS.map(
+const FREETIER_ALLOWED_MODEL_IDS = SUPPORTED_FREETIER_MODELS.map(
   (model) => model.id,
 )
 
-export const FREEBUFF_ROOT_AGENT_ID_BY_MODEL: Record<string, string> = {
-  [FREEBUFF_MINIMAX_MODEL_ID]: 'base2-free',
-  [FREEBUFF_KIMI_MODEL_ID]: 'base2-free-kimi',
-  [FREEBUFF_DEEPSEEK_V4_PRO_MODEL_ID]: 'base2-free-deepseek',
-  [FREEBUFF_DEEPSEEK_V4_FLASH_MODEL_ID]: 'base2-free-deepseek-flash',
+export const FREETIER_ROOT_AGENT_ID_BY_MODEL: Record<string, string> = {
+  [FREETIER_MINIMAX_MODEL_ID]: 'base2-free',
+  [FREETIER_KIMI_MODEL_ID]: 'base2-free-kimi',
+  [FREETIER_DEEPSEEK_V4_PRO_MODEL_ID]: 'base2-free-deepseek',
+  [FREETIER_DEEPSEEK_V4_FLASH_MODEL_ID]: 'base2-free-deepseek-flash',
 }
 
-export const FREEBUFF_REVIEWER_AGENT_ID_BY_MODEL: Record<string, string> = {
-  [FREEBUFF_MINIMAX_MODEL_ID]: 'code-reviewer-minimax',
-  [FREEBUFF_KIMI_MODEL_ID]: 'code-reviewer-kimi',
-  [FREEBUFF_DEEPSEEK_V4_PRO_MODEL_ID]: 'code-reviewer-deepseek',
-  [FREEBUFF_DEEPSEEK_V4_FLASH_MODEL_ID]: 'code-reviewer-deepseek-flash',
+export const FREETIER_REVIEWER_AGENT_ID_BY_MODEL: Record<string, string> = {
+  [FREETIER_MINIMAX_MODEL_ID]: 'code-reviewer-minimax',
+  [FREETIER_KIMI_MODEL_ID]: 'code-reviewer-kimi',
+  [FREETIER_DEEPSEEK_V4_PRO_MODEL_ID]: 'code-reviewer-deepseek',
+  [FREETIER_DEEPSEEK_V4_FLASH_MODEL_ID]: 'code-reviewer-deepseek-flash',
 }
 
-export function getFreebuffRootAgentIdForModel(model: string): string {
-  return FREEBUFF_ROOT_AGENT_ID_BY_MODEL[model] ?? 'base2-free'
+export function getFreeTierRootAgentIdForModel(model: string): string {
+  return FREETIER_ROOT_AGENT_ID_BY_MODEL[model] ?? 'base2-free'
 }
 
 /**
@@ -66,14 +66,14 @@ export function getFreebuffRootAgentIdForModel(model: string): string {
 export const FREE_MODE_AGENT_MODELS: Record<string, Set<string>> = {
   // Root orchestrator
   'base2-free': new Set([
-    FREEBUFF_MINIMAX_MODEL_ID,
-    FREEBUFF_DEEPSEEK_V4_PRO_MODEL_ID,
-    FREEBUFF_DEEPSEEK_V4_FLASH_MODEL_ID,
-    FREEBUFF_KIMI_MODEL_ID,
+    FREETIER_MINIMAX_MODEL_ID,
+    FREETIER_DEEPSEEK_V4_PRO_MODEL_ID,
+    FREETIER_DEEPSEEK_V4_FLASH_MODEL_ID,
+    FREETIER_KIMI_MODEL_ID,
   ]),
-  'base2-free-kimi': new Set([FREEBUFF_KIMI_MODEL_ID]),
-  'base2-free-deepseek': new Set([FREEBUFF_DEEPSEEK_V4_PRO_MODEL_ID]),
-  'base2-free-deepseek-flash': new Set([FREEBUFF_DEEPSEEK_V4_FLASH_MODEL_ID]),
+  'base2-free-kimi': new Set([FREETIER_KIMI_MODEL_ID]),
+  'base2-free-deepseek': new Set([FREETIER_DEEPSEEK_V4_PRO_MODEL_ID]),
+  'base2-free-deepseek-flash': new Set([FREETIER_DEEPSEEK_V4_FLASH_MODEL_ID]),
 
   // File exploration agents
   'file-picker': new Set(['google/gemini-2.5-flash-lite']),
@@ -89,26 +89,26 @@ export const FREE_MODE_AGENT_MODELS: Record<string, Set<string>> = {
 
   // Command execution
   basher: new Set(['google/gemini-3.1-flash-lite-preview']),
-  'tmux-cli': new Set([FREEBUFF_MINIMAX_MODEL_ID]),
+  'tmux-cli': new Set([FREETIER_MINIMAX_MODEL_ID]),
 
   // Code reviewer for free mode
-  'code-reviewer-minimax': new Set([FREEBUFF_MINIMAX_MODEL_ID]),
-  'code-reviewer-kimi': new Set([FREEBUFF_KIMI_MODEL_ID]),
-  'code-reviewer-deepseek': new Set([FREEBUFF_DEEPSEEK_V4_PRO_MODEL_ID]),
+  'code-reviewer-minimax': new Set([FREETIER_MINIMAX_MODEL_ID]),
+  'code-reviewer-kimi': new Set([FREETIER_KIMI_MODEL_ID]),
+  'code-reviewer-deepseek': new Set([FREETIER_DEEPSEEK_V4_PRO_MODEL_ID]),
   'code-reviewer-deepseek-flash': new Set([
-    FREEBUFF_DEEPSEEK_V4_FLASH_MODEL_ID,
+    FREETIER_DEEPSEEK_V4_FLASH_MODEL_ID,
   ]),
-  // Legacy freebuff clients spawned code-reviewer-lite under provider-specific
+  // Legacy freetier clients spawned code-reviewer-lite under provider-specific
   // free roots before those reviewer IDs existed.
   'code-reviewer-lite': new Set([
-    FREEBUFF_MINIMAX_MODEL_ID,
-    FREEBUFF_KIMI_MODEL_ID,
-    FREEBUFF_DEEPSEEK_V4_PRO_MODEL_ID,
-    FREEBUFF_DEEPSEEK_V4_FLASH_MODEL_ID,
+    FREETIER_MINIMAX_MODEL_ID,
+    FREETIER_KIMI_MODEL_ID,
+    FREETIER_DEEPSEEK_V4_PRO_MODEL_ID,
+    FREETIER_DEEPSEEK_V4_FLASH_MODEL_ID,
   ]),
 
   // Legacy: kept for the standalone gemini thinker agent if invoked directly.
-  [FREEBUFF_GEMINI_THINKER_AGENT_ID]: new Set([FREEBUFF_GEMINI_PRO_MODEL_ID]),
+  [FREETIER_GEMINI_THINKER_AGENT_ID]: new Set([FREETIER_GEMINI_PRO_MODEL_ID]),
 }
 
 /**
@@ -142,31 +142,31 @@ export function isFreeMode(costMode: CostMode | string | undefined): boolean {
   return costMode === FREE_COST_MODE
 }
 
-export function isFreebuffRootAgent(fullAgentId: string): boolean {
+export function isFreeTierRootAgent(fullAgentId: string): boolean {
   const { publisherId, agentId } = parseAgentId(fullAgentId)
   if (!agentId) return false
-  if (publisherId && publisherId !== 'codebuff') return false
-  return FREEBUFF_ROOT_AGENT_ID_SET.has(agentId)
+  if (publisherId && publisherId !== 'nexus') return false
+  return FREETIER_ROOT_AGENT_ID_SET.has(agentId)
 }
 
-export function isFreebuffGeminiThinkerAgent(fullAgentId: string): boolean {
+export function isFreeTierGeminiThinkerAgent(fullAgentId: string): boolean {
   const { publisherId, agentId } = parseAgentId(fullAgentId)
   if (!agentId) return false
-  if (publisherId && publisherId !== 'codebuff') return false
-  return agentId === FREEBUFF_GEMINI_THINKER_AGENT_ID
+  if (publisherId && publisherId !== 'nexus') return false
+  return agentId === FREETIER_GEMINI_THINKER_AGENT_ID
 }
 
-export function shouldUseLocalTokenCountForFreebuffDeepseekFlash(params: {
+export function shouldUseLocalTokenCountForFreeTierDeepseekFlash(params: {
   agentId: string | undefined
   model: string | undefined
 }): boolean {
   const { agentId: fullAgentId, model } = params
-  if (!fullAgentId || model !== FREEBUFF_DEEPSEEK_V4_FLASH_MODEL_ID) {
+  if (!fullAgentId || model !== FREETIER_DEEPSEEK_V4_FLASH_MODEL_ID) {
     return false
   }
 
   const { publisherId, agentId } = parseAgentId(fullAgentId)
-  if (publisherId && publisherId !== 'codebuff') return false
+  if (publisherId && publisherId !== 'nexus') return false
   return agentId === 'base2-free-deepseek-flash'
 }
 
@@ -177,7 +177,7 @@ export function shouldUseLocalTokenCountForFreebuffDeepseekFlash(params: {
  * Returns true only if:
  * 1. The agent has a valid agent ID
  * 2. The agent is in the allowed free-mode agents list
- * 3. The agent is either internal or published by 'codebuff' (prevents spoofing)
+ * 3. The agent is either internal or published by 'nexus' (prevents spoofing)
  * 4. The model is in that agent's allowed model set
  */
 export function isFreeModeAllowedAgentModel(
@@ -189,8 +189,8 @@ export function isFreeModeAllowedAgentModel(
   // Must have a valid agent ID
   if (!agentId) return false
 
-  // Must be either internal (no publisher) or from codebuff
-  if (publisherId && publisherId !== 'codebuff') return false
+  // Must be either internal (no publisher) or from nexus
+  if (publisherId && publisherId !== 'nexus') return false
 
   // Get the allowed models for this agent
   const allowedModels = FREE_MODE_AGENT_MODELS[agentId]
@@ -220,7 +220,7 @@ export function isFreeModeAllowedAgentModel(
  * Handles all agent ID formats:
  * - 'file-picker'
  * - 'file-picker@1.0.0'
- * - 'codebuff/file-picker@0.0.2'
+ * - 'nexus/file-picker@0.0.2'
  */
 export function isFreeAgent(fullAgentId: string): boolean {
   const { publisherId, agentId } = parseAgentId(fullAgentId)
@@ -231,9 +231,9 @@ export function isFreeAgent(fullAgentId: string): boolean {
   // Must be in the free tier agents list
   if (!FREE_TIER_AGENTS.has(agentId)) return false
 
-  // Must be either internal (no publisher) or from codebuff
+  // Must be either internal (no publisher) or from nexus
   // This prevents publisher spoofing attacks
-  if (publisherId && publisherId !== 'codebuff') return false
+  if (publisherId && publisherId !== 'nexus') return false
 
   return true
 }

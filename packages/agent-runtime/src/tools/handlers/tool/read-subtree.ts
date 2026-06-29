@@ -3,10 +3,10 @@ import { jsonToolResult } from '@nexus/common/util/messages'
 
 import { truncateFileTreeBasedOnTokenBudget } from '../../../system-prompt/truncate-file-tree'
 
-import type { CodebuffToolHandlerFunction } from '../handler-function-type'
+import type { NexusToolHandlerFunction } from '../handler-function-type'
 import type {
-  CodebuffToolCall,
-  CodebuffToolOutput,
+  NexusToolCall,
+  NexusToolOutput,
 } from '@nexus/common/tools/list'
 import type { Logger } from '@nexus/common/types/contracts/logger'
 import type {
@@ -17,11 +17,11 @@ import type {
 type ToolName = 'read_subtree'
 export const handleReadSubtree = (async (params: {
   previousToolCallFinished: Promise<void>
-  toolCall: CodebuffToolCall<ToolName>
+  toolCall: NexusToolCall<ToolName>
   fileContext: ProjectFileContext
   logger: Logger
 }): Promise<{
-  output: CodebuffToolOutput<ToolName>
+  output: NexusToolOutput<ToolName>
 }> => {
   const { previousToolCallFinished, toolCall, fileContext, logger } = params
   const { paths, maxTokens } = toolCall.input
@@ -98,7 +98,7 @@ export const handleReadSubtree = (async (params: {
 
   await previousToolCallFinished
 
-  // Build outputs inline so the return type is a tuple matching CodebuffToolOutput
+  // Build outputs inline so the return type is a tuple matching NexusToolOutput
   const requested = paths && paths.length > 0 ? paths : ['.']
   const outputs: Array<
     | {
@@ -140,7 +140,7 @@ export const handleReadSubtree = (async (params: {
   }
 
   return { output: jsonToolResult(outputs) }
-}) satisfies CodebuffToolHandlerFunction<ToolName>
+}) satisfies NexusToolHandlerFunction<ToolName>
 
 function deepClone<T>(obj: T): T {
   return JSON.parse(JSON.stringify(obj))

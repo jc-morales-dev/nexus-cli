@@ -3,11 +3,11 @@ import { partition } from 'lodash'
 
 import { processFileBlock } from '../../../process-file-block'
 
-import type { CodebuffToolHandlerFunction } from '../handler-function-type'
+import type { NexusToolHandlerFunction } from '../handler-function-type'
 import type {
   ClientToolCall,
-  CodebuffToolCall,
-  CodebuffToolOutput,
+  NexusToolCall,
+  NexusToolOutput,
 } from '@nexus/common/tools/list'
 import type { RequestOptionalFileFn } from '@nexus/common/types/contracts/client'
 import type { Logger } from '@nexus/common/types/contracts/logger'
@@ -62,7 +62,7 @@ export function getFileProcessingValues(
 export const handleWriteFile = (async (
   params: {
     previousToolCallFinished: Promise<void>
-    toolCall: CodebuffToolCall<'write_file'>
+    toolCall: NexusToolCall<'write_file'>
 
     agentState: AgentState
     clientSessionId: string
@@ -75,11 +75,11 @@ export const handleWriteFile = (async (
 
     requestClientToolCall: (
       toolCall: ClientToolCall<'write_file'>,
-    ) => Promise<CodebuffToolOutput<'write_file'>>
+    ) => Promise<NexusToolOutput<'write_file'>>
     requestOptionalFile: RequestOptionalFileFn
     writeToClient: (chunk: string) => void
   } & ParamsExcluding<RequestOptionalFileFn, 'filePath'>,
-): Promise<{ output: CodebuffToolOutput<'write_file'> }> => {
+): Promise<{ output: NexusToolOutput<'write_file'> }> => {
   const {
     previousToolCallFinished,
     toolCall,
@@ -159,7 +159,7 @@ export const handleWriteFile = (async (
       requestClientToolCall,
     ),
   }
-}) satisfies CodebuffToolHandlerFunction<'write_file'>
+}) satisfies NexusToolHandlerFunction<'write_file'>
 
 export async function postStreamProcessing<T extends FileProcessingTools>(
   toolCall: FileProcessing<T>,
@@ -167,8 +167,8 @@ export async function postStreamProcessing<T extends FileProcessingTools>(
   writeToClient: (chunk: string) => void,
   requestClientToolCall: (
     toolCall: ClientToolCall<T>,
-  ) => Promise<CodebuffToolOutput<T>>,
-): Promise<CodebuffToolOutput<T>> {
+  ) => Promise<NexusToolOutput<T>>,
+): Promise<NexusToolOutput<T>> {
   const allFileProcessingResults = await Promise.all(
     fileProcessingState.allPromises,
   )

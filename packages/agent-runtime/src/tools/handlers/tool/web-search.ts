@@ -1,6 +1,8 @@
+import { isByokDirectMode } from '@codebuff/common/constants/byok'
 import { jsonToolResult } from '@codebuff/common/util/messages'
 
 import { callWebSearchAPI } from '../../../llm-api/codebuff-web-api'
+import { keylessWebSearch } from '../../../llm-api/keyless-web-search'
 
 import type { CodebuffToolHandlerFunction } from '../handler-function-type'
 import type {
@@ -69,6 +71,37 @@ export const handleWebSearch = (async (params: {
   let creditsUsed = 0
 
   try {
+    // NEXUS (BYOK, no backend): search the web with no API key — SearXNG if the
+    // user self-hosts one (NEXUS_SEARXNG_URL), otherwise DuckDuckGo. Free.
+    if (isByokDirectMode()) {
+      const keyless = await keylessWebSearch({ query, depth, fetch, logger })
+      const searchDuration = Date.now() - searchStartTime
+      if (keyless.error) {
+        logger.warn(
+          { ...searchContext, searchDuration, success: false, error: keyless.error },
+          'Keyless web search returned error',
+        )
+        return {
+          output: jsonToolResult({ errorMessage: keyless.error }),
+          creditsUsed,
+        }
+      }
+      logger.info(
+        {
+          ...searchContext,
+          searchDuration,
+          resultLength: keyless.result?.length ?? 0,
+          usedKeyless: true,
+          success: true,
+        },
+        'Search completed via keyless backend',
+      )
+      return {
+        output: jsonToolResult({ result: keyless.result ?? '' }),
+        creditsUsed,
+      }
+    }
+
     const webApi = await callWebSearchAPI({
       query,
       depth,

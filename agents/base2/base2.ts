@@ -5,12 +5,12 @@ import {
   FREEBUFF_GEMINI_THINKER_INSTRUCTIONS_PROMPT,
   FREEBUFF_GEMINI_THINKER_STEP_PROMPT,
   FREEBUFF_GEMINI_THINKER_SYSTEM_INSTRUCTION,
-} from '@nexus/common/constants/freebuff-gemini-thinker'
+} from '@nexus/common/constants/freetier-gemini-thinker'
 import { FREEBUFF_REVIEWER_AGENT_ID_BY_MODEL } from '@nexus/common/constants/free-agents'
 import {
   canFreebuffModelSpawnGeminiThinker,
   FREEBUFF_MINIMAX_MODEL_ID,
-} from '@nexus/common/constants/freebuff-models'
+} from '@nexus/common/constants/freetier-models'
 
 import { publisher } from '../constants'
 import {

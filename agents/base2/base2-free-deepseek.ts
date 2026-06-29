@@ -1,4 +1,4 @@
-import { FREEBUFF_DEEPSEEK_V4_PRO_MODEL_ID } from '@nexus/common/constants/freebuff-models'
+import { FREEBUFF_DEEPSEEK_V4_PRO_MODEL_ID } from '@nexus/common/constants/freetier-models'
 
 import { createBase2 } from './base2'
 

@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 
 import type { UserProfile } from '@/types/user'
 
-const USER_PROFILE_STORAGE_KEY = 'codebuff-user-profile'
+const USER_PROFILE_STORAGE_KEY = 'nexus-user-profile'
 
 // Helper functions for local storage
 const getUserProfileFromStorage = (): UserProfile | null => {

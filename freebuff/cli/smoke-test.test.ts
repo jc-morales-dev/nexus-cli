@@ -149,7 +149,7 @@ describe.skipIf(!binaryExists)('Freebuff Binary Smoke Tests', () => {
     test(
       'displays Freebuff ASCII logo on startup',
       async () => {
-        sessionName = `freebuff-smoke-${Date.now()}`
+        sessionName = `freetier-smoke-${Date.now()}`
 
         // Start the binary in a detached tmux session
         await tmux([

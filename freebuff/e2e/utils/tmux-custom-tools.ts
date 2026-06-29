@@ -1,6 +1,6 @@
 import { z } from 'zod/v4'
 
-import { FreebuffSession } from './freebuff-session'
+import { FreebuffSession } from './freetier-session'
 
 import type { ZodType } from 'zod/v4'
 

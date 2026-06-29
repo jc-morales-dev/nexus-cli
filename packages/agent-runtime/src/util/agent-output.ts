@@ -1,5 +1,5 @@
 import type { AgentTemplate } from '@nexus/common/types/agent-template'
-import type { Message } from '@nexus/common/types/messages/codebuff-message'
+import type { Message } from '@nexus/common/types/messages/nexus-message'
 import type {
   AgentState,
   AgentOutput,

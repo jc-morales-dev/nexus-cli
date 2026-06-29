@@ -5,7 +5,7 @@ import { generateLoginUrl, pollLoginStatus } from '../../login/login-flow'
 import { createMockApiClient } from '../helpers/mock-api-client'
 
 import type { LoginUrlResponse } from '../../login/login-flow'
-import type { ApiResponse } from '../../utils/codebuff-api'
+import type { ApiResponse } from '../../utils/nexus-api'
 import type { Logger } from '@nexus/common/types/contracts/logger'
 
 const createClock = () => {

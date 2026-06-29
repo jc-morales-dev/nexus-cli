@@ -27,7 +27,7 @@ import type {
   AgentRuntimeScopedDeps,
 } from '@nexus/common/types/contracts/agent-runtime'
 import type { Logger } from '@nexus/common/types/contracts/logger'
-import type { ToolMessage } from '@nexus/common/types/messages/codebuff-message'
+import type { ToolMessage } from '@nexus/common/types/messages/nexus-message'
 import type { ToolResultOutput } from '@nexus/common/types/messages/content-part'
 import type { PrintModeEvent } from '@nexus/common/types/print-mode'
 import type {

@@ -26,7 +26,7 @@ import { checkAdminAuth } from '../../../../lib/admin-auth'
 import { logger } from '../../../../util/logger'
 
 import type { System } from '@nexus/agent-runtime/llm-api/claude'
-import type { Message } from '@nexus/common/types/messages/codebuff-message'
+import type { Message } from '@nexus/common/types/messages/nexus-message'
 import type { NextRequest } from 'next/server'
 
 // Type for messages stored in BigQuery traces

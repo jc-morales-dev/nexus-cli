@@ -1,7 +1,7 @@
-import { FREEBUFF_PREMIUM_SESSION_RESET_TIMEZONE } from '@nexus/common/constants/freebuff-models'
+import { FREEBUFF_PREMIUM_SESSION_RESET_TIMEZONE } from '@nexus/common/constants/freetier-models'
 import { getZonedDayBounds } from '@nexus/common/util/zoned-time'
 
-import type { FreebuffSessionRateLimitByModel } from '@nexus/common/types/freebuff-session'
+import type { FreebuffSessionRateLimitByModel } from '@nexus/common/types/freetier-session'
 
 export function getFreebuffPremiumResetAt(params: {
   rateLimitsByModel?: FreebuffSessionRateLimitByModel

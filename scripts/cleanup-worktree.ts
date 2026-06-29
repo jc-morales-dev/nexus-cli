@@ -36,7 +36,7 @@ class WorktreeError extends Error {
   }
 }
 
-const WORKTREES_DIR = '../codebuff-worktrees'
+const WORKTREES_DIR = '../nexus-worktrees'
 
 // Utility functions
 function parseArgs(): WorktreeArgs | null {

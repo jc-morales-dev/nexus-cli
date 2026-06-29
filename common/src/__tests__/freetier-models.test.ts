@@ -18,7 +18,7 @@ import {
   isFreebuffPremiumModelId,
   isSupportedFreebuffModelId,
   resolveFreebuffModelForAccessTier,
-} from '../constants/freebuff-models'
+} from '../constants/freetier-models'
 
 describe('freebuff model availability', () => {
   test('defaults to MiniMax M2.7 for base2-free', () => {

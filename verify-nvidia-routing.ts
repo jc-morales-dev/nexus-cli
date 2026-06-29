@@ -131,7 +131,7 @@ async function testActualApiCall() {
       headers: {
         Authorization: `Bearer ${nvidiaApiKey}`,
         'Content-Type': 'application/json',
-        'user-agent': `ai-sdk/openai-compatible/${VERSION}/codebuff-nvidia-verify`,
+        'user-agent': `ai-sdk/openai-compatible/${VERSION}/nexus-nvidia-verify`,
       },
       body: JSON.stringify({
         model: 'z-ai/glm-5.1',

@@ -2,7 +2,7 @@ import {
   DEFAULT_FREEBUFF_MODEL_ID,
   resolveAvailableFreebuffModel,
   resolveFreebuffModel,
-} from '@nexus/common/constants/freebuff-models'
+} from '@nexus/common/constants/freetier-models'
 import { create } from 'zustand'
 
 import { loadFreebuffModelPreference } from '../utils/settings'

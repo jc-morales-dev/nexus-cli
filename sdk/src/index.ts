@@ -1,5 +1,5 @@
 export type * from '@nexus/common/types/json'
-export type * from '@nexus/common/types/messages/codebuff-message'
+export type * from '@nexus/common/types/messages/nexus-message'
 export type * from '@nexus/common/types/messages/data-content'
 export type * from '@nexus/common/types/print-mode'
 export type {

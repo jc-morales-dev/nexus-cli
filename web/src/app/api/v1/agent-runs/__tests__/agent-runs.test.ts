@@ -115,10 +115,10 @@ describe('/api/v1/agent-runs POST endpoint', () => {
       expect(body).toEqual({ error: 'Missing or invalid Authorization header' })
     })
 
-    test('extracts API key from x-codebuff-api-key header', async () => {
+    test('extracts API key from x-nexus-api-key header', async () => {
       const req = new NextRequest('http://localhost:3000/api/v1/agent-runs', {
         method: 'POST',
-        headers: { 'x-codebuff-api-key': 'test-api-key-123' },
+        headers: { 'x-nexus-api-key': 'test-api-key-123' },
         body: JSON.stringify({
           action: 'START',
           agentId: 'test-agent',

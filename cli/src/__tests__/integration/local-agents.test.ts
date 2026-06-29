@@ -43,7 +43,7 @@ describe('Local Agent Integration', () => {
   let originalProjectRoot: string | undefined
 
   beforeEach(() => {
-    tempDir = mkdtempSync(path.join(os.tmpdir(), 'codebuff-agents-'))
+    tempDir = mkdtempSync(path.join(os.tmpdir(), 'nexus-agents-'))
     originalCwd = process.cwd()
     setProjectRoot(process.cwd())
     originalProjectRoot = getProjectRoot()

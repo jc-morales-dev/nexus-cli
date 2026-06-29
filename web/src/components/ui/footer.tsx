@@ -3,7 +3,7 @@ import Link from 'next/link'
 export function Footer() {
   return (
     <footer className="bg-black text-white py-16 border-t border-zinc-800">
-      <div className="codebuff-container">
+      <div className="nexus-container">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
           <div>
             <Link href="/" className="flex items-center space-x-2 mb-4">

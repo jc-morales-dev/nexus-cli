@@ -1,7 +1,7 @@
 import { useNow } from './use-now'
 import { IS_FREEBUFF } from '../utils/constants'
 
-import type { FreebuffSessionResponse } from '../types/freebuff-session'
+import type { FreebuffSessionResponse } from '../types/freetier-session'
 
 export interface FreebuffSessionProgress {
   /** 0..1, fraction of the session remaining. 1 at admission, 0 at expiry. */

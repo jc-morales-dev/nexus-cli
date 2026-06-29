@@ -1,7 +1,7 @@
 import { useActivityQuery } from './use-activity-query'
 import { getAuthToken } from '../utils/auth'
 import { IS_FREEBUFF } from '../utils/constants'
-import { getApiClient } from '../utils/codebuff-api'
+import { getApiClient } from '../utils/nexus-api'
 import { logger as defaultLogger } from '../utils/logger'
 
 import type { Logger } from '@nexus/common/types/contracts/logger'

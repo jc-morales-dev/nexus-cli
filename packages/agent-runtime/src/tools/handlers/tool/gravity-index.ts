@@ -1,6 +1,6 @@
 import { jsonToolResult } from '@nexus/common/util/messages'
 
-import { callGravityIndexAPI } from '../../../llm-api/codebuff-web-api'
+import { callGravityIndexAPI } from '../../../llm-api/nexus-web-api'
 
 import type { CodebuffToolHandlerFunction } from '../handler-function-type'
 import type {

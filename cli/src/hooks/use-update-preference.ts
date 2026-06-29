@@ -7,7 +7,7 @@ import {
 } from './use-activity-query'
 import { subscriptionQueryKeys } from './use-subscription-query'
 import { showClipboardMessage } from '../utils/clipboard'
-import { getApiClient } from '../utils/codebuff-api'
+import { getApiClient } from '../utils/nexus-api'
 import { logger } from '../utils/logger'
 
 import type { SubscriptionResponse } from '@nexus/common/types/subscription'

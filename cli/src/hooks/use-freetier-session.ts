@@ -3,30 +3,30 @@ import {
   FALLBACK_FREEBUFF_MODEL_ID,
   LIMITED_FREEBUFF_MODEL_ID,
   resolveFreebuffModel,
-} from '@nexus/common/constants/freebuff-models'
-import { getRateLimitsByModel } from '@nexus/common/types/freebuff-session'
+} from '@nexus/common/constants/freetier-models'
+import { getRateLimitsByModel } from '@nexus/common/types/freetier-session'
 import { useEffect } from 'react'
 
 import {
   getSelectedFreebuffModel,
   useFreebuffModelStore,
-} from '../state/freebuff-model-store'
-import { useFreebuffSessionStore } from '../state/freebuff-session-store'
+} from '../state/freetier-model-store'
+import { useFreebuffSessionStore } from '../state/freetier-session-store'
 import { getAuthTokenDetails } from '../utils/auth'
 import { IS_FREEBUFF } from '../utils/constants'
 import {
   isFreebuffInstanceOwnedByDeadLocalProcess,
   recordFreebuffInstanceOwner,
-} from '../utils/freebuff-instance-owner'
+} from '../utils/freetier-instance-owner'
 import { logger } from '../utils/logger'
 import { saveFreebuffModelPreference } from '../utils/settings'
 
-import type { FreebuffSessionResponse } from '../types/freebuff-session'
+import type { FreebuffSessionResponse } from '../types/freetier-session'
 import type {
   FreebuffCountryBlockReason,
   FreebuffIpPrivacySignal,
   FreebuffSessionServerResponse,
-} from '@nexus/common/types/freebuff-session'
+} from '@nexus/common/types/freetier-session'
 
 const POLL_INTERVAL_QUEUED_MS = 5_000
 const POLL_INTERVAL_ACTIVE_MS = 30_000
@@ -34,10 +34,10 @@ const POLL_INTERVAL_ERROR_MS = 10_000
 
 /** Header sent on GET so the server can detect when another CLI on the same
  *  account has rotated the id and respond with `{ status: 'superseded' }`. */
-const FREEBUFF_INSTANCE_HEADER = 'x-freebuff-instance-id'
+const FREEBUFF_INSTANCE_HEADER = 'x-freetier-instance-id'
 
 /** Header sent on POST telling the server which model's queue to join. */
-const FREEBUFF_MODEL_HEADER = 'x-freebuff-model'
+const FREEBUFF_MODEL_HEADER = 'x-freetier-model'
 
 /** Play the terminal bell so users get an audible notification on admission. */
 const playAdmissionSound = () => {
@@ -442,7 +442,7 @@ export function useFreebuffSession(): UseFreebuffSessionResult {
     if (!token) {
       logger.warn(
         {},
-        '[freebuff-session] No auth token; skipping waiting-room admission',
+        '[freetier-session] No auth token; skipping waiting-room admission',
       )
       setError('Not authenticated')
       return
@@ -591,7 +591,7 @@ export function useFreebuffSession(): UseFreebuffSessionResult {
       } catch (err) {
         if (cancelled || abortController.signal.aborted) return
         const msg = err instanceof Error ? err.message : String(err)
-        logger.warn({ error: msg }, '[freebuff-session] fetch failed')
+        logger.warn({ error: msg }, '[freetier-session] fetch failed')
         setError(msg)
         schedule(POLL_INTERVAL_ERROR_MS)
       }

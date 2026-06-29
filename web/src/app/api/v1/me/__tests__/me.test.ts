@@ -79,10 +79,10 @@ describe('/api/v1/me route', () => {
       expect(body).toEqual({ error: 'Missing or invalid Authorization header' })
     })
 
-    test('extracts API key from x-codebuff-api-key header', async () => {
+    test('extracts API key from x-nexus-api-key header', async () => {
       const apiKey = 'test-api-key-123'
       const req = new NextRequest('http://localhost:3000/api/v1/me', {
-        headers: { 'x-codebuff-api-key': apiKey },
+        headers: { 'x-nexus-api-key': apiKey },
       })
 
       const response = await getMe({

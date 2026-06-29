@@ -82,7 +82,7 @@ const callCodebuffV1 = async (params: {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${apiKey}`,
-            'x-codebuff-api-key': apiKey,
+            'x-nexus-api-key': apiKey,
           },
           body: JSON.stringify(payload),
         }),
@@ -324,7 +324,7 @@ export async function callTokenCountAPI(params: {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${apiKey}`,
-          'x-codebuff-api-key': apiKey,
+          'x-nexus-api-key': apiKey,
         },
         body: JSON.stringify(payload),
       }),

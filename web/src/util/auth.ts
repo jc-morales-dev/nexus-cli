@@ -22,10 +22,10 @@ export async function getUserIdFromSessionToken(
 }
 
 /**
- * Extract api key from x-codebuff-api-key header or authorization header
+ * Extract api key from x-nexus-api-key header or authorization header
  */
 export function extractApiKeyFromHeader(req: NextRequest): string | undefined {
-  const token = req.headers.get('x-codebuff-api-key')
+  const token = req.headers.get('x-nexus-api-key')
   if (typeof token === 'string' && token) {
     return token
   }

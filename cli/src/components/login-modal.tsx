@@ -282,7 +282,7 @@ export const LoginModal = ({
       >
         {/* Header - Logo rendered by useLogo hook */}
         <box
-          key="codebuff-logo"
+          key="nexus-logo"
           style={{
             flexDirection: 'column',
             alignItems: contentMaxWidth < 40 ? 'center' : 'flex-start',

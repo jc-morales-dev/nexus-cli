@@ -354,7 +354,7 @@ export function StrongHeroSection({ compact }: { compact?: boolean }) {
       </motion.div>
 
       {/* Foreground content */}
-      <div className="codebuff-container min-h-dvh flex flex-col items-center justify-center relative z-10 pb-12">
+      <div className="nexus-container min-h-dvh flex flex-col items-center justify-center relative z-10 pb-12">
         <div className="flex flex-col items-center text-center max-w-4xl w-full space-y-12">
           <motion.h1
             className="text-4xl sm:text-5xl md:text-5xl font-bold text-white tracking-tight"

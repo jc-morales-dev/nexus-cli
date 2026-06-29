@@ -7,7 +7,7 @@ import { getCiEnv } from '@nexus/common/env-ci'
 import { z } from 'zod'
 
 
-import { getApiClient, setApiClientAuthToken } from './codebuff-api'
+import { getApiClient, setApiClientAuthToken } from './nexus-api'
 import { logger } from './logger'
 
 import type { CiEnv } from '@nexus/common/types/contracts/env'

@@ -15,7 +15,7 @@ import type {
   CodebuffToolOutput,
 } from '@nexus/common/tools/list'
 import type { Logger } from '@nexus/common/types/contracts/logger'
-import type { Message } from '@nexus/common/types/messages/codebuff-message'
+import type { Message } from '@nexus/common/types/messages/nexus-message'
 import type {
   TextPart,
   ImagePart,

@@ -1,4 +1,4 @@
-import type { FreebuffAccessTier } from '../constants/freebuff-models'
+import type { FreebuffAccessTier } from '../constants/freetier-models'
 
 /**
  * Wire-level shapes returned by `/api/v1/freebuff/session`. Source of truth

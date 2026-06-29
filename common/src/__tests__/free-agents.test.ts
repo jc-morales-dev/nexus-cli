@@ -6,8 +6,8 @@ import {
   FREEBUFF_GEMINI_PRO_MODEL_ID,
   FREEBUFF_KIMI_MODEL_ID,
   FREEBUFF_MINIMAX_MODEL_ID,
-} from '../constants/freebuff-models'
-import { FREEBUFF_GEMINI_THINKER_AGENT_ID } from '../constants/freebuff-gemini-thinker'
+} from '../constants/freetier-models'
+import { FREEBUFF_GEMINI_THINKER_AGENT_ID } from '../constants/freetier-gemini-thinker'
 import {
   getFreebuffRootAgentIdForModel,
   isFreebuffGeminiThinkerAgent,

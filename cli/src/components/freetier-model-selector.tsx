@@ -15,21 +15,21 @@ import {
   getFreebuffModelsForAccessTier,
   isFreebuffModelAvailable,
   isFreebuffPremiumModelId,
-} from '@nexus/common/constants/freebuff-models'
-import { getRateLimitsByModel } from '@nexus/common/types/freebuff-session'
+} from '@nexus/common/constants/freetier-models'
+import { getRateLimitsByModel } from '@nexus/common/types/freetier-session'
 
-import { joinFreebuffQueue } from '../hooks/use-freebuff-session'
+import { joinFreebuffQueue } from '../hooks/use-freetier-session'
 import { useNow } from '../hooks/use-now'
-import { useFreebuffModelStore } from '../state/freebuff-model-store'
-import { useFreebuffSessionStore } from '../state/freebuff-session-store'
+import { useFreebuffModelStore } from '../state/freetier-model-store'
+import { useFreebuffSessionStore } from '../state/freetier-session-store'
 import { useTerminalDimensions } from '../hooks/use-terminal-dimensions'
 import { useTheme } from '../hooks/use-theme'
 import {
   freebuffModelNavigationDirectionForKey,
   nextFreebuffModelId,
-} from '../utils/freebuff-model-navigation'
+} from '../utils/freetier-model-navigation'
 
-import type { FreebuffModelOption } from '@nexus/common/constants/freebuff-models'
+import type { FreebuffModelOption } from '@nexus/common/constants/freetier-models'
 import type { KeyEvent, ScrollBoxRenderable } from '@opentui/core'
 
 // Section grouping: premium models share one quota pool, unlimited has none.

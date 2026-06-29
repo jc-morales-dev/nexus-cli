@@ -21,7 +21,7 @@ import type { AgentDefinition } from '@nexus/sdk'
  * ```
  */
 export const freebuffTesterAgent: AgentDefinition = {
-  id: 'freebuff-tester',
+  id: 'freetier-tester',
   displayName: 'Freebuff E2E Tester',
   model: 'anthropic/claude-sonnet-4.5',
   toolNames: [

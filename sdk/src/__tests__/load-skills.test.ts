@@ -49,7 +49,7 @@ describe('loadSkills', () => {
   let projectDir: string
 
   beforeEach(() => {
-    tempRoot = mkdtempSync(path.join(os.tmpdir(), 'codebuff-sdk-load-skills-'))
+    tempRoot = mkdtempSync(path.join(os.tmpdir(), 'nexus-sdk-load-skills-'))
     homeDir = path.join(tempRoot, 'home')
     projectDir = path.join(tempRoot, 'project')
 

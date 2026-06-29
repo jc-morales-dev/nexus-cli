@@ -36,7 +36,7 @@ describe('Custom Agents: apply_patch tool', () => {
       if (skipIfNoApiKey()) return
 
       const tmpDir = await fs.promises.mkdtemp(
-        path.join(os.tmpdir(), 'codebuff-apply-patch-'),
+        path.join(os.tmpdir(), 'nexus-apply-patch-'),
       )
       const collector = new EventCollector()
 

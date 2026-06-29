@@ -14,9 +14,9 @@ import type {
   PromptAiSdkStructuredInput,
 } from '@nexus/common/types/contracts/llm'
 import type { ParamsOf } from '@nexus/common/types/function-params'
-import type { Message } from '@nexus/common/types/messages/codebuff-message'
+import type { Message } from '@nexus/common/types/messages/nexus-message'
 
-export const E2E_MOCK_API_KEY = 'codebuff-e2e-mock'
+export const E2E_MOCK_API_KEY = 'nexus-e2e-mock'
 
 const MOCK_USER = {
   id: 'e2e-user',

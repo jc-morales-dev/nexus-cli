@@ -388,7 +388,7 @@ async function main(): Promise<void> {
       process.exit(1)
     }
 
-    const worktreesDir = '../codebuff-worktrees'
+    const worktreesDir = '../nexus-worktrees'
     const worktreePath = resolve(worktreesDir, args.name)
 
     // Check if worktree already exists

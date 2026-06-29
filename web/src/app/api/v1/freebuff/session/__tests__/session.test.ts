@@ -7,7 +7,7 @@ import {
   getFreebuffSession,
   postFreebuffSession,
 } from '../_handlers'
-import { FREEBUFF_DEEPSEEK_V4_FLASH_MODEL_ID } from '@nexus/common/constants/freebuff-models'
+import { FREEBUFF_DEEPSEEK_V4_FLASH_MODEL_ID } from '@nexus/common/constants/freetier-models'
 
 import type { FreebuffSessionDeps } from '../_handlers'
 import type { FreeModeCountryAccess } from '@/server/free-mode-country'

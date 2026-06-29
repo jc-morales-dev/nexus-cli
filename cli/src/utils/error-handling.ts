@@ -1,12 +1,12 @@
 import { env } from '@nexus/common/env'
 import { extractApiErrorDetails } from '@nexus/common/util/error'
-import { formatFreebuffHardBlockedPrivacySignals } from '@nexus/common/util/freebuff-privacy'
+import { formatFreebuffHardBlockedPrivacySignals } from '@nexus/common/util/freetier-privacy'
 
 import type { ChatMessage } from '../types/chat'
 import type {
   FreebuffCountryBlockReason,
   FreebuffIpPrivacySignal,
-} from '@nexus/common/types/freebuff-session'
+} from '@nexus/common/types/freetier-session'
 
 import { IS_FREEBUFF } from './constants'
 
@@ -169,7 +169,7 @@ export const getFreeModeUnavailableErrorMessage = (
 /**
  * Freebuff waiting-room gate errors returned by /api/v1/chat/completions.
  *
- * Contract (see docs/freebuff-waiting-room.md):
+ * Contract (see docs/freetier-waiting-room.md):
  *   - 428 `waiting_room_required`   — no session row exists; POST /session to join.
  *   - 429 `waiting_room_queued`     — row exists but still queued.
  *   - 409 `session_superseded`      — another CLI rotated our instance id.

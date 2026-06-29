@@ -3,7 +3,7 @@ import { Agent } from 'undici'
 import {
   FREEBUFF_DEPLOYMENT_HOURS_LABEL,
   isFreebuffDeploymentHours,
-} from '@nexus/common/constants/freebuff-models'
+} from '@nexus/common/constants/freetier-models'
 import { PROFIT_MARGIN } from '@nexus/common/constants/limits'
 import { getErrorObject } from '@nexus/common/util/error'
 import { env } from '@nexus/internal/env'

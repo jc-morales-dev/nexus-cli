@@ -9,7 +9,7 @@ import type {
 } from '@nexus/common/types/contracts/llm'
 import type { Logger } from '@nexus/common/types/contracts/logger'
 import type { ParamsOf } from '@nexus/common/types/function-params'
-import type { Message } from '@nexus/common/types/messages/codebuff-message'
+import type { Message } from '@nexus/common/types/messages/nexus-message'
 import type { OpenRouterProviderOptions } from '@nexus/common/types/agent-template'
 import type { ToolSet } from 'ai'
 

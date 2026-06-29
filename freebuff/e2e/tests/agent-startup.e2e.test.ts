@@ -9,7 +9,7 @@
 
 import { afterEach, describe, expect, test } from 'bun:test'
 
-import { freebuffTesterAgent } from '../agent/freebuff-tester'
+import { freebuffTesterAgent } from '../agent/freetier-tester'
 import { createFreebuffTmuxTools, requireFreebuffBinary } from '../utils'
 
 import type { CodebuffClient as CodebuffClientType } from '@nexus/sdk'

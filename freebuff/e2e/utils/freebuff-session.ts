@@ -26,7 +26,7 @@ export class FreebuffSession {
       initialFiles?: Record<string, string>
     },
   ): Promise<FreebuffSession> {
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'freebuff-e2e-'))
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'freetier-e2e-'))
 
     // Create a minimal project so freebuff has something to work with
     fs.writeFileSync(

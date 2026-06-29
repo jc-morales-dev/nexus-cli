@@ -18,7 +18,7 @@ import {
   logoutUser as logoutUserUtil,
   type User,
 } from '../utils/auth'
-import { resetCodebuffClient } from '../utils/codebuff-client'
+import { resetCodebuffClient } from '../utils/nexus-client'
 import { logger as defaultLogger, loggerContext } from '../utils/logger'
 
 import type { GetUserInfoFromApiKeyFn } from '@nexus/common/types/contracts/database'

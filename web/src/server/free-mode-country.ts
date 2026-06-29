@@ -4,10 +4,10 @@ import geoip from 'geoip-lite'
 import {
   FREEBUFF_HARD_BLOCKED_PRIVACY_SIGNALS,
   isFreebuffHardBlockedPrivacySignal,
-} from '@nexus/common/util/freebuff-privacy'
+} from '@nexus/common/util/freetier-privacy'
 
 import type { NextRequest } from 'next/server'
-import type { FreebuffAccessTier } from '@nexus/common/constants/freebuff-models'
+import type { FreebuffAccessTier } from '@nexus/common/constants/freetier-models'
 import type {
   FreebuffCountryBlockReason,
   FreebuffIpPrivacySignal,
@@ -15,7 +15,7 @@ import type {
   FreebuffPrivacyProviderDecision,
   FreebuffScamalyticsStatus,
   FreebuffSpurStatus,
-} from '@nexus/common/types/freebuff-session'
+} from '@nexus/common/types/freetier-session'
 
 export const FREE_MODE_ALLOWED_COUNTRIES = new Set([
   'US',

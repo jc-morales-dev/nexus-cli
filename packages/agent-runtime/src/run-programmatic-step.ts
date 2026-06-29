@@ -24,7 +24,7 @@ import type {
 import type { AddAgentStepFn } from '@nexus/common/types/contracts/database'
 import type { Logger } from '@nexus/common/types/contracts/logger'
 import type { ParamsExcluding } from '@nexus/common/types/function-params'
-import type { ToolMessage } from '@nexus/common/types/messages/codebuff-message'
+import type { ToolMessage } from '@nexus/common/types/messages/nexus-message'
 import type {
   ToolCallPart,
   ToolResultOutput,

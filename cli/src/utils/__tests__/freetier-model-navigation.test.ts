@@ -3,7 +3,7 @@ import { describe, expect, test } from 'bun:test'
 import {
   freebuffModelNavigationDirectionForKey,
   nextFreebuffModelId,
-} from '../freebuff-model-navigation'
+} from '../freetier-model-navigation'
 
 describe('nextFreebuffModelId', () => {
   test('moves to the next model when moving forward', () => {

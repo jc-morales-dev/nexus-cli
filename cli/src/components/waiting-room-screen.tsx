@@ -4,36 +4,36 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { Button } from './button'
 import { ChoiceAdBanner, CHOICE_AD_BANNER_HEIGHT } from './choice-ad-banner'
-import { FreebuffModelSelector } from './freebuff-model-selector'
+import { FreebuffModelSelector } from './freetier-model-selector'
 import { LimitedLandingPanel } from './limited-landing-panel'
 import { ShimmerText } from './shimmer-text'
 import {
   refreshFreebuffLandingMetadata,
   takeOverFreebuffSession,
-} from '../hooks/use-freebuff-session'
-import { useFreebuffCtrlCExit } from '../hooks/use-freebuff-ctrl-c-exit'
+} from '../hooks/use-freetier-session'
+import { useFreebuffCtrlCExit } from '../hooks/use-freetier-ctrl-c-exit'
 import { useGravityAd } from '../hooks/use-gravity-ad'
 import { useLogo } from '../hooks/use-logo'
 import { useNow } from '../hooks/use-now'
 import { useSheenAnimation } from '../hooks/use-sheen-animation'
 import { useTerminalDimensions } from '../hooks/use-terminal-dimensions'
 import { useTheme } from '../hooks/use-theme'
-import { exitFreebuffCleanly } from '../utils/freebuff-exit'
+import { exitFreebuffCleanly } from '../utils/freetier-exit'
 import {
   formatFreebuffPremiumResetCountdown,
   getFreebuffPremiumResetAt,
-} from '../utils/freebuff-premium-reset'
+} from '../utils/freetier-premium-reset'
 import { formatSessionUnits } from '../utils/format-session-units'
 import { getLogoAccentColor, getLogoBlockColor } from '../utils/theme-system'
 import {
   FREEBUFF_LIMITED_SESSION_LIMIT,
   FREEBUFF_PREMIUM_SESSION_LIMIT,
-} from '@nexus/common/constants/freebuff-models'
-import { getRateLimitsByModel } from '@nexus/common/types/freebuff-session'
-import { formatFreebuffHardBlockedPrivacySignals } from '@nexus/common/util/freebuff-privacy'
+} from '@nexus/common/constants/freetier-models'
+import { getRateLimitsByModel } from '@nexus/common/types/freetier-session'
+import { formatFreebuffHardBlockedPrivacySignals } from '@nexus/common/util/freetier-privacy'
 
-import type { FreebuffSessionResponse } from '../types/freebuff-session'
-import type { FreebuffIpPrivacySignal } from '@nexus/common/types/freebuff-session'
+import type { FreebuffSessionResponse } from '../types/freetier-session'
+import type { FreebuffIpPrivacySignal } from '@nexus/common/types/freetier-session'
 import type { KeyEvent } from '@opentui/core'
 
 interface WaitingRoomScreenProps {

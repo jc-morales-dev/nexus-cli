@@ -1,4 +1,4 @@
-import { getRateLimitsByModel } from '@nexus/common/types/freebuff-session'
+import { getRateLimitsByModel } from '@nexus/common/types/freetier-session'
 import { TextAttributes } from '@opentui/core'
 import { useKeyboard } from '@opentui/react'
 import React, { useCallback, useState } from 'react'
@@ -7,9 +7,9 @@ import { Button } from './button'
 import {
   refreshFreebuffSession,
   returnToFreebuffLanding,
-} from '../hooks/use-freebuff-session'
+} from '../hooks/use-freetier-session'
 import { useTheme } from '../hooks/use-theme'
-import { useFreebuffSessionStore } from '../state/freebuff-session-store'
+import { useFreebuffSessionStore } from '../state/freetier-session-store'
 import { formatSessionUnits } from '../utils/format-session-units'
 import { isPlainEnterKey } from '../utils/terminal-enter-detection'
 import { BORDER_CHARS } from '../utils/ui-constants'

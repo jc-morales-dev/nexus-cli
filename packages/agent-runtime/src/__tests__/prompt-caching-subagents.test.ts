@@ -9,7 +9,7 @@ import { loopAgentSteps } from '../run-agent-step'
 
 import type { AgentTemplate } from '../templates/types'
 import type { ParamsExcluding } from '@nexus/common/types/function-params'
-import type { Message } from '@nexus/common/types/messages/codebuff-message'
+import type { Message } from '@nexus/common/types/messages/nexus-message'
 import type { TextPart } from '@nexus/common/types/messages/content-part'
 import type { ProjectFileContext } from '@nexus/common/util/file'
 

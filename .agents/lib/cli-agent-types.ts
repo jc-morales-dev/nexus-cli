@@ -45,7 +45,7 @@ export interface CliAgentConfig {
   cliSpecificDocs?: string
   /** 
    * If true, skips the preparation phase before starting the tmux session.
-   * Use this for agents that test the CLI itself (like codebuff-local-cli)
+   * Use this for agents that test the CLI itself (like nexus-local-cli)
    * rather than external tools that need context gathering.
    */
   skipPrepPhase?: boolean

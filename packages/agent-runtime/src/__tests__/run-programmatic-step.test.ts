@@ -35,7 +35,7 @@ import type {
 import type { SendActionFn } from '@nexus/common/types/contracts/client'
 import type { Logger } from '@nexus/common/types/contracts/logger'
 import type { ParamsOf } from '@nexus/common/types/function-params'
-import type { ToolMessage } from '@nexus/common/types/messages/codebuff-message'
+import type { ToolMessage } from '@nexus/common/types/messages/nexus-message'
 import type { ToolResultOutput } from '@nexus/common/types/messages/content-part'
 import type { AgentState } from '@nexus/common/types/session-state'
 

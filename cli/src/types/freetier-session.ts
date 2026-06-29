@@ -1,6 +1,6 @@
-export type { FreebuffSessionServerResponse } from '@nexus/common/types/freebuff-session'
+export type { FreebuffSessionServerResponse } from '@nexus/common/types/freetier-session'
 
-import type { FreebuffSessionServerResponse } from '@nexus/common/types/freebuff-session'
+import type { FreebuffSessionServerResponse } from '@nexus/common/types/freetier-session'
 
 /**
  * CLI session shape. Most states are wire-level `/api/v1/freebuff/session`

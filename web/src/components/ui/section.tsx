@@ -46,7 +46,7 @@ export function Section({
   const isMobile = useIsMobile()
 
   const content = contained ? (
-    <div className={cn('codebuff-container relative z-10', containerClassName)}>
+    <div className={cn('nexus-container relative z-10', containerClassName)}>
       {children}
     </div>
   ) : (

@@ -47,7 +47,7 @@ import type { ToolName } from '@nexus/common/tools/constants'
 import type { PublishedClientToolName } from '@nexus/common/tools/list'
 import type { Logger } from '@nexus/common/types/contracts/logger'
 import type { CodebuffFileSystem } from '@nexus/common/types/filesystem'
-import type { ToolMessage } from '@nexus/common/types/messages/codebuff-message'
+import type { ToolMessage } from '@nexus/common/types/messages/nexus-message'
 import type {
   ImagePart,
   TextPart,

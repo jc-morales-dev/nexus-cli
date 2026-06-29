@@ -139,10 +139,10 @@ describe('/api/v1/feedback POST endpoint', () => {
       expect(response.status).toBe(200)
     })
 
-    test('accepts x-codebuff-api-key header', async () => {
+    test('accepts x-nexus-api-key header', async () => {
       const req = new NextRequest('http://localhost:3000/api/v1/feedback', {
         method: 'POST',
-        headers: { 'x-codebuff-api-key': 'test-api-key-123' },
+        headers: { 'x-nexus-api-key': 'test-api-key-123' },
         body: JSON.stringify(validFeedbackBody),
       })
 

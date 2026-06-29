@@ -19,7 +19,7 @@ import {
   logoutUser,
 } from '../../utils/auth'
 import * as AuthModule from '../../utils/auth'
-import * as CodebuffApiModule from '../../utils/codebuff-api'
+import * as CodebuffApiModule from '../../utils/nexus-api'
 
 type User = AuthModule.User
 

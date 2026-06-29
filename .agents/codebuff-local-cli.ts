@@ -3,10 +3,10 @@ import { createCliAgent } from './lib/create-cli-agent'
 import type { AgentDefinition } from './types/agent-definition'
 
 const baseDefinition = createCliAgent({
-  id: 'codebuff-local-cli',
+  id: 'nexus-local-cli',
   displayName: 'Codebuff Local CLI',
   cliName: 'Codebuff',
-  shortName: 'codebuff-local',
+  shortName: 'nexus-local',
   startCommand: 'bun --cwd=cli run dev',
   permissionNote:
     'No permission flags needed for Codebuff local dev server.',

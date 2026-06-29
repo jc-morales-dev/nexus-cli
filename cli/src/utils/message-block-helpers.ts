@@ -1,6 +1,6 @@
 import { isEqual } from 'lodash'
 
-import { formatToolOutput } from './codebuff-client'
+import { formatToolOutput } from './nexus-client'
 import { shouldCollapseByDefault, shouldCollapseForParent } from './constants'
 
 import type {

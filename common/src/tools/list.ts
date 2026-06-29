@@ -39,7 +39,7 @@ import { writeFileParams } from './params/tool/write-file'
 import { writeTodosParams } from './params/tool/write-todos'
 
 import type { $ToolParams, PublishedToolName, ToolName } from './constants'
-import type { ToolMessage } from '../types/messages/codebuff-message'
+import type { ToolMessage } from '../types/messages/nexus-message'
 import type { ToolCallPart } from '../types/messages/content-part'
 
 export const toolParams = {

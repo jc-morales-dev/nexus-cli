@@ -16,6 +16,7 @@ import os from 'os'
 import path from 'path'
 
 import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
+import { isByokDirectMode } from '@nexus/common/constants/byok'
 import { getProjectFileTree } from '@nexus/common/project-file-tree'
 import { createCliRenderer } from '@opentui/core'
 import { createRoot } from '@opentui/react'
@@ -373,6 +374,15 @@ async function main(): Promise<void> {
       React.useState(showProjectPicker)
 
     React.useEffect(() => {
+      // NEXUS is an account-less, BYOK tool: in BYOK mode (NEXUS_MODE / a
+      // provider key set by the pre-init) we never show the Nexus login. This
+      // doesn't depend on the dummy auth token, so account-less boot is robust.
+      if (isByokDirectMode()) {
+        setRequireAuth(false)
+        setHasInvalidCredentials(false)
+        return
+      }
+
       const apiKey = getAuthTokenDetails().token ?? ''
 
       if (!apiKey) {

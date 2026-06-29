@@ -6,7 +6,7 @@ import { eq, inArray, sql } from 'drizzle-orm'
 
 const args = process.argv.slice(2).filter((a) => !a.startsWith('--'))
 const BAN_FILE =
-  args[0] ?? '/Users/jahooma/codebuff/debug/freebuff-ban-candidates.txt'
+  args[0] ?? '/Users/jahooma/codebuff/debug/freetier-ban-candidates.txt'
 const DRY_RUN = !process.argv.includes('--commit')
 
 function parseEmails(path: string): string[] {

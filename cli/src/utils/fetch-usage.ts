@@ -1,9 +1,9 @@
 import { getAuthToken } from './auth'
-import { getApiClient } from './codebuff-api'
+import { getApiClient } from './nexus-api'
 import { logger } from './logger'
 import { useChatStore } from '../state/chat-store'
 
-import type { CodebuffApiClient } from './codebuff-api'
+import type { CodebuffApiClient } from './nexus-api'
 import type { Logger } from '@nexus/common/types/contracts/logger'
 
 export interface FetchAndUpdateUsageParams {

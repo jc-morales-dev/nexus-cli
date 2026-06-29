@@ -9,7 +9,7 @@ import {
 } from 'bun:test'
 
 import { createMockApiClient } from '../../__tests__/helpers/mock-api-client'
-import * as CodebuffApiModule from '../../utils/codebuff-api'
+import * as CodebuffApiModule from '../../utils/nexus-api'
 import { fetchUserDetails } from '../use-user-details-query'
 
 import type { Logger } from '@nexus/common/types/contracts/logger'

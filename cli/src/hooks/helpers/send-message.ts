@@ -5,7 +5,7 @@ import {
   markFreebuffSessionEnded,
   markFreebuffSessionSuperseded,
   refreshFreebuffSession,
-} from '../use-freebuff-session'
+} from '../use-freetier-session'
 import { getProjectRoot } from '../../project-files'
 import { useChatStore } from '../../state/chat-store'
 import { IS_FREEBUFF } from '../../utils/constants'

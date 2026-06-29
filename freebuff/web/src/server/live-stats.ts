@@ -1,4 +1,4 @@
-import { SUPPORTED_FREEBUFF_MODELS } from '@nexus/common/constants/freebuff-models'
+import { SUPPORTED_FREEBUFF_MODELS } from '@nexus/common/constants/freetier-models'
 import { db } from '@nexus/internal/db'
 import * as schema from '@nexus/internal/db/schema'
 import { and, count, eq, gt, sql } from 'drizzle-orm'

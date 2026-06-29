@@ -2,7 +2,7 @@ import { describe, test, expect, beforeEach, mock } from 'bun:test'
 
 import { fetchAndUpdateUsage } from '../fetch-usage'
 
-import type { CodebuffApiClient } from '../codebuff-api'
+import type { CodebuffApiClient } from '../nexus-api'
 import type { FetchAndUpdateUsageParams } from '../fetch-usage'
 import type { Logger } from '@nexus/common/types/contracts/logger'
 

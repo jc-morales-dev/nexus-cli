@@ -15,7 +15,7 @@ import { type ToolSet } from 'ai'
 import { cloneDeep, mapValues } from 'lodash'
 
 import { CACHE_DEBUG_FULL_LOGGING } from './constants'
-import { callTokenCountAPI } from './llm-api/codebuff-web-api'
+import { callTokenCountAPI } from './llm-api/nexus-web-api'
 import { getMCPToolData } from './mcp'
 import { getAgentStreamFromTemplate } from './prompt-agent-stream'
 import { runProgrammaticStep } from './run-programmatic-step'
@@ -70,7 +70,7 @@ import type { ParamsExcluding } from '@nexus/common/types/function-params'
 import type {
   Message,
   ToolMessage,
-} from '@nexus/common/types/messages/codebuff-message'
+} from '@nexus/common/types/messages/nexus-message'
 import type {
   TextPart,
   ImagePart,

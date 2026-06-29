@@ -28,7 +28,7 @@ describe('Composio SDK tools', () => {
       async (_url: string | URL | Request, init?: RequestInit) => {
         expect(init?.method).toBe('POST')
         expect(init?.headers).toEqual({
-          Authorization: 'Bearer codebuff-api-key',
+          Authorization: 'Bearer nexus-api-key',
           'Content-Type': 'application/json',
         })
         expect(JSON.parse(String(init?.body))).toEqual({
@@ -49,7 +49,7 @@ describe('Composio SDK tools', () => {
     globalThis.fetch = fetchMock as unknown as typeof fetch
 
     const output = await executeComposioToolViaServer({
-      apiKey: 'codebuff-api-key',
+      apiKey: 'nexus-api-key',
       toolName: 'composio_search_tools',
       input: {
         queries: ['find gmail tools'],
@@ -67,7 +67,7 @@ describe('Composio SDK tools', () => {
     ) as unknown as typeof fetch
 
     const output = await executeComposioToolViaServer({
-      apiKey: 'codebuff-api-key',
+      apiKey: 'nexus-api-key',
       toolName: 'composio_search_tools',
       input: {
         queries: ['find gmail tools'],

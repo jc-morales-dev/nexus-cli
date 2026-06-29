@@ -2,14 +2,14 @@ import { isByokDirectMode } from '@nexus/common/constants/byok'
 import { useQuery } from '@tanstack/react-query'
 
 import { getAuthToken } from '../utils/auth'
-import { getApiClient, setApiClientAuthToken } from '../utils/codebuff-api'
+import { getApiClient, setApiClientAuthToken } from '../utils/nexus-api'
 import { logger as defaultLogger } from '../utils/logger'
 
 import type {
   CodebuffApiClient,
   UserField,
   UserDetails,
-} from '../utils/codebuff-api'
+} from '../utils/nexus-api'
 import type { Logger } from '@nexus/common/types/contracts/logger'
 
 // Re-export types for backwards compatibility

@@ -24,7 +24,7 @@ import {
 import * as tokenCounter from '../token-counter'
 
 import type { CodebuffToolMessage } from '@nexus/common/tools/list'
-import type { Message } from '@nexus/common/types/messages/codebuff-message'
+import type { Message } from '@nexus/common/types/messages/nexus-message'
 import type {
   TextPart,
   ToolCallPart,

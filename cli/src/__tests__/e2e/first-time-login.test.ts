@@ -8,7 +8,7 @@ import {
 } from '../../login/login-flow'
 import { createMockApiClient } from '../helpers/mock-api-client'
 
-import type { ApiResponse } from '../../utils/codebuff-api'
+import type { ApiResponse } from '../../utils/nexus-api'
 
 describe('First-Time Login Flow (helpers)', () => {
   test('generateLoginUrl posts fingerprint id and returns payload', async () => {

@@ -3,7 +3,7 @@ import { describe, expect, test } from 'bun:test'
 import {
   FREEBUFF_MODELS,
   SUPPORTED_FREEBUFF_MODELS,
-} from '@nexus/common/constants/freebuff-models'
+} from '@nexus/common/constants/freetier-models'
 
 import { getInstantAdmitCapacity } from '../config'
 

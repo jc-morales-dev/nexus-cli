@@ -80,7 +80,7 @@ describe.skipIf(!tmuxAvailable || !sdkBuilt)(
     test(
       'CLI starts and displays help output',
       async () => {
-        const sessionName = 'codebuff-test-' + Date.now()
+        const sessionName = 'nexus-test-' + Date.now()
 
         try {
           // Create session with --help flag and keep it alive with '; sleep 2'
@@ -126,7 +126,7 @@ describe.skipIf(!tmuxAvailable || !sdkBuilt)(
     test(
       'CLI accepts --agent flag',
       async () => {
-        const sessionName = 'codebuff-test-' + Date.now()
+        const sessionName = 'nexus-test-' + Date.now()
 
         try {
           // Start CLI with --agent flag (it will wait for input, so we can capture)

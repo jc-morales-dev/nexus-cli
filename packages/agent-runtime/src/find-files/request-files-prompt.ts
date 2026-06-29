@@ -21,7 +21,7 @@ import type { TextBlock } from '../llm-api/claude'
 import type { PromptAiSdkFn } from '@nexus/common/types/contracts/llm'
 import type { Logger } from '@nexus/common/types/contracts/logger'
 import type { ParamsExcluding } from '@nexus/common/types/function-params'
-import type { Message } from '@nexus/common/types/messages/codebuff-message'
+import type { Message } from '@nexus/common/types/messages/nexus-message'
 import type { ProjectFileContext } from '@nexus/common/util/file'
 
 const NUMBER_OF_EXAMPLE_FILES = 100

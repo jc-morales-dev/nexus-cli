@@ -1,7 +1,7 @@
 import {
   SUPPORTED_FREEBUFF_MODELS,
   isFreebuffModelAvailable,
-} from '@nexus/common/constants/freebuff-models'
+} from '@nexus/common/constants/freetier-models'
 
 import {
   ADMISSION_TICK_MS,

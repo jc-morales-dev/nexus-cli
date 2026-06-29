@@ -134,7 +134,7 @@ async function calculateEnhancedFingerprint(): Promise<string> {
  */
 function calculateLegacyFingerprint(): string {
   const randomSuffix = randomBytes(6).toString('base64url').substring(0, 8)
-  return `codebuff-cli-${randomSuffix}`
+  return `nexus-cli-${randomSuffix}`
 }
 
 /**
@@ -233,7 +233,7 @@ export function getFingerprintType(
   if (fingerprintId.startsWith('enhanced-')) {
     return 'enhanced_cli'
   }
-  if (fingerprintId.startsWith('codebuff-cli-') || fingerprintId.startsWith('legacy-')) {
+  if (fingerprintId.startsWith('nexus-cli-') || fingerprintId.startsWith('legacy-')) {
     return 'legacy'
   }
   return 'unknown'

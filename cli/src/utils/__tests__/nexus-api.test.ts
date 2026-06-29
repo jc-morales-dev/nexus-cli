@@ -2,7 +2,7 @@ import { describe, test, expect, mock, beforeEach } from 'bun:test'
 
 import type { FeedbackRequest } from '@nexus/common/schemas/feedback'
 
-import { createCodebuffApiClient } from '../codebuff-api'
+import { createCodebuffApiClient } from '../nexus-api'
 
 // Type for mocked fetch function
 type MockFetch = (url: string, options?: RequestInit) => Promise<Response>

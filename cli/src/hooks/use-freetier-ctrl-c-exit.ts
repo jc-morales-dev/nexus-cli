@@ -1,7 +1,7 @@
 import { useKeyboard } from '@opentui/react'
 import { useCallback } from 'react'
 
-import { exitFreebuffCleanly } from '../utils/freebuff-exit'
+import { exitFreebuffCleanly } from '../utils/freetier-exit'
 
 import type { KeyEvent } from '@opentui/core'
 

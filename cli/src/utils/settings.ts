@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 
-import { isFreebuffModelId } from '@nexus/common/constants/freebuff-models'
+import { isFreebuffModelId } from '@nexus/common/constants/freetier-models'
 
 import { getConfigDir } from './auth'
 import { AGENT_MODES } from './constants'

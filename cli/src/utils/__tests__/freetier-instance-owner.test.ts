@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
 
 import { ensureCliTestEnv } from '../../__tests__/test-utils'
 
-const OWNER_FILE = 'freebuff-instance-owner.json'
+const OWNER_FILE = 'freetier-instance-owner.json'
 
 ensureCliTestEnv()
 
@@ -14,7 +14,7 @@ const { getConfigDir } = await import('../auth')
 const {
   isFreebuffInstanceOwnedByDeadLocalProcess,
   recordFreebuffInstanceOwner,
-} = await import('../freebuff-instance-owner')
+} = await import('../freetier-instance-owner')
 
 describe('freebuff instance owner', () => {
   let originalHome: string | undefined
@@ -24,7 +24,7 @@ describe('freebuff instance owner', () => {
 
   beforeEach(() => {
     originalHome = process.env.HOME
-    tempHome = fs.mkdtempSync(path.join(os.tmpdir(), 'freebuff-owner-'))
+    tempHome = fs.mkdtempSync(path.join(os.tmpdir(), 'freetier-owner-'))
     process.env.HOME = tempHome
   })
 

@@ -15,7 +15,7 @@ import type { StreamChunk } from '@nexus/common/types/contracts/llm'
 import type {
   AssistantMessage,
   Message,
-} from '@nexus/common/types/messages/codebuff-message'
+} from '@nexus/common/types/messages/nexus-message'
 import type { PromptResult } from '@nexus/common/util/error'
 
 describe.skipIf(!INCLUDE_REASONING_IN_MESSAGE_HISTORY)('stream parser reasoning history', () => {

@@ -1,7 +1,7 @@
 import { WEBSITE_URL } from '@nexus/sdk'
 
 import { getUserCredentials } from '../utils/auth'
-import { getApiClient, setApiClientAuthToken } from '../utils/codebuff-api'
+import { getApiClient, setApiClientAuthToken } from '../utils/nexus-api'
 import { loadAgentDefinitions, getLoadedAgentsData } from '../utils/local-agent-registry'
 
 import type {

@@ -20,18 +20,18 @@ describe('fingerprint utilities', () => {
     })
 
     describe('legacy fingerprints', () => {
-      test('should detect codebuff-cli- prefix as legacy', () => {
-        expect(getFingerprintType('codebuff-cli-abc12345')).toBe('legacy')
+      test('should detect nexus-cli- prefix as legacy', () => {
+        expect(getFingerprintType('nexus-cli-abc12345')).toBe('legacy')
       })
 
       test('should detect legacy- prefix as legacy', () => {
         expect(getFingerprintType('legacy-abc123-xyz789')).toBe('legacy')
       })
 
-      test('should detect codebuff-cli- prefix with any suffix', () => {
-        expect(getFingerprintType('codebuff-cli-')).toBe('legacy')
-        expect(getFingerprintType('codebuff-cli-randomsuffix')).toBe('legacy')
-        expect(getFingerprintType('codebuff-cli-12345678')).toBe('legacy')
+      test('should detect nexus-cli- prefix with any suffix', () => {
+        expect(getFingerprintType('nexus-cli-')).toBe('legacy')
+        expect(getFingerprintType('nexus-cli-randomsuffix')).toBe('legacy')
+        expect(getFingerprintType('nexus-cli-12345678')).toBe('legacy')
       })
 
       test('should detect legacy- prefix with any suffix', () => {
@@ -52,12 +52,12 @@ describe('fingerprint utilities', () => {
       test('should return unknown for partial matches', () => {
         // Should not match if prefix is incomplete
         expect(getFingerprintType('enhance-abc123')).toBe('unknown')
-        expect(getFingerprintType('codebuff-abc123')).toBe('unknown')
+        expect(getFingerprintType('nexus-abc123')).toBe('unknown')
         expect(getFingerprintType('lega-abc123')).toBe('unknown')
       })
 
       test('should return unknown for SDK fingerprints', () => {
-        expect(getFingerprintType('codebuff-sdk-abc123')).toBe('unknown')
+        expect(getFingerprintType('nexus-sdk-abc123')).toBe('unknown')
       })
 
       test('should return unknown for random strings', () => {
@@ -77,20 +77,20 @@ describe('fingerprint utilities', () => {
 
   describe('generateFingerprintIdSync', () => {
     describe('format validation', () => {
-      test('should return string starting with codebuff-cli-', () => {
+      test('should return string starting with nexus-cli-', () => {
         const fingerprint = generateFingerprintIdSync()
-        expect(fingerprint.startsWith('codebuff-cli-')).toBe(true)
+        expect(fingerprint.startsWith('nexus-cli-')).toBe(true)
       })
 
       test('should return fingerprint of expected length', () => {
         const fingerprint = generateFingerprintIdSync()
-        // Format: codebuff-cli- (13 chars) + 8 random chars = 21 chars
+        // Format: nexus-cli- (13 chars) + 8 random chars = 21 chars
         expect(fingerprint.length).toBe(21)
       })
 
       test('should contain only valid base64url characters in suffix', () => {
         const fingerprint = generateFingerprintIdSync()
-        const suffix = fingerprint.replace('codebuff-cli-', '')
+        const suffix = fingerprint.replace('nexus-cli-', '')
         // base64url alphabet: A-Z, a-z, 0-9, -, _
         const base64urlPattern = /^[A-Za-z0-9_-]+$/
         expect(base64urlPattern.test(suffix)).toBe(true)
@@ -98,7 +98,7 @@ describe('fingerprint utilities', () => {
 
       test('should have exactly 8 characters in the random suffix', () => {
         const fingerprint = generateFingerprintIdSync()
-        const suffix = fingerprint.replace('codebuff-cli-', '')
+        const suffix = fingerprint.replace('nexus-cli-', '')
         expect(suffix.length).toBe(8)
       })
     })

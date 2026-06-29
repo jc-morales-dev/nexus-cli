@@ -47,7 +47,7 @@ export default function HomeClient() {
       <Section background={SECTION_THEMES.hero.background} hero fullViewport>
         <div
           className={cn(
-            'codebuff-container min-h-full flex flex-col transition-all duration-1000',
+            'nexus-container min-h-full flex flex-col transition-all duration-1000',
           )}
         >
           <div className={cn('w-full mb-8 md:mb-12 flex-shrink-0')}>
@@ -123,7 +123,7 @@ export default function HomeClient() {
               >
                 <div className="bg-zinc-900/50 border-2 border-green-500/30 rounded-xl p-8 shadow-2xl shadow-green-500/10">
                   <Image
-                    src="/codebuff-vs-claude-code.png"
+                    src="/nexus-vs-claude-code.png"
                     alt="Codebuff vs Claude Code Performance Comparison"
                     width={800}
                     height={600}

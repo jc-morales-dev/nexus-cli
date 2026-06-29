@@ -5,7 +5,7 @@ import { defineToolComponent } from './types'
 import { useTerminalDimensions } from '../../hooks/use-terminal-dimensions'
 import { useTheme } from '../../hooks/use-theme'
 import { getLatestFollowupToolCallId, useChatStore } from '../../state/chat-store'
-import { useFreebuffSessionStore } from '../../state/freebuff-session-store'
+import { useFreebuffSessionStore } from '../../state/freetier-session-store'
 import { IS_FREEBUFF } from '../../utils/constants'
 import { Button } from '../button'
 

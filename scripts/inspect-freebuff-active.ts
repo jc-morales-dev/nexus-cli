@@ -11,7 +11,7 @@
  *
  * Heuristic red flags are printed next to each user.
  *
- * usage:  bun scripts/inspect-freebuff-active.ts
+ * usage:  bun scripts/inspect-freetier-active.ts
  */
 
 import { FREEBUFF_ROOT_AGENT_IDS } from '@nexus/common/constants/free-agents'

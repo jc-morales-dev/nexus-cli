@@ -31,7 +31,7 @@ export class CodebuffClient {
           )
         }
       },
-      fingerprintId: `codebuff-sdk-${Math.random().toString(36).substring(2, 15)}`,
+      fingerprintId: `nexus-sdk-${Math.random().toString(36).substring(2, 15)}`,
       ...options,
     }
   }

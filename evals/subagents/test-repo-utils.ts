@@ -22,7 +22,7 @@ export const withTestRepo = async <T>(
   const { repoUrl, parentSha, initCommand, env } = repoConfig
 
   // Create a temporary directory for the test repo
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'codebuff-eval-'))
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'nexus-eval-'))
   const repoDir = path.join(tempDir, 'repo')
 
   try {
@@ -71,7 +71,7 @@ export const withTestRepoAndParent = async <T>(
 ): Promise<T | null> => {
   const { repoUrl, commitSha, initCommand } = repoConfig
 
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'codebuff-eval-'))
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'nexus-eval-'))
   const repoDir = path.join(tempDir, 'repo')
 
   try {

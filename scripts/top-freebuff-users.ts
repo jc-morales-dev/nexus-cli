@@ -67,7 +67,7 @@ async function topFreebuffUsers() {
   if (results.length === 0) {
     console.log(`No ${agentId} messages found in this time range.`)
     console.log('\nTip: Run with a different agent_id as the 4th argument, e.g.:')
-    console.log('  bun run scripts/top-freebuff-users.ts 168 50 claude-sonnet-4-20250514')
+    console.log('  bun run scripts/top-freetier-users.ts 168 50 claude-sonnet-4-20250514')
     return
   }
 

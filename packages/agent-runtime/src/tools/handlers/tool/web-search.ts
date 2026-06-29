@@ -1,7 +1,7 @@
 import { isByokDirectMode } from '@nexus/common/constants/byok'
 import { jsonToolResult } from '@nexus/common/util/messages'
 
-import { callWebSearchAPI } from '../../../llm-api/codebuff-web-api'
+import { callWebSearchAPI } from '../../../llm-api/nexus-web-api'
 import { keylessWebSearch } from '../../../llm-api/keyless-web-search'
 
 import type { CodebuffToolHandlerFunction } from '../handler-function-type'

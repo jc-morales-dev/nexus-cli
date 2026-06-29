@@ -1,7 +1,7 @@
 /**
  * Pure bot-suspect identifier that powers the hourly bot-sweep admin endpoint.
  *
- * Mirrors the heuristics from scripts/inspect-freebuff-active.ts: queries every
+ * Mirrors the heuristics from scripts/inspect-freetier-active.ts: queries every
  * current free_session row, joins message stats and account metadata, and
  * returns a ranked list of suspects grouped into tiers.
  *
@@ -482,7 +482,7 @@ async function fetchGithubCreatedAt(
     const headers: Record<string, string> = {
       Accept: 'application/vnd.github+json',
       'X-GitHub-Api-Version': '2022-11-28',
-      'User-Agent': 'codebuff-bot-sweep',
+      'User-Agent': 'nexus-bot-sweep',
     }
     if (env.BOT_SWEEP_GITHUB_TOKEN) {
       headers.Authorization = `Bearer ${env.BOT_SWEEP_GITHUB_TOKEN}`
@@ -599,8 +599,8 @@ export function formatSweepReport(report: SweepReport): {
 
   lines.push('DRY RUN — this report does not ban anyone.')
   lines.push(
-    'To ban: edit .context/freebuff-ban-candidates.txt, then run ' +
-      '`infisical run --env=prod -- bun scripts/ban-freebuff-bots.ts <path> --commit`',
+    'To ban: edit .context/freetier-ban-candidates.txt, then run ' +
+      '`infisical run --env=prod -- bun scripts/ban-freetier-bots.ts <path> --commit`',
   )
 
   return { subject, message: lines.join('\n') }

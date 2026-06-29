@@ -1,4 +1,4 @@
-import { getFreebuffModel } from '@nexus/common/constants/freebuff-models'
+import { getFreebuffModel } from '@nexus/common/constants/freetier-models'
 import { TextAttributes } from '@opentui/core'
 import React, { useEffect, useState } from 'react'
 
@@ -6,11 +6,11 @@ import { Button } from './button'
 import { ScrollToBottomButton } from './scroll-to-bottom-button'
 import { ShimmerText } from './shimmer-text'
 
-import { useFreebuffSessionProgress } from '../hooks/use-freebuff-session-progress'
+import { useFreebuffSessionProgress } from '../hooks/use-freetier-session-progress'
 import { useTheme } from '../hooks/use-theme'
 import { formatElapsedTime } from '../utils/format-elapsed-time'
 
-import type { FreebuffSessionResponse } from '../types/freebuff-session'
+import type { FreebuffSessionResponse } from '../types/freetier-session'
 import type { StatusIndicatorState } from '../utils/status-indicator-state'
 
 /** A small status-bar action button with hover-bold styling. */

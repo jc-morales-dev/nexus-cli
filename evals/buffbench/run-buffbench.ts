@@ -274,7 +274,7 @@ function installBinaries(binInstalls: EvalDataV2['binInstalls']): {
     return { tempDir: null, env: {} }
   }
 
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'codebuff-bins-'))
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'nexus-bins-'))
 
   const binPaths: string[] = []
 

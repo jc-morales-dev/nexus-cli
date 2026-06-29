@@ -3,7 +3,7 @@ import { describe, expect, test } from 'bun:test'
 import {
   formatFreebuffPremiumResetCountdown,
   getFreebuffPremiumResetAt,
-} from '../freebuff-premium-reset'
+} from '../freetier-premium-reset'
 
 describe('freebuff premium reset helpers', () => {
   test('uses server resetAt when it is in the future', () => {

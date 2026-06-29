@@ -1,7 +1,7 @@
 import { TextAttributes } from '@opentui/core'
 import React from 'react'
 
-import { useFreebuffCtrlCExit } from '../hooks/use-freebuff-ctrl-c-exit'
+import { useFreebuffCtrlCExit } from '../hooks/use-freetier-ctrl-c-exit'
 import { useLogo } from '../hooks/use-logo'
 import { useTerminalDimensions } from '../hooks/use-terminal-dimensions'
 import { useTheme } from '../hooks/use-theme'

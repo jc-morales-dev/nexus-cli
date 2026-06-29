@@ -26,7 +26,7 @@ import type { ParamsExcluding } from '@nexus/common/types/function-params'
 import type {
   Message,
   ToolMessage,
-} from '@nexus/common/types/messages/codebuff-message'
+} from '@nexus/common/types/messages/nexus-message'
 import type { PrintModeEvent } from '@nexus/common/types/print-mode'
 import type { Subgoal } from '@nexus/common/types/session-state'
 import type { ProjectFileContext } from '@nexus/common/util/file'

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { formatFreebuffHardBlockedMessage } from '@nexus/common/util/freebuff-privacy'
+import { formatFreebuffHardBlockedMessage } from '@nexus/common/util/freetier-privacy'
 import { env } from '@nexus/internal/env'
 
 import {
@@ -136,9 +136,9 @@ async function endSessionForHardBlock(
 
 /** Header the CLI uses to identify which instance is polling. Used by GET to
  *  detect when another CLI on the same account has rotated the id. */
-export const FREEBUFF_INSTANCE_HEADER = 'x-freebuff-instance-id'
+export const FREEBUFF_INSTANCE_HEADER = 'x-freetier-instance-id'
 /** Header the CLI sends on POST to pick which model's queue to join. */
-export const FREEBUFF_MODEL_HEADER = 'x-freebuff-model'
+export const FREEBUFF_MODEL_HEADER = 'x-freetier-model'
 
 export interface FreebuffSessionDeps {
   getUserInfoFromApiKey: GetUserInfoFromApiKeyFn

@@ -9,7 +9,7 @@ interface FreebuffInstanceOwner {
   pid: number
 }
 
-const OWNER_FILE = 'freebuff-instance-owner.json'
+const OWNER_FILE = 'freetier-instance-owner.json'
 
 const getOwnerPath = (): string => path.join(getConfigDir(), OWNER_FILE)
 
@@ -52,7 +52,7 @@ export function recordFreebuffInstanceOwner(instanceId: string): void {
   } catch (error) {
     logger.debug(
       { error: error instanceof Error ? error.message : String(error) },
-      '[freebuff-session] Failed to record local owner',
+      '[freetier-session] Failed to record local owner',
     )
   }
 }

@@ -30,7 +30,7 @@ import type { CustomToolDefinition } from './custom-tool'
 import type { AgentDefinition } from '@nexus/common/templates/initial-agents-dir/types/agent-definition'
 import type { Logger } from '@nexus/common/types/contracts/logger'
 import type { CodebuffFileSystem } from '@nexus/common/types/filesystem'
-import type { Message } from '@nexus/common/types/messages/codebuff-message'
+import type { Message } from '@nexus/common/types/messages/nexus-message'
 import type {
   AgentOutput,
   SessionState,

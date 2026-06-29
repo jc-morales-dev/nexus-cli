@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { getCurrentChatId } from '../project-files'
 import { flushAnalytics } from '../utils/analytics'
 import { IS_FREEBUFF } from '../utils/constants'
-import { exitFreebuffCleanly } from '../utils/freebuff-exit'
+import { exitFreebuffCleanly } from '../utils/freetier-exit'
 import { withTimeout } from '../utils/terminal-color-detection'
 
 import type { InputValue } from '../types/store'

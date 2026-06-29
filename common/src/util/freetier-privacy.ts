@@ -1,4 +1,4 @@
-import type { FreebuffIpPrivacySignal } from '../types/freebuff-session'
+import type { FreebuffIpPrivacySignal } from '../types/freetier-session'
 
 export const FREEBUFF_HARD_BLOCKED_PRIVACY_SIGNALS = [
   'vpn',

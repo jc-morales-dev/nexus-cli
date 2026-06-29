@@ -9,7 +9,7 @@ import { handleInitializationFlowLocally } from './init'
 import { buildInterviewPrompt, buildPlanPrompt, buildReviewPromptFromArgs } from './prompt-builders'
 import { runBashCommand } from './router'
 import { handleUsageCommand } from './usage'
-import { returnToFreebuffLanding } from '../hooks/use-freebuff-session'
+import { returnToFreebuffLanding } from '../hooks/use-freetier-session'
 import { useThemeStore } from '../hooks/use-theme'
 import { WEBSITE_URL } from '../login/constants'
 import { useChatStore } from '../state/chat-store'
@@ -19,7 +19,7 @@ import { getChatGptOAuthStatus } from '../utils/chatgpt-oauth'
 import { AGENT_MODES, END_SESSION_MESSAGE, IS_FREEBUFF } from '../utils/constants'
 import { getSystemMessage, getUserMessage } from '../utils/message-history'
 import { capturePendingAttachments } from '../utils/pending-attachments'
-import { resetCodebuffClient } from '../utils/codebuff-client'
+import { resetCodebuffClient } from '../utils/nexus-client'
 import {
   saveOpenRouterApiKey,
   clearOpenRouterApiKey,
@@ -753,7 +753,7 @@ const ALL_COMMANDS: CommandDefinition[] = [
       clearInput(params)
     },
   }),
-  // /end-session (freebuff-only) — end the active session early and drop back
+  // /end-session (freetier-only) — end the active session early and drop back
   // to the model picker. The hook flips status to 'none', which unmounts
   // <Chat> and mounts <WaitingRoomScreen> on the landing view, where the
   // user picks a model and hits Enter to rejoin the queue.

@@ -12,7 +12,7 @@ import type {
   AgentRuntimeScopedDeps,
 } from '@nexus/common/types/contracts/agent-runtime'
 import type { StreamChunk } from '@nexus/common/types/contracts/llm'
-import type { AssistantMessage } from '@nexus/common/types/messages/codebuff-message'
+import type { AssistantMessage } from '@nexus/common/types/messages/nexus-message'
 import type { PromptResult } from '@nexus/common/util/error'
 
 describe('stream parser abort handling', () => {

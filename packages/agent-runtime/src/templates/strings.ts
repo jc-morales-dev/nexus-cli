@@ -18,7 +18,7 @@ import type { ParamsExcluding } from '@nexus/common/types/function-params'
 import type {
   Message,
   UserMessage,
-} from '@nexus/common/types/messages/codebuff-message'
+} from '@nexus/common/types/messages/nexus-message'
 import type { TextPart } from '@nexus/common/types/messages/content-part'
 import type {
   AgentState,

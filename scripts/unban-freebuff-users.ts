@@ -1,9 +1,9 @@
 /**
- * Reverse of ban-freebuff-bots.ts: sets banned=false for users listed in a
+ * Reverse of ban-freetier-bots.ts: sets banned=false for users listed in a
  * file. Does NOT restore free_session rows (those rebuild themselves on the
  * next CLI /session request).
  *
- * usage:   bun scripts/unban-freebuff-users.ts <path> [--commit]
+ * usage:   bun scripts/unban-freetier-users.ts <path> [--commit]
  */
 
 import { readFileSync } from 'fs'
@@ -17,7 +17,7 @@ const FILE = args[0]
 const DRY_RUN = !process.argv.includes('--commit')
 
 if (!FILE) {
-  console.error('usage: bun scripts/unban-freebuff-users.ts <path> [--commit]')
+  console.error('usage: bun scripts/unban-freetier-users.ts <path> [--commit]')
   process.exit(1)
 }
 

@@ -26,7 +26,7 @@ import type {
   FreebuffPrivacyProviderDecision,
   FreebuffScamalyticsStatus,
   FreebuffSpurStatus,
-} from '@nexus/common/types/freebuff-session'
+} from '@nexus/common/types/freetier-session'
 
 export const ReferralStatus = pgEnum('referral_status', [
   ReferralStatusValues[0],

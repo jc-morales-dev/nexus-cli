@@ -7,7 +7,7 @@ import {
 } from '@nexus/common/util/cache-debug'
 import type { CacheDebugUsageData } from '@nexus/common/types/contracts/llm'
 import type { Logger } from '@nexus/common/types/contracts/logger'
-import type { Message } from '@nexus/common/types/messages/codebuff-message'
+import type { Message } from '@nexus/common/types/messages/nexus-message'
 import type { ProviderMetadata } from '@nexus/common/types/messages/provider-metadata'
 import type { JSONValue } from '@nexus/common/types/json'
 

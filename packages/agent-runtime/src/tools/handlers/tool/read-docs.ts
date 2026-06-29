@@ -1,6 +1,6 @@
 import { jsonToolResult } from '@nexus/common/util/messages'
 
-import { callDocsSearchAPI } from '../../../llm-api/codebuff-web-api'
+import { callDocsSearchAPI } from '../../../llm-api/nexus-web-api'
 
 import type { fetchContext7LibraryDocumentation } from '../../../llm-api/context7-api'
 import type { CodebuffToolHandlerFunction } from '../handler-function-type'

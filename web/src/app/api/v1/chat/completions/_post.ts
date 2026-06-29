@@ -5,7 +5,7 @@ import {
   FREEBUFF_GEMINI_PRO_MODEL_ID,
   isFreebuffModelAllowedForAccessTier,
   isSupportedFreebuffModelId,
-} from '@nexus/common/constants/freebuff-models'
+} from '@nexus/common/constants/freetier-models'
 import {
   isFreebuffGeminiThinkerAgent,
   isFreebuffRootAgent,
@@ -13,7 +13,7 @@ import {
   isFreeModeAllowedAgentModel,
 } from '@nexus/common/constants/free-agents'
 import { getErrorObject } from '@nexus/common/util/error'
-import { formatFreebuffHardBlockedMessage } from '@nexus/common/util/freebuff-privacy'
+import { formatFreebuffHardBlockedMessage } from '@nexus/common/util/freetier-privacy'
 import { pluralize } from '@nexus/common/util/string'
 import { env } from '@nexus/internal/env'
 import { NextResponse } from 'next/server'

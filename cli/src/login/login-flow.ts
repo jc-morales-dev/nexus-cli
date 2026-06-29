@@ -1,9 +1,9 @@
-import { createCodebuffApiClient } from '../utils/codebuff-api'
+import { createCodebuffApiClient } from '../utils/nexus-api'
 
 import type {
   CodebuffApiClient,
   LoginCodeResponse,
-} from '../utils/codebuff-api'
+} from '../utils/nexus-api'
 import type { Logger } from '@nexus/common/types/contracts/logger'
 
 // Re-export for backwards compatibility

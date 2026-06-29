@@ -13,7 +13,7 @@ import {
 } from 'bun:test'
 
 import { createToolCallChunk, mockFileContext } from './test-utils'
-import * as webApi from '../llm-api/codebuff-web-api'
+import * as webApi from '../llm-api/nexus-web-api'
 import { runAgentStep } from '../run-agent-step'
 import { assembleLocalAgentTemplates } from '../templates/agent-registry'
 

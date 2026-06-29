@@ -24,7 +24,7 @@ import type {
   ParamsExcluding,
   OptionalFields,
 } from '@nexus/common/types/function-params'
-import type { Message } from '@nexus/common/types/messages/codebuff-message'
+import type { Message } from '@nexus/common/types/messages/nexus-message'
 import type { PrintModeEvent } from '@nexus/common/types/print-mode'
 import type {
   AgentState,

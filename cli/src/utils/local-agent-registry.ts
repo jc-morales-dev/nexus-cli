@@ -10,10 +10,10 @@ import {
 
 import type { MCPConfig } from '@nexus/common/types/mcp'
 
-import { getSelectedFreebuffModel } from '../state/freebuff-model-store'
+import { getSelectedFreebuffModel } from '../state/freetier-model-store'
 import { getProjectRoot } from '../project-files'
 import { IS_FREEBUFF, type AgentMode } from './constants'
-import { getAgentIdForMode } from './freebuff-agent-selection'
+import { getAgentIdForMode } from './freetier-agent-selection'
 import { logger } from './logger'
 import * as bundledAgentsModule from '../agents/bundled-agents.generated'
 

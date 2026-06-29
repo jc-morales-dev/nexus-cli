@@ -1,6 +1,6 @@
 import { mock } from 'bun:test'
 
-import type { CodebuffApiClient } from '../../utils/codebuff-api'
+import type { CodebuffApiClient } from '../../utils/nexus-api'
 
 export interface MockApiClientOverrides {
   get?: ReturnType<typeof mock>

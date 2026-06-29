@@ -156,9 +156,9 @@ describe('/api/auth/cli/logout POST endpoint', () => {
       )
     })
 
-    test('accepts auth token from x-codebuff-api-key header', async () => {
+    test('accepts auth token from x-nexus-api-key header', async () => {
       const req = createRequest(createValidBody(), {
-        'x-codebuff-api-key': testAuthToken,
+        'x-nexus-api-key': testAuthToken,
       })
 
       const response = await postLogout({ req, db: mockDb, logger: mockLogger })

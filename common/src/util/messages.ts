@@ -10,7 +10,7 @@ import type {
   SystemMessage,
   ToolMessage,
   UserMessage,
-} from '../types/messages/codebuff-message'
+} from '../types/messages/nexus-message'
 import type { ToolResultOutput } from '../types/messages/content-part'
 import type { ProviderMetadata } from '../types/messages/provider-metadata'
 import type {

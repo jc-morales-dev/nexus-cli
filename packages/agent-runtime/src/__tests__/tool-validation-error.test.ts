@@ -17,7 +17,7 @@ import type { StreamChunk } from '@nexus/common/types/contracts/llm'
 import type {
   AssistantMessage,
   ToolMessage,
-} from '@nexus/common/types/messages/codebuff-message'
+} from '@nexus/common/types/messages/nexus-message'
 import type { PrintModeEvent } from '@nexus/common/types/print-mode'
 
 describe('tool validation error handling', () => {

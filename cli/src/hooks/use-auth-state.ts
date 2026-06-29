@@ -5,7 +5,7 @@ import { useAuthQuery, useLogoutMutation } from './use-auth-query'
 import { useLoginStore } from '../state/login-store'
 import { identifyUser, trackEvent } from '../utils/analytics'
 import { getUserCredentials } from '../utils/auth'
-import { resetCodebuffClient } from '../utils/codebuff-client'
+import { resetCodebuffClient } from '../utils/nexus-client'
 import { IS_FREEBUFF } from '../utils/constants'
 import { loggerContext } from '../utils/logger'
 

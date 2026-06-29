@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { getCodebuffClient } from '../utils/codebuff-client'
+import { getCodebuffClient } from '../utils/nexus-client'
 import { logger } from '../utils/logger'
 
 // Adaptive health check interval configuration

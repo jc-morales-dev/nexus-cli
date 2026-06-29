@@ -6,7 +6,7 @@ import { and, asc, count, desc, eq, gte, inArray, lt, sql } from 'drizzle-orm'
 import { FREEBUFF_ADMISSION_LOCK_ID } from './config'
 
 import type { FireworksHealth } from './fireworks-health'
-import type { FreebuffAccessTier } from '@nexus/common/constants/freebuff-models'
+import type { FreebuffAccessTier } from '@nexus/common/constants/freetier-models'
 import type {
   FreeSessionCountryAccessMetadata,
   InternalSessionRow,

@@ -10,7 +10,7 @@ import type {
   AgentRuntimeDeps,
   AgentRuntimeScopedDeps,
 } from '@nexus/common/types/contracts/agent-runtime'
-import type { Message } from '@nexus/common/types/messages/codebuff-message'
+import type { Message } from '@nexus/common/types/messages/nexus-message'
 import type { ProjectFileContext } from '@nexus/common/util/file'
 
 let agentRuntimeImpl: AgentRuntimeDeps & AgentRuntimeScopedDeps

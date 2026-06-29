@@ -1,6 +1,6 @@
 import { parseAgentId } from '../util/agent-id-parsing'
 
-import { FREEBUFF_GEMINI_THINKER_AGENT_ID } from './freebuff-gemini-thinker'
+import { FREEBUFF_GEMINI_THINKER_AGENT_ID } from './freetier-gemini-thinker'
 import {
   FREEBUFF_DEEPSEEK_V4_FLASH_MODEL_ID,
   FREEBUFF_DEEPSEEK_V4_PRO_MODEL_ID,
@@ -8,7 +8,7 @@ import {
   FREEBUFF_KIMI_MODEL_ID,
   FREEBUFF_MINIMAX_MODEL_ID,
   SUPPORTED_FREEBUFF_MODELS,
-} from './freebuff-models'
+} from './freetier-models'
 
 import type { CostMode } from './model-config'
 

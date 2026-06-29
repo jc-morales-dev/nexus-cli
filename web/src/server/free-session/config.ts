@@ -3,7 +3,7 @@ import {
   FREEBUFF_DEEPSEEK_V4_PRO_MODEL_ID,
   FREEBUFF_KIMI_MODEL_ID,
   FREEBUFF_MINIMAX_MODEL_ID,
-} from '@nexus/common/constants/freebuff-models'
+} from '@nexus/common/constants/freetier-models'
 import { env } from '@nexus/internal/env'
 
 /**

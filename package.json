@@ -1,5 +1,5 @@
 {
-  "name": "codebuff-project",
+  "name": "nexus-project",
   "version": "1.0.0",
   "private": true,
   "license": "Apache-2.0",
@@ -7,12 +7,8 @@
   "workspaces": [
     ".agents",
     "common",
-    "web",
-    "freebuff",
-    "freebuff/web",
     "packages/*",
     "scripts",
-    "evals",
     "sdk",
     "agents",
     "cli"

@@ -4,6 +4,7 @@ import { fileExists } from '@codebuff/common/util/file'
 import { applyPatch } from 'diff'
 import z from 'zod/v4'
 
+import { checkpoints } from '../checkpoints'
 import { resolveFilePathWithinProject } from './path-utils'
 
 import type { CodebuffToolOutput } from '@codebuff/common/tools/list'
@@ -89,7 +90,21 @@ async function applyChange(params: {
     }
 
     if (type === 'file') {
+      // Snapshot prior state for /undo before overwriting. Best-effort: a failed
+      // read must never break the edit, and we skip recording rather than risk a
+      // wrong null (which would make /undo delete an existing file).
+      let prior: string | null | undefined = exists ? undefined : null
+      if (exists) {
+        try {
+          prior = await fs.readFile(fullPath, 'utf-8')
+        } catch {
+          prior = undefined
+        }
+      }
       await fs.writeFile(fullPath, content)
+      if (prior !== undefined) {
+        checkpoints.recordPriorState(relativePath, fullPath, prior)
+      }
     } else {
       const oldContent = await fs.readFile(fullPath, 'utf-8')
       const newContent = applyPatch(oldContent, content)
@@ -97,6 +112,7 @@ async function applyChange(params: {
         return { status: 'patchFailed', file: relativePath, patch: content }
       }
       await fs.writeFile(fullPath, newContent)
+      checkpoints.recordPriorState(relativePath, fullPath, oldContent)
     }
 
     return { status: exists ? 'modified' : 'created', file: relativePath }

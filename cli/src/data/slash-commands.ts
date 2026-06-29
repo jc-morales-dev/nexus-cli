@@ -109,16 +109,12 @@ const ALL_SLASH_COMMANDS: SlashCommand[] = [
     description: 'Create a starter knowledge.md file',
     implicitCommand: true,
   },
-  // {
-  //   id: 'undo',
-  //   label: 'undo',
-  //   description: 'Undo the last change made by the assistant',
-  // },
-  // {
-  //   id: 'redo',
-  //   label: 'redo',
-  //   description: 'Redo the most recent undone change',
-  // },
+  {
+    id: 'undo',
+    label: 'undo',
+    description: 'Revertir las ediciones del último turno del agente',
+    aliases: ['revert'],
+  },
   {
     id: 'usage',
     label: 'usage',

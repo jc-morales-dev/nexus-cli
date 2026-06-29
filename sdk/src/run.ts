@@ -26,6 +26,7 @@ import { executeComposioToolViaServer } from './composio'
 import { getErrorStatusCode } from './error-utils'
 import { getAgentRuntimeImpl } from './impl/agent-runtime'
 import { getUserInfoFromApiKey } from './impl/database'
+import { checkpoints } from './checkpoints'
 import { initialSessionState, applyOverridesToSessionState } from './run-state'
 import { changeFile } from './tools/change-file'
 import { applyPatchTool } from './tools/apply-patch'
@@ -218,6 +219,11 @@ async function runOnce({
   costMode,
   extraCodebuffMetadata,
 }: RunExecutionOptions): Promise<RunState> {
+  // Open a new undo checkpoint for this turn's edits, labeled with the prompt.
+  // Materialized lazily on the first edit, so prompts that don't edit anything
+  // leave no empty checkpoint.
+  checkpoints.beginCheckpoint(typeof prompt === 'string' ? prompt : 'edit')
+
   const fsSourceValue = typeof fsSource === 'function' ? fsSource() : fsSource
   const fs = await fsSourceValue
   let spawn: CodebuffSpawn

@@ -7,6 +7,8 @@ export type {
   ImagePart,
 } from '@codebuff/common/types/messages/content-part'
 export { run } from './run'
+export { checkpoints } from './checkpoints'
+export type { UndoResult, CheckpointSummary } from './checkpoints'
 export { getFiles } from './tools/read-files'
 export type { FileFilter, FileFilterResult } from './tools/read-files'
 export type {

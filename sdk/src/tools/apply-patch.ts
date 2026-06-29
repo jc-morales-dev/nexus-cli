@@ -1,5 +1,7 @@
 import path from 'path'
 
+import { checkpoints } from '../checkpoints'
+
 import type { ApplyPatchOperation } from '@codebuff/common/tools/params/tool/apply-patch'
 import type { CodebuffToolOutput } from '@codebuff/common/tools/list'
 import type { CodebuffFileSystem } from '@codebuff/common/types/filesystem'
@@ -621,14 +623,30 @@ export async function applyPatchTool(params: {
       const sanitizedDiff = sanitizeUnifiedDiff(operation.diff)
       const { result: content } = applyDiff('', sanitizedDiff, 'create')
 
+      // Snapshot prior state for /undo (null if this is a brand-new file).
+      let priorCreate: string | null = null
+      try {
+        priorCreate = await fs.readFile(fullPath, 'utf-8')
+      } catch {
+        priorCreate = null
+      }
       await fs.mkdir(path.dirname(fullPath), { recursive: true })
       await fs.writeFile(fullPath, content)
+      checkpoints.recordPriorState(operation.path, fullPath, priorCreate)
 
       return [successResult(operation.path, 'add')]
     }
 
     if (operation.type === 'delete_file') {
+      // Snapshot the content before deleting so /undo can recreate the file.
+      let priorDelete: string | null = null
+      try {
+        priorDelete = await fs.readFile(fullPath, 'utf-8')
+      } catch {
+        priorDelete = null
+      }
       await fs.unlink(fullPath)
+      checkpoints.recordPriorState(operation.path, fullPath, priorDelete)
       return [successResult(operation.path, 'delete')]
     }
 
@@ -658,6 +676,7 @@ export async function applyPatchTool(params: {
         patched: patchResult.patched,
       }),
     )
+    checkpoints.recordPriorState(operation.path, fullPath, oldContent)
 
     return [successResult(operation.path, 'update')]
   } catch (error) {

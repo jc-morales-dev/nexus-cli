@@ -1,5 +1,5 @@
-import { isByokDirectMode } from '@codebuff/common/constants/byok'
-import { jsonToolResult } from '@codebuff/common/util/messages'
+import { isByokDirectMode } from '@nexus/common/constants/byok'
+import { jsonToolResult } from '@nexus/common/util/messages'
 
 import { callWebSearchAPI } from '../../../llm-api/codebuff-web-api'
 import { keylessWebSearch } from '../../../llm-api/keyless-web-search'
@@ -8,9 +8,9 @@ import type { CodebuffToolHandlerFunction } from '../handler-function-type'
 import type {
   CodebuffToolCall,
   CodebuffToolOutput,
-} from '@codebuff/common/tools/list'
-import type { ClientEnv, CiEnv } from '@codebuff/common/types/contracts/env'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+} from '@nexus/common/tools/list'
+import type { ClientEnv, CiEnv } from '@nexus/common/types/contracts/env'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 export const handleWebSearch = (async (params: {
   previousToolCallFinished: Promise<void>

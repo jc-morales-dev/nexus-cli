@@ -1,7 +1,7 @@
 import {
   clearMockedModules,
   mockModule,
-} from '@codebuff/common/testing/mock-modules'
+} from '@nexus/common/testing/mock-modules'
 import { afterEach, beforeEach, describe, expect, it } from 'bun:test'
 
 import {
@@ -12,7 +12,7 @@ import {
   validateAndNormalizeRepositoryUrl,
 } from '../org-billing'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 // Mock the database
 const mockGrants = [
@@ -86,10 +86,10 @@ const createDbMock = (options?: {
 
 describe('Organization Billing', () => {
   beforeEach(async () => {
-    await mockModule('@codebuff/internal/db', () => ({
+    await mockModule('@nexus/internal/db', () => ({
       default: createDbMock(),
     }))
-    await mockModule('@codebuff/internal/db/transaction', () => ({
+    await mockModule('@nexus/internal/db/transaction', () => ({
       withAdvisoryLockTransaction: async ({
         callback,
       }: {
@@ -128,7 +128,7 @@ describe('Organization Billing', () => {
 
     it('should handle organization with no grants', async () => {
       // Mock empty grants
-      await mockModule('@codebuff/internal/db', () => ({
+      await mockModule('@nexus/internal/db', () => ({
         default: createDbMock({ grants: [] }),
       }))
 
@@ -256,7 +256,7 @@ describe('Organization Billing', () => {
 
     it('should handle duplicate operation IDs gracefully', async () => {
       // Mock database returning empty result for onConflictDoNothing (duplicate detected)
-      await mockModule('@codebuff/internal/db', () => ({
+      await mockModule('@nexus/internal/db', () => ({
         default: createDbMock({
           insert: () => ({
             values: () => ({

@@ -40,7 +40,7 @@ Use the Codebuff SDK to run a testing agent that interacts with Freebuff via cus
 
 ```typescript
 import { describe, test, expect, afterEach } from 'bun:test'
-import { CodebuffClient } from '@codebuff/sdk'
+import { CodebuffClient } from '@nexus/sdk'
 import { freebuffTesterAgent } from '../agent/freebuff-tester'
 import { createFreebuffTmuxTools, requireFreebuffBinary } from '../utils'
 

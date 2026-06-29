@@ -16,7 +16,7 @@ mock.module('../../components/chatgpt-connect-banner', () => ({
   handleChatGptAuthCode,
 }))
 
-mock.module('@codebuff/common/constants/chatgpt-oauth', () => ({
+mock.module('@nexus/common/constants/chatgpt-oauth', () => ({
   CHATGPT_OAUTH_ENABLED: true,
 }))
 

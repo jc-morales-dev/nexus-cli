@@ -1,7 +1,7 @@
 'use client'
 
 // BILLING_DISABLED: Removed billing-related imports (env, loadStripe)
-// import { env } from '@codebuff/common/env'
+// import { env } from '@nexus/common/env'
 // import { loadStripe } from '@stripe/stripe-js'
 import {
   ArrowLeft,

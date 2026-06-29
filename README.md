@@ -104,16 +104,16 @@ export default {
 
 ## SDK: Run agents in production
 
-Install the [SDK package](https://www.npmjs.com/package/@codebuff/sdk) -- note this is different than the CLI codebuff package.
+Install the [SDK package](https://www.npmjs.com/package/@nexus/sdk) -- note this is different than the CLI codebuff package.
 
 ```bash
-npm install @codebuff/sdk
+npm install @nexus/sdk
 ```
 
 Import the client and run agents!
 
 ```typescript
-import { CodebuffClient } from '@codebuff/sdk'
+import { CodebuffClient } from '@nexus/sdk'
 
 // 1. Initialize the client
 const client = new CodebuffClient({
@@ -149,7 +149,7 @@ await client.run({
 })
 ```
 
-Learn more about the SDK [here](https://www.npmjs.com/package/@codebuff/sdk).
+Learn more about the SDK [here](https://www.npmjs.com/package/@nexus/sdk).
 
 ## Freebuff: The free coding agent
 
@@ -230,7 +230,7 @@ Some ways you can help:
 
 **CLI**: `npm install -g codebuff`
 
-**SDK**: `npm install @codebuff/sdk`
+**SDK**: `npm install @nexus/sdk`
 
 **Freebuff (free)**: `npm install -g freebuff`
 

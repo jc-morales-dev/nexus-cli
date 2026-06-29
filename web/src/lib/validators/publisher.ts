@@ -1,4 +1,4 @@
-import { PublisherIdSchema } from '@codebuff/common/types/publisher'
+import { PublisherIdSchema } from '@nexus/common/types/publisher'
 
 export function validatePublisherName(name: string): string | null {
   if (!name || !name.trim()) {

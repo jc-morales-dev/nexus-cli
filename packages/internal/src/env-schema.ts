@@ -1,4 +1,4 @@
-import { clientEnvSchema, clientProcessEnv } from '@codebuff/common/env-schema'
+import { clientEnvSchema, clientProcessEnv } from '@nexus/common/env-schema'
 import z from 'zod/v4'
 
 export const serverEnvSchema = clientEnvSchema.extend({

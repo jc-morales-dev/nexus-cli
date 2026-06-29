@@ -7,7 +7,7 @@
  * usage:  infisical run --env=prod --path=/ -- bun scripts/test-bot-sweep.ts
  */
 
-import { sendBasicEmail } from '@codebuff/internal/loops/client'
+import { sendBasicEmail } from '@nexus/internal/loops/client'
 
 import {
   formatSweepReport,

@@ -1,5 +1,5 @@
 {
-  "name": "@codebuff/common",
+  "name": "@nexus/common",
   "version": "1.0.0",
   "description": "Common utilities for Codebuff",
   "private": true,

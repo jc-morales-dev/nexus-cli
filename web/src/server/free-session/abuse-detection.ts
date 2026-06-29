@@ -8,13 +8,13 @@
  * This module is read-only — banning is still a human-in-the-loop decision.
  */
 
-import { FREEBUFF_ROOT_AGENT_IDS } from '@codebuff/common/constants/free-agents'
-import { db } from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
-import { env } from '@codebuff/internal/env'
+import { FREEBUFF_ROOT_AGENT_IDS } from '@nexus/common/constants/free-agents'
+import { db } from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
+import { env } from '@nexus/internal/env'
 import { and, eq, inArray, sql } from 'drizzle-orm'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 const WINDOW_HOURS = 24
 const GITHUB_API_CONCURRENCY = 8

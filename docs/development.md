@@ -54,7 +54,7 @@ infisical run --env=prod -- bun scripts/<name>.ts
 You can also inline a one-off query:
 
 ```bash
-infisical run --env=prod -- bun -e "import db from '@codebuff/internal/db'; /* ... */"
+infisical run --env=prod -- bun -e "import db from '@nexus/internal/db'; /* ... */"
 ```
 
 Add `--silent` to suppress the Infisical banner. Default env is `dev` — always pass `--env=prod` explicitly when you want prod. Prefer read-only queries; coordinate before running anything that writes.

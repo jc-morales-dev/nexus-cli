@@ -1,6 +1,6 @@
 import { describe, expect, mock, test } from 'bun:test'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 import { postBillingPortal } from '../_post'
 

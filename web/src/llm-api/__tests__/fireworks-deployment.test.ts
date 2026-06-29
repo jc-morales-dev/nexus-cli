@@ -9,7 +9,7 @@ import {
   resetDeploymentCooldown,
 } from '../fireworks'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 const STANDARD_MODEL_ID = 'accounts/fireworks/models/glm-5p1'
 const KIMI_STANDARD_MODEL_ID = 'accounts/fireworks/models/kimi-k2p6'

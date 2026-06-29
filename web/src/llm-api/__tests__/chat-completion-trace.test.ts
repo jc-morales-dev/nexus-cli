@@ -7,11 +7,11 @@ import {
   jest,
 } from '@jest/globals'
 
-jest.mock('@codebuff/bigquery', () => ({
+jest.mock('@nexus/bigquery', () => ({
   setupBigQuery: jest.fn(),
 }))
 
-import type { ChatCompletionTraceRow } from '@codebuff/common/types/contracts/bigquery'
+import type { ChatCompletionTraceRow } from '@nexus/common/types/contracts/bigquery'
 import type { ChatCompletionRequestBody } from '../types'
 import type {
   recordChatCompletionTrace as recordChatCompletionTraceType,

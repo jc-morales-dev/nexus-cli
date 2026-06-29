@@ -1,10 +1,10 @@
 import {
   clearMockedModules,
   mockModule,
-} from '@codebuff/common/testing/mock-modules'
+} from '@nexus/common/testing/mock-modules'
 import { afterEach, describe, expect, it } from 'bun:test'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 const logger: Logger = {
   debug: () => {},
@@ -31,29 +31,29 @@ describe('usage-service', () => {
   describe('getUserUsageData', () => {
     describe('autoTopupEnabled field', () => {
       it('should include autoTopupEnabled: true when triggerMonthlyResetAndGrant returns true', async () => {
-        await mockModule('@codebuff/billing/grant-credits', () => ({
+        await mockModule('@nexus/billing/grant-credits', () => ({
           triggerMonthlyResetAndGrant: async () => ({
             quotaResetDate: futureDate,
             autoTopupEnabled: true,
           }),
         }))
 
-        await mockModule('@codebuff/billing/auto-topup', () => ({
+        await mockModule('@nexus/billing/auto-topup', () => ({
           checkAndTriggerAutoTopup: async () => undefined,
         }))
 
-        await mockModule('@codebuff/billing/balance-calculator', () => ({
+        await mockModule('@nexus/billing/balance-calculator', () => ({
           calculateUsageAndBalance: async () => ({
             usageThisCycle: 100,
             balance: mockBalance,
           }),
         }))
 
-        await mockModule('@codebuff/billing/subscription', () => ({
+        await mockModule('@nexus/billing/subscription', () => ({
           getActiveSubscription: async () => null,
         }))
 
-        const { getUserUsageData } = await import('@codebuff/billing/usage-service')
+        const { getUserUsageData } = await import('@nexus/billing/usage-service')
 
         const result = await getUserUsageData({
           userId: 'user-123',
@@ -67,29 +67,29 @@ describe('usage-service', () => {
       })
 
       it('should include autoTopupEnabled: false when triggerMonthlyResetAndGrant returns false', async () => {
-        await mockModule('@codebuff/billing/grant-credits', () => ({
+        await mockModule('@nexus/billing/grant-credits', () => ({
           triggerMonthlyResetAndGrant: async () => ({
             quotaResetDate: futureDate,
             autoTopupEnabled: false,
           }),
         }))
 
-        await mockModule('@codebuff/billing/auto-topup', () => ({
+        await mockModule('@nexus/billing/auto-topup', () => ({
           checkAndTriggerAutoTopup: async () => undefined,
         }))
 
-        await mockModule('@codebuff/billing/balance-calculator', () => ({
+        await mockModule('@nexus/billing/balance-calculator', () => ({
           calculateUsageAndBalance: async () => ({
             usageThisCycle: 100,
             balance: mockBalance,
           }),
         }))
 
-        await mockModule('@codebuff/billing/subscription', () => ({
+        await mockModule('@nexus/billing/subscription', () => ({
           getActiveSubscription: async () => null,
         }))
 
-        const { getUserUsageData } = await import('@codebuff/billing/usage-service')
+        const { getUserUsageData } = await import('@nexus/billing/usage-service')
 
         const result = await getUserUsageData({
           userId: 'user-123',
@@ -100,29 +100,29 @@ describe('usage-service', () => {
       })
 
       it('should include autoTopupTriggered: true when auto top-up was triggered', async () => {
-        await mockModule('@codebuff/billing/grant-credits', () => ({
+        await mockModule('@nexus/billing/grant-credits', () => ({
           triggerMonthlyResetAndGrant: async () => ({
             quotaResetDate: futureDate,
             autoTopupEnabled: true,
           }),
         }))
 
-        await mockModule('@codebuff/billing/auto-topup', () => ({
+        await mockModule('@nexus/billing/auto-topup', () => ({
           checkAndTriggerAutoTopup: async () => 500, // Returns amount when triggered
         }))
 
-        await mockModule('@codebuff/billing/balance-calculator', () => ({
+        await mockModule('@nexus/billing/balance-calculator', () => ({
           calculateUsageAndBalance: async () => ({
             usageThisCycle: 100,
             balance: mockBalance,
           }),
         }))
 
-        await mockModule('@codebuff/billing/subscription', () => ({
+        await mockModule('@nexus/billing/subscription', () => ({
           getActiveSubscription: async () => null,
         }))
 
-        const { getUserUsageData } = await import('@codebuff/billing/usage-service')
+        const { getUserUsageData } = await import('@nexus/billing/usage-service')
 
         const result = await getUserUsageData({
           userId: 'user-123',
@@ -134,29 +134,29 @@ describe('usage-service', () => {
       })
 
       it('should include autoTopupTriggered: false when auto top-up was not triggered', async () => {
-        await mockModule('@codebuff/billing/grant-credits', () => ({
+        await mockModule('@nexus/billing/grant-credits', () => ({
           triggerMonthlyResetAndGrant: async () => ({
             quotaResetDate: futureDate,
             autoTopupEnabled: true,
           }),
         }))
 
-        await mockModule('@codebuff/billing/auto-topup', () => ({
+        await mockModule('@nexus/billing/auto-topup', () => ({
           checkAndTriggerAutoTopup: async () => undefined, // Returns undefined when not triggered
         }))
 
-        await mockModule('@codebuff/billing/balance-calculator', () => ({
+        await mockModule('@nexus/billing/balance-calculator', () => ({
           calculateUsageAndBalance: async () => ({
             usageThisCycle: 100,
             balance: mockBalance,
           }),
         }))
 
-        await mockModule('@codebuff/billing/subscription', () => ({
+        await mockModule('@nexus/billing/subscription', () => ({
           getActiveSubscription: async () => null,
         }))
 
-        const { getUserUsageData } = await import('@codebuff/billing/usage-service')
+        const { getUserUsageData } = await import('@nexus/billing/usage-service')
 
         const result = await getUserUsageData({
           userId: 'user-123',
@@ -167,31 +167,31 @@ describe('usage-service', () => {
       })
 
       it('should continue and return data even when auto top-up check fails', async () => {
-        await mockModule('@codebuff/billing/grant-credits', () => ({
+        await mockModule('@nexus/billing/grant-credits', () => ({
           triggerMonthlyResetAndGrant: async () => ({
             quotaResetDate: futureDate,
             autoTopupEnabled: true,
           }),
         }))
 
-        await mockModule('@codebuff/billing/auto-topup', () => ({
+        await mockModule('@nexus/billing/auto-topup', () => ({
           checkAndTriggerAutoTopup: async () => {
             throw new Error('Payment failed')
           },
         }))
 
-        await mockModule('@codebuff/billing/balance-calculator', () => ({
+        await mockModule('@nexus/billing/balance-calculator', () => ({
           calculateUsageAndBalance: async () => ({
             usageThisCycle: 100,
             balance: mockBalance,
           }),
         }))
 
-        await mockModule('@codebuff/billing/subscription', () => ({
+        await mockModule('@nexus/billing/subscription', () => ({
           getActiveSubscription: async () => null,
         }))
 
-        const { getUserUsageData } = await import('@codebuff/billing/usage-service')
+        const { getUserUsageData } = await import('@nexus/billing/usage-service')
 
         // Should not throw
         const result = await getUserUsageData({

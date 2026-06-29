@@ -1,8 +1,8 @@
-import * as mainPromptModule from '@codebuff/agent-runtime/main-prompt'
-import { withSystemTags } from '@codebuff/agent-runtime/util/messages'
-import { getInitialSessionState } from '@codebuff/common/types/session-state'
-import { getStubProjectFileContext } from '@codebuff/common/util/file'
-import { assistantMessage, userMessage } from '@codebuff/common/util/messages'
+import * as mainPromptModule from '@nexus/agent-runtime/main-prompt'
+import { withSystemTags } from '@nexus/agent-runtime/util/messages'
+import { getInitialSessionState } from '@nexus/common/types/session-state'
+import { getStubProjectFileContext } from '@nexus/common/util/file'
+import { assistantMessage, userMessage } from '@nexus/common/util/messages'
 import { afterEach, describe, expect, it, mock, spyOn } from 'bun:test'
 import { RetryError } from 'ai'
 

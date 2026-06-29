@@ -1,13 +1,13 @@
-import { buildArray } from '@codebuff/common/util/array'
-import { schemaToJsonStr } from '@codebuff/common/util/zod-schema'
+import { buildArray } from '@nexus/common/util/array'
+import { schemaToJsonStr } from '@nexus/common/util/zod-schema'
 import { z } from 'zod/v4'
 
 import { getAgentTemplate } from './agent-registry'
 
-import type { AgentTemplate } from '@codebuff/common/types/agent-template'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
-import type { ParamsExcluding } from '@codebuff/common/types/function-params'
-import type { AgentTemplateType } from '@codebuff/common/types/session-state'
+import type { AgentTemplate } from '@nexus/common/types/agent-template'
+import type { Logger } from '@nexus/common/types/contracts/logger'
+import type { ParamsExcluding } from '@nexus/common/types/function-params'
+import type { AgentTemplateType } from '@nexus/common/types/session-state'
 import type { ToolSet } from 'ai'
 
 function ensureJsonSchemaCompatible(schema: z.ZodType): z.ZodType {

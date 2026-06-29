@@ -1,4 +1,4 @@
-import { deepseekModels } from '@codebuff/common/constants/model-config'
+import { deepseekModels } from '@nexus/common/constants/model-config'
 
 import type { ChatCompletionRequestBody } from './types'
 

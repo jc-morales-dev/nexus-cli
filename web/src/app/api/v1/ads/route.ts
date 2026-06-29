@@ -1,5 +1,5 @@
-import { trackEvent } from '@codebuff/common/analytics'
-import { env } from '@codebuff/internal/env'
+import { trackEvent } from '@nexus/common/analytics'
+import { env } from '@nexus/internal/env'
 
 import { postAds } from './_post'
 

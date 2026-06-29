@@ -1,4 +1,4 @@
-import { pluralize } from '@codebuff/common/util/string'
+import { pluralize } from '@nexus/common/util/string'
 import { Info } from 'lucide-react'
 import { useState, useEffect } from 'react'
 

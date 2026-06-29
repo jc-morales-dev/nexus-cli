@@ -1,6 +1,6 @@
 import postgres from 'postgres'
 
-import { env } from '@codebuff/internal/env'
+import { env } from '@nexus/internal/env'
 
 /**
  * Lock IDs for different singleton processes.

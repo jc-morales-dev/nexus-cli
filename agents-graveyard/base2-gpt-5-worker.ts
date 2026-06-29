@@ -1,4 +1,4 @@
-import { buildArray } from '@codebuff/common/util/array'
+import { buildArray } from '@nexus/common/util/array'
 
 import { createBase2 } from '../agents/base2/base2'
 

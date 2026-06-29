@@ -1,6 +1,6 @@
-import { pluralize } from '@codebuff/common/util/string'
-import { db } from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
+import { pluralize } from '@nexus/common/util/string'
+import { db } from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
 import { sql } from 'drizzle-orm'
 
 async function calculateDAU() {

@@ -2,7 +2,7 @@ import { describe, expect, test } from 'bun:test'
 
 import { createZeroClickProvider } from '../zeroclick'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 const logger: Logger = {
   debug: () => {},

@@ -1,15 +1,15 @@
 import {
   flattenTree,
   getLastReadFilePaths,
-} from '@codebuff/common/project-file-tree'
-import { createMarkdownFileBlock } from '@codebuff/common/util/file'
-import { truncateString } from '@codebuff/common/util/string'
-import { closeXml } from '@codebuff/common/util/xml'
+} from '@nexus/common/project-file-tree'
+import { createMarkdownFileBlock } from '@nexus/common/util/file'
+import { truncateString } from '@nexus/common/util/string'
+import { closeXml } from '@nexus/common/util/xml'
 
 import { truncateFileTreeBasedOnTokenBudget } from './truncate-file-tree'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
-import type { ProjectFileContext } from '@codebuff/common/util/file'
+import type { Logger } from '@nexus/common/types/contracts/logger'
+import type { ProjectFileContext } from '@nexus/common/util/file'
 
 export const knowledgeFilesPrompt = `
 # Knowledge files

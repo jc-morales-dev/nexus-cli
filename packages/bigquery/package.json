@@ -1,5 +1,5 @@
 {
-  "name": "@codebuff/bigquery",
+  "name": "@nexus/bigquery",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@google-cloud/bigquery": "^7.9.4",
-    "@codebuff/common": "workspace:*"
+    "@nexus/common": "workspace:*"
   },
   "devDependencies": {}
 }

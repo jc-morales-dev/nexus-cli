@@ -7,9 +7,9 @@ import { z } from 'zod/v4'
 
 import { initialSessionState } from '../run-state'
 
-import type { MockStatResult } from '@codebuff/common/testing/mock-types'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
-import type { CodebuffFileSystem } from '@codebuff/common/types/filesystem'
+import type { MockStatResult } from '@nexus/common/testing/mock-types'
+import type { Logger } from '@nexus/common/types/contracts/logger'
+import type { CodebuffFileSystem } from '@nexus/common/types/filesystem'
 
 describe('Initial Session State', () => {
   let mockFs: CodebuffFileSystem

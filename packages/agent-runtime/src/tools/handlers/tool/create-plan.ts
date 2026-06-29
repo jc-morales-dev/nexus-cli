@@ -6,8 +6,8 @@ import type {
   ClientToolCall,
   CodebuffToolCall,
   CodebuffToolOutput,
-} from '@codebuff/common/tools/list'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+} from '@nexus/common/tools/list'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 export const handleCreatePlan = (async (params: {
   previousToolCallFinished: Promise<void>

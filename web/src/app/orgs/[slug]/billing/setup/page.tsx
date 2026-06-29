@@ -1,6 +1,6 @@
 'use client'
 
-import { env } from '@codebuff/common/env'
+import { env } from '@nexus/common/env'
 import { loadStripe } from '@stripe/stripe-js'
 import { ArrowLeft, CreditCard, Loader2 } from 'lucide-react'
 import Link from 'next/link'

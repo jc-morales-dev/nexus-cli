@@ -1,6 +1,6 @@
-import db from '@codebuff/internal/db'
-import { user } from '@codebuff/internal/db/schema'
-import { env } from '@codebuff/internal/env'
+import db from '@nexus/internal/db'
+import { user } from '@nexus/internal/db/schema'
+import { env } from '@nexus/internal/env'
 import { Client, Events, GatewayIntentBits } from 'discord.js'
 import { eq, or } from 'drizzle-orm'
 

@@ -7,7 +7,7 @@
  *   3. Actual API call to NVIDIA (real response from the model)
  */
 
-import { VERSION } from '@codebuff/llm-providers/openai-compatible'
+import { VERSION } from '@nexus/llm-providers/openai-compatible'
 
 // ============================================================================
 // Level 1: Test routing logic (mirrors isNvidiaModel from model-provider.ts)
@@ -63,7 +63,7 @@ async function testSdkRouting() {
   // Now let's import the actual SDK functions to test the routing
   try {
     const { getModelForRequest, isNvidiaModel: sdkIsNvidia } = await import(
-      '@codebuff/sdk/src/impl/model-provider.ts'
+      '@nexus/sdk/src/impl/model-provider.ts'
     )
 
     const testModel = 'z-ai/glm-5.1'

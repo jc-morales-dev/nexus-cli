@@ -1,5 +1,5 @@
-import { env } from '@codebuff/internal/env'
-import { stripeServer } from '@codebuff/internal/util/stripe'
+import { env } from '@nexus/internal/env'
+import { stripeServer } from '@nexus/internal/util/stripe'
 import { getServerSession } from 'next-auth'
 
 import type { NextRequest } from 'next/server'

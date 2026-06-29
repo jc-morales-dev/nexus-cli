@@ -1,6 +1,6 @@
 'use client'
 
-import { env } from '@codebuff/common/env'
+import { env } from '@nexus/common/env'
 import { loadStripe } from '@stripe/stripe-js'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { ExternalLink, Loader2 } from 'lucide-react'

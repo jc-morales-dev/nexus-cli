@@ -1,4 +1,4 @@
-import { jsonToolResult } from '@codebuff/common/util/messages'
+import { jsonToolResult } from '@nexus/common/util/messages'
 
 import { callGravityIndexAPI } from '../../../llm-api/codebuff-web-api'
 
@@ -6,10 +6,10 @@ import type { CodebuffToolHandlerFunction } from '../handler-function-type'
 import type {
   CodebuffToolCall,
   CodebuffToolOutput,
-} from '@codebuff/common/tools/list'
-import type { ClientEnv, CiEnv } from '@codebuff/common/types/contracts/env'
-import type { JSONObject } from '@codebuff/common/types/json'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+} from '@nexus/common/tools/list'
+import type { ClientEnv, CiEnv } from '@nexus/common/types/contracts/env'
+import type { JSONObject } from '@nexus/common/types/json'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 export const handleGravityIndex = (async (params: {
   previousToolCallFinished: Promise<void>

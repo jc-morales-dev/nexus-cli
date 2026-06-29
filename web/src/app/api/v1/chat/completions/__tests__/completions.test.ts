@@ -1,30 +1,30 @@
 import { afterEach, beforeEach, describe, expect, mock, it } from 'bun:test'
 import { NextRequest } from 'next/server'
 
-import { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
-import { TEST_USER_ID } from '@codebuff/common/constants/paths'
+import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
+import { TEST_USER_ID } from '@nexus/common/constants/paths'
 import {
   FREEBUFF_DEEPSEEK_V4_FLASH_MODEL_ID,
   FREEBUFF_DEEPSEEK_V4_PRO_MODEL_ID,
   FREEBUFF_GEMINI_PRO_MODEL_ID,
-} from '@codebuff/common/constants/freebuff-models'
-import { openCodeZenModels } from '@codebuff/common/constants/model-config'
+} from '@nexus/common/constants/freebuff-models'
+import { openCodeZenModels } from '@nexus/common/constants/model-config'
 import { postChatCompletions } from '../_post'
 import { resetFreeModeRateLimits } from '../free-mode-rate-limiter'
 import { getFreeModeCountryAccess } from '@/server/free-mode-country'
 
-import type { TrackEventFn } from '@codebuff/common/types/contracts/analytics'
-import type { InsertMessageBigqueryFn } from '@codebuff/common/types/contracts/bigquery'
-import type { GetUserUsageDataFn } from '@codebuff/common/types/contracts/billing'
+import type { TrackEventFn } from '@nexus/common/types/contracts/analytics'
+import type { InsertMessageBigqueryFn } from '@nexus/common/types/contracts/bigquery'
+import type { GetUserUsageDataFn } from '@nexus/common/types/contracts/billing'
 import type {
   GetAgentRunFromIdFn,
   GetUserInfoFromApiKeyFn,
-} from '@codebuff/common/types/contracts/database'
+} from '@nexus/common/types/contracts/database'
 import type {
   Logger,
   LoggerWithContextFn,
-} from '@codebuff/common/types/contracts/logger'
-import type { BlockGrantResult } from '@codebuff/billing/subscription'
+} from '@nexus/common/types/contracts/logger'
+import type { BlockGrantResult } from '@nexus/billing/subscription'
 import type { GetUserPreferencesFn } from '../_post'
 
 describe('/api/v1/chat/completions POST endpoint', () => {

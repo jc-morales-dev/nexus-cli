@@ -2,8 +2,8 @@
 
 ## Quick Rules
 
-- Public client env: `NEXT_PUBLIC_*` only, validated in `common/src/env-schema.ts` (used via `@codebuff/common/env`).
-- Server secrets: validated in `packages/internal/src/env-schema.ts` (used via `@codebuff/internal/env`).
+- Public client env: `NEXT_PUBLIC_*` only, validated in `common/src/env-schema.ts` (used via `@nexus/common/env`).
+- Server secrets: validated in `packages/internal/src/env-schema.ts` (used via `@nexus/internal/env`).
 - Runtime/OS env: pass typed snapshots instead of reading `process.env` throughout the codebase.
 - `IPINFO_TOKEN` is required; free-mode country gating uses it to check IPinfo privacy signals for VPN/proxy/Tor/relay/hosting traffic.
 - `SPUR_TOKEN` is required; VPN/proxy/Tor/residential-proxy privacy signals use Spur Context API corroboration.

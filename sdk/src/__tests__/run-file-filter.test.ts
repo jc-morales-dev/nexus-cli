@@ -1,15 +1,15 @@
-import * as mainPromptModule from '@codebuff/agent-runtime/main-prompt'
-import { FILE_READ_STATUS } from '@codebuff/common/old-constants'
-import * as projectFileTree from '@codebuff/common/project-file-tree'
-import { getInitialSessionState } from '@codebuff/common/types/session-state'
-import { getStubProjectFileContext } from '@codebuff/common/util/file'
+import * as mainPromptModule from '@nexus/agent-runtime/main-prompt'
+import { FILE_READ_STATUS } from '@nexus/common/old-constants'
+import * as projectFileTree from '@nexus/common/project-file-tree'
+import { getInitialSessionState } from '@nexus/common/types/session-state'
+import { getStubProjectFileContext } from '@nexus/common/util/file'
 import { afterEach, describe, expect, it, mock, spyOn } from 'bun:test'
 
 import { CodebuffClient } from '../client'
 import * as databaseModule from '../impl/database'
 
 import type { FileFilter } from '../tools/read-files'
-import type { CodebuffFileSystem } from '@codebuff/common/types/filesystem'
+import type { CodebuffFileSystem } from '@nexus/common/types/filesystem'
 import type { PathLike } from 'node:fs'
 
 interface NodeError extends Error {

@@ -8,7 +8,7 @@ import {
   FREEBUFF_LIMITED_SESSION_LIMIT,
   FREEBUFF_PREMIUM_SESSION_LIMIT,
   FREEBUFF_PREMIUM_SESSION_WINDOW_HOURS,
-} from '@codebuff/common/constants/freebuff-models'
+} from '@nexus/common/constants/freebuff-models'
 
 import {
   checkSessionAdmissible,

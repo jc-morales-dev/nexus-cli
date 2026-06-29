@@ -1,6 +1,6 @@
-import { db } from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
-import { getErrorObject } from '@codebuff/common/util/error'
+import { db } from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
+import { getErrorObject } from '@nexus/common/util/error'
 import { and, eq, gt, isNull } from 'drizzle-orm'
 
 import {
@@ -19,7 +19,7 @@ import type {
   FreeModeCountryAccess,
   FreeModeCountryAccessOptions,
 } from './free-mode-country'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 export const FREE_MODE_COUNTRY_CACHE_ALLOWED_TTL_MS =
   IPINFO_PRIVACY_CACHE_TTL_MS

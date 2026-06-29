@@ -1,6 +1,6 @@
-import { FILE_READ_STATUS } from '@codebuff/common/old-constants'
-import * as projectFileTree from '@codebuff/common/project-file-tree'
-import { createNodeError } from '@codebuff/common/testing/errors'
+import { FILE_READ_STATUS } from '@nexus/common/old-constants'
+import * as projectFileTree from '@nexus/common/project-file-tree'
+import { createNodeError } from '@nexus/common/testing/errors'
 import {
   describe,
   test,
@@ -13,7 +13,7 @@ import {
 
 import { getFiles } from '../tools/read-files'
 
-import type { CodebuffFileSystem } from '@codebuff/common/types/filesystem'
+import type { CodebuffFileSystem } from '@nexus/common/types/filesystem'
 import type { PathLike } from 'node:fs'
 
 // Helper to create a mock filesystem

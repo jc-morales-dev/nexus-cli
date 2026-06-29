@@ -1,9 +1,9 @@
-import { CHATGPT_OAUTH_ENABLED } from '@codebuff/common/constants/chatgpt-oauth'
-import { isByokDirectMode } from '@codebuff/common/constants/byok'
+import { CHATGPT_OAUTH_ENABLED } from '@nexus/common/constants/chatgpt-oauth'
+import { isByokDirectMode } from '@nexus/common/constants/byok'
 import { AGENT_MODES, IS_FREEBUFF } from '../utils/constants'
 import { getChatGptOAuthStatus } from '../utils/chatgpt-oauth'
 
-import type { SkillsMap } from '@codebuff/common/types/skill'
+import type { SkillsMap } from '@nexus/common/types/skill'
 
 
 export interface SlashCommand {

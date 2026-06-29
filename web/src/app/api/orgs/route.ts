@@ -1,7 +1,7 @@
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
-import { env } from '@codebuff/internal/env'
-import { stripeServer } from '@codebuff/internal/util/stripe'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
+import { env } from '@nexus/internal/env'
+import { stripeServer } from '@nexus/internal/util/stripe'
 import { eq, and } from 'drizzle-orm'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
@@ -9,7 +9,7 @@ import { getServerSession } from 'next-auth'
 import type {
   CreateOrganizationRequest,
   ListOrganizationsResponse,
-} from '@codebuff/common/types/organization'
+} from '@nexus/common/types/organization'
 import type { NextRequest } from 'next/server'
 
 import { authOptions } from '@/app/api/auth/[...nextauth]/auth-options'

@@ -3,12 +3,12 @@ import { NextRequest } from 'next/server'
 
 import { postGravityIndex } from '../_post'
 
-import type { TrackEventFn } from '@codebuff/common/types/contracts/analytics'
-import type { GetUserInfoFromApiKeyFn } from '@codebuff/common/types/contracts/database'
+import type { TrackEventFn } from '@nexus/common/types/contracts/analytics'
+import type { GetUserInfoFromApiKeyFn } from '@nexus/common/types/contracts/database'
 import type {
   Logger,
   LoggerWithContextFn,
-} from '@codebuff/common/types/contracts/logger'
+} from '@nexus/common/types/contracts/logger'
 
 const testServerEnv = { GRAVITY_API_KEY: 'gravity-key' }
 

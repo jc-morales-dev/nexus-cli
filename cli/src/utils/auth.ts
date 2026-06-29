@@ -2,15 +2,15 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 
-import { env } from '@codebuff/common/env'
-import { getCiEnv } from '@codebuff/common/env-ci'
+import { env } from '@nexus/common/env'
+import { getCiEnv } from '@nexus/common/env-ci'
 import { z } from 'zod'
 
 
 import { getApiClient, setApiClientAuthToken } from './codebuff-api'
 import { logger } from './logger'
 
-import type { CiEnv } from '@codebuff/common/types/contracts/env'
+import type { CiEnv } from '@nexus/common/types/contracts/env'
 
 // User schema
 const userSchema = z.object({

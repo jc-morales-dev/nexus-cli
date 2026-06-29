@@ -1,16 +1,16 @@
-import { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
-import { isFreeMode } from '@codebuff/common/constants/free-agents'
-import { models, PROFIT_MARGIN } from '@codebuff/common/old-constants'
-import { buildArray } from '@codebuff/common/util/array'
-import { normalizeProviderRequestBodyForCacheDebug } from '@codebuff/common/util/cache-debug'
+import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
+import { isFreeMode } from '@nexus/common/constants/free-agents'
+import { models, PROFIT_MARGIN } from '@nexus/common/old-constants'
+import { buildArray } from '@nexus/common/util/array'
+import { normalizeProviderRequestBodyForCacheDebug } from '@nexus/common/util/cache-debug'
 import {
   getErrorObject,
   promptAborted,
   promptSuccess,
-} from '@codebuff/common/util/error'
-import { convertCbToModelMessages } from '@codebuff/common/util/messages'
-import { isExplicitlyDefinedModel } from '@codebuff/common/util/model-utils'
-import { StopSequenceHandler } from '@codebuff/common/util/stop-sequence'
+} from '@nexus/common/util/error'
+import { convertCbToModelMessages } from '@nexus/common/util/messages'
+import { isExplicitlyDefinedModel } from '@nexus/common/util/model-utils'
+import { StopSequenceHandler } from '@nexus/common/util/stop-sequence'
 import {
   streamText,
   generateText,
@@ -33,15 +33,15 @@ import type { ModelRequestParams } from './model-provider'
 import type {
   OpenRouterProviderOptions,
   OpenRouterProviderRoutingOptions,
-} from '@codebuff/common/types/agent-template'
+} from '@nexus/common/types/agent-template'
 import type {
   PromptAiSdkFn,
   PromptAiSdkStreamFn,
   PromptAiSdkStructuredInput,
   PromptAiSdkStructuredOutput,
-} from '@codebuff/common/types/contracts/llm'
-import type { ParamsOf } from '@codebuff/common/types/function-params'
-import type { JSONObject } from '@codebuff/common/types/json'
+} from '@nexus/common/types/contracts/llm'
+import type { ParamsOf } from '@nexus/common/types/function-params'
+import type { JSONObject } from '@nexus/common/types/json'
 import type { LanguageModel } from 'ai'
 import type z from 'zod/v4'
 

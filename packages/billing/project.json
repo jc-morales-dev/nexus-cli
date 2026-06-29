@@ -1,5 +1,5 @@
 {
-  "name": "@codebuff/billing",
+  "name": "@nexus/billing",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "src",
   "projectType": "library",
@@ -12,7 +12,7 @@
       }
     },
     "test": {
-      "executor": "@codebuff/build-tools:infisical-run",
+      "executor": "@nexus/build-tools:infisical-run",
       "options": {
         "command": "bun test",
         "cwd": "packages/billing"

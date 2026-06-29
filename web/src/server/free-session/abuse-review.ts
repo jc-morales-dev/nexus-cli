@@ -13,9 +13,9 @@
  * model to treat anything inside those tags as untrusted data.
  */
 
-import { env } from '@codebuff/internal/env'
+import { env } from '@nexus/internal/env'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 import type { SweepReport } from './abuse-detection'
 
 const MODEL = 'claude-sonnet-4-6'

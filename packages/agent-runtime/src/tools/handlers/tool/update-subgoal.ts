@@ -1,11 +1,11 @@
-import { jsonToolResult } from '@codebuff/common/util/messages'
+import { jsonToolResult } from '@nexus/common/util/messages'
 
 import type { CodebuffToolHandlerFunction } from '../handler-function-type'
 import type {
   CodebuffToolCall,
   CodebuffToolOutput,
-} from '@codebuff/common/tools/list'
-import type { Subgoal } from '@codebuff/common/types/session-state'
+} from '@nexus/common/tools/list'
+import type { Subgoal } from '@nexus/common/types/session-state'
 
 type ToolName = 'update_subgoal'
 export const handleUpdateSubgoal = (async (params: {

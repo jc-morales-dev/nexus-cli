@@ -1,9 +1,9 @@
-import { API_KEY_ENV_VAR } from '@codebuff/common/old-constants'
-import { CodebuffClient } from '@codebuff/sdk'
+import { API_KEY_ENV_VAR } from '@nexus/common/old-constants'
+import { CodebuffClient } from '@nexus/sdk'
 import { describe, expect, it } from 'bun:test'
 
 
-import type { PrintModeEvent } from '@codebuff/common/types/print-mode'
+import type { PrintModeEvent } from '@nexus/common/types/print-mode'
 
 /**
  * Integration tests for the editor-best-of-n-max agent.

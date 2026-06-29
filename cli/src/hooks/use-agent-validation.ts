@@ -1,5 +1,5 @@
-import { isByokDirectMode } from '@codebuff/common/constants/byok'
-import { validateAgents } from '@codebuff/sdk'
+import { isByokDirectMode } from '@nexus/common/constants/byok'
+import { validateAgents } from '@nexus/sdk'
 import { useCallback, useState } from 'react'
 
 import { loadAgentDefinitions } from '../utils/local-agent-registry'

@@ -31,9 +31,9 @@ const nextConfig = {
       'async_hooks',
     )
     config.externals.push(
-      '@codebuff/code-map',
-      '@codebuff/code-map/parse',
-      '@codebuff/code-map/languages',
+      '@nexus/code-map',
+      '@nexus/code-map/parse',
+      '@nexus/code-map/languages',
       /^@codebuff\/code-map/,
     )
     config.infrastructureLogging = {

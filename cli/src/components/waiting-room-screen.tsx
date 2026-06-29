@@ -28,12 +28,12 @@ import { getLogoAccentColor, getLogoBlockColor } from '../utils/theme-system'
 import {
   FREEBUFF_LIMITED_SESSION_LIMIT,
   FREEBUFF_PREMIUM_SESSION_LIMIT,
-} from '@codebuff/common/constants/freebuff-models'
-import { getRateLimitsByModel } from '@codebuff/common/types/freebuff-session'
-import { formatFreebuffHardBlockedPrivacySignals } from '@codebuff/common/util/freebuff-privacy'
+} from '@nexus/common/constants/freebuff-models'
+import { getRateLimitsByModel } from '@nexus/common/types/freebuff-session'
+import { formatFreebuffHardBlockedPrivacySignals } from '@nexus/common/util/freebuff-privacy'
 
 import type { FreebuffSessionResponse } from '../types/freebuff-session'
-import type { FreebuffIpPrivacySignal } from '@codebuff/common/types/freebuff-session'
+import type { FreebuffIpPrivacySignal } from '@nexus/common/types/freebuff-session'
 import type { KeyEvent } from '@opentui/core'
 
 interface WaitingRoomScreenProps {

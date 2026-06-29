@@ -1,5 +1,5 @@
-import { jsonToolResult } from '@codebuff/common/util/messages'
-import { removeUndefinedProps } from '@codebuff/common/util/object'
+import { jsonToolResult } from '@nexus/common/util/messages'
+import { removeUndefinedProps } from '@nexus/common/util/object'
 import z from 'zod/v4'
 
 import { getAgentTemplate } from '../../../templates/agent-registry'
@@ -8,12 +8,12 @@ import type { CodebuffToolHandlerFunction } from '../handler-function-type'
 import type {
   CodebuffToolCall,
   CodebuffToolOutput,
-} from '@codebuff/common/tools/list'
+} from '@nexus/common/tools/list'
 import type {
   AgentTemplate,
   Logger,
-} from '@codebuff/common/types/agent-template'
-import type { FetchAgentFromDatabaseFn } from '@codebuff/common/types/contracts/database'
+} from '@nexus/common/types/agent-template'
+import type { FetchAgentFromDatabaseFn } from '@nexus/common/types/contracts/database'
 
 export const handleLookupAgentInfo = (async (params: {
   toolCall: CodebuffToolCall<'lookup_agent_info'>

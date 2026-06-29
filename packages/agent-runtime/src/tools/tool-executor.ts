@@ -1,6 +1,6 @@
-import { endsAgentStepParam, toolNames } from '@codebuff/common/tools/constants'
-import { toolParams } from '@codebuff/common/tools/list'
-import { generateCompactId } from '@codebuff/common/util/string'
+import { endsAgentStepParam, toolNames } from '@nexus/common/tools/constants'
+import { toolParams } from '@nexus/common/tools/list'
+import { generateCompactId } from '@nexus/common/util/string'
 import { cloneDeep } from 'lodash'
 
 import { getMCPToolData } from '../mcp'
@@ -15,30 +15,30 @@ import { ensureZodSchema } from './prompts'
 import type { AgentTemplate } from '../templates/types'
 import type { CodebuffToolHandlerFunction } from './handlers/handler-function-type'
 import type { FileProcessingState } from './handlers/tool/write-file'
-import type { ToolName } from '@codebuff/common/tools/constants'
+import type { ToolName } from '@nexus/common/tools/constants'
 import type {
   ClientToolCall,
   ClientToolName,
   CodebuffToolCall,
   CodebuffToolOutput,
-} from '@codebuff/common/tools/list'
+} from '@nexus/common/tools/list'
 import type {
   AgentRuntimeDeps,
   AgentRuntimeScopedDeps,
-} from '@codebuff/common/types/contracts/agent-runtime'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
-import type { ToolMessage } from '@codebuff/common/types/messages/codebuff-message'
-import type { ToolResultOutput } from '@codebuff/common/types/messages/content-part'
-import type { PrintModeEvent } from '@codebuff/common/types/print-mode'
+} from '@nexus/common/types/contracts/agent-runtime'
+import type { Logger } from '@nexus/common/types/contracts/logger'
+import type { ToolMessage } from '@nexus/common/types/messages/codebuff-message'
+import type { ToolResultOutput } from '@nexus/common/types/messages/content-part'
+import type { PrintModeEvent } from '@nexus/common/types/print-mode'
 import type {
   AgentTemplateType,
   AgentState,
   Subgoal,
-} from '@codebuff/common/types/session-state'
+} from '@nexus/common/types/session-state'
 import type {
   CustomToolDefinitions,
   ProjectFileContext,
-} from '@codebuff/common/util/file'
+} from '@nexus/common/util/file'
 import type { ToolCallPart, ToolSet } from 'ai'
 
 export type CustomToolCall = {

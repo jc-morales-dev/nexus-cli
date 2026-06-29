@@ -1,4 +1,4 @@
-import { getRateLimitsByModel } from '@codebuff/common/types/freebuff-session'
+import { getRateLimitsByModel } from '@nexus/common/types/freebuff-session'
 import { TextAttributes } from '@opentui/core'
 import { useKeyboard } from '@opentui/react'
 import React, { useCallback, useState } from 'react'

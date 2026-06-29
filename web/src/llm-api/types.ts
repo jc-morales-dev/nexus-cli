@@ -1,5 +1,5 @@
-import type { Logger } from '@codebuff/common/types/contracts/logger'
-import type { InsertMessageBigqueryFn } from '@codebuff/common/types/contracts/bigquery'
+import type { Logger } from '@nexus/common/types/contracts/logger'
+import type { InsertMessageBigqueryFn } from '@nexus/common/types/contracts/bigquery'
 
 export interface CodebuffMetadata {
   client_id?: string

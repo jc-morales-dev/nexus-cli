@@ -1,4 +1,4 @@
-import { convertStripeGrantAmountToCredits } from '@codebuff/common/util/currency'
+import { convertStripeGrantAmountToCredits } from '@nexus/common/util/currency'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import debounce from 'lodash/debounce'
 import { useState, useCallback, useRef, useEffect } from 'react'

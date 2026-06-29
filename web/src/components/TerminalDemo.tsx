@@ -1,5 +1,5 @@
-import { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
-import { sleep } from '@codebuff/common/util/promise'
+import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
+import { sleep } from '@nexus/common/util/promise'
 import { useMutation } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
 import posthog from 'posthog-js'

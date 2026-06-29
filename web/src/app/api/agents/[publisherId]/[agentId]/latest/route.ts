@@ -1,5 +1,5 @@
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
 import { and, desc, eq } from 'drizzle-orm'
 import { NextResponse } from 'next/server'
 

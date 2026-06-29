@@ -1,4 +1,4 @@
-import { WEBSITE_URL } from '@codebuff/sdk'
+import { WEBSITE_URL } from '@nexus/sdk'
 import { useEffect, useRef, useState } from 'react'
 
 import { useTerminalLayout } from './use-terminal-layout'
@@ -10,7 +10,7 @@ import { IS_FREEBUFF } from '../utils/constants'
 import { getCliEnv } from '../utils/env'
 import { logger } from '../utils/logger'
 
-import type { Message } from '@codebuff/sdk'
+import type { Message } from '@nexus/sdk'
 
 const AD_ROTATION_INTERVAL_MS = 60 * 1000 // 60 seconds per ad
 const MAX_ADS_AFTER_ACTIVITY = 3 // Show up to 3 ads after last activity, then pause fetching new ads

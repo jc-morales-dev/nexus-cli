@@ -44,7 +44,7 @@ The user-facing terminal UI, built with [OpenTUI](https://github.com/nickhudkins
 
 ### `sdk/` — JavaScript/TypeScript SDK
 
-The public SDK used by the CLI and available to external users via `@codebuff/sdk` on npm.
+The public SDK used by the CLI and available to external users via `@nexus/sdk` on npm.
 
 - **Entry point:** `src/client.ts` (`CodebuffClient`) → `src/run.ts` (`run()`)
 - **Key responsibilities:**

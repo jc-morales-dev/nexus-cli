@@ -1,13 +1,13 @@
-import * as analytics from '@codebuff/common/analytics'
-import { TEST_USER_ID } from '@codebuff/common/old-constants'
-import { TEST_AGENT_RUNTIME_IMPL } from '@codebuff/common/testing/impl/agent-runtime'
+import * as analytics from '@nexus/common/analytics'
+import { TEST_USER_ID } from '@nexus/common/old-constants'
+import { TEST_AGENT_RUNTIME_IMPL } from '@nexus/common/testing/impl/agent-runtime'
 import {
   createMockDbOperations,
   setupDbSpies,
-} from '@codebuff/common/testing/mocks/database'
-import { getInitialSessionState } from '@codebuff/common/types/session-state'
-import { promptSuccess } from '@codebuff/common/util/error'
-import { assistantMessage, userMessage } from '@codebuff/common/util/messages'
+} from '@nexus/common/testing/mocks/database'
+import { getInitialSessionState } from '@nexus/common/types/session-state'
+import { promptSuccess } from '@nexus/common/util/error'
+import { assistantMessage, userMessage } from '@nexus/common/util/messages'
 import {
   afterAll,
   afterEach,
@@ -25,13 +25,13 @@ import { createToolCallChunk } from './test-utils'
 import { asUserMessage } from '../util/messages'
 
 import type { AgentTemplate } from '../templates/types'
-import type { DbSpies } from '@codebuff/common/testing/mocks/database'
+import type { DbSpies } from '@nexus/common/testing/mocks/database'
 import type {
   AgentRuntimeDeps,
   AgentRuntimeScopedDeps,
-} from '@codebuff/common/types/contracts/agent-runtime'
-import type { ParamsExcluding } from '@codebuff/common/types/function-params'
-import type { ProjectFileContext } from '@codebuff/common/util/file'
+} from '@nexus/common/types/contracts/agent-runtime'
+import type { ParamsExcluding } from '@nexus/common/types/function-params'
+import type { ProjectFileContext } from '@nexus/common/util/file'
 
 describe('runAgentStep - set_output tool', () => {
   let testAgent: AgentTemplate

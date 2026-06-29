@@ -7,8 +7,8 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
 
-import { CLIENT_ENV_PREFIX, clientEnvVars } from '@codebuff/common/env-schema'
-import { ciOnlyEnvVars, serverEnvVars } from '@codebuff/internal/env-schema'
+import { CLIENT_ENV_PREFIX, clientEnvVars } from '@nexus/common/env-schema'
+import { ciOnlyEnvVars, serverEnvVars } from '@nexus/internal/env-schema'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)

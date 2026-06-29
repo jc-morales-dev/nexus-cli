@@ -1,12 +1,12 @@
 'use client'
 
-import { pluralize } from '@codebuff/common/util/string'
+import { pluralize } from '@nexus/common/util/string'
 import { useQuery } from '@tanstack/react-query'
 import { User, Plus, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 
-import type { PublisherProfileResponse } from '@codebuff/common/types/publisher'
+import type { PublisherProfileResponse } from '@nexus/common/types/publisher'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'

@@ -1,4 +1,4 @@
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 /**
  * Identifies which upstream ad network served an ad. Stored on

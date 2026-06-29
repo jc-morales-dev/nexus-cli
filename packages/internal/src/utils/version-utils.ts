@@ -1,6 +1,6 @@
 import { and, desc, eq } from 'drizzle-orm'
 
-import * as schema from '@codebuff/internal/db/schema'
+import * as schema from '@nexus/internal/db/schema'
 
 import type { CodebuffPgDatabase } from '../db/types'
 

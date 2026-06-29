@@ -5,10 +5,10 @@
  * process env with SDK-specific vars for binary paths and WASM.
  */
 
-import { BYOK_OPENROUTER_ENV_VAR } from '@codebuff/common/constants/byok'
-import { CHATGPT_OAUTH_TOKEN_ENV_VAR } from '@codebuff/common/constants/chatgpt-oauth'
-import { API_KEY_ENV_VAR } from '@codebuff/common/constants/paths'
-import { getBaseEnv } from '@codebuff/common/env-process'
+import { BYOK_OPENROUTER_ENV_VAR } from '@nexus/common/constants/byok'
+import { CHATGPT_OAUTH_TOKEN_ENV_VAR } from '@nexus/common/constants/chatgpt-oauth'
+import { API_KEY_ENV_VAR } from '@nexus/common/constants/paths'
+import { getBaseEnv } from '@nexus/common/env-process'
 
 import type { SdkEnv } from './types/env'
 

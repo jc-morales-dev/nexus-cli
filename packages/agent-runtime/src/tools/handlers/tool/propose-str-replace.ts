@@ -8,11 +8,11 @@ import type { CodebuffToolHandlerFunction } from '../handler-function-type'
 import type {
   CodebuffToolCall,
   CodebuffToolOutput,
-} from '@codebuff/common/tools/list'
-import type { RequestOptionalFileFn } from '@codebuff/common/types/contracts/client'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
-import type { ParamsExcluding } from '@codebuff/common/types/function-params'
-import type { AgentState } from '@codebuff/common/types/session-state'
+} from '@nexus/common/tools/list'
+import type { RequestOptionalFileFn } from '@nexus/common/types/contracts/client'
+import type { Logger } from '@nexus/common/types/contracts/logger'
+import type { ParamsExcluding } from '@nexus/common/types/function-params'
+import type { AgentState } from '@nexus/common/types/session-state'
 
 export const handleProposeStrReplace = (async (
   params: {

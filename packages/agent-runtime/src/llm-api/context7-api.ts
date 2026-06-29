@@ -1,7 +1,7 @@
-import { withTimeout } from '@codebuff/common/util/promise'
+import { withTimeout } from '@nexus/common/util/promise'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
-import type { ParamsOf } from '@codebuff/common/types/function-params'
+import type { Logger } from '@nexus/common/types/contracts/logger'
+import type { ParamsOf } from '@nexus/common/types/function-params'
 
 const CONTEXT7_API_BASE_URL = 'https://context7.com/api/v1'
 const DEFAULT_TYPE = 'txt'

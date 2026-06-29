@@ -1,7 +1,7 @@
 import { timingSafeEqual } from 'crypto'
 
-import { env } from '@codebuff/internal/env'
-import { sendBasicEmail } from '@codebuff/internal/loops/client'
+import { env } from '@nexus/internal/env'
+import { sendBasicEmail } from '@nexus/internal/loops/client'
 import { NextResponse } from 'next/server'
 
 import {

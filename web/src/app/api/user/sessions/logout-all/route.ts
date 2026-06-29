@@ -1,5 +1,5 @@
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
 import { and, eq, ne } from 'drizzle-orm'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'

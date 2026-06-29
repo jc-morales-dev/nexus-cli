@@ -1,10 +1,10 @@
 import {
   clearMockedModules,
   mockModule,
-} from '@codebuff/common/testing/mock-modules'
+} from '@nexus/common/testing/mock-modules'
 import { afterEach, describe, expect, it } from 'bun:test'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 const logger: Logger = {
   debug: () => {},
@@ -180,7 +180,7 @@ describe('Balance Calculator - calculateUsageAndBalance', () => {
       ]
 
       // Mock the database to return our test grants
-      await mockModule('@codebuff/internal/db', () => ({
+      await mockModule('@nexus/internal/db', () => ({
         default: {
           select: () => ({
             from: () => ({
@@ -193,12 +193,12 @@ describe('Balance Calculator - calculateUsageAndBalance', () => {
       }))
 
       // Mock analytics to prevent actual tracking
-      await mockModule('@codebuff/common/analytics', () => ({
+      await mockModule('@nexus/common/analytics', () => ({
         trackEvent: () => {},
       }))
 
       const { calculateUsageAndBalance } = await import(
-        '@codebuff/billing/balance-calculator'
+        '@nexus/billing/balance-calculator'
       )
 
       const result = await calculateUsageAndBalance({
@@ -243,7 +243,7 @@ describe('Balance Calculator - calculateUsageAndBalance', () => {
         }),
       ]
 
-      await mockModule('@codebuff/internal/db', () => ({
+      await mockModule('@nexus/internal/db', () => ({
         default: {
           select: () => ({
             from: () => ({
@@ -255,12 +255,12 @@ describe('Balance Calculator - calculateUsageAndBalance', () => {
         },
       }))
 
-      await mockModule('@codebuff/common/analytics', () => ({
+      await mockModule('@nexus/common/analytics', () => ({
         trackEvent: () => {},
       }))
 
       const { calculateUsageAndBalance } = await import(
-        '@codebuff/billing/balance-calculator'
+        '@nexus/billing/balance-calculator'
       )
 
       const result = await calculateUsageAndBalance({
@@ -306,7 +306,7 @@ describe('Balance Calculator - calculateUsageAndBalance', () => {
         }),
       ]
 
-      await mockModule('@codebuff/internal/db', () => ({
+      await mockModule('@nexus/internal/db', () => ({
         default: {
           select: () => ({
             from: () => ({
@@ -318,12 +318,12 @@ describe('Balance Calculator - calculateUsageAndBalance', () => {
         },
       }))
 
-      await mockModule('@codebuff/common/analytics', () => ({
+      await mockModule('@nexus/common/analytics', () => ({
         trackEvent: () => {},
       }))
 
       const { calculateUsageAndBalance } = await import(
-        '@codebuff/billing/balance-calculator'
+        '@nexus/billing/balance-calculator'
       )
 
       const result = await calculateUsageAndBalance({
@@ -368,7 +368,7 @@ describe('Balance Calculator - calculateUsageAndBalance', () => {
         }),
       ]
 
-      await mockModule('@codebuff/internal/db', () => ({
+      await mockModule('@nexus/internal/db', () => ({
         default: {
           select: () => ({
             from: () => ({
@@ -380,12 +380,12 @@ describe('Balance Calculator - calculateUsageAndBalance', () => {
         },
       }))
 
-      await mockModule('@codebuff/common/analytics', () => ({
+      await mockModule('@nexus/common/analytics', () => ({
         trackEvent: () => {},
       }))
 
       const { calculateUsageAndBalance } = await import(
-        '@codebuff/billing/balance-calculator'
+        '@nexus/billing/balance-calculator'
       )
 
       const result = await calculateUsageAndBalance({
@@ -432,13 +432,13 @@ describe('consumeFromOrderedGrants - credit consumption bugs', () => {
   }
 
   async function importModule() {
-    await mockModule('@codebuff/internal/db', () => ({
+    await mockModule('@nexus/internal/db', () => ({
       default: {},
     }))
-    await mockModule('@codebuff/common/analytics', () => ({
+    await mockModule('@nexus/common/analytics', () => ({
       trackEvent: () => {},
     }))
-    return import('@codebuff/billing/balance-calculator')
+    return import('@nexus/billing/balance-calculator')
   }
 
   it('should deepen debt (not repay it) when consuming from a grant already in debt', async () => {
@@ -703,10 +703,10 @@ describe('Balance Calculator - Grant Ordering for Consumption', () => {
 
       const dbMock = createDbMockForUnion({ grants })
 
-      await mockModule('@codebuff/internal/db', () => ({
+      await mockModule('@nexus/internal/db', () => ({
         default: dbMock,
       }))
-      await mockModule('@codebuff/internal/db/transaction', () => ({
+      await mockModule('@nexus/internal/db/transaction', () => ({
         withSerializableTransaction: async ({
           callback,
         }: {
@@ -744,7 +744,7 @@ describe('Balance Calculator - Grant Ordering for Consumption', () => {
 
       const dbMock = createDbMockForUnion({ grants })
 
-      await mockModule('@codebuff/internal/db', () => ({
+      await mockModule('@nexus/internal/db', () => ({
         default: dbMock,
       }))
 
@@ -786,7 +786,7 @@ describe('Balance Calculator - Grant Ordering for Consumption', () => {
 
       const dbMock = createDbMockForUnion({ grants })
 
-      await mockModule('@codebuff/internal/db', () => ({
+      await mockModule('@nexus/internal/db', () => ({
         default: dbMock,
       }))
 
@@ -806,7 +806,7 @@ describe('Balance Calculator - Grant Ordering for Consumption', () => {
     it('should handle empty grants case', async () => {
       const dbMock = createDbMockForUnion({ grants: [] })
 
-      await mockModule('@codebuff/internal/db', () => ({
+      await mockModule('@nexus/internal/db', () => ({
         default: dbMock,
       }))
 
@@ -829,7 +829,7 @@ describe('Balance Calculator - Grant Ordering for Consumption', () => {
 
       const dbMock = createDbMockForUnion({ grants })
 
-      await mockModule('@codebuff/internal/db', () => ({
+      await mockModule('@nexus/internal/db', () => ({
         default: dbMock,
       }))
 
@@ -863,7 +863,7 @@ describe('Balance Calculator - Grant Ordering for Consumption', () => {
 
       const dbMock = createDbMockForUnion({ grants })
 
-      await mockModule('@codebuff/internal/db', () => ({
+      await mockModule('@nexus/internal/db', () => ({
         default: dbMock,
       }))
 
@@ -899,7 +899,7 @@ describe('Balance Calculator - Grant Ordering for Consumption', () => {
 
       const dbMock = createDbMockForUnion({ grants })
 
-      await mockModule('@codebuff/internal/db', () => ({
+      await mockModule('@nexus/internal/db', () => ({
         default: dbMock,
       }))
 

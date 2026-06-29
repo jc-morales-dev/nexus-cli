@@ -6,7 +6,7 @@ import { describe, expect, it } from 'bun:test'
 import { CodebuffClient } from '../client'
 import { EventCollector, DEFAULT_TIMEOUT } from '../../e2e/utils'
 
-import type { AgentOutput } from '@codebuff/common/types/session-state'
+import type { AgentOutput } from '@nexus/common/types/session-state'
 
 const apiKey = process.env.CODEBUFF_API_KEY
 

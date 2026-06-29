@@ -1,7 +1,7 @@
 import {
   clearMockedModules,
   mockModule,
-} from '@codebuff/common/testing/mock-modules'
+} from '@nexus/common/testing/mock-modules'
 import { afterAll, beforeEach, describe, expect, mock, test } from 'bun:test'
 
 import type Stripe from 'stripe'
@@ -20,13 +20,13 @@ const setupMocks = async () => {
   const fromMock = mock(() => ({ where: whereMock }))
   const selectMock = mock(() => ({ from: fromMock }))
 
-  await mockModule('@codebuff/internal/db', () => ({
+  await mockModule('@nexus/internal/db', () => ({
     default: {
       select: selectMock,
     },
   }))
 
-  await mockModule('@codebuff/internal/db/schema', () => ({
+  await mockModule('@nexus/internal/db/schema', () => ({
     org: {
       id: 'id',
       stripe_customer_id: 'stripe_customer_id',

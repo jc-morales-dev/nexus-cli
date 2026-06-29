@@ -4,10 +4,10 @@ import {
   finetunedVertexModels,
   models,
   type FinetunedVertexModel,
-} from '@codebuff/common/old-constants'
-import { getAllFilePaths } from '@codebuff/common/project-file-tree'
-import { isAbortError, unwrapPromptResult } from '@codebuff/common/util/error'
-import { systemMessage, userMessage } from '@codebuff/common/util/messages'
+} from '@nexus/common/old-constants'
+import { getAllFilePaths } from '@nexus/common/project-file-tree'
+import { isAbortError, unwrapPromptResult } from '@nexus/common/util/error'
+import { systemMessage, userMessage } from '@nexus/common/util/messages'
 import { range, shuffle, uniq } from 'lodash'
 
 import { promptFlashWithFallbacks } from '../llm-api/gemini-with-fallbacks'
@@ -18,11 +18,11 @@ import {
 } from '../util/messages'
 
 import type { TextBlock } from '../llm-api/claude'
-import type { PromptAiSdkFn } from '@codebuff/common/types/contracts/llm'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
-import type { ParamsExcluding } from '@codebuff/common/types/function-params'
-import type { Message } from '@codebuff/common/types/messages/codebuff-message'
-import type { ProjectFileContext } from '@codebuff/common/util/file'
+import type { PromptAiSdkFn } from '@nexus/common/types/contracts/llm'
+import type { Logger } from '@nexus/common/types/contracts/logger'
+import type { ParamsExcluding } from '@nexus/common/types/function-params'
+import type { Message } from '@nexus/common/types/messages/codebuff-message'
+import type { ProjectFileContext } from '@nexus/common/util/file'
 
 const NUMBER_OF_EXAMPLE_FILES = 100
 const MAX_FILES_PER_REQUEST = 30

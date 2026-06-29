@@ -1,12 +1,12 @@
 import {
   insertChatCompletionTraceBigquery,
   insertMessageBigquery,
-} from '@codebuff/bigquery'
-import { ensureSubscriberBlockGrant } from '@codebuff/billing/subscription'
-import { getUserUsageData } from '@codebuff/billing/usage-service'
-import { trackEvent } from '@codebuff/common/analytics'
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
+} from '@nexus/bigquery'
+import { ensureSubscriberBlockGrant } from '@nexus/billing/subscription'
+import { getUserUsageData } from '@nexus/billing/usage-service'
+import { trackEvent } from '@nexus/common/analytics'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
 import { eq } from 'drizzle-orm'
 
 import { postChatCompletions } from './_post'

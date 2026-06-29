@@ -1,16 +1,16 @@
 import { NextResponse } from 'next/server'
 
-import type { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
-import type { TrackEventFn } from '@codebuff/common/types/contracts/analytics'
+import type { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
+import type { TrackEventFn } from '@nexus/common/types/contracts/analytics'
 import type {
   ConsumeCreditsWithFallbackFn,
   GetUserUsageDataFn,
-} from '@codebuff/common/types/contracts/billing'
-import type { GetUserInfoFromApiKeyFn } from '@codebuff/common/types/contracts/database'
+} from '@nexus/common/types/contracts/billing'
+import type { GetUserInfoFromApiKeyFn } from '@nexus/common/types/contracts/database'
 import type {
   Logger,
   LoggerWithContextFn,
-} from '@codebuff/common/types/contracts/logger'
+} from '@nexus/common/types/contracts/logger'
 import type { NextRequest } from 'next/server'
 import type { ZodType } from 'zod'
 

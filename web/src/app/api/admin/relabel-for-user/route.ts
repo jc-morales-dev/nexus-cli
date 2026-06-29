@@ -1,4 +1,4 @@
-import { messagesWithSystem } from '@codebuff/agent-runtime/util/messages'
+import { messagesWithSystem } from '@nexus/agent-runtime/util/messages'
 import {
   getTracesAndAllDataForUser,
   getTracesWithoutRelabels,
@@ -9,24 +9,24 @@ import {
   type GetRelevantFilesTrace,
   type Relabel,
   type TraceBundle,
-} from '@codebuff/bigquery'
+} from '@nexus/bigquery'
 import {
   finetunedVertexModels,
   models,
   TEST_USER_ID,
-} from '@codebuff/common/old-constants'
-import { unwrapPromptResult } from '@codebuff/common/util/error'
-import { userMessage } from '@codebuff/common/util/messages'
-import { generateCompactId } from '@codebuff/common/util/string'
-import { closeXml } from '@codebuff/common/util/xml'
-import { promptAiSdk } from '@codebuff/sdk'
+} from '@nexus/common/old-constants'
+import { unwrapPromptResult } from '@nexus/common/util/error'
+import { userMessage } from '@nexus/common/util/messages'
+import { generateCompactId } from '@nexus/common/util/string'
+import { closeXml } from '@nexus/common/util/xml'
+import { promptAiSdk } from '@nexus/sdk'
 import { NextResponse } from 'next/server'
 
 import { checkAdminAuth } from '../../../../lib/admin-auth'
 import { logger } from '../../../../util/logger'
 
-import type { System } from '@codebuff/agent-runtime/llm-api/claude'
-import type { Message } from '@codebuff/common/types/messages/codebuff-message'
+import type { System } from '@nexus/agent-runtime/llm-api/claude'
+import type { Message } from '@nexus/common/types/messages/codebuff-message'
 import type { NextRequest } from 'next/server'
 
 // Type for messages stored in BigQuery traces

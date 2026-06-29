@@ -1,8 +1,8 @@
 'use server'
 
-import { env } from '@codebuff/common/env'
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
+import { env } from '@nexus/common/env'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
 import { eq } from 'drizzle-orm'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'

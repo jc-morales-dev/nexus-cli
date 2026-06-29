@@ -1,9 +1,9 @@
-import { FILE_READ_STATUS } from '@codebuff/common/old-constants'
-import { isFileIgnored } from '@codebuff/common/project-file-tree'
+import { FILE_READ_STATUS } from '@nexus/common/old-constants'
+import { isFileIgnored } from '@nexus/common/project-file-tree'
 
 import { resolveFilePathWithinProject } from './path-utils'
 
-import type { CodebuffFileSystem } from '@codebuff/common/types/filesystem'
+import type { CodebuffFileSystem } from '@nexus/common/types/filesystem'
 
 export type FileFilterResult = {
   status: 'blocked' | 'allow-example' | 'allow'

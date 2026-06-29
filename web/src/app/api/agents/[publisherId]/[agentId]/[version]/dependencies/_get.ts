@@ -1,9 +1,9 @@
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
 import { and, eq, or } from 'drizzle-orm'
 import { NextResponse } from 'next/server'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 import {
   buildAgentTree,

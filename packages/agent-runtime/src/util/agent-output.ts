@@ -1,9 +1,9 @@
-import type { AgentTemplate } from '@codebuff/common/types/agent-template'
-import type { Message } from '@codebuff/common/types/messages/codebuff-message'
+import type { AgentTemplate } from '@nexus/common/types/agent-template'
+import type { Message } from '@nexus/common/types/messages/codebuff-message'
 import type {
   AgentState,
   AgentOutput,
-} from '@codebuff/common/types/session-state'
+} from '@nexus/common/types/session-state'
 
 /** Messages tagged with these tags are stripped from agent output. */
 const EXCLUDED_OUTPUT_TAGS = ['TOOL_CALL_ERROR'] as const

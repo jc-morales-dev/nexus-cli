@@ -1,7 +1,7 @@
 'use client'
 
-import { DynamicAgentTemplateSchema } from '@codebuff/common/types/dynamic-agent-template'
-import { schemaToJsonStr } from '@codebuff/common/util/zod-schema'
+import { DynamicAgentTemplateSchema } from '@nexus/common/types/dynamic-agent-template'
+import { schemaToJsonStr } from '@nexus/common/util/zod-schema'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { useState, useRef } from 'react'
 

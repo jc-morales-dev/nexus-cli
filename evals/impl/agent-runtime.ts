@@ -1,8 +1,8 @@
-import { success } from '@codebuff/common/util/error'
+import { success } from '@nexus/common/util/error'
 
-import type { AgentTemplate } from '@codebuff/common/types/agent-template'
-import type { AgentRuntimeDeps } from '@codebuff/common/types/contracts/agent-runtime'
-import type { ClientEnv, CiEnv } from '@codebuff/common/types/contracts/env'
+import type { AgentTemplate } from '@nexus/common/types/agent-template'
+import type { AgentRuntimeDeps } from '@nexus/common/types/contracts/agent-runtime'
+import type { ClientEnv, CiEnv } from '@nexus/common/types/contracts/env'
 
 const evalsClientEnv: ClientEnv = {
   NEXT_PUBLIC_CB_ENVIRONMENT: 'test',

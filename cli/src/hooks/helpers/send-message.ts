@@ -1,4 +1,4 @@
-import { getErrorObject } from '@codebuff/common/util/error'
+import { getErrorObject } from '@nexus/common/util/error'
 
 import {
   markFreebuffSessionCountryBlocked,
@@ -45,7 +45,7 @@ import type { AgentMode } from '../../utils/constants'
 import type { SendMessageTimerController } from '../../utils/send-message-timer'
 import type { StreamController } from '../stream-state'
 import type { StreamStatus } from '../use-message-queue'
-import type { MessageContent, RunState } from '@codebuff/sdk'
+import type { MessageContent, RunState } from '@nexus/sdk'
 import type { MutableRefObject, SetStateAction } from 'react'
 
 /** Resets queue state on early return (before streaming starts). */

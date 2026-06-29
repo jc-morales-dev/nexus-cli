@@ -1,4 +1,4 @@
-import { isByokDirectMode } from '@codebuff/common/constants/byok'
+import { isByokDirectMode } from '@nexus/common/constants/byok'
 import { useQuery } from '@tanstack/react-query'
 
 import { getAuthToken } from '../utils/auth'
@@ -10,7 +10,7 @@ import type {
   UserField,
   UserDetails,
 } from '../utils/codebuff-api'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 // Re-export types for backwards compatibility
 export type { UserField, UserDetails }

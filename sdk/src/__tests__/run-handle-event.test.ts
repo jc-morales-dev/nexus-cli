@@ -1,14 +1,14 @@
 
-import * as mainPromptModule from '@codebuff/agent-runtime/main-prompt'
-import { getInitialSessionState } from '@codebuff/common/types/session-state'
-import { getStubProjectFileContext } from '@codebuff/common/util/file'
+import * as mainPromptModule from '@nexus/agent-runtime/main-prompt'
+import { getInitialSessionState } from '@nexus/common/types/session-state'
+import { getStubProjectFileContext } from '@nexus/common/util/file'
 import { afterEach, describe, expect, it, mock, spyOn } from 'bun:test'
 
 import { CodebuffClient } from '../client'
 import * as databaseModule from '../impl/database'
 
 import type { CodebuffClientOptions } from '../run'
-import type { PrintModeEvent } from '@codebuff/common/types/print-mode'
+import type { PrintModeEvent } from '@nexus/common/types/print-mode'
 
 describe('CodebuffClient handleEvent / handleStreamChunk', () => {
   afterEach(() => {

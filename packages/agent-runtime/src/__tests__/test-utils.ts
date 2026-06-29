@@ -1,9 +1,9 @@
-import { promptSuccess } from '@codebuff/common/util/error'
-import { generateCompactId } from '@codebuff/common/util/string'
+import { promptSuccess } from '@nexus/common/util/error'
+import { generateCompactId } from '@nexus/common/util/string'
 
-import type { StreamChunk } from '@codebuff/common/types/contracts/llm'
-import type { PromptResult } from '@codebuff/common/util/error'
-import type { ProjectFileContext } from '@codebuff/common/util/file'
+import type { StreamChunk } from '@nexus/common/types/contracts/llm'
+import type { PromptResult } from '@nexus/common/util/error'
+import type { ProjectFileContext } from '@nexus/common/util/file'
 
 /**
  * Creates a native tool call stream chunk for testing.

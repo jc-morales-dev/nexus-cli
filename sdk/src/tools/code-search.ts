@@ -6,7 +6,7 @@ import { formatCodeSearchOutput } from '../../../common/src/util/format-code-sea
 import { getBundledRgPath } from '../native/ripgrep'
 
 import type { CodebuffToolOutput } from '../../../common/src/tools/list'
-import { Logger } from '@codebuff/common/types/contracts/logger'
+import { Logger } from '@nexus/common/types/contracts/logger'
 
 // Hidden directories to include in code search by default.
 // These are searched in addition to '.' to ensure important config/workflow files are discoverable.
@@ -419,7 +419,7 @@ export function codeSearch({
     childProcess.once('error', (error) => {
       if (isResolved) return
       settle({
-        errorMessage: `Failed to execute ripgrep: ${error.message}. Vendored ripgrep not found; ensure @codebuff/sdk is up-to-date or set CODEBUFF_RG_PATH.`,
+        errorMessage: `Failed to execute ripgrep: ${error.message}. Vendored ripgrep not found; ensure @nexus/sdk is up-to-date or set CODEBUFF_RG_PATH.`,
       })
     })
   })

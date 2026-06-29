@@ -5,7 +5,7 @@ import {
   FREEBUFF_DEEPSEEK_V4_PRO_MODEL_ID,
   FREEBUFF_KIMI_MODEL_ID,
   FREEBUFF_MINIMAX_MODEL_ID,
-} from '@codebuff/common/constants/freebuff-models'
+} from '@nexus/common/constants/freebuff-models'
 
 import { createBase2 } from '../base2/base2'
 

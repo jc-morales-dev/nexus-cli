@@ -1,5 +1,5 @@
-import type { CodebuffClient} from '@codebuff/sdk';
-import { type AgentDefinition } from '@codebuff/sdk'
+import type { CodebuffClient} from '@nexus/sdk';
+import { type AgentDefinition } from '@nexus/sdk'
 
 import { PLACEHOLDER } from '../../agents/types/secret-agent-definition'
 import fileExplorerDef from '../../agents-graveyard/file-explorer/file-explorer'

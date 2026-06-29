@@ -8,8 +8,8 @@
 
 import { readFileSync } from 'fs'
 
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
 import { inArray, sql } from 'drizzle-orm'
 
 const args = process.argv.slice(2).filter((a) => !a.startsWith('--'))

@@ -1,4 +1,4 @@
-import { isRetryableStatusCode, getErrorStatusCode } from '@codebuff/sdk'
+import { isRetryableStatusCode, getErrorStatusCode } from '@nexus/sdk'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 
@@ -30,7 +30,7 @@ import { getLogoBlockColor, getLogoAccentColor } from './utils/theme-system'
 import type { MultilineInputHandle } from './components/multiline-input'
 import type { AgentMode } from './utils/constants'
 import type { AuthStatus } from './utils/status-indicator-state'
-import type { FileTreeNode } from '@codebuff/common/util/file'
+import type { FileTreeNode } from '@nexus/common/util/file'
 
 interface AppProps {
   initialPrompt: string | null

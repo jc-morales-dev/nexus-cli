@@ -1,6 +1,6 @@
 'use client'
 
-import { pluralize } from '@codebuff/common/util/string'
+import { pluralize } from '@nexus/common/util/string'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import {
   CreditCard,

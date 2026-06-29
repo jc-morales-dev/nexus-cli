@@ -1,8 +1,8 @@
-import { getErrorObject } from '@codebuff/common/util/error'
+import { getErrorObject } from '@nexus/common/util/error'
 import { cloneDeep } from 'lodash'
 
-import type { CodebuffToolOutput } from '@codebuff/common/tools/list'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { CodebuffToolOutput } from '@nexus/common/tools/list'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 export function simplifyReadFileResults(
   messageContent: CodebuffToolOutput<'read_files'>,

@@ -14,7 +14,7 @@
  *
  * Only the network call needs a live `fetch`; the parsers are pure and tested.
  */
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 export interface SearchResult {
   title: string

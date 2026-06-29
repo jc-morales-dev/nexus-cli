@@ -1,11 +1,11 @@
-# @codebuff/sdk
+# @nexus/sdk
 
 Official SDK for Codebuff - AI coding agent and framework
 
 ## Installation
 
 ```bash
-npm install @codebuff/sdk
+npm install @nexus/sdk
 ```
 
 ## Prerequisites
@@ -17,7 +17,7 @@ npm install @codebuff/sdk
 ### Basic Example
 
 ```typescript
-import { CodebuffClient } from '@codebuff/sdk'
+import { CodebuffClient } from '@nexus/sdk'
 
 async function main() {
   const client = new CodebuffClient({
@@ -59,9 +59,9 @@ Here, we create a full agent and custom tools that can be reused between runs.
 ```typescript
 import { z } from 'zod/v4'
 
-import { CodebuffClient, getCustomToolDefinition } from '@codebuff/sdk'
+import { CodebuffClient, getCustomToolDefinition } from '@nexus/sdk'
 
-import type { AgentDefinition } from '@codebuff/sdk'
+import type { AgentDefinition } from '@nexus/sdk'
 
 async function main() {
   const client = new CodebuffClient({
@@ -178,7 +178,7 @@ const client = new CodebuffClient({
 Loads agent definitions from `.agents` directories on disk.
 
 ```typescript
-import { loadLocalAgents, CodebuffClient } from '@codebuff/sdk'
+import { loadLocalAgents, CodebuffClient } from '@nexus/sdk'
 
 // Load from default locations (.agents in cwd, parent, or home)
 const agents = await loadLocalAgents({ verbose: true })

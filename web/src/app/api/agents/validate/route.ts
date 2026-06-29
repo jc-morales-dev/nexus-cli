@@ -1,4 +1,4 @@
-import { validateAgentsWithSpawnableAgents } from '@codebuff/internal/templates/agent-validation'
+import { validateAgentsWithSpawnableAgents } from '@nexus/internal/templates/agent-validation'
 import { NextResponse } from 'next/server'
 
 import type { NextRequest } from 'next/server'

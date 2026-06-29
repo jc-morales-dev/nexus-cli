@@ -1,11 +1,11 @@
-export type * from '@codebuff/common/types/json'
-export type * from '@codebuff/common/types/messages/codebuff-message'
-export type * from '@codebuff/common/types/messages/data-content'
-export type * from '@codebuff/common/types/print-mode'
+export type * from '@nexus/common/types/json'
+export type * from '@nexus/common/types/messages/codebuff-message'
+export type * from '@nexus/common/types/messages/data-content'
+export type * from '@nexus/common/types/print-mode'
 export type {
   TextPart,
   ImagePart,
-} from '@codebuff/common/types/messages/content-part'
+} from '@nexus/common/types/messages/content-part'
 export { run } from './run'
 export { checkpoints } from './checkpoints'
 export type { UndoResult, CheckpointSummary } from './checkpoints'
@@ -23,16 +23,16 @@ export type {
   TextContent,
   ImageContent,
 } from './run'
-export { buildUserMessageContent } from '@codebuff/agent-runtime/util/messages'
+export { buildUserMessageContent } from '@nexus/agent-runtime/util/messages'
 // Agent type exports
-export type { AgentDefinition } from '@codebuff/common/templates/initial-agents-dir/types/agent-definition'
-export type { ToolName } from '@codebuff/common/tools/constants'
+export type { AgentDefinition } from '@nexus/common/templates/initial-agents-dir/types/agent-definition'
+export type { ToolName } from '@nexus/common/tools/constants'
 
 export type {
   ClientToolCall,
   ClientToolName,
   CodebuffToolOutput,
-} from '@codebuff/common/tools/list'
+} from '@nexus/common/tools/list'
 export * from './client'
 export * from './custom-tool'
 export * from './native/ripgrep'
@@ -45,9 +45,9 @@ export * from './credentials'
 export { loadLocalAgents } from './agents/load-agents'
 export { loadMCPConfig, loadMCPConfigSync } from './agents/load-mcp-config'
 export { loadSkills } from './skills/load-skills'
-export { formatAvailableSkillsXml } from '@codebuff/common/util/skills'
+export { formatAvailableSkillsXml } from '@nexus/common/util/skills'
 export type { LoadSkillsOptions } from './skills/load-skills'
-export type { SkillDefinition, SkillsMap } from '@codebuff/common/types/skill'
+export type { SkillDefinition, SkillsMap } from '@nexus/common/types/skill'
 export type {
   LoadedAgents,
   LoadedAgentDefinition,
@@ -86,15 +86,15 @@ export {
   RECONNECTION_RETRY_DELAY_MS,
 } from './retry-config'
 
-export type { CodebuffFileSystem } from '@codebuff/common/types/filesystem'
+export type { CodebuffFileSystem } from '@nexus/common/types/filesystem'
 
 // Tree-sitter / code-map exports
 export {
   getFileTokenScores,
   setWasmDir,
   setTreeSitterWasmPath,
-} from '@codebuff/code-map'
-export type { FileTokenData, TokenCallerMap } from '@codebuff/code-map'
+} from '@nexus/code-map'
+export type { FileTokenData, TokenCallerMap } from '@nexus/code-map'
 
 export { runTerminalCommand } from './tools/run-terminal-command'
 export {

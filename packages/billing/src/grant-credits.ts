@@ -1,19 +1,19 @@
-import { trackEvent } from '@codebuff/common/analytics'
-import { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
-import { GRANT_PRIORITIES } from '@codebuff/common/constants/grant-priorities'
-import { SIGNUP_FREE_CREDITS_GRANT } from '@codebuff/common/constants/limits'
-import { getNextQuotaReset } from '@codebuff/common/util/dates'
-import { withRetry } from '@codebuff/common/util/promise'
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
-import { withAdvisoryLockTransaction } from '@codebuff/internal/db/transaction'
-import { logSyncFailure } from '@codebuff/internal/util/sync-failure'
+import { trackEvent } from '@nexus/common/analytics'
+import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
+import { GRANT_PRIORITIES } from '@nexus/common/constants/grant-priorities'
+import { SIGNUP_FREE_CREDITS_GRANT } from '@nexus/common/constants/limits'
+import { getNextQuotaReset } from '@nexus/common/util/dates'
+import { withRetry } from '@nexus/common/util/promise'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
+import { withAdvisoryLockTransaction } from '@nexus/internal/db/transaction'
+import { logSyncFailure } from '@nexus/internal/util/sync-failure'
 import { and, desc, eq, gt, isNull, like, lte, or, sql } from 'drizzle-orm'
 
 import { generateOperationIdTimestamp } from './utils'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
-import type { GrantType } from '@codebuff/internal/db/schema'
+import type { Logger } from '@nexus/common/types/contracts/logger'
+import type { GrantType } from '@nexus/internal/db/schema'
 
 type _CreditGrantSelect = typeof schema.creditLedger.$inferSelect
 type DbTransaction = Parameters<typeof db.transaction>[0] extends (

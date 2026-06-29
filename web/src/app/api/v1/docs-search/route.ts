@@ -1,7 +1,7 @@
-import { consumeCreditsWithFallback } from '@codebuff/billing/credit-delegation'
-import { ensureSubscriberBlockGrant } from '@codebuff/billing/subscription'
-import { getUserUsageData } from '@codebuff/billing/usage-service'
-import { trackEvent } from '@codebuff/common/analytics'
+import { consumeCreditsWithFallback } from '@nexus/billing/credit-delegation'
+import { ensureSubscriberBlockGrant } from '@nexus/billing/subscription'
+import { getUserUsageData } from '@nexus/billing/usage-service'
+import { trackEvent } from '@nexus/common/analytics'
 
 import { postDocsSearch } from './_post'
 

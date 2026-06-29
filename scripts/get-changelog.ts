@@ -2,10 +2,10 @@ import { execSync } from 'child_process'
 import fs from 'fs'
 import path from 'path'
 
-import { models } from '@codebuff/common/old-constants'
-import { userMessage } from '@codebuff/common/util/messages'
-import { generateCompactId } from '@codebuff/common/util/string'
-import { promptAiSdk } from '@codebuff/sdk'
+import { models } from '@nexus/common/old-constants'
+import { userMessage } from '@nexus/common/util/messages'
+import { generateCompactId } from '@nexus/common/util/string'
+import { promptAiSdk } from '@nexus/sdk'
 import prettier from 'prettier'
 
 // Native slugify implementation

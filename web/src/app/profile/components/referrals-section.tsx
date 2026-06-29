@@ -1,6 +1,6 @@
 'use client'
 
-import { env } from '@codebuff/common/env'
+import { env } from '@nexus/common/env'
 import { useQuery } from '@tanstack/react-query'
 import { Forward } from 'lucide-react'
 import { useSession } from 'next-auth/react'

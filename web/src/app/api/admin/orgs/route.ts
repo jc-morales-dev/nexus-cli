@@ -1,6 +1,6 @@
-import { calculateOrganizationUsageAndBalance } from '@codebuff/billing'
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
+import { calculateOrganizationUsageAndBalance } from '@nexus/billing'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
 import { eq, sql, desc } from 'drizzle-orm'
 import { NextResponse } from 'next/server'
 

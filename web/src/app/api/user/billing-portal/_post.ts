@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 export type SessionUser = {
   id: string

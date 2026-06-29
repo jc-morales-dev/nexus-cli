@@ -1,7 +1,7 @@
 import {
   clearMockedModules,
   mockModule,
-} from '@codebuff/common/testing/mock-modules'
+} from '@nexus/common/testing/mock-modules'
 import { afterAll, beforeAll, describe, expect, it, mock } from 'bun:test'
 
 import {
@@ -19,7 +19,7 @@ describe('Credit Delegation', () => {
 
   beforeAll(async () => {
     // Mock the org-billing functions that credit-delegation depends on
-    await mockModule('@codebuff/billing/org-billing', () => ({
+    await mockModule('@nexus/billing/org-billing', () => ({
       normalizeRepositoryUrl: mock((url: string) => url.toLowerCase().trim()),
       extractOwnerAndRepo: mock((url: string) => {
         if (url.includes('codebuffai/codebuff')) {
@@ -31,7 +31,7 @@ describe('Credit Delegation', () => {
     }))
 
     // Mock common dependencies
-    await mockModule('@codebuff/internal/db', () => {
+    await mockModule('@nexus/internal/db', () => {
       const select = mock((fields: Record<string, unknown>) => {
         if ('orgId' in fields && 'orgName' in fields) {
           return {

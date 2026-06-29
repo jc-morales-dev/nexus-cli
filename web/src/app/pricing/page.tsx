@@ -1,5 +1,5 @@
-import { env } from '@codebuff/common/env'
-import { SIGNUP_FREE_CREDITS_GRANT } from '@codebuff/common/constants/limits'
+import { env } from '@nexus/common/env'
+import { SIGNUP_FREE_CREDITS_GRANT } from '@nexus/common/constants/limits'
 
 import PricingClient from './pricing-client'
 

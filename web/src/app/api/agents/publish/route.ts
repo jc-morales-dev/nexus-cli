@@ -1,12 +1,12 @@
-import { publishAgentsRequestSchema } from '@codebuff/common/types/api/agents/publish'
+import { publishAgentsRequestSchema } from '@nexus/common/types/api/agents/publish'
 import {
   determineNextVersion,
   stringifyVersion,
   versionExists,
-} from '@codebuff/internal'
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
-import { validateAgentsWithSpawnableAgents } from '@codebuff/internal/templates/agent-validation'
+} from '@nexus/internal'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
+import { validateAgentsWithSpawnableAgents } from '@nexus/internal/templates/agent-validation'
 import { eq, and, or, desc } from 'drizzle-orm'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
@@ -18,7 +18,7 @@ import {
 } from './subagent-resolution'
 import { authOptions } from '../../auth/[...nextauth]/auth-options'
 
-import type { Version } from '@codebuff/internal'
+import type { Version } from '@nexus/internal'
 import type { NextRequest } from 'next/server'
 
 import { getUserInfoFromApiKey } from '@/db/user'

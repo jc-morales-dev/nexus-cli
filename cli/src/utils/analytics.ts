@@ -3,19 +3,19 @@ import {
   generateAnonymousId,
   type AnalyticsClientWithIdentify,
   type PostHogClientOptions,
-} from '@codebuff/common/analytics-core'
+} from '@nexus/common/analytics-core'
 import {
   env as defaultEnv,
   IS_PROD as defaultIsProd,
   DEBUG_ANALYTICS,
-} from '@codebuff/common/env'
-import { shouldTrackAnalyticsEvent } from '@codebuff/common/util/analytics-sampling'
+} from '@nexus/common/env'
+import { shouldTrackAnalyticsEvent } from '@nexus/common/util/analytics-sampling'
 
-import type { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
+import type { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
 
 
 // Re-export types from core for backwards compatibility
-export type { AnalyticsClientWithIdentify as AnalyticsClient } from '@codebuff/common/analytics-core'
+export type { AnalyticsClientWithIdentify as AnalyticsClient } from '@nexus/common/analytics-core'
 
 export enum AnalyticsErrorStage {
   Init = 'init',

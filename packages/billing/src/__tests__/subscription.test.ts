@@ -3,8 +3,8 @@ import { describe, expect, it } from 'bun:test'
 import {
   DEFAULT_TIER,
   SUBSCRIPTION_TIERS,
-} from '@codebuff/common/constants/subscription-plans'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+} from '@nexus/common/constants/subscription-plans'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 import {
   checkRateLimit,

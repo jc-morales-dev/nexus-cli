@@ -1,11 +1,11 @@
-import { assistantMessage, userMessage } from '@codebuff/common/util/messages'
+import { assistantMessage, userMessage } from '@nexus/common/util/messages'
 
 import type { CodebuffToolHandlerFunction } from '../handler-function-type'
 import type {
   CodebuffToolCall,
   CodebuffToolOutput,
-} from '@codebuff/common/tools/list'
-import type { AgentState } from '@codebuff/common/types/session-state'
+} from '@nexus/common/tools/list'
+import type { AgentState } from '@nexus/common/types/session-state'
 
 export const handleAddMessage = (async (params: {
   previousToolCallFinished: Promise<void>

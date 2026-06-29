@@ -6,7 +6,7 @@
  * - Eval results reporting
  */
 
-import type { BaseCiEnv } from '@codebuff/common/types/contracts/env'
+import type { BaseCiEnv } from '@nexus/common/types/contracts/env'
 
 /**
  * Evals-specific CI env vars.

@@ -1,11 +1,11 @@
-import { utils } from '@codebuff/internal'
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
+import { utils } from '@nexus/internal'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
 import { desc, eq } from 'drizzle-orm'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 
-import type { GitEvalResultRequest } from '@codebuff/internal/db/schema'
+import type { GitEvalResultRequest } from '@nexus/internal/db/schema'
 import type { NextRequest } from 'next/server'
 
 import { authOptions } from '@/app/api/auth/[...nextauth]/auth-options'

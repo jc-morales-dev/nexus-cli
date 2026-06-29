@@ -1,11 +1,11 @@
 import fs from 'fs'
 import path from 'path'
 
-import { withTimeout } from '@codebuff/common/util/promise'
+import { withTimeout } from '@nexus/common/util/promise'
 import { z } from 'zod/v4'
 
 import type { EvalCommitV2 } from './types'
-import type { AgentDefinition, CodebuffClient } from '@codebuff/sdk'
+import type { AgentDefinition, CodebuffClient } from '@nexus/sdk'
 
 const DEBUG_ERROR = true
 

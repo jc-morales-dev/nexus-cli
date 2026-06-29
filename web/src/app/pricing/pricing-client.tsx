@@ -1,12 +1,12 @@
 'use client'
 
-import { SIGNUP_FREE_CREDITS_GRANT } from '@codebuff/common/constants/limits'
+import { SIGNUP_FREE_CREDITS_GRANT } from '@nexus/common/constants/limits'
 import {
   SUBSCRIPTION_TIERS,
   SUBSCRIPTION_DISPLAY_NAME,
   type SubscriptionTierPrice,
-} from '@codebuff/common/constants/subscription-plans'
-import { env } from '@codebuff/common/env'
+} from '@nexus/common/constants/subscription-plans'
+import { env } from '@nexus/common/env'
 import { loadStripe } from '@stripe/stripe-js'
 import { motion } from 'framer-motion'
 import { Gift, Shield, Loader2, HelpCircle } from 'lucide-react'
@@ -28,7 +28,7 @@ import {
 } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 
-import type { SubscriptionResponse } from '@codebuff/common/types/subscription'
+import type { SubscriptionResponse } from '@nexus/common/types/subscription'
 
 const WEEKS_PER_MONTH = 4
 const CREDITS_PER_DOLLAR = Object.fromEntries(

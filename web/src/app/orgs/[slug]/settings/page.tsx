@@ -6,7 +6,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { useState, useEffect } from 'react'
 
-import type { PublisherProfileResponse } from '@codebuff/common/types/publisher'
+import type { PublisherProfileResponse } from '@nexus/common/types/publisher'
 
 // BILLING_DISABLED: BillingStatus component temporarily removed
 // import { BillingStatus } from '@/components/organization/billing-status'

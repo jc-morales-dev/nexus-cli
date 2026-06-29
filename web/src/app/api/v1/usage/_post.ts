@@ -1,16 +1,16 @@
-import { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
-import { INVALID_AUTH_TOKEN_MESSAGE } from '@codebuff/common/old-constants'
+import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
+import { INVALID_AUTH_TOKEN_MESSAGE } from '@nexus/common/old-constants'
 import { NextResponse } from 'next/server'
 import { z } from 'zod/v4'
 
 
-import type { TrackEventFn } from '@codebuff/common/types/contracts/analytics'
+import type { TrackEventFn } from '@nexus/common/types/contracts/analytics'
 import type {
   GetOrganizationUsageResponseFn,
   GetUserUsageDataFn,
-} from '@codebuff/common/types/contracts/billing'
-import type { GetUserInfoFromApiKeyFn } from '@codebuff/common/types/contracts/database'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+} from '@nexus/common/types/contracts/billing'
+import type { GetUserInfoFromApiKeyFn } from '@nexus/common/types/contracts/database'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 import type { NextRequest } from 'next/server'
 
 import { extractApiKeyFromHeader } from '@/util/auth'

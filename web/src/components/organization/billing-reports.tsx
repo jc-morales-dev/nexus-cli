@@ -1,6 +1,6 @@
 'use client'
 
-import { pluralize } from '@codebuff/common/util/string'
+import { pluralize } from '@nexus/common/util/string'
 import {
   BarChart3,
   Download,

@@ -1,14 +1,14 @@
 import { createHash, randomUUID } from 'node:crypto'
 
-import { setupBigQuery } from '@codebuff/bigquery'
+import { setupBigQuery } from '@nexus/bigquery'
 
 import { createRequestAuditRecord } from './request-audit'
 
 import type {
   ChatCompletionTraceRow,
   InsertChatCompletionTraceBigqueryFn,
-} from '@codebuff/common/types/contracts/bigquery'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+} from '@nexus/common/types/contracts/bigquery'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 import type { ChatCompletionRequestBody } from './types'
 
 type TraceCacheEntry = {

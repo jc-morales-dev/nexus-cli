@@ -1,18 +1,18 @@
 import * as os from 'os'
 import path from 'path'
 
-import { getFileTokenScores } from '@codebuff/code-map/parse'
-import { getSystemInfo } from '@codebuff/common/util/system-info'
+import { getFileTokenScores } from '@nexus/code-map/parse'
+import { getSystemInfo } from '@nexus/common/util/system-info'
 import {
   KNOWLEDGE_FILE_NAMES_LOWERCASE,
   isKnowledgeFile,
-} from '@codebuff/common/constants/knowledge'
+} from '@nexus/common/constants/knowledge'
 import {
   getProjectFileTree,
   getAllFilePaths,
-} from '@codebuff/common/project-file-tree'
-import { getInitialSessionState } from '@codebuff/common/types/session-state'
-import { getErrorObject } from '@codebuff/common/util/error'
+} from '@nexus/common/project-file-tree'
+import { getInitialSessionState } from '@nexus/common/types/session-state'
+import { getErrorObject } from '@nexus/common/util/error'
 import { cloneDeep } from 'lodash'
 import z from 'zod/v4'
 
@@ -24,22 +24,22 @@ export {
   KNOWLEDGE_FILE_NAMES,
   PRIMARY_KNOWLEDGE_FILE_NAME,
   isKnowledgeFile,
-} from '@codebuff/common/constants/knowledge'
+} from '@nexus/common/constants/knowledge'
 
 import type { CustomToolDefinition } from './custom-tool'
-import type { AgentDefinition } from '@codebuff/common/templates/initial-agents-dir/types/agent-definition'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
-import type { CodebuffFileSystem } from '@codebuff/common/types/filesystem'
-import type { Message } from '@codebuff/common/types/messages/codebuff-message'
+import type { AgentDefinition } from '@nexus/common/templates/initial-agents-dir/types/agent-definition'
+import type { Logger } from '@nexus/common/types/contracts/logger'
+import type { CodebuffFileSystem } from '@nexus/common/types/filesystem'
+import type { Message } from '@nexus/common/types/messages/codebuff-message'
 import type {
   AgentOutput,
   SessionState,
-} from '@codebuff/common/types/session-state'
-import type { CodebuffSpawn } from '@codebuff/common/types/spawn'
+} from '@nexus/common/types/session-state'
+import type { CodebuffSpawn } from '@nexus/common/types/spawn'
 import type {
   CustomToolDefinitions,
   FileTreeNode,
-} from '@codebuff/common/util/file'
+} from '@nexus/common/util/file'
 import type * as fsType from 'fs'
 
 /**

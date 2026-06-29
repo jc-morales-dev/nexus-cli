@@ -1,6 +1,6 @@
-import { jsonToolResult } from '@codebuff/common/util/messages'
-import { SKILLS_DIR_NAME, SKILL_FILE_NAME } from '@codebuff/common/constants/skills'
-import { SkillFrontmatterSchema, type SkillDefinition } from '@codebuff/common/types/skill'
+import { jsonToolResult } from '@nexus/common/util/messages'
+import { SKILLS_DIR_NAME, SKILL_FILE_NAME } from '@nexus/common/constants/skills'
+import { SkillFrontmatterSchema, type SkillDefinition } from '@nexus/common/types/skill'
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -10,8 +10,8 @@ import type { CodebuffToolHandlerFunction } from '../handler-function-type'
 import type {
   CodebuffToolCall,
   CodebuffToolOutput,
-} from '@codebuff/common/tools/list'
-import type { ProjectFileContext } from '@codebuff/common/util/file'
+} from '@nexus/common/tools/list'
+import type { ProjectFileContext } from '@nexus/common/util/file'
 
 /**
  * Dynamically load a single skill from disk.

@@ -1,10 +1,10 @@
-import { WEBSITE_URL } from '@codebuff/sdk'
+import { WEBSITE_URL } from '@nexus/sdk'
 import { getSystemProcessEnv } from './env'
 
 import type {
   PublishAgentsResponse,
-} from '@codebuff/common/types/api/agents/publish'
-import type { FeedbackRequest } from '@codebuff/common/schemas/feedback'
+} from '@nexus/common/types/api/agents/publish'
+import type { FeedbackRequest } from '@nexus/common/schemas/feedback'
 
 /**
  * API response types for consistent error handling.

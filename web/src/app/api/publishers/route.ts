@@ -1,5 +1,5 @@
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
 import { eq, and, or } from 'drizzle-orm'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
@@ -7,7 +7,7 @@ import { getServerSession } from 'next-auth'
 import type {
   CreatePublisherRequest,
   PublisherProfileResponse,
-} from '@codebuff/common/types/publisher'
+} from '@nexus/common/types/publisher'
 import type { NextRequest } from 'next/server'
 
 import { authOptions } from '@/app/api/auth/[...nextauth]/auth-options'

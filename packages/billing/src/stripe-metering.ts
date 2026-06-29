@@ -1,11 +1,11 @@
-import { TEST_USER_ID } from '@codebuff/common/old-constants'
-import { withRetry, withTimeout } from '@codebuff/common/util/promise'
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
-import { stripeServer } from '@codebuff/internal/util/stripe'
+import { TEST_USER_ID } from '@nexus/common/old-constants'
+import { withRetry, withTimeout } from '@nexus/common/util/promise'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
+import { stripeServer } from '@nexus/internal/util/stripe'
 import { eq } from 'drizzle-orm'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 const STRIPE_METER_EVENT_NAME = 'credits'
 const STRIPE_METER_REQUEST_TIMEOUT_MS = 10_000

@@ -1,4 +1,4 @@
-import db from '@codebuff/internal/db'
+import db from '@nexus/internal/db'
 
 
 import { createLogoutDb, postLogout } from './_post'

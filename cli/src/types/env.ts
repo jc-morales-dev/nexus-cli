@@ -10,7 +10,7 @@
 import type {
   BaseEnv,
   ClientEnv,
-} from '@codebuff/common/types/contracts/env'
+} from '@nexus/common/types/contracts/env'
 
 /**
  * CLI-specific env vars for terminal/IDE detection and editor preferences.

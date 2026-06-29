@@ -1,6 +1,6 @@
 import { beforeAll, beforeEach, describe, expect, mock, test } from 'bun:test'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 import type { executeComposioTool as ExecuteComposioTool } from '../composio'
 
 let executeComposioTool: typeof ExecuteComposioTool

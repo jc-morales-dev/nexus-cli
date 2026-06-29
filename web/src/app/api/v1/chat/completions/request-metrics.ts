@@ -1,8 +1,8 @@
 import os from 'os'
 
-import { getErrorObject } from '@codebuff/common/util/error'
+import { getErrorObject } from '@nexus/common/util/error'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 const HOSTNAME = os.hostname()
 const DEFAULT_LOG_SAMPLE_RATE = 0.05

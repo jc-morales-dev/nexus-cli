@@ -1,7 +1,7 @@
 'use client'
 
-import { GRANT_PRIORITIES } from '@codebuff/common/constants/grant-priorities'
-import { pluralize } from '@codebuff/common/util/string'
+import { GRANT_PRIORITIES } from '@nexus/common/constants/grant-priorities'
+import { pluralize } from '@nexus/common/util/string'
 import {
   ChevronDown,
   ChevronRight,
@@ -13,8 +13,8 @@ import {
 } from 'lucide-react'
 import React from 'react'
 
-import type { CreditBalance } from '@codebuff/billing'
-import type { GrantType } from '@codebuff/internal/db/schema'
+import type { CreditBalance } from '@nexus/billing'
+import type { GrantType } from '@nexus/internal/db/schema'
 
 import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card'
 import {

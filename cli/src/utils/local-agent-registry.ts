@@ -2,13 +2,13 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 
-import { pluralize } from '@codebuff/common/util/string'
+import { pluralize } from '@nexus/common/util/string'
 import {
   loadLocalAgents as sdkLoadLocalAgents,
   loadMCPConfigSync,
-} from '@codebuff/sdk'
+} from '@nexus/sdk'
 
-import type { MCPConfig } from '@codebuff/common/types/mcp'
+import type { MCPConfig } from '@nexus/common/types/mcp'
 
 import { getSelectedFreebuffModel } from '../state/freebuff-model-store'
 import { getProjectRoot } from '../project-files'
@@ -17,7 +17,7 @@ import { getAgentIdForMode } from './freebuff-agent-selection'
 import { logger } from './logger'
 import * as bundledAgentsModule from '../agents/bundled-agents.generated'
 
-import type { AgentDefinition } from '@codebuff/common/templates/initial-agents-dir/types/agent-definition'
+import type { AgentDefinition } from '@nexus/common/templates/initial-agents-dir/types/agent-definition'
 
 // ============================================================================
 // Constants and types

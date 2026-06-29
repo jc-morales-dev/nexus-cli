@@ -5,7 +5,7 @@ import {
   getActiveChatCompletionRequestCount,
 } from '../request-metrics'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 const createLogger = (): Logger => ({
   debug: mock(() => {}),

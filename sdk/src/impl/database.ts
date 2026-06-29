@@ -1,10 +1,10 @@
 import {
   BYOK_STUB_USER,
   isByokDirectMode,
-} from '@codebuff/common/constants/byok'
-import { validateSingleAgent } from '@codebuff/common/templates/agent-validation'
-import { DynamicAgentTemplateSchema } from '@codebuff/common/types/dynamic-agent-template'
-import { getErrorObject } from '@codebuff/common/util/error'
+} from '@nexus/common/constants/byok'
+import { validateSingleAgent } from '@nexus/common/templates/agent-validation'
+import { DynamicAgentTemplateSchema } from '@nexus/common/types/dynamic-agent-template'
+import { getErrorObject } from '@nexus/common/util/error'
 import z from 'zod/v4'
 
 import { WEBSITE_URL } from '../constants'
@@ -29,9 +29,9 @@ import type {
   GetUserInfoFromApiKeyOutput,
   StartAgentRunFn,
   UserColumn,
-} from '@codebuff/common/types/contracts/database'
-import type { DynamicAgentTemplate } from '@codebuff/common/types/dynamic-agent-template'
-import type { ParamsOf } from '@codebuff/common/types/function-params'
+} from '@nexus/common/types/contracts/database'
+import type { DynamicAgentTemplate } from '@nexus/common/types/dynamic-agent-template'
+import type { ParamsOf } from '@nexus/common/types/function-params'
 
 type CachedUserInfo = Partial<
   NonNullable<Awaited<GetUserInfoFromApiKeyOutput<UserColumn>>>

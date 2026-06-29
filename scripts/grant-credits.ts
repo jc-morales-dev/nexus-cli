@@ -1,8 +1,8 @@
 import { createInterface } from 'readline'
 
-import { generateCompactId } from '@codebuff/common/util/string'
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
+import { generateCompactId } from '@nexus/common/util/string'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
 import { eq } from 'drizzle-orm'
 
 function prompt(rl: ReturnType<typeof createInterface>, question: string): Promise<string> {

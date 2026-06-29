@@ -8,19 +8,19 @@
 
 import path from 'path'
 
-import { BYOK_OPENROUTER_HEADER } from '@codebuff/common/constants/byok'
-import { isFreeMode } from '@codebuff/common/constants/free-agents'
+import { BYOK_OPENROUTER_HEADER } from '@nexus/common/constants/byok'
+import { isFreeMode } from '@nexus/common/constants/free-agents'
 import {
   CHATGPT_BACKEND_BASE_URL,
   CHATGPT_OAUTH_ENABLED,
   isChatGptOAuthModelAllowed,
   isOpenAIProviderModel,
   toOpenAIModelId,
-} from '@codebuff/common/constants/chatgpt-oauth'
+} from '@nexus/common/constants/chatgpt-oauth'
 import {
   OpenAICompatibleChatLanguageModel,
   VERSION,
-} from '@codebuff/llm-providers/openai-compatible'
+} from '@nexus/llm-providers/openai-compatible'
 
 import { WEBSITE_URL } from '../constants'
 import { getValidChatGptOAuthCredentials } from '../credentials'

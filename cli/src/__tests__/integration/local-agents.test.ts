@@ -2,7 +2,7 @@ import { mkdtempSync, rmSync, writeFileSync, mkdirSync, realpathSync } from 'fs'
 import os from 'os'
 import path from 'path'
 
-import { validateAgents } from '@codebuff/sdk'
+import { validateAgents } from '@nexus/sdk'
 import { describe, test, expect, beforeEach, afterEach, mock } from 'bun:test'
 
 // Mock the logger to prevent analytics initialization errors in tests

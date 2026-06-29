@@ -1,4 +1,4 @@
-import { stripeServer } from '@codebuff/internal/util/stripe'
+import { stripeServer } from '@nexus/internal/util/stripe'
 
 import type Stripe from 'stripe'
 

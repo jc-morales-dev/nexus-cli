@@ -1,14 +1,14 @@
 import path from 'path'
 
-import { fileExists } from '@codebuff/common/util/file'
+import { fileExists } from '@nexus/common/util/file'
 import { applyPatch } from 'diff'
 import z from 'zod/v4'
 
 import { checkpoints } from '../checkpoints'
 import { resolveFilePathWithinProject } from './path-utils'
 
-import type { CodebuffToolOutput } from '@codebuff/common/tools/list'
-import type { CodebuffFileSystem } from '@codebuff/common/types/filesystem'
+import type { CodebuffToolOutput } from '@nexus/common/tools/list'
+import type { CodebuffFileSystem } from '@nexus/common/types/filesystem'
 import type { ResolvedProjectPath } from './path-utils'
 
 const FileChangeSchema = z.object({

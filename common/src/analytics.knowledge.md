@@ -51,7 +51,7 @@ Both modules share common types and utilities from `common/src/analytics-core.ts
 ### Usage
 
 ```typescript
-import { initAnalytics, trackEvent } from '@codebuff/common/analytics'
+import { initAnalytics, trackEvent } from '@nexus/common/analytics'
 
 // Initialize once at server startup
 initAnalytics({ logger, clientEnv: env })
@@ -121,7 +121,7 @@ Both modules support **dependency injection** for testing without `mock.module()
 ### Server-side Testing
 
 ```typescript
-import { resetServerAnalyticsState, type ServerAnalyticsDeps } from '@codebuff/common/analytics'
+import { resetServerAnalyticsState, type ServerAnalyticsDeps } from '@nexus/common/analytics'
 
 const mockClient = { capture: mock(() => {}), flush: mock(() => Promise.resolve()) }
 const deps: ServerAnalyticsDeps = { createClient: () => mockClient }

@@ -9,7 +9,7 @@ import { useTheme } from '../hooks/use-theme'
 import {
   getFreebuffModel,
   LIMITED_FREEBUFF_MODEL_ID,
-} from '@codebuff/common/constants/freebuff-models'
+} from '@nexus/common/constants/freebuff-models'
 
 import type { KeyEvent, ScrollBoxRenderable } from '@opentui/core'
 

@@ -44,8 +44,8 @@ const isUseClientModule = (sourceFile: ts.SourceFile): boolean => {
 }
 
 const isInternalImport = (moduleSpecifier: string): boolean =>
-  moduleSpecifier === '@codebuff/internal' ||
-  moduleSpecifier.startsWith('@codebuff/internal/')
+  moduleSpecifier === '@nexus/internal' ||
+  moduleSpecifier.startsWith('@nexus/internal/')
 
 const collectSourceFiles = (dir: string): string[] => {
   if (!fs.existsSync(dir)) return []
@@ -99,9 +99,9 @@ type Violation = {
 
 const violations: Violation[] = []
 
-const ENV_PROCESS_MODULE = '@codebuff/common/env-process'
-const ENV_TYPES_MODULE = '@codebuff/common/types/contracts/env'
-const INTERNAL_ENV_MODULE = '@codebuff/internal/env'
+const ENV_PROCESS_MODULE = '@nexus/common/env-process'
+const ENV_TYPES_MODULE = '@nexus/common/types/contracts/env'
+const INTERNAL_ENV_MODULE = '@nexus/internal/env'
 
 const getLine = (sourceFile: ts.SourceFile, pos: number): number =>
   ts.getLineAndCharacterOfPosition(sourceFile, pos).line + 1
@@ -210,7 +210,7 @@ const isDynamicImportCall = (
 
 /**
  * Detect if a file is an "env helper" by checking if it imports getBaseEnv
- * from @codebuff/common/env-process. These files are the designated entry points for env access.
+ * from @nexus/common/env-process. These files are the designated entry points for env access.
  */
 const isEnvHelperFile = (sourceFile: ts.SourceFile): boolean => {
   for (const stmt of sourceFile.statements) {
@@ -443,7 +443,7 @@ for (const config of packageConfigs) {
   }
 }
 
-// common: do not allow importing from @codebuff/internal (layering + secret safety)
+// common: do not allow importing from @nexus/internal (layering + secret safety)
 {
   const rootDir = path.join(cwd, 'common', 'src')
   const files = collectSourceFiles(rootDir)
@@ -451,7 +451,7 @@ for (const config of packageConfigs) {
   for (const absolutePath of files) {
     const relativePath = normalizePath(path.relative(cwd, absolutePath))
     const content = fs.readFileSync(absolutePath, 'utf8')
-    if (!content.includes('@codebuff/internal')) continue
+    if (!content.includes('@nexus/internal')) continue
 
     const sourceFile = ts.createSourceFile(
       relativePath,
@@ -501,13 +501,13 @@ for (const config of packageConfigs) {
       const lineInfo = lines.length ? ` (lines ${lines.join(', ')})` : ''
       violations.push({
         file: relativePath,
-        message: `Disallowed import from @codebuff/internal${lineInfo}; common must not depend on internal (inject server env/deps instead)`,
+        message: `Disallowed import from @nexus/internal${lineInfo}; common must not depend on internal (inject server env/deps instead)`,
       })
     }
   }
 }
 
-// web: prevent Client Components from importing @codebuff/internal/env
+// web: prevent Client Components from importing @nexus/internal/env
 {
   const rootDir = path.join(cwd, 'web', 'src')
   const files = collectSourceFiles(rootDir)
@@ -517,7 +517,7 @@ for (const config of packageConfigs) {
     const content = fs.readFileSync(absolutePath, 'utf8')
     if (
       !content.includes('use client') ||
-      !content.includes('@codebuff/internal')
+      !content.includes('@nexus/internal')
     ) {
       continue
     }

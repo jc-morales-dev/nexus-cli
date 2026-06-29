@@ -1,11 +1,11 @@
 import { env } from 'process'
 
-import { CREDIT_PRICING } from '@codebuff/common/constants/limits'
-import { convertCreditsToUsdCents } from '@codebuff/common/util/currency'
-import { getNextQuotaReset } from '@codebuff/common/util/dates'
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
-import { stripeServer } from '@codebuff/internal/util/stripe'
+import { CREDIT_PRICING } from '@nexus/common/constants/limits'
+import { convertCreditsToUsdCents } from '@nexus/common/util/currency'
+import { getNextQuotaReset } from '@nexus/common/util/dates'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
+import { stripeServer } from '@nexus/internal/util/stripe'
 import { eq } from 'drizzle-orm'
 
 import { calculateUsageAndBalance } from './balance-calculator'
@@ -16,7 +16,7 @@ import {
 } from './org-billing'
 import { generateOperationIdTimestamp } from './utils'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 import type Stripe from 'stripe'
 
 const MINIMUM_PURCHASE_CREDITS = 500

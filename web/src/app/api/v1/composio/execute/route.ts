@@ -1,4 +1,4 @@
-import db from '@codebuff/internal/db'
+import db from '@nexus/internal/db'
 
 import { getUserInfoFromApiKey } from '@/db/user'
 import { logger, loggerWithContext } from '@/util/logger'

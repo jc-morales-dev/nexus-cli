@@ -1,10 +1,10 @@
-import { GRANT_PRIORITIES } from '@codebuff/common/constants/grant-priorities'
-import { GrantTypeValues } from '@codebuff/common/types/grant'
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
-import { withAdvisoryLockTransaction } from '@codebuff/internal/db/transaction'
-import { env } from '@codebuff/internal/env'
-import { stripeServer } from '@codebuff/internal/util/stripe'
+import { GRANT_PRIORITIES } from '@nexus/common/constants/grant-priorities'
+import { GrantTypeValues } from '@nexus/common/types/grant'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
+import { withAdvisoryLockTransaction } from '@nexus/internal/db/transaction'
+import { env } from '@nexus/internal/env'
+import { stripeServer } from '@nexus/internal/util/stripe'
 import { and, asc, gt, isNull, or, eq } from 'drizzle-orm'
 
 import { consumeFromOrderedGrants } from './balance-calculator'
@@ -14,9 +14,9 @@ import type {
   CreditUsageAndBalance,
   CreditConsumptionResult,
 } from './balance-calculator'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
-import type { OptionalFields } from '@codebuff/common/types/function-params'
-import type { GrantType } from '@codebuff/internal/db/schema'
+import type { Logger } from '@nexus/common/types/contracts/logger'
+import type { OptionalFields } from '@nexus/common/types/function-params'
+import type { GrantType } from '@nexus/internal/db/schema'
 
 // Add a minimal structural type that both `db` and `tx` satisfy
 type DbConn = Pick<typeof db, 'select' | 'update'>

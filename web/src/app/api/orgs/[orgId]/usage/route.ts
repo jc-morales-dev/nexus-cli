@@ -1,4 +1,4 @@
-import { getOrganizationUsageData } from '@codebuff/billing'
+import { getOrganizationUsageData } from '@nexus/billing'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 

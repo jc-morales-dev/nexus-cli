@@ -1,19 +1,19 @@
-import { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
+import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
 import {
   gravityIndexActionRequiresApiKey,
   gravityIndexInputSchema,
-} from '@codebuff/common/types/gravity-index'
+} from '@nexus/common/types/gravity-index'
 import { NextResponse } from 'next/server'
 
 import { parseJsonBody, requireUserFromApiKey } from '../_helpers'
 
-import type { GravityIndexInput } from '@codebuff/common/types/gravity-index'
-import type { TrackEventFn } from '@codebuff/common/types/contracts/analytics'
-import type { GetUserInfoFromApiKeyFn } from '@codebuff/common/types/contracts/database'
+import type { GravityIndexInput } from '@nexus/common/types/gravity-index'
+import type { TrackEventFn } from '@nexus/common/types/contracts/analytics'
+import type { GetUserInfoFromApiKeyFn } from '@nexus/common/types/contracts/database'
 import type {
   Logger,
   LoggerWithContextFn,
-} from '@codebuff/common/types/contracts/logger'
+} from '@nexus/common/types/contracts/logger'
 import type { NextRequest } from 'next/server'
 
 const GRAVITY_INDEX_BASE_URL = 'https://index.trygravity.ai'

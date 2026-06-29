@@ -1,23 +1,23 @@
 import type { FileProcessingState } from './tool/write-file'
-import type { ToolName } from '@codebuff/common/tools/constants'
+import type { ToolName } from '@nexus/common/tools/constants'
 import type {
   ClientToolCall,
   ClientToolName,
   CodebuffToolCall,
   CodebuffToolMessage,
   CodebuffToolOutput,
-} from '@codebuff/common/tools/list'
-import type { AgentTemplate } from '@codebuff/common/types/agent-template'
+} from '@nexus/common/tools/list'
+import type { AgentTemplate } from '@nexus/common/types/agent-template'
 import type {
   AgentRuntimeDeps,
   AgentRuntimeScopedDeps,
-} from '@codebuff/common/types/contracts/agent-runtime'
-import type { TrackEventFn } from '@codebuff/common/types/contracts/analytics'
-import type { SendSubagentChunkFn } from '@codebuff/common/types/contracts/client'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
-import type { PrintModeEvent } from '@codebuff/common/types/print-mode'
-import type { AgentState, Subgoal } from '@codebuff/common/types/session-state'
-import type { ProjectFileContext } from '@codebuff/common/util/file'
+} from '@nexus/common/types/contracts/agent-runtime'
+import type { TrackEventFn } from '@nexus/common/types/contracts/analytics'
+import type { SendSubagentChunkFn } from '@nexus/common/types/contracts/client'
+import type { Logger } from '@nexus/common/types/contracts/logger'
+import type { PrintModeEvent } from '@nexus/common/types/print-mode'
+import type { AgentState, Subgoal } from '@nexus/common/types/session-state'
+import type { ProjectFileContext } from '@nexus/common/util/file'
 import type { ToolSet } from 'ai'
 
 type PresentOrAbsent<K extends PropertyKey, V> =

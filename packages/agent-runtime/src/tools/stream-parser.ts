@@ -1,11 +1,11 @@
-import { toolNames } from '@codebuff/common/tools/constants'
-import { buildArray } from '@codebuff/common/util/array'
-import { AbortError } from '@codebuff/common/util/error'
+import { toolNames } from '@nexus/common/tools/constants'
+import { buildArray } from '@nexus/common/util/array'
+import { AbortError } from '@nexus/common/util/error'
 import {
   assistantMessage,
   userMessage,
-} from '@codebuff/common/util/messages'
-import { generateCompactId } from '@codebuff/common/util/string'
+} from '@nexus/common/util/messages'
+import { generateCompactId } from '@nexus/common/util/string'
 
 import { processStreamWithTools } from '../tool-stream-parser'
 import { INCLUDE_REASONING_IN_MESSAGE_HISTORY } from '../constants'
@@ -19,17 +19,17 @@ import { withSystemTags } from '../util/messages'
 import type { CustomToolCall, ExecuteToolCallParams } from './tool-executor'
 import type { AgentTemplate } from '../templates/types'
 import type { FileProcessingState } from './handlers/tool/write-file'
-import type { ToolName } from '@codebuff/common/tools/constants'
-import type { CodebuffToolCall } from '@codebuff/common/tools/list'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
-import type { ParamsExcluding } from '@codebuff/common/types/function-params'
+import type { ToolName } from '@nexus/common/tools/constants'
+import type { CodebuffToolCall } from '@nexus/common/tools/list'
+import type { Logger } from '@nexus/common/types/contracts/logger'
+import type { ParamsExcluding } from '@nexus/common/types/function-params'
 import type {
   Message,
   ToolMessage,
-} from '@codebuff/common/types/messages/codebuff-message'
-import type { PrintModeEvent } from '@codebuff/common/types/print-mode'
-import type { Subgoal } from '@codebuff/common/types/session-state'
-import type { ProjectFileContext } from '@codebuff/common/util/file'
+} from '@nexus/common/types/messages/codebuff-message'
+import type { PrintModeEvent } from '@nexus/common/types/print-mode'
+import type { Subgoal } from '@nexus/common/types/session-state'
+import type { ProjectFileContext } from '@nexus/common/util/file'
 
 export async function processStream(
   params: {

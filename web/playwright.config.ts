@@ -1,4 +1,4 @@
-import { getE2EDatabaseUrl } from '@codebuff/internal/db/e2e-constants'
+import { getE2EDatabaseUrl } from '@nexus/internal/db/e2e-constants'
 import { defineConfig, devices } from '@playwright/test'
 
 // Use the same port as the dev server, defaulting to 3000

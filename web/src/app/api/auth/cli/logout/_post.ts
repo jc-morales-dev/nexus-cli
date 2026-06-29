@@ -5,7 +5,7 @@ import { z } from 'zod/v4'
 import { shouldUnclaim } from './_helpers'
 
 import type { LogoutDb } from './_db'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 import type { NextRequest } from 'next/server'
 
 import { extractApiKeyFromHeader } from '@/util/auth'

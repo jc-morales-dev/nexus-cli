@@ -1,5 +1,5 @@
 {
-  "name": "@codebuff/web",
+  "name": "@nexus/web",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -38,10 +38,10 @@
     "bun": "1.3.11"
   },
   "dependencies": {
-    "@codebuff/billing": "workspace:*",
-    "@codebuff/common": "workspace:*",
-    "@codebuff/internal": "workspace:*",
-    "@codebuff/sdk": "workspace:*",
+    "@nexus/billing": "workspace:*",
+    "@nexus/common": "workspace:*",
+    "@nexus/internal": "workspace:*",
+    "@nexus/sdk": "workspace:*",
     "@composio/core": "^0.10.0",
     "@hookform/resolvers": "^3.9.0",
     "@mdx-js/loader": "^3.1.0",

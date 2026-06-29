@@ -14,9 +14,9 @@
  * usage:  bun scripts/inspect-freebuff-active.ts
  */
 
-import { FREEBUFF_ROOT_AGENT_IDS } from '@codebuff/common/constants/free-agents'
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
+import { FREEBUFF_ROOT_AGENT_IDS } from '@nexus/common/constants/free-agents'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
 import { sql, eq, inArray, desc, and, gte } from 'drizzle-orm'
 
 const WINDOW_HOURS = 24

@@ -2,10 +2,10 @@ import {
   checkRateLimit,
   getActiveSubscription,
   getSubscriptionLimits,
-} from '@codebuff/billing'
-import { SUBSCRIPTION_DISPLAY_NAME } from '@codebuff/common/constants/subscription-plans'
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
+} from '@nexus/billing'
+import { SUBSCRIPTION_DISPLAY_NAME } from '@nexus/common/constants/subscription-plans'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
 import { eq } from 'drizzle-orm'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
@@ -17,7 +17,7 @@ import { logger } from '@/util/logger'
 import type {
   NoSubscriptionResponse,
   ActiveSubscriptionResponse,
-} from '@codebuff/common/types/subscription'
+} from '@nexus/common/types/subscription'
 import type { NextRequest } from 'next/server'
 
 export async function GET(req: NextRequest) {

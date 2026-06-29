@@ -1,5 +1,5 @@
-import { isByokDirectMode } from '@codebuff/common/constants/byok'
-import { API_KEY_ENV_VAR } from '@codebuff/common/constants/paths'
+import { isByokDirectMode } from '@nexus/common/constants/byok'
+import { API_KEY_ENV_VAR } from '@nexus/common/constants/paths'
 
 import { WEBSITE_URL } from './constants'
 import { getCodebuffApiKeyFromEnv } from './env'

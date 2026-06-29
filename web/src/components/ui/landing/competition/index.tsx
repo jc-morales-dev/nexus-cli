@@ -1,4 +1,4 @@
-import { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
+import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
 import { motion } from 'framer-motion'
 import posthog from 'posthog-js'
 import { useState, useEffect, useRef } from 'react'

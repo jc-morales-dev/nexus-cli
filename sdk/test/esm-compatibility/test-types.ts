@@ -2,15 +2,15 @@
 import {
   CodebuffClient as ClientClass,
   getCustomToolDefinition,
-} from '@codebuff/sdk'
-import * as FullSDK from '@codebuff/sdk'
+} from '@nexus/sdk'
+import * as FullSDK from '@nexus/sdk'
 ;
 
 import type {
   CodebuffClient,
   CustomToolDefinition,
   RunState,
-} from '@codebuff/sdk'
+} from '@nexus/sdk'
 (async () => {
   // Test 1: Type imports work correctly
   const testClient: CodebuffClient = {} as any
@@ -48,7 +48,7 @@ import type {
   console.log('✅ Custom tool definition types work correctly')
 
   // Test 5: Dynamic imports also work in TypeScript ESM
-  const dynamicSDK = await import('@codebuff/sdk')
+  const dynamicSDK = await import('@nexus/sdk')
   const ClientFromDynamic: typeof ClientClass = dynamicSDK.CodebuffClient
   console.log('✅ Dynamic imports work in TypeScript ESM')
 

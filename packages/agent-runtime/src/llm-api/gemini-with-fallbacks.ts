@@ -1,13 +1,13 @@
-import { openaiModels, openrouterModels } from '@codebuff/common/old-constants'
-import { isAbortError, unwrapPromptResult } from '@codebuff/common/util/error'
+import { openaiModels, openrouterModels } from '@nexus/common/old-constants'
+import { isAbortError, unwrapPromptResult } from '@nexus/common/util/error'
 
 import type {
   FinetunedVertexModel,
-} from '@codebuff/common/old-constants'
-import type { PromptAiSdkFn } from '@codebuff/common/types/contracts/llm'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
-import type { ParamsExcluding } from '@codebuff/common/types/function-params'
-import type { Message } from '@codebuff/common/types/messages/codebuff-message'
+} from '@nexus/common/old-constants'
+import type { PromptAiSdkFn } from '@nexus/common/types/contracts/llm'
+import type { Logger } from '@nexus/common/types/contracts/logger'
+import type { ParamsExcluding } from '@nexus/common/types/function-params'
+import type { Message } from '@nexus/common/types/messages/codebuff-message'
 
 /**
  * Prompts a Gemini model with fallback logic.

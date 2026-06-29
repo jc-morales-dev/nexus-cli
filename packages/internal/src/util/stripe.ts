@@ -1,6 +1,6 @@
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
-import { env } from '@codebuff/internal/env'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
+import { env } from '@nexus/internal/env'
 import { eq } from 'drizzle-orm'
 import Stripe from 'stripe'
 

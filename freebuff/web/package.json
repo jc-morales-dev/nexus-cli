@@ -1,5 +1,5 @@
 {
-  "name": "@codebuff/freebuff-web",
+  "name": "@nexus/freebuff-web",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -12,9 +12,9 @@
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.7.4",
-    "@codebuff/billing": "workspace:*",
-    "@codebuff/common": "workspace:*",
-    "@codebuff/internal": "workspace:*",
+    "@nexus/billing": "workspace:*",
+    "@nexus/common": "workspace:*",
+    "@nexus/internal": "workspace:*",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-slot": "^1.1.2",
     "class-variance-authority": "^0.7.1",

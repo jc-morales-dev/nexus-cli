@@ -1,17 +1,17 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-import { API_KEY_ENV_VAR } from '@codebuff/common/old-constants'
+import { API_KEY_ENV_VAR } from '@nexus/common/old-constants'
 import {
   CodebuffClient,
   getUserCredentials,
   loadLocalAgents,
-} from '@codebuff/sdk'
+} from '@nexus/sdk'
 import { createTwoFilesPatch } from 'diff'
 
 import { withTestRepo } from './test-repo-utils'
 
-import type { AgentDefinition } from '@codebuff/sdk'
+import type { AgentDefinition } from '@nexus/sdk'
 
 export const evalPlannerAgent = async (params: {
   client: CodebuffClient

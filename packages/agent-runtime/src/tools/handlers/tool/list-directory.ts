@@ -3,7 +3,7 @@ import type {
   ClientToolCall,
   CodebuffToolCall,
   CodebuffToolOutput,
-} from '@codebuff/common/tools/list'
+} from '@nexus/common/tools/list'
 
 type ToolName = 'list_directory'
 export const handleListDirectory = (async (params: {

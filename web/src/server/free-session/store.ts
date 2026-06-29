@@ -1,12 +1,12 @@
-import { db } from '@codebuff/internal/db'
-import { coerceBool } from '@codebuff/internal/db/advisory-lock'
-import * as schema from '@codebuff/internal/db/schema'
+import { db } from '@nexus/internal/db'
+import { coerceBool } from '@nexus/internal/db/advisory-lock'
+import * as schema from '@nexus/internal/db/schema'
 import { and, asc, count, desc, eq, gte, inArray, lt, sql } from 'drizzle-orm'
 
 import { FREEBUFF_ADMISSION_LOCK_ID } from './config'
 
 import type { FireworksHealth } from './fireworks-health'
-import type { FreebuffAccessTier } from '@codebuff/common/constants/freebuff-models'
+import type { FreebuffAccessTier } from '@nexus/common/constants/freebuff-models'
 import type {
   FreeSessionCountryAccessMetadata,
   InternalSessionRow,

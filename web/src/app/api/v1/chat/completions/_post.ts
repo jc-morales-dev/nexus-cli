@@ -1,43 +1,43 @@
-import { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
-import { BYOK_OPENROUTER_HEADER } from '@codebuff/common/constants/byok'
+import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
+import { BYOK_OPENROUTER_HEADER } from '@nexus/common/constants/byok'
 import {
   type FreebuffAccessTier,
   FREEBUFF_GEMINI_PRO_MODEL_ID,
   isFreebuffModelAllowedForAccessTier,
   isSupportedFreebuffModelId,
-} from '@codebuff/common/constants/freebuff-models'
+} from '@nexus/common/constants/freebuff-models'
 import {
   isFreebuffGeminiThinkerAgent,
   isFreebuffRootAgent,
   isFreeMode,
   isFreeModeAllowedAgentModel,
-} from '@codebuff/common/constants/free-agents'
-import { getErrorObject } from '@codebuff/common/util/error'
-import { formatFreebuffHardBlockedMessage } from '@codebuff/common/util/freebuff-privacy'
-import { pluralize } from '@codebuff/common/util/string'
-import { env } from '@codebuff/internal/env'
+} from '@nexus/common/constants/free-agents'
+import { getErrorObject } from '@nexus/common/util/error'
+import { formatFreebuffHardBlockedMessage } from '@nexus/common/util/freebuff-privacy'
+import { pluralize } from '@nexus/common/util/string'
+import { env } from '@nexus/internal/env'
 import { NextResponse } from 'next/server'
 
-import type { TrackEventFn } from '@codebuff/common/types/contracts/analytics'
+import type { TrackEventFn } from '@nexus/common/types/contracts/analytics'
 import type {
   InsertChatCompletionTraceBigqueryFn,
   InsertMessageBigqueryFn,
-} from '@codebuff/common/types/contracts/bigquery'
-import type { GetUserUsageDataFn } from '@codebuff/common/types/contracts/billing'
+} from '@nexus/common/types/contracts/bigquery'
+import type { GetUserUsageDataFn } from '@nexus/common/types/contracts/billing'
 import type {
   GetAgentRunFromIdFn,
   GetUserInfoFromApiKeyFn,
-} from '@codebuff/common/types/contracts/database'
+} from '@nexus/common/types/contracts/database'
 import type {
   Logger,
   LoggerWithContextFn,
-} from '@codebuff/common/types/contracts/logger'
+} from '@nexus/common/types/contracts/logger'
 
-import type { BlockGrantResult } from '@codebuff/billing/subscription'
+import type { BlockGrantResult } from '@nexus/billing/subscription'
 import {
   isWeeklyLimitError,
   isBlockExhaustedError,
-} from '@codebuff/billing/subscription'
+} from '@nexus/billing/subscription'
 
 export type GetUserPreferencesFn = (params: {
   userId: string
@@ -115,7 +115,7 @@ import type {
   FreeModeCountryAccessOptions,
 } from '@/server/free-mode-country'
 import { extractApiKeyFromHeader } from '@/util/auth'
-import { withDefaultProperties } from '@codebuff/common/analytics'
+import { withDefaultProperties } from '@nexus/common/analytics'
 import { checkFreeModeRateLimit as defaultCheckFreeModeRateLimit } from './free-mode-rate-limiter'
 import { beginChatCompletionRequestMetrics } from './request-metrics'
 

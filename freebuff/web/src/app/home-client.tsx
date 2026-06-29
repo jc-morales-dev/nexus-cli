@@ -1,6 +1,6 @@
 'use client'
 
-import { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
+import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Check, ChevronDown, Copy } from 'lucide-react'
 import Image from 'next/image'

@@ -3,7 +3,7 @@ export {}
 import {
   clearMockedModules,
   mockModule,
-} from '@codebuff/common/testing/mock-modules'
+} from '@nexus/common/testing/mock-modules'
 import { afterAll, beforeEach, describe, expect, it, mock } from 'bun:test'
 
 import type { BanConditionContext } from '../ban-conditions'
@@ -39,14 +39,14 @@ const setupMocks = async () => {
     }),
   )
 
-  await mockModule('@codebuff/internal/db', () => ({
+  await mockModule('@nexus/internal/db', () => ({
     default: {
       select: mockSelect,
       update: mockUpdate,
     },
   }))
 
-  await mockModule('@codebuff/internal/db/schema', () => ({
+  await mockModule('@nexus/internal/db/schema', () => ({
     user: {
       id: 'id',
       banned: 'banned',
@@ -56,7 +56,7 @@ const setupMocks = async () => {
     },
   }))
 
-  await mockModule('@codebuff/internal/util/stripe', () => ({
+  await mockModule('@nexus/internal/util/stripe', () => ({
     stripeServer: {
       disputes: {
         list: mockDisputesList,

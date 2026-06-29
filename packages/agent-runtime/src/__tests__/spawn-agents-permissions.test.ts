@@ -1,7 +1,7 @@
-import { TEST_USER_ID } from '@codebuff/common/old-constants'
-import { TEST_AGENT_RUNTIME_IMPL } from '@codebuff/common/testing/impl/agent-runtime'
-import { getInitialSessionState } from '@codebuff/common/types/session-state'
-import { assistantMessage } from '@codebuff/common/util/messages'
+import { TEST_USER_ID } from '@nexus/common/old-constants'
+import { TEST_AGENT_RUNTIME_IMPL } from '@nexus/common/testing/impl/agent-runtime'
+import { getInitialSessionState } from '@nexus/common/types/session-state'
+import { assistantMessage } from '@nexus/common/util/messages'
 import {
   describe,
   expect,
@@ -18,9 +18,9 @@ import { handleSpawnAgentInline } from '../tools/handlers/tool/spawn-agent-inlin
 import { getMatchingSpawn } from '../tools/handlers/tool/spawn-agent-utils'
 import { handleSpawnAgents } from '../tools/handlers/tool/spawn-agents'
 
-import type { CodebuffToolCall } from '@codebuff/common/tools/list'
-import type { AgentTemplate } from '@codebuff/common/types/agent-template'
-import type { ParamsExcluding } from '@codebuff/common/types/function-params'
+import type { CodebuffToolCall } from '@nexus/common/tools/list'
+import type { AgentTemplate } from '@nexus/common/types/agent-template'
+import type { ParamsExcluding } from '@nexus/common/types/function-params'
 
 describe('Spawn Agents Permissions', () => {
   let mockSendSubagentChunk: any

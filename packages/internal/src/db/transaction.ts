@@ -1,11 +1,11 @@
-import { trackEvent } from '@codebuff/common/analytics'
-import { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
-import { INITIAL_RETRY_DELAY, withRetry } from '@codebuff/common/util/promise'
+import { trackEvent } from '@nexus/common/analytics'
+import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
+import { INITIAL_RETRY_DELAY, withRetry } from '@nexus/common/util/promise'
 import { sql } from 'drizzle-orm'
 
 import db from './index'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 type TransactionCallback<T> = Parameters<typeof db.transaction<T>>[0]
 

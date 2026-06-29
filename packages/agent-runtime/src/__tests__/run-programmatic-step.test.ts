@@ -1,12 +1,12 @@
-import * as analytics from '@codebuff/common/analytics'
-import { TEST_USER_ID } from '@codebuff/common/old-constants'
-import { TEST_AGENT_RUNTIME_IMPL } from '@codebuff/common/testing/impl/agent-runtime'
-import { getInitialSessionState } from '@codebuff/common/types/session-state'
+import * as analytics from '@nexus/common/analytics'
+import { TEST_USER_ID } from '@nexus/common/old-constants'
+import { TEST_AGENT_RUNTIME_IMPL } from '@nexus/common/testing/impl/agent-runtime'
+import { getInitialSessionState } from '@nexus/common/types/session-state'
 import {
   assistantMessage,
   jsonToolResult,
   userMessage,
-} from '@codebuff/common/util/messages'
+} from '@nexus/common/util/messages'
 import {
   afterEach,
   beforeEach,
@@ -27,17 +27,17 @@ import * as toolExecutor from '../tools/tool-executor'
 
 import type { AgentTemplate, StepGenerator } from '../templates/types'
 import type { executeToolCall } from '../tools/tool-executor'
-import type { PublicAgentState } from '@codebuff/common/types/agent-template'
+import type { PublicAgentState } from '@nexus/common/types/agent-template'
 import type {
   AgentRuntimeDeps,
   AgentRuntimeScopedDeps,
-} from '@codebuff/common/types/contracts/agent-runtime'
-import type { SendActionFn } from '@codebuff/common/types/contracts/client'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
-import type { ParamsOf } from '@codebuff/common/types/function-params'
-import type { ToolMessage } from '@codebuff/common/types/messages/codebuff-message'
-import type { ToolResultOutput } from '@codebuff/common/types/messages/content-part'
-import type { AgentState } from '@codebuff/common/types/session-state'
+} from '@nexus/common/types/contracts/agent-runtime'
+import type { SendActionFn } from '@nexus/common/types/contracts/client'
+import type { Logger } from '@nexus/common/types/contracts/logger'
+import type { ParamsOf } from '@nexus/common/types/function-params'
+import type { ToolMessage } from '@nexus/common/types/messages/codebuff-message'
+import type { ToolResultOutput } from '@nexus/common/types/messages/content-part'
+import type { AgentState } from '@nexus/common/types/session-state'
 
 const logger: Logger = {
   debug: () => {},

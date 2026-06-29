@@ -1,5 +1,5 @@
-import { IS_PROD } from '@codebuff/common/env'
-import { getErrorObject } from '@codebuff/common/util/error'
+import { IS_PROD } from '@nexus/common/env'
+import { getErrorObject } from '@nexus/common/util/error'
 import { BigQuery } from '@google-cloud/bigquery'
 
 import {
@@ -13,8 +13,8 @@ import type { BaseTrace, GetRelevantFilesTrace, Relabel, Trace } from './schema'
 import type {
   ChatCompletionTraceRow,
   MessageRow,
-} from '@codebuff/common/types/contracts/bigquery'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+} from '@nexus/common/types/contracts/bigquery'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 const DATASET = IS_PROD ? 'codebuff_data' : 'codebuff_data_dev'
 

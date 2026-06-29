@@ -1,16 +1,16 @@
-import { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
-import { TEST_USER_ID } from '@codebuff/common/old-constants'
+import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
+import { TEST_USER_ID } from '@nexus/common/old-constants'
 import { afterEach, beforeEach, describe, expect, mock, test } from 'bun:test'
 import { NextRequest } from 'next/server'
 
 import { postAgentRuns } from '../_post'
 
-import type { TrackEventFn } from '@codebuff/common/types/contracts/analytics'
-import type { GetUserInfoFromApiKeyFn } from '@codebuff/common/types/contracts/database'
+import type { TrackEventFn } from '@nexus/common/types/contracts/analytics'
+import type { GetUserInfoFromApiKeyFn } from '@nexus/common/types/contracts/database'
 import type {
   Logger,
   LoggerWithContextFn,
-} from '@codebuff/common/types/contracts/logger'
+} from '@nexus/common/types/contracts/logger'
 
 describe('/api/v1/agent-runs POST endpoint', () => {
   const mockUserData: Record<string, { id: string }> = {

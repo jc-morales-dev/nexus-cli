@@ -1,8 +1,8 @@
-import { trackEvent as trackCommonEvent } from '@codebuff/common/analytics'
-import { env as clientEnvDefault } from '@codebuff/common/env'
-import { getCiEnv } from '@codebuff/common/env-ci'
-import { shouldTrackAnalyticsEvent } from '@codebuff/common/util/analytics-sampling'
-import { success } from '@codebuff/common/util/error'
+import { trackEvent as trackCommonEvent } from '@nexus/common/analytics'
+import { env as clientEnvDefault } from '@nexus/common/env'
+import { getCiEnv } from '@nexus/common/env-ci'
+import { shouldTrackAnalyticsEvent } from '@nexus/common/util/analytics-sampling'
+import { success } from '@nexus/common/util/error'
 
 import {
   addAgentStep,
@@ -16,11 +16,11 @@ import { promptAiSdk, promptAiSdkStream, promptAiSdkStructured } from './llm'
 import type {
   AgentRuntimeDeps,
   AgentRuntimeScopedDeps,
-} from '@codebuff/common/types/contracts/agent-runtime'
-import type { DatabaseAgentCache } from '@codebuff/common/types/contracts/database'
-import type { ClientEnv } from '@codebuff/common/types/contracts/env'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
-import type { TrackEventFn } from '@codebuff/common/types/contracts/analytics'
+} from '@nexus/common/types/contracts/agent-runtime'
+import type { DatabaseAgentCache } from '@nexus/common/types/contracts/database'
+import type { ClientEnv } from '@nexus/common/types/contracts/env'
+import type { Logger } from '@nexus/common/types/contracts/logger'
+import type { TrackEventFn } from '@nexus/common/types/contracts/analytics'
 
 const databaseAgentCache: DatabaseAgentCache = new Map()
 

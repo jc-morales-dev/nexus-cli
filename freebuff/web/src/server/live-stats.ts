@@ -1,6 +1,6 @@
-import { SUPPORTED_FREEBUFF_MODELS } from '@codebuff/common/constants/freebuff-models'
-import { db } from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
+import { SUPPORTED_FREEBUFF_MODELS } from '@nexus/common/constants/freebuff-models'
+import { db } from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
 import { and, count, eq, gt, sql } from 'drizzle-orm'
 
 export interface FreebuffLiveCountryCount {

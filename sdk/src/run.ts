@@ -1,25 +1,25 @@
 import path from 'path'
 
-import { callMainPrompt } from '@codebuff/agent-runtime/main-prompt'
+import { callMainPrompt } from '@nexus/agent-runtime/main-prompt'
 import {
   buildUserMessageContent,
   withSystemTags,
-} from '@codebuff/agent-runtime/util/messages'
-import { MAX_AGENT_STEPS_DEFAULT } from '@codebuff/common/constants/agents'
-import { toOptionalFile } from '@codebuff/common/constants/paths'
+} from '@nexus/agent-runtime/util/messages'
+import { MAX_AGENT_STEPS_DEFAULT } from '@nexus/common/constants/agents'
+import { toOptionalFile } from '@nexus/common/constants/paths'
 import {
   getMCPClient,
   listMCPTools,
   callMCPTool,
-} from '@codebuff/common/mcp/client'
+} from '@nexus/common/mcp/client'
 import {
   COMPOSIO_META_TOOL_NAMES,
   isComposioMetaToolName,
-} from '@codebuff/common/constants/composio'
-import { toolNames } from '@codebuff/common/tools/constants'
-import { clientToolCallSchema } from '@codebuff/common/tools/list'
-import { AgentOutputSchema } from '@codebuff/common/types/session-state'
-import { extractApiErrorDetails } from '@codebuff/common/util/error'
+} from '@nexus/common/constants/composio'
+import { toolNames } from '@nexus/common/tools/constants'
+import { clientToolCallSchema } from '@nexus/common/tools/list'
+import { AgentOutputSchema } from '@nexus/common/types/session-state'
+import { extractApiErrorDetails } from '@nexus/common/util/error'
 import { cloneDeep } from 'lodash'
 
 import { executeComposioToolViaServer } from './composio'
@@ -41,22 +41,22 @@ import { runTerminalCommand } from './tools/run-terminal-command'
 import type { CustomToolDefinition } from './custom-tool'
 import type { RunState } from './run-state'
 import type { FileFilter } from './tools/read-files'
-import type { ServerAction } from '@codebuff/common/actions'
-import type { AgentDefinition } from '@codebuff/common/templates/initial-agents-dir/types/agent-definition'
-import type { ToolName } from '@codebuff/common/tools/constants'
-import type { PublishedClientToolName } from '@codebuff/common/tools/list'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
-import type { CodebuffFileSystem } from '@codebuff/common/types/filesystem'
-import type { ToolMessage } from '@codebuff/common/types/messages/codebuff-message'
+import type { ServerAction } from '@nexus/common/actions'
+import type { AgentDefinition } from '@nexus/common/templates/initial-agents-dir/types/agent-definition'
+import type { ToolName } from '@nexus/common/tools/constants'
+import type { PublishedClientToolName } from '@nexus/common/tools/list'
+import type { Logger } from '@nexus/common/types/contracts/logger'
+import type { CodebuffFileSystem } from '@nexus/common/types/filesystem'
+import type { ToolMessage } from '@nexus/common/types/messages/codebuff-message'
 import type {
   ImagePart,
   TextPart,
   ToolResultOutput,
-} from '@codebuff/common/types/messages/content-part'
-import type { PrintModeEvent } from '@codebuff/common/types/print-mode'
-import type { SessionState } from '@codebuff/common/types/session-state'
-import type { Source } from '@codebuff/common/types/source'
-import type { CodebuffSpawn } from '@codebuff/common/types/spawn'
+} from '@nexus/common/types/messages/content-part'
+import type { PrintModeEvent } from '@nexus/common/types/print-mode'
+import type { SessionState } from '@nexus/common/types/session-state'
+import type { Source } from '@nexus/common/types/source'
+import type { CodebuffSpawn } from '@nexus/common/types/spawn'
 
 /**
  * Wraps content for user messages, ensuring text is wrapped in <user_message> tags.

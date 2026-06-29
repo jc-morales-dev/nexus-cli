@@ -1,9 +1,9 @@
-import { AgentTemplateTypes } from '@codebuff/common/types/session-state'
-import { parseAgentId } from '@codebuff/common/util/agent-id-parsing'
+import { AgentTemplateTypes } from '@nexus/common/types/session-state'
+import { parseAgentId } from '@nexus/common/util/agent-id-parsing'
 
 import { fetchAgent } from '../templates/fetch-agent'
 
-import type { DynamicAgentValidationError } from '@codebuff/common/templates/agent-validation'
+import type { DynamicAgentValidationError } from '@nexus/common/templates/agent-validation'
 
 export interface SubagentValidationResult {
   valid: boolean

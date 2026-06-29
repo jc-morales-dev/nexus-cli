@@ -1,6 +1,6 @@
-import { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
+import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 
@@ -15,12 +15,12 @@ import type {
   AdProviderId,
   NormalizedAd,
 } from '@/lib/ad-providers/types'
-import type { TrackEventFn } from '@codebuff/common/types/contracts/analytics'
-import type { GetUserInfoFromApiKeyFn } from '@codebuff/common/types/contracts/database'
+import type { TrackEventFn } from '@nexus/common/types/contracts/analytics'
+import type { GetUserInfoFromApiKeyFn } from '@nexus/common/types/contracts/database'
 import type {
   Logger,
   LoggerWithContextFn,
-} from '@codebuff/common/types/contracts/logger'
+} from '@nexus/common/types/contracts/logger'
 import type { NextRequest } from 'next/server'
 
 const messageSchema = z.object({

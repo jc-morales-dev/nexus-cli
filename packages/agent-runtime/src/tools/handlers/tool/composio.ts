@@ -1,5 +1,5 @@
-import type { ComposioMetaToolName } from '@codebuff/common/constants/composio'
-import type { CodebuffToolOutput } from '@codebuff/common/tools/list'
+import type { ComposioMetaToolName } from '@nexus/common/constants/composio'
+import type { CodebuffToolOutput } from '@nexus/common/tools/list'
 import type { CodebuffToolHandlerFunction } from '../handler-function-type'
 
 function makeComposioHandler<

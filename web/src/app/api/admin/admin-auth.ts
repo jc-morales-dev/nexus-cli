@@ -1,4 +1,4 @@
-import { utils } from '@codebuff/internal'
+import { utils } from '@nexus/internal'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 

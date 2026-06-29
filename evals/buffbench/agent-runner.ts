@@ -3,7 +3,7 @@ import { promisify } from 'util'
 
 const execAsync = promisify(exec)
 
-import { withTimeout } from '@codebuff/common/util/promise'
+import { withTimeout } from '@nexus/common/util/promise'
 
 import { withTestRepo } from '../subagents/test-repo-utils'
 import { ClaudeRunner } from './runners/claude'
@@ -13,7 +13,7 @@ import { OpenCodeRunner } from './runners/opencode'
 
 import type { Runner, AgentStep } from './runners/runner'
 import type { EvalCommitV2, FinalCheckOutput } from './types'
-import type { CodebuffClient } from '@codebuff/sdk'
+import type { CodebuffClient } from '@nexus/sdk'
 
 export type { AgentStep }
 

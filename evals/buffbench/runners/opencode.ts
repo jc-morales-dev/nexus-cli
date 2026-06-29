@@ -4,8 +4,8 @@ import type { AgentStep, Runner, RunnerResult } from './runner'
 import type {
   PrintModeToolCall,
   PrintModeToolResult,
-} from '@codebuff/common/types/print-mode'
-import type { JSONValue } from '@codebuff/common/types/json'
+} from '@nexus/common/types/print-mode'
+import type { JSONValue } from '@nexus/common/types/json'
 
 const OPENCODE_MODEL = 'opencode/kimi-k2.6'
 

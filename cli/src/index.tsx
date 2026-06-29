@@ -15,8 +15,8 @@ import { createRequire } from 'module'
 import os from 'os'
 import path from 'path'
 
-import { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
-import { getProjectFileTree } from '@codebuff/common/project-file-tree'
+import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
+import { getProjectFileTree } from '@nexus/common/project-file-tree'
 import { createCliRenderer } from '@opentui/core'
 import { createRoot } from '@opentui/react'
 import {
@@ -49,7 +49,7 @@ import { detectTerminalTheme } from './utils/terminal-color-detection'
 import { setOscDetectedTheme } from './utils/theme-system'
 
 import type { AgentMode } from './utils/constants'
-import type { FileTreeNode } from '@codebuff/common/util/file'
+import type { FileTreeNode } from '@nexus/common/util/file'
 
 const require = createRequire(import.meta.url)
 

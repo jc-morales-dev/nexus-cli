@@ -1,4 +1,4 @@
-import { env } from '@codebuff/common/env'
+import { env } from '@nexus/common/env'
 
 import AgentStoreClient from './store-client'
 

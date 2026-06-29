@@ -1,7 +1,7 @@
 'use client'
 
-import { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
-import { sleep } from '@codebuff/common/util/promise'
+import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
+import { sleep } from '@nexus/common/util/promise'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import posthog from 'posthog-js'

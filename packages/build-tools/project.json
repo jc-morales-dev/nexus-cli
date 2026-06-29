@@ -1,5 +1,5 @@
 {
-  "name": "@codebuff/build-tools",
+  "name": "@nexus/build-tools",
   "$schema": "../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": ".",
   "projectType": "library",

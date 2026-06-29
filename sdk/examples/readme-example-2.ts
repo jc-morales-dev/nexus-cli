@@ -1,8 +1,8 @@
 import { z } from 'zod/v4'
 
-import { CodebuffClient, getCustomToolDefinition } from '@codebuff/sdk'
+import { CodebuffClient, getCustomToolDefinition } from '@nexus/sdk'
 
-import type { AgentDefinition } from '@codebuff/sdk'
+import type { AgentDefinition } from '@nexus/sdk'
 
 async function main() {
   const client = new CodebuffClient({

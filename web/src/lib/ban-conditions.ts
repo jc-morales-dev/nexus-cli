@@ -1,11 +1,11 @@
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
-import { stripeServer } from '@codebuff/internal/util/stripe'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
+import { stripeServer } from '@nexus/internal/util/stripe'
 import { eq } from 'drizzle-orm'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
-export { getUserByStripeCustomerId } from '@codebuff/internal/util/stripe'
+export { getUserByStripeCustomerId } from '@nexus/internal/util/stripe'
 
 // =============================================================================
 // CONFIGURATION - Edit these values to adjust ban thresholds

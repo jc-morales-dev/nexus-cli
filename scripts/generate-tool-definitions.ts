@@ -4,7 +4,7 @@ import { execSync } from 'child_process'
 import { writeFileSync, mkdirSync } from 'fs'
 import { join, dirname } from 'path'
 
-import { compileToolDefinitions } from '@codebuff/common/tools/compile-tool-definitions'
+import { compileToolDefinitions } from '@nexus/common/tools/compile-tool-definitions'
 
 /**
  * Regenerates the tool-definitions.d.ts file from the current tool schemas.

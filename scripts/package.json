@@ -1,5 +1,5 @@
 {
-  "name": "@codebuff/scripts",
+  "name": "@nexus/scripts",
   "version": "1.0.0",
   "description": "Scripts package for Codebuff",
   "private": true,
@@ -22,8 +22,8 @@
   },
   "dependencies": {
     "@ai-sdk/openai-compatible": "^1.0.19",
-    "@codebuff/bigquery": "workspace:*",
-    "@codebuff/common": "workspace:*"
+    "@nexus/bigquery": "workspace:*",
+    "@nexus/common": "workspace:*"
   },
   "devDependencies": {}
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { pluralize } from '@codebuff/common/util/string'
+import { pluralize } from '@nexus/common/util/string'
 import { Plus, Users, CreditCard, Settings, Building2 } from 'lucide-react'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'

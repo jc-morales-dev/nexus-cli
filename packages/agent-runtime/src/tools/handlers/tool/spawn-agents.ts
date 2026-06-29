@@ -1,4 +1,4 @@
-import { jsonToolResult } from '@codebuff/common/util/messages'
+import { jsonToolResult } from '@nexus/common/util/messages'
 
 import {
   validateAndGetAgentTemplate,
@@ -12,12 +12,12 @@ import type { CodebuffToolHandlerFunction } from '../handler-function-type'
 import type {
   CodebuffToolCall,
   CodebuffToolOutput,
-} from '@codebuff/common/tools/list'
-import type { AgentTemplate } from '@codebuff/common/types/agent-template'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
-import type { ParamsExcluding } from '@codebuff/common/types/function-params'
-import type { PrintModeEvent } from '@codebuff/common/types/print-mode'
-import type { AgentState } from '@codebuff/common/types/session-state'
+} from '@nexus/common/tools/list'
+import type { AgentTemplate } from '@nexus/common/types/agent-template'
+import type { Logger } from '@nexus/common/types/contracts/logger'
+import type { ParamsExcluding } from '@nexus/common/types/function-params'
+import type { PrintModeEvent } from '@nexus/common/types/print-mode'
+import type { AgentState } from '@nexus/common/types/session-state'
 import type { ToolSet } from 'ai'
 
 export type SendSubagentChunk = (data: {

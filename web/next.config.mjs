@@ -42,9 +42,9 @@ const nextConfig = {
     // Externalize code-map package to avoid bundling tree-sitter WASM files
     // The web app doesn't need code-map functionality (only SDK CLI tools do)
     config.externals.push(
-      '@codebuff/code-map',
-      '@codebuff/code-map/parse',
-      '@codebuff/code-map/languages',
+      '@nexus/code-map',
+      '@nexus/code-map/parse',
+      '@nexus/code-map/languages',
       /^@codebuff\/code-map/
     )
 

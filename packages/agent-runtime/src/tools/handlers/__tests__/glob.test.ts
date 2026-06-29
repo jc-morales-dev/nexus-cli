@@ -5,7 +5,7 @@ import { handleGlob } from '../tool/glob'
 import type {
   CodebuffToolCall,
   CodebuffToolOutput,
-} from '@codebuff/common/tools/list'
+} from '@nexus/common/tools/list'
 
 interface GlobResultValue {
   files?: string[]

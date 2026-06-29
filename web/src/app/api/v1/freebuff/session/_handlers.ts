@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { formatFreebuffHardBlockedMessage } from '@codebuff/common/util/freebuff-privacy'
-import { env } from '@codebuff/internal/env'
+import { formatFreebuffHardBlockedMessage } from '@nexus/common/util/freebuff-privacy'
+import { env } from '@nexus/internal/env'
 
 import {
   endUserSession,
@@ -19,8 +19,8 @@ import { extractApiKeyFromHeader } from '@/util/auth'
 import type { FreeModeCountryAccess } from '@/server/free-mode-country'
 import type { FreeSessionCountryAccessMetadata } from '@/server/free-session/types'
 import type { SessionDeps } from '@/server/free-session/public-api'
-import type { GetUserInfoFromApiKeyFn } from '@codebuff/common/types/contracts/database'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { GetUserInfoFromApiKeyFn } from '@nexus/common/types/contracts/database'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 import type { NextRequest } from 'next/server'
 
 /** Resolves the caller's current free-mode country/privacy classification.

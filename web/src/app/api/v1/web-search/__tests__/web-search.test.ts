@@ -3,17 +3,17 @@ import { NextRequest } from 'next/server'
 
 import { postWebSearch } from '../_post'
 
-import type { TrackEventFn } from '@codebuff/common/types/contracts/analytics'
+import type { TrackEventFn } from '@nexus/common/types/contracts/analytics'
 import type {
   GetUserUsageDataFn,
   ConsumeCreditsWithFallbackFn,
-} from '@codebuff/common/types/contracts/billing'
-import type { GetUserInfoFromApiKeyFn } from '@codebuff/common/types/contracts/database'
+} from '@nexus/common/types/contracts/billing'
+import type { GetUserInfoFromApiKeyFn } from '@nexus/common/types/contracts/database'
 import type {
   Logger,
   LoggerWithContextFn,
-} from '@codebuff/common/types/contracts/logger'
-import type { BlockGrantResult } from '@codebuff/billing/subscription'
+} from '@nexus/common/types/contracts/logger'
+import type { BlockGrantResult } from '@nexus/billing/subscription'
 
 const testServerEnv = { SERPER_API_KEY: 'test-serper-key' }
 

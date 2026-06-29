@@ -1,7 +1,7 @@
-import { getUserInfoFromApiKey } from '@codebuff/sdk'
+import { getUserInfoFromApiKey } from '@nexus/sdk'
 import { describe, test, expect, beforeEach, afterEach, mock } from 'bun:test'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 /**
  * Integration tests for API communication with Codebuff backend

@@ -11,17 +11,17 @@ import {
   CHATGPT_OAUTH_CLIENT_ID,
   CHATGPT_OAUTH_REDIRECT_URI,
   CHATGPT_OAUTH_TOKEN_URL,
-} from '@codebuff/common/constants/chatgpt-oauth'
+} from '@nexus/common/constants/chatgpt-oauth'
 import {
   clearChatGptOAuthCredentials,
   getChatGptOAuthCredentials,
   isChatGptOAuthValid,
   resetChatGptOAuthRateLimit,
   saveChatGptOAuthCredentials,
-} from '@codebuff/sdk'
+} from '@nexus/sdk'
 import { safeOpen } from './open-url'
 
-import type { ChatGptOAuthCredentials } from '@codebuff/sdk'
+import type { ChatGptOAuthCredentials } from '@nexus/sdk'
 
 function parseOAuthTokenResponse(data: unknown): {
   accessToken: string

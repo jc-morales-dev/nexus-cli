@@ -1,6 +1,6 @@
 'use client'
 
-import { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
+import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
 import posthog from 'posthog-js'
 import { useEffect, useState } from 'react'
 

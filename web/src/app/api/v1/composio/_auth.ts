@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
-import { env } from '@codebuff/internal/env'
+import { env } from '@nexus/internal/env'
 
-import type { GetUserInfoFromApiKeyFn } from '@codebuff/common/types/contracts/database'
+import type { GetUserInfoFromApiKeyFn } from '@nexus/common/types/contracts/database'
 import type {
   Logger,
   LoggerWithContextFn,
-} from '@codebuff/common/types/contracts/logger'
+} from '@nexus/common/types/contracts/logger'
 import type { NextRequest } from 'next/server'
 
 import { extractApiKeyFromHeader } from '@/util/auth'

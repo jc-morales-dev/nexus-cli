@@ -15,8 +15,8 @@ import {
   getFreebuffModelsForAccessTier,
   isFreebuffModelAvailable,
   isFreebuffPremiumModelId,
-} from '@codebuff/common/constants/freebuff-models'
-import { getRateLimitsByModel } from '@codebuff/common/types/freebuff-session'
+} from '@nexus/common/constants/freebuff-models'
+import { getRateLimitsByModel } from '@nexus/common/types/freebuff-session'
 
 import { joinFreebuffQueue } from '../hooks/use-freebuff-session'
 import { useNow } from '../hooks/use-now'
@@ -29,7 +29,7 @@ import {
   nextFreebuffModelId,
 } from '../utils/freebuff-model-navigation'
 
-import type { FreebuffModelOption } from '@codebuff/common/constants/freebuff-models'
+import type { FreebuffModelOption } from '@nexus/common/constants/freebuff-models'
 import type { KeyEvent, ScrollBoxRenderable } from '@opentui/core'
 
 // Section grouping: premium models share one quota pool, unlimited has none.

@@ -7,7 +7,7 @@ import { NextRequest } from 'next/server'
 import { postLogout } from '../_post'
 
 import type { LogoutDb } from '../_post'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 describe('/api/auth/cli/logout POST endpoint', () => {
   let mockLogger: Logger

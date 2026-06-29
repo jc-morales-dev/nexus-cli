@@ -1,9 +1,9 @@
 import { randomBytes } from 'node:crypto'
 
-import { genAuthCode } from '@codebuff/common/util/credentials'
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
-import { env } from '@codebuff/internal/env'
+import { genAuthCode } from '@nexus/common/util/credentials'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
+import { env } from '@nexus/internal/env'
 import { and, eq, gt } from 'drizzle-orm'
 import { NextResponse } from 'next/server'
 import { z } from 'zod/v4'

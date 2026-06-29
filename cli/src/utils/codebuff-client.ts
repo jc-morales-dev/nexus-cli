@@ -1,6 +1,6 @@
-import { API_KEY_ENV_VAR } from '@codebuff/common/old-constants'
-import { AskUserBridge } from '@codebuff/common/utils/ask-user-bridge'
-import { CodebuffClient } from '@codebuff/sdk'
+import { API_KEY_ENV_VAR } from '@nexus/common/old-constants'
+import { AskUserBridge } from '@nexus/common/utils/ask-user-bridge'
+import { CodebuffClient } from '@nexus/sdk'
 
 import { getAuthTokenDetails } from './auth'
 import { getCliEnv, getSystemProcessEnv } from './env'
@@ -9,7 +9,7 @@ import { logger } from './logger'
 import { getRgPath } from '../native/ripgrep'
 import { getProjectRoot } from '../project-files'
 
-import type { ClientToolCall } from '@codebuff/common/tools/list'
+import type { ClientToolCall } from '@nexus/common/tools/list'
 
 let clientInstance: CodebuffClient | null = null
 

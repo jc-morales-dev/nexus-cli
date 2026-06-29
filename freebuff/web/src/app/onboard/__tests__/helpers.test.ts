@@ -1,4 +1,4 @@
-import { genAuthCode } from '@codebuff/common/util/credentials'
+import { genAuthCode } from '@nexus/common/util/credentials'
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
 
 import {

@@ -1,14 +1,14 @@
-import { getErrorObject } from '@codebuff/common/util/error'
-import { COMPOSIO_META_TOOL_NAMES } from '@codebuff/common/constants/composio'
+import { getErrorObject } from '@nexus/common/util/error'
+import { COMPOSIO_META_TOOL_NAMES } from '@nexus/common/constants/composio'
 import { NextResponse } from 'next/server'
 import { z } from 'zod/v4'
 
-import type { GetUserInfoFromApiKeyFn } from '@codebuff/common/types/contracts/database'
+import type { GetUserInfoFromApiKeyFn } from '@nexus/common/types/contracts/database'
 import type {
   Logger,
   LoggerWithContextFn,
-} from '@codebuff/common/types/contracts/logger'
-import type { CodebuffPgDatabase } from '@codebuff/internal/db/types'
+} from '@nexus/common/types/contracts/logger'
+import type { CodebuffPgDatabase } from '@nexus/internal/db/types'
 import type { NextRequest } from 'next/server'
 
 import { executeComposioTool, isComposioConfigured } from '@/server/composio'

@@ -3,11 +3,11 @@ import os from 'os'
 import {
   ADVISORY_LOCK_IDS,
   tryAcquireAdvisoryLock,
-} from '@codebuff/internal/db'
+} from '@nexus/internal/db'
 
 import { startDiscordBot } from '../../src/discord/client'
 
-import type { LockHandle } from '@codebuff/internal/db'
+import type { LockHandle } from '@nexus/internal/db'
 import type { Client } from 'discord.js'
 
 const LOCK_RETRY_INTERVAL_MS = 30_000 // 30 seconds

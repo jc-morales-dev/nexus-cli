@@ -9,7 +9,7 @@ import {
   CHATGPT_OAUTH_CLIENT_ID,
   CHATGPT_OAUTH_REDIRECT_URI,
   CHATGPT_OAUTH_TOKEN_URL,
-} from '@codebuff/common/constants/chatgpt-oauth'
+} from '@nexus/common/constants/chatgpt-oauth'
 
 function toBase64Url(buffer: Buffer): string {
   return buffer

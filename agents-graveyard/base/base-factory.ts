@@ -1,4 +1,4 @@
-import { AGENT_PERSONAS } from '@codebuff/common/constants/agents'
+import { AGENT_PERSONAS } from '@nexus/common/constants/agents'
 
 import {
   baseAgentAgentStepPrompt,

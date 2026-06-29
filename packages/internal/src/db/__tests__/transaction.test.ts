@@ -1,9 +1,9 @@
-import * as analyticsModule from '@codebuff/common/analytics'
-import { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
-import { createPostgresError } from '@codebuff/common/testing/errors'
+import * as analyticsModule from '@nexus/common/analytics'
+import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
+import { createPostgresError } from '@nexus/common/testing/errors'
 import { afterEach, beforeEach, describe, expect, it, mock, spyOn } from 'bun:test'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 // Mock postgres and env before any module that imports db/index.ts is loaded.
 // db/index.ts calls postgres(env.DATABASE_URL) and drizzle() at the top level,
@@ -13,7 +13,7 @@ mock.module('postgres', () => ({
     options: { parsers: {}, serializers: {} },
   }),
 }))
-mock.module('@codebuff/internal/env', () => ({
+mock.module('@nexus/internal/env', () => ({
   env: { DATABASE_URL: 'postgres://mock:mock@localhost:5432/mock' },
 }))
 

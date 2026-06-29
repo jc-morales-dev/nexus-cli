@@ -1,4 +1,4 @@
-import { GrantTypeValues } from '@codebuff/common/types/grant'
+import { GrantTypeValues } from '@nexus/common/types/grant'
 import { sql } from 'drizzle-orm'
 import {
   boolean,
@@ -26,7 +26,7 @@ import type {
   FreebuffPrivacyProviderDecision,
   FreebuffScamalyticsStatus,
   FreebuffSpurStatus,
-} from '@codebuff/common/types/freebuff-session'
+} from '@nexus/common/types/freebuff-session'
 
 export const ReferralStatus = pgEnum('referral_status', [
   ReferralStatusValues[0],

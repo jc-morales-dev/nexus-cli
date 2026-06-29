@@ -1,24 +1,24 @@
-import { trackEvent } from '@codebuff/common/analytics'
-import { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
-import { TEST_USER_ID } from '@codebuff/common/old-constants'
-import { GrantTypeValues } from '@codebuff/common/types/grant'
-import { failure, getErrorObject, success } from '@codebuff/common/util/error'
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
-import { withAdvisoryLockTransaction } from '@codebuff/internal/db/transaction'
+import { trackEvent } from '@nexus/common/analytics'
+import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
+import { TEST_USER_ID } from '@nexus/common/old-constants'
+import { GrantTypeValues } from '@nexus/common/types/grant'
+import { failure, getErrorObject, success } from '@nexus/common/util/error'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
+import { withAdvisoryLockTransaction } from '@nexus/internal/db/transaction'
 import { and, asc, desc, gt, isNull, ne, or, eq, sql } from 'drizzle-orm'
 import { union } from 'drizzle-orm/pg-core'
 
 import { reportPurchasedCreditsToStripe } from './stripe-metering'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 import type {
   ParamsExcluding,
   ParamsOf,
   OptionalFields,
-} from '@codebuff/common/types/function-params'
-import type { ErrorOr } from '@codebuff/common/util/error'
-import type { GrantType } from '@codebuff/internal/db/schema'
+} from '@nexus/common/types/function-params'
+import type { ErrorOr } from '@nexus/common/util/error'
+import type { GrantType } from '@nexus/internal/db/schema'
 
 export interface CreditBalance {
   totalRemaining: number

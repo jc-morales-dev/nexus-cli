@@ -1,5 +1,5 @@
-// Re-exported from @codebuff/common to keep it browser-safe and avoid duplication.
-export { parseToolCallXml } from '@codebuff/common/util/xml-parser'
+// Re-exported from @nexus/common to keep it browser-safe and avoid duplication.
+export { parseToolCallXml } from '@nexus/common/util/xml-parser'
 
 /**
  * Tool result part interface

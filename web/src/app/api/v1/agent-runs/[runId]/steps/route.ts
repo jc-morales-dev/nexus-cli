@@ -1,5 +1,5 @@
-import { trackEvent } from '@codebuff/common/analytics'
-import db from '@codebuff/internal/db'
+import { trackEvent } from '@nexus/common/analytics'
+import db from '@nexus/internal/db'
 
 import { postAgentRunsSteps } from './_post'
 

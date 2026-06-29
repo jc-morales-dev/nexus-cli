@@ -37,8 +37,8 @@ const {
 } = await import('../send-message')
 const { createBatchedMessageUpdater } =
   await import('../../../utils/message-updater')
-import { createPaymentRequiredError } from '@codebuff/sdk'
-import type { RunState } from '@codebuff/sdk'
+import { createPaymentRequiredError } from '@nexus/sdk'
+import type { RunState } from '@nexus/sdk'
 
 const createMockTimerController = (): SendMessageTimerController & {
   startCalls: string[]

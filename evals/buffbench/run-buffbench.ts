@@ -3,12 +3,12 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 
-import { API_KEY_ENV_VAR } from '@codebuff/common/old-constants'
+import { API_KEY_ENV_VAR } from '@nexus/common/old-constants'
 import {
   CodebuffClient,
   getUserCredentials,
   loadLocalAgents,
-} from '@codebuff/sdk'
+} from '@nexus/sdk'
 import pLimit from 'p-limit'
 
 import { runAgentOnCommit, type ExternalAgentType } from './agent-runner'

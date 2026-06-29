@@ -1,10 +1,10 @@
-import { getStubProjectFileContext } from '@codebuff/common/util/file'
+import { getStubProjectFileContext } from '@nexus/common/util/file'
 import { describe, it, expect } from 'bun:test'
 
 import { handleReadSubtree } from '../tool/read-subtree'
 
-import type { CodebuffToolCall } from '@codebuff/common/tools/list'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { CodebuffToolCall } from '@nexus/common/tools/list'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 // Type for read_subtree result entries
 interface ReadSubtreeResultEntry {

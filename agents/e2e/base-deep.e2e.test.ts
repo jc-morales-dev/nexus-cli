@@ -3,15 +3,15 @@ import os from 'os'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
-import { API_KEY_ENV_VAR } from '@codebuff/common/old-constants'
-import { CodebuffClient, getUserCredentials } from '@codebuff/sdk'
+import { API_KEY_ENV_VAR } from '@nexus/common/old-constants'
+import { CodebuffClient, getUserCredentials } from '@nexus/sdk'
 import { beforeAll, describe, expect, it } from 'bun:test'
 import { $ } from 'bun'
 
 import baseDeep from '../base2/base-deep'
 import thinkerCodex from '../thinker/thinker-gpt'
 
-import type { PrintModeEvent } from '@codebuff/common/types/print-mode'
+import type { PrintModeEvent } from '@nexus/common/types/print-mode'
 
 describe('Base Deep Agent Integration', () => {
   const repoRoot = path.resolve(

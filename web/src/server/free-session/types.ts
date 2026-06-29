@@ -1,9 +1,9 @@
-import type { FreebuffSessionServerResponse } from '@codebuff/common/types/freebuff-session'
+import type { FreebuffSessionServerResponse } from '@nexus/common/types/freebuff-session'
 import type {
   FreebuffCountryBlockReason,
   FreebuffIpPrivacySignal,
-} from '@codebuff/common/types/freebuff-session'
-import type { FreebuffAccessTier } from '@codebuff/common/constants/freebuff-models'
+} from '@nexus/common/types/freebuff-session'
+import type { FreebuffAccessTier } from '@nexus/common/constants/freebuff-models'
 
 export type FreeSessionStatus = 'queued' | 'active'
 

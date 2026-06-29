@@ -1,19 +1,19 @@
-import { setupBigQuery } from '@codebuff/bigquery'
+import { setupBigQuery } from '@nexus/bigquery'
 import {
   consumeCreditsAndAddAgentStep,
   recordMessageWithoutBilling,
-} from '@codebuff/billing'
+} from '@nexus/billing'
 import {
   isFreeAgent,
   isFreeMode,
   isFreeModeAllowedAgentModel,
-} from '@codebuff/common/constants/free-agents'
-import { PROFIT_MARGIN } from '@codebuff/common/old-constants'
+} from '@nexus/common/constants/free-agents'
+import { PROFIT_MARGIN } from '@nexus/common/old-constants'
 
 import { createRequestAuditRecord } from './request-audit'
 
-import type { InsertMessageBigqueryFn } from '@codebuff/common/types/contracts/bigquery'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { InsertMessageBigqueryFn } from '@nexus/common/types/contracts/bigquery'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 import type { ChatCompletionRequestBody } from './types'
 

@@ -1,5 +1,5 @@
 {
-  "name": "@codebuff/evals",
+  "name": "@nexus/evals",
   "version": "1.0.0",
   "description": "Evaluation scripts for Codebuff",
   "private": true,
@@ -32,10 +32,10 @@
   },
   "dependencies": {
     "@anthropic-ai/claude-code": "^2.0.56",
-    "@codebuff/code-map": "workspace:*",
-    "@codebuff/common": "workspace:*",
-    "@codebuff/internal": "workspace:*",
-    "@codebuff/sdk": "workspace:*",
+    "@nexus/code-map": "workspace:*",
+    "@nexus/common": "workspace:*",
+    "@nexus/internal": "workspace:*",
+    "@nexus/sdk": "workspace:*",
     "@oclif/core": "^4.4.0",
     "@oclif/parser": "^3.8.17",
     "async": "^3.2.6",

@@ -1,16 +1,16 @@
-import { validateAgents } from '@codebuff/common/templates/agent-validation'
+import { validateAgents } from '@nexus/common/templates/agent-validation'
 import {
   normalizeAgentIdForLookup,
   parsePublishedAgentId,
-} from '@codebuff/common/util/agent-id-parsing'
-import { DEFAULT_ORG_PREFIX } from '@codebuff/common/util/agent-name-normalization'
+} from '@nexus/common/util/agent-id-parsing'
+import { DEFAULT_ORG_PREFIX } from '@nexus/common/util/agent-name-normalization'
 
-import type { DynamicAgentValidationError } from '@codebuff/common/templates/agent-validation'
-import type { AgentTemplate } from '@codebuff/common/types/agent-template'
-import type { FetchAgentFromDatabaseFn } from '@codebuff/common/types/contracts/database'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
-import type { ParamsExcluding } from '@codebuff/common/types/function-params'
-import type { ProjectFileContext } from '@codebuff/common/util/file'
+import type { DynamicAgentValidationError } from '@nexus/common/templates/agent-validation'
+import type { AgentTemplate } from '@nexus/common/types/agent-template'
+import type { FetchAgentFromDatabaseFn } from '@nexus/common/types/contracts/database'
+import type { Logger } from '@nexus/common/types/contracts/logger'
+import type { ParamsExcluding } from '@nexus/common/types/function-params'
+import type { ProjectFileContext } from '@nexus/common/util/file'
 
 /**
  * Single function to look up an agent template with clear priority order:

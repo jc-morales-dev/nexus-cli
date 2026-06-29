@@ -1,19 +1,19 @@
-import { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
+import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
 import {
   endsAgentStepParam,
   endToolTag,
   startToolTag,
   toolNameParam,
-} from '@codebuff/common/tools/constants'
+} from '@nexus/common/tools/constants'
 
-import type { Model } from '@codebuff/common/old-constants'
-import type { TrackEventFn } from '@codebuff/common/types/contracts/analytics'
-import type { StreamChunk } from '@codebuff/common/types/contracts/llm'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Model } from '@nexus/common/old-constants'
+import type { TrackEventFn } from '@nexus/common/types/contracts/analytics'
+import type { StreamChunk } from '@nexus/common/types/contracts/llm'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 import type {
   PrintModeError,
   PrintModeText,
-} from '@codebuff/common/types/print-mode'
+} from '@nexus/common/types/print-mode'
 
 const toolExtractionPattern = new RegExp(
   `${startToolTag}(.*?)${endToolTag}`,

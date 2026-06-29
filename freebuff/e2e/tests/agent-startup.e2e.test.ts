@@ -12,7 +12,7 @@ import { afterEach, describe, expect, test } from 'bun:test'
 import { freebuffTesterAgent } from '../agent/freebuff-tester'
 import { createFreebuffTmuxTools, requireFreebuffBinary } from '../utils'
 
-import type { CodebuffClient as CodebuffClientType } from '@codebuff/sdk'
+import type { CodebuffClient as CodebuffClientType } from '@nexus/sdk'
 
 const AGENT_TEST_TIMEOUT = 180_000
 
@@ -48,8 +48,8 @@ describe('Freebuff: Agent-driven E2E', () => {
 
       // Dynamically import SDK to avoid build-time dependency issues
       const { CodebuffClient } = (await import(
-        '@codebuff/sdk'
-      )) as typeof import('@codebuff/sdk')
+        '@nexus/sdk'
+      )) as typeof import('@nexus/sdk')
 
       const client: CodebuffClientType = new CodebuffClient({ apiKey })
 
@@ -96,8 +96,8 @@ describe('Freebuff: Agent-driven E2E', () => {
       cleanup = tmuxTools.cleanup
 
       const { CodebuffClient } = (await import(
-        '@codebuff/sdk'
-      )) as typeof import('@codebuff/sdk')
+        '@nexus/sdk'
+      )) as typeof import('@nexus/sdk')
 
       const client: CodebuffClientType = new CodebuffClient({ apiKey })
 

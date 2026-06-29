@@ -2,8 +2,8 @@ import type { CodebuffToolHandlerFunction } from '../handler-function-type'
 import type {
   CodebuffToolCall,
   CodebuffToolOutput,
-} from '@codebuff/common/tools/list'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+} from '@nexus/common/tools/list'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 export const handleSuggestFollowups = (async (params: {
   previousToolCallFinished: Promise<unknown>

@@ -1,7 +1,7 @@
-import { PROFIT_MARGIN } from '@codebuff/common/constants/limits'
-import { SUBSCRIPTION_TIERS } from '@codebuff/common/constants/subscription-plans'
-import { db } from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
+import { PROFIT_MARGIN } from '@nexus/common/constants/limits'
+import { SUBSCRIPTION_TIERS } from '@nexus/common/constants/subscription-plans'
+import { db } from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
 import { and, eq, gte, inArray, sql } from 'drizzle-orm'
 
 const WEEKS_PER_MONTH = 4.33

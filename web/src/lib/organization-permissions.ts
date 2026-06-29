@@ -1,9 +1,9 @@
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
 import { eq, and } from 'drizzle-orm'
 import { getServerSession } from 'next-auth'
 
-import type { OrganizationRole } from '@codebuff/common/types/organization'
+import type { OrganizationRole } from '@nexus/common/types/organization'
 
 import { authOptions } from '@/app/api/auth/[...nextauth]/auth-options'
 import { logger } from '@/util/logger'

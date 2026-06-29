@@ -1,4 +1,4 @@
-import { endsAgentStepParam } from '@codebuff/common/tools/constants'
+import { endsAgentStepParam } from '@nexus/common/tools/constants'
 
 export const globalStopSequence = `${JSON.stringify(endsAgentStepParam)}`
 

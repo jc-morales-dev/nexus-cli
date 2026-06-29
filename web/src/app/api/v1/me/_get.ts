@@ -1,9 +1,9 @@
-import { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
+import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
 import { NextResponse } from 'next/server'
 
-import type { TrackEventFn } from '@codebuff/common/types/contracts/analytics'
-import type { GetUserInfoFromApiKeyFn } from '@codebuff/common/types/contracts/database'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { TrackEventFn } from '@nexus/common/types/contracts/analytics'
+import type { GetUserInfoFromApiKeyFn } from '@nexus/common/types/contracts/database'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 import type { NextRequest } from 'next/server'
 
 import { VALID_USER_INFO_FIELDS } from '@/db/user'

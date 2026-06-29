@@ -12,13 +12,13 @@ import type { CodebuffToolHandlerFunction } from '../handler-function-type'
 import type {
   CodebuffToolCall,
   CodebuffToolOutput,
-} from '@codebuff/common/tools/list'
-import type { AgentTemplate } from '@codebuff/common/types/agent-template'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
-import type { ParamsExcluding } from '@codebuff/common/types/function-params'
-import type { PrintModeEvent } from '@codebuff/common/types/print-mode'
-import type { AgentState } from '@codebuff/common/types/session-state'
-import type { ProjectFileContext } from '@codebuff/common/util/file'
+} from '@nexus/common/tools/list'
+import type { AgentTemplate } from '@nexus/common/types/agent-template'
+import type { Logger } from '@nexus/common/types/contracts/logger'
+import type { ParamsExcluding } from '@nexus/common/types/function-params'
+import type { PrintModeEvent } from '@nexus/common/types/print-mode'
+import type { AgentState } from '@nexus/common/types/session-state'
+import type { ProjectFileContext } from '@nexus/common/util/file'
 import type { ToolSet } from 'ai'
 
 type ToolName = 'spawn_agent_inline'

@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto'
 
-import { genAuthCode } from '@codebuff/common/util/credentials'
+import { genAuthCode } from '@nexus/common/util/credentials'
 
 const OPAQUE_CLI_AUTH_CODE_TOKEN_RE = /^[A-Za-z0-9_-]{43}$/
 const CLI_AUTH_CODE_TOKEN_IDENTIFIER_PREFIX = 'cli-login:'

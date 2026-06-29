@@ -3,7 +3,7 @@ import { sql } from 'drizzle-orm'
 import db from '../db'
 import * as schema from '../db/schema'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 export async function logSyncFailure({
   id,

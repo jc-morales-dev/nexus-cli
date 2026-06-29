@@ -1,8 +1,8 @@
 import { Agent } from 'undici'
 
-import { PROFIT_MARGIN } from '@codebuff/common/constants/limits'
-import { getErrorObject } from '@codebuff/common/util/error'
-import { env } from '@codebuff/internal/env'
+import { PROFIT_MARGIN } from '@nexus/common/constants/limits'
+import { getErrorObject } from '@nexus/common/util/error'
+import { env } from '@nexus/internal/env'
 
 import {
   consumeCreditsForMessage,
@@ -13,8 +13,8 @@ import {
 import { addKimiToolCompatibilityFields, isKimiModel } from './kimi-tool-compat'
 
 import type { UsageData } from './helpers'
-import type { InsertMessageBigqueryFn } from '@codebuff/common/types/contracts/bigquery'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { InsertMessageBigqueryFn } from '@nexus/common/types/contracts/bigquery'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 import type { ChatCompletionRequestBody } from './types'
 
 const CANOPYWAVE_BASE_URL = 'https://inference.canopywave.io/v1'

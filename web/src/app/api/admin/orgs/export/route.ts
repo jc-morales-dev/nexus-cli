@@ -5,8 +5,8 @@ import { NextResponse } from 'next/server'
 import { checkAdminAuth } from '@/lib/admin-auth'
 
 export const dynamic = 'force-dynamic'
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
 import { eq, desc } from 'drizzle-orm'
 
 export async function GET(request: NextRequest): Promise<NextResponse> {

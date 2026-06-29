@@ -1,4 +1,4 @@
-import { env } from '@codebuff/common/env'
+import { env } from '@nexus/common/env'
 import dynamic from 'next/dynamic'
 import NextLink from 'next/link'
 import { notFound } from 'next/navigation'

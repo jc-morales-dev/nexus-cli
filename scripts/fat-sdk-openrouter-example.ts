@@ -4,7 +4,7 @@ import {
   OpenAICompatibleChatLanguageModel,
   VERSION,
 } from '@ai-sdk/openai-compatible'
-import { WEBSITE_URL } from '@codebuff/sdk'
+import { WEBSITE_URL } from '@nexus/sdk'
 import { generateText } from 'ai'
 
 const apiKey = '12345'

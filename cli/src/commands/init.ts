@@ -1,8 +1,8 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs'
 import path from 'path'
 
-import { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
-import { PRIMARY_KNOWLEDGE_FILE_NAME } from '@codebuff/common/constants/knowledge'
+import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
+import { PRIMARY_KNOWLEDGE_FILE_NAME } from '@nexus/common/constants/knowledge'
 
 // @ts-expect-error - Bun text import attribute not supported by TypeScript
 import agentDefinitionSource from '../../../common/src/templates/initial-agents-dir/types/agent-definition' with { type: 'text' }

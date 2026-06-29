@@ -1,4 +1,4 @@
-import type { AgentDefinition } from '@codebuff/sdk'
+import type { AgentDefinition } from '@nexus/sdk'
 
 /**
  * Agent definition for testing the Freebuff CLI via tmux.

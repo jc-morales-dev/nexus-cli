@@ -1,8 +1,8 @@
 import {
   getUserUsageData,
   getOrganizationUsageResponse,
-} from '@codebuff/billing'
-import { trackEvent } from '@codebuff/common/analytics'
+} from '@nexus/billing'
+import { trackEvent } from '@nexus/common/analytics'
 
 import { postUsage } from './_post'
 

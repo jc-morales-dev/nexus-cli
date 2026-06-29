@@ -44,7 +44,7 @@ Stores relabeling data:
 ## Usage
 
 ```typescript
-import { setupBigQuery, insertTrace } from '@codebuff/bigquery'
+import { setupBigQuery, insertTrace } from '@nexus/bigquery'
 
 // Initialize (creates dataset/tables if needed)
 await setupBigQuery()

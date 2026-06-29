@@ -1,7 +1,7 @@
 'use client'
 
-import { env } from '@codebuff/common/env'
-import { finetunedVertexModels } from '@codebuff/common/old-constants'
+import { env } from '@nexus/common/env'
+import { finetunedVertexModels } from '@nexus/common/old-constants'
 import { Info, Settings } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'

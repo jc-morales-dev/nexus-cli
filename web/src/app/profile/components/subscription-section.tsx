@@ -1,6 +1,6 @@
 'use client'
 
-import { SUBSCRIPTION_DISPLAY_NAME } from '@codebuff/common/constants/subscription-plans'
+import { SUBSCRIPTION_DISPLAY_NAME } from '@nexus/common/constants/subscription-plans'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   AlertTriangle,
@@ -16,12 +16,12 @@ import { Switch } from '@/components/ui/switch'
 import { toast } from '@/components/ui/use-toast'
 import { cn } from '@/lib/utils'
 
-import { formatTimeUntil } from '@codebuff/common/util/dates'
+import { formatTimeUntil } from '@nexus/common/util/dates'
 
 import type {
   SubscriptionResponse,
   ActiveSubscriptionResponse,
-} from '@codebuff/common/types/subscription'
+} from '@nexus/common/types/subscription'
 
 const formatDaysHours = (dateStr: string): string =>
   formatTimeUntil(dateStr, { fallback: '0h' })

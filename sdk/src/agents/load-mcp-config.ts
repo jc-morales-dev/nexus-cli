@@ -3,10 +3,10 @@ import fsPromises from 'fs/promises'
 import os from 'os'
 import path from 'path'
 
-import { mcpConfigSchema } from '@codebuff/common/types/mcp'
+import { mcpConfigSchema } from '@nexus/common/types/mcp'
 import { z } from 'zod/v4'
 
-import type { MCPConfig } from '@codebuff/common/types/mcp'
+import type { MCPConfig } from '@nexus/common/types/mcp'
 
 /**
  * Schema for the mcp.json file format.

@@ -2,14 +2,14 @@ import fs, { appendFileSync } from 'fs'
 import path from 'path'
 import { format } from 'util'
 
-import { trackEvent } from '@codebuff/common/analytics'
-import { env, IS_DEV, IS_CI } from '@codebuff/common/env'
-import { createAnalyticsDispatcher } from '@codebuff/common/util/analytics-dispatcher'
-import { splitData } from '@codebuff/common/util/split-data'
+import { trackEvent } from '@nexus/common/analytics'
+import { env, IS_DEV, IS_CI } from '@nexus/common/env'
+import { createAnalyticsDispatcher } from '@nexus/common/util/analytics-dispatcher'
+import { splitData } from '@nexus/common/util/split-data'
 import pino from 'pino'
 
-import type { LoggerWithContextFn } from '@codebuff/common/types/contracts/logger'
-import type { ParamsOf } from '@codebuff/common/types/function-params'
+import type { LoggerWithContextFn } from '@nexus/common/types/contracts/logger'
+import type { ParamsOf } from '@nexus/common/types/function-params'
 
 // --- Constants ---
 const MAX_LENGTH = 65535 // Max total log size is sometimes 100k (sometimes 65535?)

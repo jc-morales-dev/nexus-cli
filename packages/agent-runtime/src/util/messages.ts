@@ -1,9 +1,9 @@
 import { AssertionError } from 'assert'
 
-import { buildArray } from '@codebuff/common/util/array'
-import { getErrorObject } from '@codebuff/common/util/error'
-import { systemMessage, userMessage } from '@codebuff/common/util/messages'
-import { closeXml } from '@codebuff/common/util/xml'
+import { buildArray } from '@nexus/common/util/array'
+import { getErrorObject } from '@nexus/common/util/error'
+import { systemMessage, userMessage } from '@nexus/common/util/messages'
+import { closeXml } from '@nexus/common/util/xml'
 import { cloneDeep, isEqual } from 'lodash'
 
 import { simplifyTerminalCommandResults } from './simplify-tool-results'
@@ -13,13 +13,13 @@ import type { System } from '../llm-api/claude'
 import type {
   CodebuffToolMessage,
   CodebuffToolOutput,
-} from '@codebuff/common/tools/list'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
-import type { Message } from '@codebuff/common/types/messages/codebuff-message'
+} from '@nexus/common/tools/list'
+import type { Logger } from '@nexus/common/types/contracts/logger'
+import type { Message } from '@nexus/common/types/messages/codebuff-message'
 import type {
   TextPart,
   ImagePart,
-} from '@codebuff/common/types/messages/content-part'
+} from '@nexus/common/types/messages/content-part'
 
 export function messagesWithSystem(params: {
   messages: Message[]

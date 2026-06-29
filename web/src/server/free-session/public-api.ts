@@ -17,8 +17,8 @@ import {
   isFreebuffPremiumModelId,
   isSupportedFreebuffModelId,
   resolveFreebuffModelForAccessTier,
-} from '@codebuff/common/constants/freebuff-models'
-import { getZonedDayBounds } from '@codebuff/common/util/zoned-time'
+} from '@nexus/common/constants/freebuff-models'
+import { getZonedDayBounds } from '@nexus/common/util/zoned-time'
 
 import {
   getInstantAdmitCapacity,
@@ -40,11 +40,11 @@ import {
 } from './store'
 import { toSessionStateResponse } from './session-view'
 
-import type { FreebuffAccessTier } from '@codebuff/common/constants/freebuff-models'
+import type { FreebuffAccessTier } from '@nexus/common/constants/freebuff-models'
 import type {
   FreebuffSessionRateLimit,
   FreebuffSessionServerResponse,
-} from '@codebuff/common/types/freebuff-session'
+} from '@nexus/common/types/freebuff-session'
 import type {
   FreeSessionCountryAccessMetadata,
   InternalSessionRow,

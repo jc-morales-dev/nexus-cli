@@ -5,7 +5,7 @@ import {
   simplifyTerminalCommandResults,
 } from '../simplify-tool-results'
 
-import type { CodebuffToolOutput } from '@codebuff/common/tools/list'
+import type { CodebuffToolOutput } from '@nexus/common/tools/list'
 
 // Mock logger for tests
 const logger = {

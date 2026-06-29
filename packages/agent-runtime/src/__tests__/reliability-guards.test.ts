@@ -6,7 +6,7 @@ import {
   findRepeatedToolCall,
 } from '../reliability-guards'
 
-import type { Message } from '@codebuff/common/types/messages/codebuff-message'
+import type { Message } from '@nexus/common/types/messages/codebuff-message'
 
 /** Build an assistant message carrying a single tool call. */
 function call(toolName: string, input: unknown = {}): Message {

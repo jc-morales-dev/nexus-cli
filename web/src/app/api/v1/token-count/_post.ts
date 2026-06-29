@@ -1,22 +1,22 @@
-import { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
+import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
 import {
   isClaudeModel,
   toAnthropicModelId,
-} from '@codebuff/common/constants/anthropic'
-import { isOpenAIProviderModel } from '@codebuff/common/constants/chatgpt-oauth'
-import { getErrorObject } from '@codebuff/common/util/error'
-import { env } from '@codebuff/internal/env'
+} from '@nexus/common/constants/anthropic'
+import { isOpenAIProviderModel } from '@nexus/common/constants/chatgpt-oauth'
+import { getErrorObject } from '@nexus/common/util/error'
+import { env } from '@nexus/internal/env'
 import { NextResponse } from 'next/server'
 import { z } from 'zod/v4'
 
 import { parseJsonBody, requireUserFromApiKey } from '../_helpers'
 
-import type { TrackEventFn } from '@codebuff/common/types/contracts/analytics'
-import type { GetUserInfoFromApiKeyFn } from '@codebuff/common/types/contracts/database'
+import type { TrackEventFn } from '@nexus/common/types/contracts/analytics'
+import type { GetUserInfoFromApiKeyFn } from '@nexus/common/types/contracts/database'
 import type {
   Logger,
   LoggerWithContextFn,
-} from '@codebuff/common/types/contracts/logger'
+} from '@nexus/common/types/contracts/logger'
 import type { NextRequest } from 'next/server'
 
 const tokenCountRequestSchema = z.object({

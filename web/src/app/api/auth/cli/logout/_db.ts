@@ -1,8 +1,8 @@
-import { SESSION_TIME_WINDOW_MS } from '@codebuff/common/old-constants'
-import * as schema from '@codebuff/internal/db/schema'
+import { SESSION_TIME_WINDOW_MS } from '@nexus/common/old-constants'
+import * as schema from '@nexus/internal/db/schema'
 import { and, eq, gte, isNull, lte } from 'drizzle-orm'
 
-import type { CodebuffPgDatabase } from '@codebuff/internal/db/types'
+import type { CodebuffPgDatabase } from '@nexus/internal/db/types'
 
 export type FingerprintData = { created_at: Date; sig_hash: string | null }
 

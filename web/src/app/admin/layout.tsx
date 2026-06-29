@@ -1,4 +1,4 @@
-import { utils } from '@codebuff/internal'
+import { utils } from '@nexus/internal'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { getServerSession } from 'next-auth'

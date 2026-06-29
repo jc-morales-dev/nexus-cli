@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from 'path'
 
 import type { Runner, RunnerResult, AgentStep } from './runner'
-import type { CodebuffClient } from '@codebuff/sdk'
+import type { CodebuffClient } from '@nexus/sdk'
 
 
 const DEBUG_ERROR = true

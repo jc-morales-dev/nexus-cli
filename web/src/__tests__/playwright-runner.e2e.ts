@@ -1,6 +1,6 @@
 export {}
 
-import { getE2EDatabaseUrl } from '@codebuff/internal/db/e2e-constants'
+import { getE2EDatabaseUrl } from '@nexus/internal/db/e2e-constants'
 import { describe, expect, it, setDefaultTimeout } from 'bun:test'
 
 setDefaultTimeout(10 * 60 * 1000)

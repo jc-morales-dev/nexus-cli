@@ -6,7 +6,7 @@ import path from 'path'
 import {
   SKILL_FILE_NAME,
   SKILL_NAME_MAX_LENGTH,
-} from '@codebuff/common/constants/skills'
+} from '@nexus/common/constants/skills'
 
 import { loadSkills } from '../skills/load-skills'
 

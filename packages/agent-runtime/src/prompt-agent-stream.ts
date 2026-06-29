@@ -1,16 +1,16 @@
 import { globalStopSequence } from './constants'
 
 import type { AgentTemplate } from './templates/types'
-import type { TrackEventFn } from '@codebuff/common/types/contracts/analytics'
-import type { SendActionFn } from '@codebuff/common/types/contracts/client'
+import type { TrackEventFn } from '@nexus/common/types/contracts/analytics'
+import type { SendActionFn } from '@nexus/common/types/contracts/client'
 import type {
   CacheDebugUsageData,
   PromptAiSdkStreamFn,
-} from '@codebuff/common/types/contracts/llm'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
-import type { ParamsOf } from '@codebuff/common/types/function-params'
-import type { Message } from '@codebuff/common/types/messages/codebuff-message'
-import type { OpenRouterProviderOptions } from '@codebuff/common/types/agent-template'
+} from '@nexus/common/types/contracts/llm'
+import type { Logger } from '@nexus/common/types/contracts/logger'
+import type { ParamsOf } from '@nexus/common/types/function-params'
+import type { Message } from '@nexus/common/types/messages/codebuff-message'
+import type { OpenRouterProviderOptions } from '@nexus/common/types/agent-template'
 import type { ToolSet } from 'ai'
 
 export const getAgentStreamFromTemplate = (params: {

@@ -1,5 +1,5 @@
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
 import { eq, and, desc, gte, sql } from 'drizzle-orm'
 
 import { checkAndTriggerAutoTopup } from './auto-topup'
@@ -12,7 +12,7 @@ import {
 import { getActiveSubscription } from './subscription'
 
 import type { CreditBalance } from './balance-calculator'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 export interface UserUsageData {
   usageThisCycle: number

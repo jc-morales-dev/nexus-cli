@@ -1,4 +1,4 @@
-import { trackEvent } from '@codebuff/common/analytics'
+import { trackEvent } from '@nexus/common/analytics'
 
 import { postFeedback } from './_post'
 

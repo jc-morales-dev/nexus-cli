@@ -1,4 +1,4 @@
-import { env, IS_DEV } from '@codebuff/common/env'
+import { env, IS_DEV } from '@nexus/common/env'
 
 import { IS_FREEBUFF } from '../utils/constants'
 

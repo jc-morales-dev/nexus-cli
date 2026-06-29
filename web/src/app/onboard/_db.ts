@@ -1,6 +1,6 @@
-import { MAX_DATE } from '@codebuff/common/old-constants'
-import { db } from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
+import { MAX_DATE } from '@nexus/common/old-constants'
+import { db } from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
 import { and, eq, gt, isNull, ne } from 'drizzle-orm'
 import { cookies } from 'next/headers'
 

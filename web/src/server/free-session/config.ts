@@ -3,8 +3,8 @@ import {
   FREEBUFF_DEEPSEEK_V4_PRO_MODEL_ID,
   FREEBUFF_KIMI_MODEL_ID,
   FREEBUFF_MINIMAX_MODEL_ID,
-} from '@codebuff/common/constants/freebuff-models'
-import { env } from '@codebuff/internal/env'
+} from '@nexus/common/constants/freebuff-models'
+import { env } from '@nexus/internal/env'
 
 /**
  * Advisory lock ID claimed by the admission tick so only one pod admits

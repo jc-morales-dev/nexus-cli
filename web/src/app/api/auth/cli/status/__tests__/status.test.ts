@@ -1,5 +1,5 @@
-import { genAuthCode } from '@codebuff/common/util/credentials'
-import { createMockLogger } from '@codebuff/common/testing/mock-types'
+import { genAuthCode } from '@nexus/common/util/credentials'
+import { createMockLogger } from '@nexus/common/testing/mock-types'
 import { describe, expect, mock, test } from 'bun:test'
 
 import { getLoginStatus } from '../_get'

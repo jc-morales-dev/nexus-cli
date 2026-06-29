@@ -7,18 +7,18 @@ import path from 'path'
 import {
   COMPOSIO_API_KEY_ENV_VAR,
   getComposioUpstreamToolName,
-} from '@codebuff/common/constants/composio'
-import { getErrorObject } from '@codebuff/common/util/error'
-import { env } from '@codebuff/internal/env'
-import * as schema from '@codebuff/internal/db/schema'
+} from '@nexus/common/constants/composio'
+import { getErrorObject } from '@nexus/common/util/error'
+import { env } from '@nexus/internal/env'
+import * as schema from '@nexus/internal/db/schema'
 import { Composio } from '@composio/core'
 import { and, eq } from 'drizzle-orm'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
-import type { JSONValue } from '@codebuff/common/types/json'
-import type { ToolResultOutput } from '@codebuff/common/types/messages/content-part'
-import type { CodebuffPgDatabase } from '@codebuff/internal/db/types'
-import type { ComposioMetaToolName } from '@codebuff/common/constants/composio'
+import type { Logger } from '@nexus/common/types/contracts/logger'
+import type { JSONValue } from '@nexus/common/types/json'
+import type { ToolResultOutput } from '@nexus/common/types/messages/content-part'
+import type { CodebuffPgDatabase } from '@nexus/internal/db/types'
+import type { ComposioMetaToolName } from '@nexus/common/constants/composio'
 
 const COMPOSIO_HOME_ENV_PATH = path.join(homedir(), 'codebuff', '.env.local')
 

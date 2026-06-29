@@ -30,7 +30,7 @@ import postgres from 'postgres'
 import * as schema from '../schema'
 import { withAdvisoryLockTransaction } from '../transaction'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 // Test logger that captures log messages for verification
 function createTestLogger() {

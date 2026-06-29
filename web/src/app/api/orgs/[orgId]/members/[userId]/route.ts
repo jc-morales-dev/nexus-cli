@@ -1,11 +1,11 @@
-import { updateStripeSubscriptionQuantity } from '@codebuff/billing'
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
+import { updateStripeSubscriptionQuantity } from '@nexus/billing'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
 import { eq, and, isNull, sql } from 'drizzle-orm'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 
-import type { UpdateMemberRoleRequest } from '@codebuff/common/types/organization'
+import type { UpdateMemberRoleRequest } from '@nexus/common/types/organization'
 import type { NextRequest } from 'next/server'
 
 import { authOptions } from '@/app/api/auth/[...nextauth]/auth-options'

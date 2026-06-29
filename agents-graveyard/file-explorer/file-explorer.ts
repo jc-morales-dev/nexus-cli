@@ -1,4 +1,4 @@
-import { AgentTemplateTypes } from '@codebuff/common/types/session-state'
+import { AgentTemplateTypes } from '@nexus/common/types/session-state'
 
 import { publisher } from '../../agents/constants'
 

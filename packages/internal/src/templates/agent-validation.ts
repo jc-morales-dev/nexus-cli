@@ -1,14 +1,14 @@
 import {
   collectAgentIds,
   validateAgents,
-} from '@codebuff/common/templates/agent-validation'
+} from '@nexus/common/templates/agent-validation'
 
 import { validateSpawnableAgents } from '../util/agent-template-validation'
 
-import type { DynamicAgentValidationError } from '@codebuff/common/templates/agent-validation'
-import type { AgentTemplate } from '@codebuff/common/types/agent-template'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
-import type { DynamicAgentTemplate } from '@codebuff/common/types/dynamic-agent-template'
+import type { DynamicAgentValidationError } from '@nexus/common/templates/agent-validation'
+import type { AgentTemplate } from '@nexus/common/types/agent-template'
+import type { Logger } from '@nexus/common/types/contracts/logger'
+import type { DynamicAgentTemplate } from '@nexus/common/types/dynamic-agent-template'
 
 export async function validateAgentsWithSpawnableAgents(params: {
   agentTemplates?: Record<string, any>

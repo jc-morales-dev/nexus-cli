@@ -1,10 +1,10 @@
-import { env } from '@codebuff/common/env'
+import { env } from '@nexus/common/env'
 import {
   FALLBACK_FREEBUFF_MODEL_ID,
   LIMITED_FREEBUFF_MODEL_ID,
   resolveFreebuffModel,
-} from '@codebuff/common/constants/freebuff-models'
-import { getRateLimitsByModel } from '@codebuff/common/types/freebuff-session'
+} from '@nexus/common/constants/freebuff-models'
+import { getRateLimitsByModel } from '@nexus/common/types/freebuff-session'
 import { useEffect } from 'react'
 
 import {
@@ -26,7 +26,7 @@ import type {
   FreebuffCountryBlockReason,
   FreebuffIpPrivacySignal,
   FreebuffSessionServerResponse,
-} from '@codebuff/common/types/freebuff-session'
+} from '@nexus/common/types/freebuff-session'
 
 const POLL_INTERVAL_QUEUED_MS = 5_000
 const POLL_INTERVAL_ACTIVE_MS = 30_000

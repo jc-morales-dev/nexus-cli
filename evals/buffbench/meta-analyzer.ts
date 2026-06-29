@@ -1,10 +1,10 @@
 import fs from 'fs'
 import path from 'path'
 
-import { getErrorObject } from '@codebuff/common/util/error'
-import { withTimeout } from '@codebuff/common/util/promise'
+import { getErrorObject } from '@nexus/common/util/error'
+import { withTimeout } from '@nexus/common/util/promise'
 
-import type { CodebuffClient, AgentDefinition } from '@codebuff/sdk'
+import type { CodebuffClient, AgentDefinition } from '@nexus/sdk'
 
 export interface TaskAnalysisData {
   commitSha: string

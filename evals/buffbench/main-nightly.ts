@@ -1,6 +1,6 @@
 import path from 'path'
 
-import { sendBasicEmail } from '@codebuff/internal/loops'
+import { sendBasicEmail } from '@nexus/internal/loops'
 
 import { runBuffBench } from './run-buffbench'
 

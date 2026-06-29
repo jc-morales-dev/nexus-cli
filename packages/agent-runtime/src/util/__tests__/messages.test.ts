@@ -3,7 +3,7 @@ import {
   jsonToolResult,
   systemMessage,
   userMessage,
-} from '@codebuff/common/util/messages'
+} from '@nexus/common/util/messages'
 import {
   afterEach,
   beforeEach,
@@ -23,12 +23,12 @@ import {
 } from '../../util/messages'
 import * as tokenCounter from '../token-counter'
 
-import type { CodebuffToolMessage } from '@codebuff/common/tools/list'
-import type { Message } from '@codebuff/common/types/messages/codebuff-message'
+import type { CodebuffToolMessage } from '@nexus/common/tools/list'
+import type { Message } from '@nexus/common/types/messages/codebuff-message'
 import type {
   TextPart,
   ToolCallPart,
-} from '@codebuff/common/types/messages/content-part'
+} from '@nexus/common/types/messages/content-part'
 
 /**
  * Type guard to check if a content part is a text part.

@@ -1,5 +1,5 @@
-import { getAllFilePaths } from '@codebuff/common/project-file-tree'
-import { jsonToolResult } from '@codebuff/common/util/messages'
+import { getAllFilePaths } from '@nexus/common/project-file-tree'
+import { jsonToolResult } from '@nexus/common/util/messages'
 
 import { truncateFileTreeBasedOnTokenBudget } from '../../../system-prompt/truncate-file-tree'
 
@@ -7,12 +7,12 @@ import type { CodebuffToolHandlerFunction } from '../handler-function-type'
 import type {
   CodebuffToolCall,
   CodebuffToolOutput,
-} from '@codebuff/common/tools/list'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+} from '@nexus/common/tools/list'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 import type {
   FileTreeNode,
   ProjectFileContext,
-} from '@codebuff/common/util/file'
+} from '@nexus/common/util/file'
 
 type ToolName = 'read_subtree'
 export const handleReadSubtree = (async (params: {

@@ -1,6 +1,6 @@
 'use client'
 
-import { env } from '@codebuff/common/env'
+import { env } from '@nexus/common/env'
 import { useSession } from 'next-auth/react'
 import posthog from 'posthog-js'
 import { PostHogProvider as PostHogProviderWrapper } from 'posthog-js/react'

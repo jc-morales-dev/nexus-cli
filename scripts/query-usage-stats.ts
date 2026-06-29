@@ -1,4 +1,4 @@
-import { db } from '@codebuff/internal/db'
+import { db } from '@nexus/internal/db'
 import { sql } from 'drizzle-orm'
 
 async function queryUsageStats() {

@@ -1,5 +1,5 @@
 {
-  "name": "@codebuff/sdk",
+  "name": "@nexus/sdk",
   "private": false,
   "version": "0.10.7",
   "description": "Official SDK for Codebuff — AI coding agent & framework",

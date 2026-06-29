@@ -1,5 +1,5 @@
-import { buildArray } from '@codebuff/common/util/array'
-import { closeXml } from '@codebuff/common/util/xml'
+import { buildArray } from '@nexus/common/util/array'
+import { closeXml } from '@nexus/common/util/xml'
 
 import baseLite from './base-lite'
 import { publisher } from '../constants'

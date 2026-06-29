@@ -3,14 +3,14 @@ import path, { dirname } from 'path'
 import { format as stringFormat } from 'util'
 
 
-import { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
-import { env, IS_DEV, IS_TEST, IS_CI } from '@codebuff/common/env'
-import { createAnalyticsDispatcher } from '@codebuff/common/util/analytics-dispatcher'
-import { getAnalyticsEventId } from '@codebuff/common/util/analytics-log'
+import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
+import { env, IS_DEV, IS_TEST, IS_CI } from '@nexus/common/env'
+import { createAnalyticsDispatcher } from '@nexus/common/util/analytics-dispatcher'
+import { getAnalyticsEventId } from '@nexus/common/util/analytics-log'
 import {
   isFullTelemetryEnabled,
   summarizeAnalyticsValue,
-} from '@codebuff/common/util/analytics-sampling'
+} from '@nexus/common/util/analytics-sampling'
 import { pino } from 'pino'
 
 import {

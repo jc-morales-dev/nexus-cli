@@ -1,5 +1,5 @@
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
 import { sql, eq, and, gte } from 'drizzle-orm'
 import { unstable_cache } from 'next/cache'
 

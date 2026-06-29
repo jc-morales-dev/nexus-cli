@@ -1,11 +1,11 @@
-import { models } from '@codebuff/common/old-constants'
-import { getToolCallString } from '@codebuff/common/tools/utils'
-import { buildArray } from '@codebuff/common/util/array'
-import { closeXml } from '@codebuff/common/util/xml'
+import { models } from '@nexus/common/old-constants'
+import { getToolCallString } from '@nexus/common/tools/utils'
+import { buildArray } from '@nexus/common/util/array'
+import { closeXml } from '@nexus/common/util/xml'
 
 import { PLACEHOLDER } from '../../agents/types/secret-agent-definition'
 
-import type { Model } from '@codebuff/common/old-constants'
+import type { Model } from '@nexus/common/old-constants'
 
 export const baseAgentSystemPrompt = (
   model: Model,

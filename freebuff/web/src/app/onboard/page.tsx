@@ -1,6 +1,6 @@
 'use server'
 
-import { env } from '@codebuff/internal/env'
+import { env } from '@nexus/internal/env'
 import { redirect } from 'next/navigation'
 import { getServerSession } from 'next-auth'
 import { headers } from 'next/headers'

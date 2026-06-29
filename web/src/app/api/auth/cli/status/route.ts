@@ -1,4 +1,4 @@
-import { env } from '@codebuff/internal/env'
+import { env } from '@nexus/internal/env'
 
 import { createLoginStatusDb } from './_db'
 import { getLoginStatus } from './_get'

@@ -1,4 +1,4 @@
-import { isByokDirectMode } from '@codebuff/common/constants/byok'
+import { isByokDirectMode } from '@nexus/common/constants/byok'
 
 import { useChatStore } from '../state/chat-store'
 import { IS_FREEBUFF } from '../utils/constants'

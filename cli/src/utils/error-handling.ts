@@ -1,12 +1,12 @@
-import { env } from '@codebuff/common/env'
-import { extractApiErrorDetails } from '@codebuff/common/util/error'
-import { formatFreebuffHardBlockedPrivacySignals } from '@codebuff/common/util/freebuff-privacy'
+import { env } from '@nexus/common/env'
+import { extractApiErrorDetails } from '@nexus/common/util/error'
+import { formatFreebuffHardBlockedPrivacySignals } from '@nexus/common/util/freebuff-privacy'
 
 import type { ChatMessage } from '../types/chat'
 import type {
   FreebuffCountryBlockReason,
   FreebuffIpPrivacySignal,
-} from '@codebuff/common/types/freebuff-session'
+} from '@nexus/common/types/freebuff-session'
 
 import { IS_FREEBUFF } from './constants'
 

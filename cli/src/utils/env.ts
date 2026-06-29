@@ -5,7 +5,7 @@
  * process env with CLI-specific vars for terminal/IDE detection.
  */
 
-import { getBaseEnv } from '@codebuff/common/env-process'
+import { getBaseEnv } from '@nexus/common/env-process'
 
 import type { CliEnv } from '../types/env'
 

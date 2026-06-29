@@ -1,16 +1,16 @@
-import { trackEvent } from '@codebuff/common/analytics'
-import { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
-import { GRANT_PRIORITIES } from '@codebuff/common/constants/grant-priorities'
+import { trackEvent } from '@nexus/common/analytics'
+import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
+import { GRANT_PRIORITIES } from '@nexus/common/constants/grant-priorities'
 import {
   DEFAULT_TIER,
   SUBSCRIPTION_DISPLAY_NAME,
   SUBSCRIPTION_TIERS,
-} from '@codebuff/common/constants/subscription-plans'
+} from '@nexus/common/constants/subscription-plans'
 
-import type { SubscriptionTierPrice } from '@codebuff/common/constants/subscription-plans'
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
-import { withAdvisoryLockTransaction } from '@codebuff/internal/db/transaction'
+import type { SubscriptionTierPrice } from '@nexus/common/constants/subscription-plans'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
+import { withAdvisoryLockTransaction } from '@nexus/internal/db/transaction'
 import {
   and,
   desc,
@@ -24,7 +24,7 @@ import {
   sql,
 } from 'drizzle-orm'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 import type Stripe from 'stripe'
 
 // ---------------------------------------------------------------------------

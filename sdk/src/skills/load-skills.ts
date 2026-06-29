@@ -6,16 +6,16 @@ import {
   SKILLS_DIR_NAME,
   SKILL_FILE_NAME,
   isValidSkillName,
-} from '@codebuff/common/constants/skills'
+} from '@nexus/common/constants/skills'
 import {
   SkillFrontmatterSchema,
   type SkillDefinition,
   type SkillsMap,
-} from '@codebuff/common/types/skill'
+} from '@nexus/common/types/skill'
 import matter from 'gray-matter'
 
 // Re-export from common for backward compatibility
-export { formatAvailableSkillsXml } from '@codebuff/common/util/skills'
+export { formatAvailableSkillsXml } from '@nexus/common/util/skills'
 
 /**
  * Parses YAML frontmatter from a SKILL.md file using gray-matter.

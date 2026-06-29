@@ -2,16 +2,16 @@ import { execSync } from 'child_process'
 import fs from 'fs'
 import path from 'path'
 
-import { getFileTokenScores } from '@codebuff/code-map/parse'
-import { isKnowledgeFile } from '@codebuff/common/constants/knowledge'
-import { getSystemInfo } from '@codebuff/common/util/system-info'
+import { getFileTokenScores } from '@nexus/code-map/parse'
+import { isKnowledgeFile } from '@nexus/common/constants/knowledge'
+import { getSystemInfo } from '@nexus/common/util/system-info'
 
 import {
   getAllFilePaths,
   getProjectFileTree,
 } from '../common/src/project-file-tree'
 
-import type { ProjectFileContext } from '@codebuff/common/util/file'
+import type { ProjectFileContext } from '@nexus/common/util/file'
 
 let _projectRootForMocks: string | undefined
 

@@ -1,4 +1,4 @@
-import { env } from '@codebuff/internal/env'
+import { env } from '@nexus/internal/env'
 
 import { FIREWORKS_ACCOUNT_ID, FIREWORKS_DEPLOYMENT_MAP } from '@/llm-api/fireworks-config'
 import { logger } from '@/util/logger'

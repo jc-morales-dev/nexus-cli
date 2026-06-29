@@ -3,10 +3,10 @@ import { Agent } from 'undici'
 import {
   FREEBUFF_DEPLOYMENT_HOURS_LABEL,
   isFreebuffDeploymentHours,
-} from '@codebuff/common/constants/freebuff-models'
-import { PROFIT_MARGIN } from '@codebuff/common/constants/limits'
-import { getErrorObject } from '@codebuff/common/util/error'
-import { env } from '@codebuff/internal/env'
+} from '@nexus/common/constants/freebuff-models'
+import { PROFIT_MARGIN } from '@nexus/common/constants/limits'
+import { getErrorObject } from '@nexus/common/util/error'
+import { env } from '@nexus/internal/env'
 
 import { FIREWORKS_DEPLOYMENT_MAP } from './fireworks-config'
 import {
@@ -17,8 +17,8 @@ import {
 } from './helpers'
 
 import type { UsageData } from './helpers'
-import type { InsertMessageBigqueryFn } from '@codebuff/common/types/contracts/bigquery'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { InsertMessageBigqueryFn } from '@nexus/common/types/contracts/bigquery'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 import type { ChatCompletionRequestBody } from './types'
 
 const FIREWORKS_BASE_URL = 'https://api.fireworks.ai/inference/v1'

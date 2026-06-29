@@ -2,7 +2,7 @@ import path from 'path'
 
 import { defineConfig } from 'drizzle-kit'
 
-import { env } from '@codebuff/internal/env'
+import { env } from '@nexus/internal/env'
 
 export default defineConfig({
   dialect: 'postgresql',

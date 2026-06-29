@@ -1,14 +1,14 @@
-import { trackEvent } from '@codebuff/common/analytics'
-import { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
-import { getNextQuotaReset } from '@codebuff/common/util/dates'
-import { getErrorObject } from '@codebuff/common/util/error'
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
+import { trackEvent } from '@nexus/common/analytics'
+import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
+import { getNextQuotaReset } from '@nexus/common/util/dates'
+import { getErrorObject } from '@nexus/common/util/error'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
 import { eq } from 'drizzle-orm'
 
 import { calculateOrganizationUsageAndBalance } from './org-billing'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 export interface OrganizationCreditAlert {
   organizationId: string

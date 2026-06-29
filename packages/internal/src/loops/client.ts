@@ -1,16 +1,16 @@
 import { eq } from 'drizzle-orm'
 import { LoopsClient, APIError } from 'loops'
 
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
-import { env } from '@codebuff/internal/env'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
+import { env } from '@nexus/internal/env'
 
 import type { LoopsEmailData, SendEmailResult } from './types'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 import type {
   ParamsExcluding,
   OptionalFields,
-} from '@codebuff/common/types/function-params'
+} from '@nexus/common/types/function-params'
 
 const ORGANIZATION_INVITATION_TRANSACTIONAL_ID = 'cmbikixxm15xo4a0iiemzkzw1'
 const BASIC_TRANSACTIONAL_ID = 'cmb8pafk92r820w0i7lkplkt2'

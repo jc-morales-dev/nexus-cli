@@ -1,6 +1,6 @@
 import { describe, test, expect, mock } from 'bun:test'
 
-import { createMockLogger } from '@codebuff/common/testing/mock-types'
+import { createMockLogger } from '@nexus/common/testing/mock-types'
 import {
   generateLoginUrl,
   pollLoginStatus,

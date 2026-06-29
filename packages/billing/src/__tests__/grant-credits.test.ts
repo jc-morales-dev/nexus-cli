@@ -1,10 +1,10 @@
 import {
   clearMockedModules,
   mockModule,
-} from '@codebuff/common/testing/mock-modules'
+} from '@nexus/common/testing/mock-modules'
 import { afterEach, describe, expect, it } from 'bun:test'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 const logger: Logger = {
   debug: () => {},
@@ -100,7 +100,7 @@ describe('grant-credits', () => {
     it('grants 500 non-expiring free credits with a deterministic operation id', async () => {
       const grantCalls: any[] = []
 
-      await mockModule('@codebuff/internal/db/transaction', () => ({
+      await mockModule('@nexus/internal/db/transaction', () => ({
         withAdvisoryLockTransaction: async ({
           callback,
         }: {
@@ -169,7 +169,7 @@ describe('grant-credits', () => {
     })
 
     it('should return total credits when user has legacy referrals as referrer', async () => {
-      await mockModule('@codebuff/internal/db', () => ({
+      await mockModule('@nexus/internal/db', () => ({
         default: createDbMockForReferralQuery('500'),
       }))
 
@@ -185,7 +185,7 @@ describe('grant-credits', () => {
     })
 
     it('should return total credits when user has legacy referrals as referred', async () => {
-      await mockModule('@codebuff/internal/db', () => ({
+      await mockModule('@nexus/internal/db', () => ({
         default: createDbMockForReferralQuery('500'),
       }))
 
@@ -201,7 +201,7 @@ describe('grant-credits', () => {
     })
 
     it('should return combined total when user has legacy referrals as both referrer and referred', async () => {
-      await mockModule('@codebuff/internal/db', () => ({
+      await mockModule('@nexus/internal/db', () => ({
         default: createDbMockForReferralQuery('750'),
       }))
 
@@ -218,7 +218,7 @@ describe('grant-credits', () => {
 
     it('should return 0 when user has no legacy referrals (only non-legacy)', async () => {
       // The query filters by is_legacy = true, so non-legacy referrals return 0
-      await mockModule('@codebuff/internal/db', () => ({
+      await mockModule('@nexus/internal/db', () => ({
         default: createDbMockForReferralQuery('0'),
       }))
 
@@ -234,7 +234,7 @@ describe('grant-credits', () => {
     })
 
     it('should return 0 when user has no referrals at all', async () => {
-      await mockModule('@codebuff/internal/db', () => ({
+      await mockModule('@nexus/internal/db', () => ({
         default: createDbMockForReferralQuery('0'),
       }))
 
@@ -250,7 +250,7 @@ describe('grant-credits', () => {
     })
 
     it('should return 0 when query returns null (COALESCE handles this)', async () => {
-      await mockModule('@codebuff/internal/db', () => ({
+      await mockModule('@nexus/internal/db', () => ({
         default: createDbMockForReferralQuery(null),
       }))
 
@@ -266,7 +266,7 @@ describe('grant-credits', () => {
     })
 
     it('should return 0 when query returns undefined result', async () => {
-      await mockModule('@codebuff/internal/db', () => ({
+      await mockModule('@nexus/internal/db', () => ({
         default: {
           select: () => ({
             from: () => ({
@@ -289,7 +289,7 @@ describe('grant-credits', () => {
 
     it('should return 0 and log error when database query fails', async () => {
       const dbError = new Error('Database connection failed')
-      await mockModule('@codebuff/internal/db', () => ({
+      await mockModule('@nexus/internal/db', () => ({
         default: createDbMockThatThrows(dbError),
       }))
 
@@ -318,7 +318,7 @@ describe('grant-credits', () => {
     })
 
     it('should handle large credit values correctly', async () => {
-      await mockModule('@codebuff/internal/db', () => ({
+      await mockModule('@nexus/internal/db', () => ({
         default: createDbMockForReferralQuery('999999'),
       }))
 
@@ -341,10 +341,10 @@ describe('grant-credits', () => {
           next_quota_reset: futureDate,
           auto_topup_enabled: true,
         }
-        await mockModule('@codebuff/internal/db', () => ({
+        await mockModule('@nexus/internal/db', () => ({
           default: createDbMock({ user }),
         }))
-        await mockModule('@codebuff/internal/db/transaction', () =>
+        await mockModule('@nexus/internal/db/transaction', () =>
           createTransactionMock(user),
         )
 
@@ -366,10 +366,10 @@ describe('grant-credits', () => {
           next_quota_reset: futureDate,
           auto_topup_enabled: false,
         }
-        await mockModule('@codebuff/internal/db', () => ({
+        await mockModule('@nexus/internal/db', () => ({
           default: createDbMock({ user }),
         }))
-        await mockModule('@codebuff/internal/db/transaction', () =>
+        await mockModule('@nexus/internal/db/transaction', () =>
           createTransactionMock(user),
         )
 
@@ -389,10 +389,10 @@ describe('grant-credits', () => {
           next_quota_reset: futureDate,
           auto_topup_enabled: null,
         }
-        await mockModule('@codebuff/internal/db', () => ({
+        await mockModule('@nexus/internal/db', () => ({
           default: createDbMock({ user }),
         }))
-        await mockModule('@codebuff/internal/db/transaction', () =>
+        await mockModule('@nexus/internal/db/transaction', () =>
           createTransactionMock(user),
         )
 
@@ -408,10 +408,10 @@ describe('grant-credits', () => {
       })
 
       it('should throw error when user is not found', async () => {
-        await mockModule('@codebuff/internal/db', () => ({
+        await mockModule('@nexus/internal/db', () => ({
           default: createDbMock({ user: null }),
         }))
-        await mockModule('@codebuff/internal/db/transaction', () =>
+        await mockModule('@nexus/internal/db/transaction', () =>
           createTransactionMock(null),
         )
 
@@ -433,10 +433,10 @@ describe('grant-credits', () => {
           next_quota_reset: futureDate,
           auto_topup_enabled: false,
         }
-        await mockModule('@codebuff/internal/db', () => ({
+        await mockModule('@nexus/internal/db', () => ({
           default: createDbMock({ user }),
         }))
-        await mockModule('@codebuff/internal/db/transaction', () =>
+        await mockModule('@nexus/internal/db/transaction', () =>
           createTransactionMock(user),
         )
 
@@ -533,7 +533,7 @@ describe('grant-credits', () => {
         const legacyReferralBonus = 500
 
         let queryCount = 0
-        await mockModule('@codebuff/internal/db', () => ({
+        await mockModule('@nexus/internal/db', () => ({
           default: {
             select: () => ({
               from: () => ({
@@ -554,7 +554,7 @@ describe('grant-credits', () => {
             }),
           },
         }))
-        await mockModule('@codebuff/internal/db/transaction', () =>
+        await mockModule('@nexus/internal/db/transaction', () =>
           createTransactionMockWithGrants(user, legacyReferralBonus),
         )
 
@@ -591,7 +591,7 @@ describe('grant-credits', () => {
         const legacyReferralBonus = 0 // No legacy referrals
 
         let queryCount = 0
-        await mockModule('@codebuff/internal/db', () => ({
+        await mockModule('@nexus/internal/db', () => ({
           default: {
             select: () => ({
               from: () => ({
@@ -612,7 +612,7 @@ describe('grant-credits', () => {
             }),
           },
         }))
-        await mockModule('@codebuff/internal/db/transaction', () =>
+        await mockModule('@nexus/internal/db/transaction', () =>
           createTransactionMockWithGrants(user, legacyReferralBonus),
         )
 
@@ -637,7 +637,7 @@ describe('grant-credits', () => {
         const grandfatheredFreeCredits = 500
 
         let queryCount = 0
-        await mockModule('@codebuff/internal/db', () => ({
+        await mockModule('@nexus/internal/db', () => ({
           default: {
             select: () => ({
               from: () => ({
@@ -656,7 +656,7 @@ describe('grant-credits', () => {
             }),
           },
         }))
-        await mockModule('@codebuff/internal/db/transaction', () =>
+        await mockModule('@nexus/internal/db/transaction', () =>
           createTransactionMockWithGrants(user, 0),
         )
 

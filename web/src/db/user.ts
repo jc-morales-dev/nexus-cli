@@ -1,12 +1,12 @@
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
 import { eq } from 'drizzle-orm'
 
 import type {
   GetUserInfoFromApiKeyInput,
   GetUserInfoFromApiKeyOutput,
   UserColumn,
-} from '@codebuff/common/types/contracts/database'
+} from '@nexus/common/types/contracts/database'
 
 export const VALID_USER_INFO_FIELDS = [
   'id',

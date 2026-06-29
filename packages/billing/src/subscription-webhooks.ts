@@ -1,19 +1,19 @@
-import { trackEvent } from '@codebuff/common/analytics'
-import { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
-import { createSubscriptionPriceMappings } from '@codebuff/common/constants/subscription-plans'
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
-import { env } from '@codebuff/internal/env'
+import { trackEvent } from '@nexus/common/analytics'
+import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
+import { createSubscriptionPriceMappings } from '@nexus/common/constants/subscription-plans'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
+import { env } from '@nexus/internal/env'
 import {
   getStripeId,
   getUserByStripeCustomerId,
   stripeServer,
-} from '@codebuff/internal/util/stripe'
+} from '@nexus/internal/util/stripe'
 import { eq } from 'drizzle-orm'
 
 import { expireActiveBlockGrants, handleSubscribe } from './subscription'
 
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 import type Stripe from 'stripe'
 
 type SubscriptionStatus = (typeof schema.subscriptionStatusEnum.enumValues)[number]

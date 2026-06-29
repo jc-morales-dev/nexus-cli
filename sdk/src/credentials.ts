@@ -5,15 +5,15 @@ import os from 'os'
 import {
   CHATGPT_OAUTH_CLIENT_ID,
   CHATGPT_OAUTH_TOKEN_URL,
-} from '@codebuff/common/constants/chatgpt-oauth'
-import { env } from '@codebuff/common/env'
-import { userSchema } from '@codebuff/common/util/credentials'
+} from '@nexus/common/constants/chatgpt-oauth'
+import { env } from '@nexus/common/env'
+import { userSchema } from '@nexus/common/util/credentials'
 import { z } from 'zod/v4'
 
 import { getChatGptOAuthTokenFromEnv } from './env'
 
-import type { ClientEnv } from '@codebuff/common/types/contracts/env'
-import type { User } from '@codebuff/common/util/credentials'
+import type { ClientEnv } from '@nexus/common/types/contracts/env'
+import type { User } from '@nexus/common/util/credentials'
 
 const chatGptOAuthSchema = z.object({
   accessToken: z.string(),

@@ -104,16 +104,16 @@ export default {
 
 ## SDK：在生产环境里跑智能体
 
-安装 [SDK 包](https://www.npmjs.com/package/@codebuff/sdk)——注意这跟 CLI 用的 codebuff 包是两个不同的包。
+安装 [SDK 包](https://www.npmjs.com/package/@nexus/sdk)——注意这跟 CLI 用的 codebuff 包是两个不同的包。
 
 ```bash
-npm install @codebuff/sdk
+npm install @nexus/sdk
 ```
 
 引入 client，开始跑智能体：
 
 ```typescript
-import { CodebuffClient } from '@codebuff/sdk'
+import { CodebuffClient } from '@nexus/sdk'
 
 // 1. 初始化 client
 const client = new CodebuffClient({
@@ -149,7 +149,7 @@ await client.run({
 })
 ```
 
-更多 SDK 用法请看[这里](https://www.npmjs.com/package/@codebuff/sdk)。
+更多 SDK 用法请看[这里](https://www.npmjs.com/package/@nexus/sdk)。
 
 ## Freebuff：免费的编程智能体
 
@@ -230,7 +230,7 @@ sudo apt-get install tmux
 
 **CLI**：`npm install -g codebuff`
 
-**SDK**：`npm install @codebuff/sdk`
+**SDK**：`npm install @nexus/sdk`
 
 **Freebuff（免费版）**：`npm install -g freebuff`
 

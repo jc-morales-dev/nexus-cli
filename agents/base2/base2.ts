@@ -1,16 +1,16 @@
-import { buildArray } from '@codebuff/common/util/array'
-import { COMPOSIO_META_TOOL_NAMES } from '@codebuff/common/constants/composio'
+import { buildArray } from '@nexus/common/util/array'
+import { COMPOSIO_META_TOOL_NAMES } from '@nexus/common/constants/composio'
 import {
   FREEBUFF_GEMINI_THINKER_AGENT_ID,
   FREEBUFF_GEMINI_THINKER_INSTRUCTIONS_PROMPT,
   FREEBUFF_GEMINI_THINKER_STEP_PROMPT,
   FREEBUFF_GEMINI_THINKER_SYSTEM_INSTRUCTION,
-} from '@codebuff/common/constants/freebuff-gemini-thinker'
-import { FREEBUFF_REVIEWER_AGENT_ID_BY_MODEL } from '@codebuff/common/constants/free-agents'
+} from '@nexus/common/constants/freebuff-gemini-thinker'
+import { FREEBUFF_REVIEWER_AGENT_ID_BY_MODEL } from '@nexus/common/constants/free-agents'
 import {
   canFreebuffModelSpawnGeminiThinker,
   FREEBUFF_MINIMAX_MODEL_ID,
-} from '@codebuff/common/constants/freebuff-models'
+} from '@nexus/common/constants/freebuff-models'
 
 import { publisher } from '../constants'
 import {

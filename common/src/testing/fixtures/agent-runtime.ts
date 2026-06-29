@@ -11,7 +11,7 @@
  *   createTestAgentRuntimeParams,
  *   createTestAgentRuntimeDeps,
  *   mockFileContext,
- * } from '@codebuff/common/testing/fixtures/agent-runtime'
+ * } from '@nexus/common/testing/fixtures/agent-runtime'
  *
  * const params = createTestAgentRuntimeParams()
  * const { agentTemplate, localAgentTemplates } = params

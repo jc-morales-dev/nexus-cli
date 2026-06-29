@@ -1,12 +1,12 @@
-import { AgentTemplateTypes } from '@codebuff/common/types/session-state'
+import { AgentTemplateTypes } from '@nexus/common/types/session-state'
 
-import type { ToolName } from '@codebuff/common/tools/constants'
+import type { ToolName } from '@nexus/common/tools/constants'
 import type {
   AgentTemplate,
   StepGenerator,
   StepHandler,
-} from '@codebuff/common/types/agent-template'
-import type { AgentTemplateType } from '@codebuff/common/types/session-state'
+} from '@nexus/common/types/agent-template'
+import type { AgentTemplateType } from '@nexus/common/types/session-state'
 
 // Re-export for backward compatibility
 export type { AgentTemplate, StepGenerator, StepHandler }

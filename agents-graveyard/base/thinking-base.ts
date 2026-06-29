@@ -1,4 +1,4 @@
-import { AgentTemplateTypes } from '@codebuff/common/types/session-state'
+import { AgentTemplateTypes } from '@nexus/common/types/session-state'
 
 import {
   baseAgentAgentStepPrompt,
@@ -7,8 +7,8 @@ import {
 } from './base-prompts'
 
 import type { SecretAgentDefinition } from '../types/secret-agent-definition'
-import type { Model } from '@codebuff/common/old-constants'
-import type { ToolCall } from '@codebuff/common/templates/initial-agents-dir/types/agent-definition'
+import type { Model } from '@nexus/common/old-constants'
+import type { ToolCall } from '@nexus/common/templates/initial-agents-dir/types/agent-definition'
 
 const baseAgentToolNames = [
   'create_plan',

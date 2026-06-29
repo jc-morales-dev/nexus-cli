@@ -1,12 +1,12 @@
-import { calculateOrganizationUsageAndBalance } from '@codebuff/billing'
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
-import { stripeServer } from '@codebuff/internal/util/stripe'
+import { calculateOrganizationUsageAndBalance } from '@nexus/billing'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
+import { stripeServer } from '@nexus/internal/util/stripe'
 import { eq, and } from 'drizzle-orm'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 
-import type { OrganizationDetailsResponse } from '@codebuff/common/types/organization'
+import type { OrganizationDetailsResponse } from '@nexus/common/types/organization'
 import type { NextRequest } from 'next/server'
 
 import { authOptions } from '@/app/api/auth/[...nextauth]/auth-options'

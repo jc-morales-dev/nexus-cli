@@ -1,4 +1,4 @@
-import { FREEBUFF_KIMI_MODEL_ID } from '@codebuff/common/constants/freebuff-models'
+import { FREEBUFF_KIMI_MODEL_ID } from '@nexus/common/constants/freebuff-models'
 
 import { createBase2 } from './base2'
 

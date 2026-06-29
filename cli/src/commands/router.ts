@@ -1,6 +1,6 @@
-import { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
-import { CHATGPT_OAUTH_ENABLED } from '@codebuff/common/constants/chatgpt-oauth'
-import { runTerminalCommand } from '@codebuff/sdk'
+import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
+import { CHATGPT_OAUTH_ENABLED } from '@nexus/common/constants/chatgpt-oauth'
+import { runTerminalCommand } from '@nexus/sdk'
 
 
 import {

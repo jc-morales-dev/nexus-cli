@@ -1,12 +1,12 @@
-import { TEST_AGENT_RUNTIME_IMPL } from '@codebuff/common/testing/impl/agent-runtime'
+import { TEST_AGENT_RUNTIME_IMPL } from '@nexus/common/testing/impl/agent-runtime'
 import { describe, test, expect, beforeEach } from 'bun:test'
 import { NextRequest } from 'next/server'
 
 import { getMe } from '../_get'
 
 import type { VALID_USER_INFO_FIELDS } from '@/db/user'
-import type { AgentRuntimeDeps } from '@codebuff/common/types/contracts/agent-runtime'
-import type { GetUserInfoFromApiKeyOutput } from '@codebuff/common/types/contracts/database'
+import type { AgentRuntimeDeps } from '@nexus/common/types/contracts/agent-runtime'
+import type { GetUserInfoFromApiKeyOutput } from '@nexus/common/types/contracts/database'
 
 
 describe('/api/v1/me route', () => {

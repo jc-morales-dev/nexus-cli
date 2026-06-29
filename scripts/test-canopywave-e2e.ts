@@ -10,10 +10,10 @@
  *   bun scripts/test-canopywave-e2e.ts
  */
 
-import { CodebuffClient } from '@codebuff/sdk'
+import { CodebuffClient } from '@nexus/sdk'
 
-import type { AgentDefinition } from '@codebuff/sdk'
-import type { PrintModeEvent } from '@codebuff/common/types/print-mode'
+import type { AgentDefinition } from '@nexus/sdk'
+import type { PrintModeEvent } from '@nexus/common/types/print-mode'
 
 const minimaxAgent: AgentDefinition = {
   id: 'canopywave-test-agent',

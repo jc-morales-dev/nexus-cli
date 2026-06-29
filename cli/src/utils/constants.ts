@@ -1,4 +1,4 @@
-import type { ToolName } from '@codebuff/sdk'
+import type { ToolName } from '@nexus/sdk'
 
 import { getCliEnv } from './env'
 

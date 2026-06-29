@@ -21,10 +21,10 @@
     "stripInternal": true,
     "baseUrl": ".",
     "paths": {
-      "@codebuff/common/*": ["../common/src/*"],
-      "@codebuff/agent-runtime/*": ["../packages/agent-runtime/src/*"],
-      "@codebuff/code-map": ["../packages/code-map/src/index.ts"],
-      "@codebuff/code-map/*": ["../packages/code-map/src/*"]
+      "@nexus/common/*": ["../common/src/*"],
+      "@nexus/agent-runtime/*": ["../packages/agent-runtime/src/*"],
+      "@nexus/code-map": ["../packages/code-map/src/index.ts"],
+      "@nexus/code-map/*": ["../packages/code-map/src/*"]
     }
   },
   "include": ["src/**/*"],

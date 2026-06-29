@@ -1,10 +1,10 @@
-import { env, DEBUG_ANALYTICS } from '@codebuff/common/env'
+import { env, DEBUG_ANALYTICS } from '@nexus/common/env'
 
 import { createPostHogClient, type AnalyticsClient } from './analytics-core'
 import { AnalyticsEvent } from './constants/analytics-events'
 
-import type { TrackEventFn } from '@codebuff/common/types/contracts/analytics'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { TrackEventFn } from '@nexus/common/types/contracts/analytics'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 let client: AnalyticsClient | undefined
 

@@ -1,6 +1,6 @@
-import { failure, success } from '@codebuff/common/util/error'
-import db from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
+import { failure, success } from '@nexus/common/util/error'
+import db from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
 import { eq, and } from 'drizzle-orm'
 
 import { consumeCredits } from './balance-calculator'
@@ -10,9 +10,9 @@ import {
   extractOwnerAndRepo,
 } from './org-billing'
 
-import type { ConsumeCreditsWithFallbackFn } from '@codebuff/common/types/contracts/billing'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
-import type { ParamsOf } from '@codebuff/common/types/function-params'
+import type { ConsumeCreditsWithFallbackFn } from '@nexus/common/types/contracts/billing'
+import type { Logger } from '@nexus/common/types/contracts/logger'
+import type { ParamsOf } from '@nexus/common/types/function-params'
 
 export interface OrganizationLookupResult {
   found: boolean

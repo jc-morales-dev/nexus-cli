@@ -2,20 +2,20 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 
-import { API_KEY_ENV_VAR } from '@codebuff/common/constants/paths'
+import { API_KEY_ENV_VAR } from '@nexus/common/constants/paths'
 import {
   CodebuffClient,
   initialSessionState,
   withMessageHistory,
   type AgentDefinition,
   type Message,
-} from '@codebuff/sdk'
+} from '@nexus/sdk'
 import { beforeAll, describe, expect, it } from 'bun:test'
 
 import base2Free from '../base2/base2-free'
 import contextPruner from '../context-pruner'
 
-import type { PrintModeEvent } from '@codebuff/common/types/print-mode'
+import type { PrintModeEvent } from '@nexus/common/types/print-mode'
 
 /**
  * Patterns that indicate the model is imitating the summarized tool call format

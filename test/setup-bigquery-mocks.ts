@@ -1,6 +1,6 @@
 import { beforeEach, spyOn } from 'bun:test'
 
-import * as bigquery from '@codebuff/bigquery'
+import * as bigquery from '@nexus/bigquery'
 
 const applyBigQueryMocks = () => {
   spyOn(bigquery, 'setupBigQuery').mockImplementation(async () => {})

@@ -1,5 +1,5 @@
-import { CHATGPT_OAUTH_ENABLED } from '@codebuff/common/constants/chatgpt-oauth'
-import { checkpoints, backgroundProcesses } from '@codebuff/sdk'
+import { CHATGPT_OAUTH_ENABLED } from '@nexus/common/constants/chatgpt-oauth'
+import { checkpoints, backgroundProcesses } from '@nexus/sdk'
 import { safeOpen } from '../utils/open-url'
 
 import { handleAdsEnable, handleAdsDisable } from './ads'

@@ -9,7 +9,7 @@ import type { ServerEnv } from '../../env-schema'
 import type {
   BaseEnv,
   CiEnv,
-} from '@codebuff/common/types/contracts/env'
+} from '@nexus/common/types/contracts/env'
 
 // Re-export common base types
 export type {
@@ -18,7 +18,7 @@ export type {
   CiEnv,
   ProcessEnv,
   ClientEnv,
-} from '@codebuff/common/types/contracts/env'
+} from '@nexus/common/types/contracts/env'
 
 // Re-export server env type
 export type { ServerEnv } from '../../env-schema'

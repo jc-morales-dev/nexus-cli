@@ -1,11 +1,11 @@
-import { isByokDirectMode } from '@codebuff/common/constants/byok'
-import { withTimeout } from '@codebuff/common/util/promise'
+import { isByokDirectMode } from '@nexus/common/constants/byok'
+import { withTimeout } from '@nexus/common/util/promise'
 
 import { countTokens, countTokensJson } from '../util/token-counter'
 
-import type { ClientEnv, CiEnv } from '@codebuff/common/types/contracts/env'
-import type { JSONObject } from '@codebuff/common/types/json'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { ClientEnv, CiEnv } from '@nexus/common/types/contracts/env'
+import type { JSONObject } from '@nexus/common/types/json'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 const FETCH_TIMEOUT_MS = 30_000
 const MAX_RETRIES = 3

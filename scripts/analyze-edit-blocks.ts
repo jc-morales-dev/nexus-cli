@@ -1,9 +1,9 @@
 import fs from 'fs'
 import path from 'path'
 
-import { fileRegex } from '@codebuff/common/util/file'
-import { db } from '@codebuff/internal/db'
-import * as schema from '@codebuff/internal/db/schema'
+import { fileRegex } from '@nexus/common/util/file'
+import { db } from '@nexus/internal/db'
+import * as schema from '@nexus/internal/db/schema'
 import { eq, desc } from 'drizzle-orm'
 import { shuffle } from 'lodash'
 

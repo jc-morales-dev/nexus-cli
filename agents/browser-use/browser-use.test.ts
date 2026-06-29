@@ -13,9 +13,9 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-import { CodebuffClient, loadLocalAgents } from '@codebuff/sdk'
+import { CodebuffClient, loadLocalAgents } from '@nexus/sdk'
 
-import type { AgentDefinition } from '@codebuff/sdk'
+import type { AgentDefinition } from '@nexus/sdk'
 
 const TRACE_DIR = path.join(process.cwd(), 'debug', 'browser-agent-traces')
 

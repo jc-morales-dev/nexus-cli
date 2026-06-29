@@ -2,17 +2,17 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 
-import * as analytics from '@codebuff/common/analytics'
-import { TEST_USER_ID } from '@codebuff/common/old-constants'
-import { createTestAgentRuntimeParams } from '@codebuff/common/testing/fixtures/agent-runtime'
-import { clearMockedModules } from '@codebuff/common/testing/mock-modules'
+import * as analytics from '@nexus/common/analytics'
+import { TEST_USER_ID } from '@nexus/common/old-constants'
+import { createTestAgentRuntimeParams } from '@nexus/common/testing/fixtures/agent-runtime'
+import { clearMockedModules } from '@nexus/common/testing/mock-modules'
 import {
   createMockDbOperations,
   setupDbSpies,
-} from '@codebuff/common/testing/mocks/database'
-import { getInitialSessionState } from '@codebuff/common/types/session-state'
-import { AbortError, promptSuccess } from '@codebuff/common/util/error'
-import { assistantMessage, userMessage } from '@codebuff/common/util/messages'
+} from '@nexus/common/testing/mocks/database'
+import { getInitialSessionState } from '@nexus/common/types/session-state'
+import { AbortError, promptSuccess } from '@nexus/common/util/error'
+import { assistantMessage, userMessage } from '@nexus/common/util/messages'
 import {
   afterAll,
   afterEach,
@@ -32,9 +32,9 @@ import { clearAgentGeneratorCache } from '../run-programmatic-step'
 import { createToolCallChunk, mockFileContext } from './test-utils'
 
 import type { AgentTemplate } from '../templates/types'
-import type { DbSpies } from '@codebuff/common/testing/mocks/database'
-import type { StepGenerator } from '@codebuff/common/types/agent-template'
-import type { AgentState } from '@codebuff/common/types/session-state'
+import type { DbSpies } from '@nexus/common/testing/mocks/database'
+import type { StepGenerator } from '@nexus/common/types/agent-template'
+import type { AgentState } from '@nexus/common/types/session-state'
 
 describe('loopAgentSteps - runAgentStep vs runProgrammaticStep behavior', () => {
   let mockTemplate: AgentTemplate

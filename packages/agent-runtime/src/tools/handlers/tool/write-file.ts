@@ -1,4 +1,4 @@
-import { AbortError } from '@codebuff/common/util/error'
+import { AbortError } from '@nexus/common/util/error'
 import { partition } from 'lodash'
 
 import { processFileBlock } from '../../../process-file-block'
@@ -8,11 +8,11 @@ import type {
   ClientToolCall,
   CodebuffToolCall,
   CodebuffToolOutput,
-} from '@codebuff/common/tools/list'
-import type { RequestOptionalFileFn } from '@codebuff/common/types/contracts/client'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
-import type { ParamsExcluding } from '@codebuff/common/types/function-params'
-import type { AgentState } from '@codebuff/common/types/session-state'
+} from '@nexus/common/tools/list'
+import type { RequestOptionalFileFn } from '@nexus/common/types/contracts/client'
+import type { Logger } from '@nexus/common/types/contracts/logger'
+import type { ParamsExcluding } from '@nexus/common/types/function-params'
+import type { AgentState } from '@nexus/common/types/session-state'
 
 type FileProcessingTools = 'write_file' | 'str_replace' | 'create_plan'
 export type FileProcessing<

@@ -1,6 +1,6 @@
-import { searchWeb } from '@codebuff/agent-runtime/llm-api/serper-api'
-import { AnalyticsEvent } from '@codebuff/common/constants/analytics-events'
-import { sleep } from '@codebuff/common/util/promise'
+import { searchWeb } from '@nexus/agent-runtime/llm-api/serper-api'
+import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
+import { sleep } from '@nexus/common/util/promise'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 
@@ -10,18 +10,18 @@ import {
   requireUserFromApiKey,
 } from '../_helpers'
 
-import type { SerperEnv } from '@codebuff/agent-runtime/llm-api/serper-api'
-import type { TrackEventFn } from '@codebuff/common/types/contracts/analytics'
+import type { SerperEnv } from '@nexus/agent-runtime/llm-api/serper-api'
+import type { TrackEventFn } from '@nexus/common/types/contracts/analytics'
 import type {
   GetUserUsageDataFn,
   ConsumeCreditsWithFallbackFn,
-} from '@codebuff/common/types/contracts/billing'
-import type { GetUserInfoFromApiKeyFn } from '@codebuff/common/types/contracts/database'
+} from '@nexus/common/types/contracts/billing'
+import type { GetUserInfoFromApiKeyFn } from '@nexus/common/types/contracts/database'
 import type {
   Logger,
   LoggerWithContextFn,
-} from '@codebuff/common/types/contracts/logger'
-import type { BlockGrantResult } from '@codebuff/billing/subscription'
+} from '@nexus/common/types/contracts/logger'
+import type { BlockGrantResult } from '@nexus/billing/subscription'
 import type { NextRequest } from 'next/server'
 
 const bodySchema = z.object({

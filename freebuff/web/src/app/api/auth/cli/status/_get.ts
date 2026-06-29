@@ -1,9 +1,9 @@
-import { genAuthCode } from '@codebuff/common/util/credentials'
+import { genAuthCode } from '@nexus/common/util/credentials'
 import { NextResponse } from 'next/server'
 import { z } from 'zod/v4'
 
 import type { LoginStatusDb } from './_db'
-import type { Logger } from '@codebuff/common/types/contracts/logger'
+import type { Logger } from '@nexus/common/types/contracts/logger'
 
 export type { LoginStatusDb } from './_db'
 

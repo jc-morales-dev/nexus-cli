@@ -1,7 +1,7 @@
 import { WEBSITE_URL } from './constants'
 
-import type { ComposioMetaToolName } from '@codebuff/common/constants/composio'
-import type { ToolResultOutput } from '@codebuff/common/types/messages/content-part'
+import type { ComposioMetaToolName } from '@nexus/common/constants/composio'
+import type { ToolResultOutput } from '@nexus/common/types/messages/content-part'
 
 type ComposioExecuteResponse = {
   output: ToolResultOutput[]

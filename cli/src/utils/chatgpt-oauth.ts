@@ -123,9 +123,9 @@ function escapeHtml(s: string): string {
 function callbackPageHtml(success: boolean, errorMessage?: string): string {
   const title = success ? 'Connected — NEXUS' : 'Connection Failed — NEXUS'
   const heading = success ? '✓ Connected to ChatGPT' : 'Connection Failed'
-  const headingColor = success ? '#4ade80' : '#f87171'
+  const headingColor = success ? '#FF073A' : '#f87171'
   const body = success
-    ? 'You can close this tab and return to Codebuff.'
+    ? 'You can close this tab and return to NEXUS.'
     : `${escapeHtml(errorMessage ?? 'Unknown error')}. Return to Codebuff and try /connect:chatgpt again.`
   return `<!DOCTYPE html>
 <html><head><meta charset="utf-8"><title>${title}</title></head>

@@ -93,18 +93,18 @@ export function getLogoBlockColor(
 
 /**
  * Get the accent color for the logo based on theme and terminal capabilities.
- * Returns the primary green color with appropriate fallback.
+ * Returns the NEXUS neon-red brand color with an appropriate fallback.
  */
 export function getLogoAccentColor(
   themeName: ThemeName,
   env: CliEnv = getCliEnv(),
 ): string {
   const isTruecolor = supportsTruecolor(env)
-  // The primary green color - 'lime' is CSS bright green
+  // The NEXUS neon-red brand color - 'red' is the non-truecolor fallback.
   if (themeName === 'dark') {
-    return isTruecolor ? '#9EFC62' : 'lime'
+    return isTruecolor ? '#FF073A' : 'red'
   }
-  return isTruecolor ? '#65A83E' : 'green'
+  return isTruecolor ? '#E60026' : 'red'
 }
 
 const IDE_THEME_INFERENCE = {
@@ -876,12 +876,12 @@ const DEFAULT_CHAT_THEMES: Record<ThemeName, ChatTheme> = {
   dark: {
     name: 'dark',
     // Core semantic colors
-    primary: '#9EFC62',
+    primary: '#FF073A',
     secondary: '#a3aed0',
-    success: '#22c55e',
+    success: '#FF073A',
     error: '#ef4444',
     warning: '#FFA500',
-    info: '#9EFC62',
+    info: '#FF073A',
     link: '#3B82F6',
     directory: '#9CA3AF',
 
@@ -895,7 +895,7 @@ const DEFAULT_CHAT_THEMES: Record<ThemeName, ChatTheme> = {
 
     // Context-specific
     aiLine: '#6b7280',
-    userLine: '#9EFC62',
+    userLine: '#FF073A',
 
     // Agent backgrounds
     agentToggleHeaderBg: '#f97316',
@@ -941,12 +941,12 @@ const DEFAULT_CHAT_THEMES: Record<ThemeName, ChatTheme> = {
   light: {
     name: 'light',
     // Core semantic colors
-    primary: '#65A83E',
+    primary: '#E60026',
     secondary: '#6b7280',
-    success: '#059669',
+    success: '#E60026',
     error: '#ef4444',
     warning: '#F59E0B',
-    info: '#65A83E',
+    info: '#E60026',
     link: '#2563EB',
     directory: '#6B7280',
 
@@ -960,7 +960,7 @@ const DEFAULT_CHAT_THEMES: Record<ThemeName, ChatTheme> = {
 
     // AI/User context
     aiLine: '#6b7280',
-    userLine: '#65A83E',
+    userLine: '#E60026',
 
     // Agent context
     agentToggleHeaderBg: '#ea580c',

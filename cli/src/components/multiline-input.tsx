@@ -1209,7 +1209,7 @@ export const MultilineInput = forwardRef<
                 visible={true}
                 focused={focused}
                 shouldBlink={effectiveShouldBlinkCursor}
-                color={supportsTruecolor() ? theme.info : 'lime'}
+                color={supportsTruecolor() ? theme.info : 'red'}
                 key={lastActivity}
               />
             )}

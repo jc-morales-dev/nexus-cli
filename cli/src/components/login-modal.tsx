@@ -347,7 +347,7 @@ export const LoginModal = ({
             }}
           >
             <text style={{ wrapMode: 'word' }}>
-              <span fg={'#00cc00'}>
+              <span fg={'#FF073A'}>
                 Press ENTER to login...
               </span>
             </text>

@@ -61,16 +61,16 @@ export interface MarkdownRenderOptions {
 }
 
 const defaultPalette: MarkdownPalette = {
-  inlineCodeFg: '#86efac',
+  inlineCodeFg: '#FF8534',
   codeBackground: '#0d1117',
   codeHeaderFg: '#666',
   headingFg: {
     1: 'magenta',
-    2: 'green',
-    3: 'green',
-    4: 'green',
-    5: 'green',
-    6: 'green',
+    2: 'red',
+    3: 'red',
+    4: 'red',
+    5: 'red',
+    6: 'red',
   },
   listBulletFg: 'white',
   blockquoteBorderFg: 'gray',

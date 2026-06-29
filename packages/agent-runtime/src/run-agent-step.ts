@@ -23,8 +23,17 @@ import {
   buildLoopRedirectMessage,
   buildValidationNudgeMessage,
   editedWithoutValidation,
+  extractToolCalls,
   findRepeatedToolCall,
 } from './reliability-guards'
+import {
+  hasAnyHooks,
+  hookTimeoutSeconds,
+  loadHooksConfig,
+  matchingHooks,
+  MAX_STOP_HOOK_RETRIES,
+  type HooksConfig,
+} from './hooks/hooks-config'
 import { additionalSystemPrompts } from './system-prompt/prompts'
 import { getAgentTemplate } from './templates/agent-registry'
 import { buildAgentToolSet } from './templates/prompts'
@@ -866,6 +875,48 @@ export async function loopAgentSteps(
   const LOOP_REDIRECT_COOLDOWN = 3
   let lastLoopRedirectStep = -LOOP_REDIRECT_COOLDOWN
 
+  // Lifecycle hooks (.nexus/hooks.json) — main coding agent only. Loaded once
+  // per turn; absent file = no hooks = zero overhead.
+  const hooksConfig: HooksConfig | null = isMainCodingAgent
+    ? loadHooksConfig(fileContext.projectRoot)
+    : null
+  const hooksEnabled = hasAnyHooks(hooksConfig)
+  let stopHookRetries = 0
+  const requestToolCall = (params as { requestToolCall?: unknown })
+    .requestToolCall
+  // Run a hook command on the client; return combined output text + exit code.
+  // Fails soft: any error yields empty text / undefined code so a flaky hook
+  // never crashes the agent loop.
+  const runHookCommand = async (
+    command: string,
+    timeoutSeconds: number,
+  ): Promise<{ text: string; exitCode: number | undefined }> => {
+    if (typeof requestToolCall !== 'function') {
+      return { text: '', exitCode: undefined }
+    }
+    try {
+      const result: any = await (requestToolCall as any)({
+        userInputId,
+        toolName: 'run_terminal_command',
+        input: { command, process_type: 'SYNC', timeout_seconds: timeoutSeconds },
+      })
+      const value = result?.output?.[0]?.value ?? {}
+      const text = [value.stdout, value.stderr, value.message]
+        .filter((s: unknown) => typeof s === 'string' && s.length > 0)
+        .join('\n')
+        .trim()
+      const exitCode =
+        typeof value.exitCode === 'number' ? value.exitCode : undefined
+      return { text, exitCode }
+    } catch (err) {
+      logger.warn(
+        { err: err instanceof Error ? err.message : String(err), command },
+        'Hook command failed to run',
+      )
+      return { text: '', exitCode: undefined }
+    }
+  }
+
   try {
     while (true) {
       totalSteps++
@@ -1026,6 +1077,42 @@ export async function loopAgentSteps(
         shouldEndTurn = false
       }
 
+      // Hooks: Stop — the agent wants to finish. Run the configured Stop
+      // commands (e.g. typecheck/test); if one exits non-zero, feed its output
+      // back and DON'T let the turn end. Bounded by MAX_STOP_HOOK_RETRIES so a
+      // perpetually-failing check can't trap the user forever.
+      if (
+        shouldEndTurn &&
+        hooksEnabled &&
+        hooksConfig &&
+        hooksConfig.Stop.length > 0 &&
+        stopHookRetries < MAX_STOP_HOOK_RETRIES
+      ) {
+        let anyFailed = false
+        for (const hook of hooksConfig.Stop) {
+          const { text, exitCode } = await runHookCommand(
+            hook.command,
+            hookTimeoutSeconds(hook),
+          )
+          if (exitCode !== undefined && exitCode !== 0 && hook.feedback !== false) {
+            anyFailed = true
+            currentAgentState.messageHistory = [
+              ...currentAgentState.messageHistory,
+              userMessage({
+                content: withSystemTags(
+                  `Stop hook${hook.name ? ` "${hook.name}"` : ''} \`${hook.command}\` failed (exit ${exitCode}). Fix this before finishing:\n${text || '(no output)'}`,
+                ),
+                keepDuringTruncation: true,
+              }),
+            ]
+          }
+        }
+        if (anyFailed) {
+          stopHookRetries++
+          shouldEndTurn = false
+        }
+      }
+
       // End turn if programmatic step ended turn, or if the previous runAgentStep ended turn
       if (shouldEndTurn) {
         break
@@ -1033,6 +1120,8 @@ export async function loopAgentSteps(
 
       const creditsBefore = currentAgentState.directCreditsUsed
       const childrenBefore = currentAgentState.childRunIds.length
+      // Snapshot so PostToolUse hooks can see which tools ran in THIS step.
+      const historyLenBeforeStep = currentAgentState.messageHistory.length
       const {
         agentState: newAgentState,
         shouldEndTurn: llmShouldEndTurn,
@@ -1092,6 +1181,35 @@ export async function loopAgentSteps(
               keepDuringTruncation: true,
             }),
           ]
+        }
+      }
+
+      // Hooks: PostToolUse — for tools that ran THIS step, run the configured
+      // commands (e.g. format/lint) and feed their output back so the agent can
+      // react on its next step. Informational only; the Stop hook is the gate.
+      if (hooksEnabled && hooksConfig && hooksConfig.PostToolUse.length > 0) {
+        const stepToolNames = extractToolCalls(
+          currentAgentState.messageHistory.slice(historyLenBeforeStep),
+        ).map((c) => c.toolName)
+        for (const hook of matchingHooks(
+          hooksConfig.PostToolUse,
+          stepToolNames,
+        )) {
+          const { text } = await runHookCommand(
+            hook.command,
+            hookTimeoutSeconds(hook),
+          )
+          if (hook.feedback !== false && text) {
+            currentAgentState.messageHistory = [
+              ...currentAgentState.messageHistory,
+              userMessage({
+                content: withSystemTags(
+                  `Hook (PostToolUse${hook.name ? ` "${hook.name}"` : ''}) ran \`${hook.command}\`:\n${text}`,
+                ),
+                keepDuringTruncation: false,
+              }),
+            ]
+          }
         }
       }
 

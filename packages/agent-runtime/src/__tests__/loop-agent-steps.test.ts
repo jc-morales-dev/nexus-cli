@@ -1,3 +1,7 @@
+import fs from 'fs'
+import os from 'os'
+import path from 'path'
+
 import * as analytics from '@codebuff/common/analytics'
 import { TEST_USER_ID } from '@codebuff/common/old-constants'
 import { createTestAgentRuntimeParams } from '@codebuff/common/testing/fixtures/agent-runtime'
@@ -316,6 +320,78 @@ describe('loopAgentSteps - runAgentStep vs runProgrammaticStep behavior', () => 
     ).length
     expect(nudgeCount).toBe(1)
     expect(llmCallCount).toBeGreaterThanOrEqual(2)
+  })
+
+  it('hooks: a failing Stop hook blocks finishing until it passes', async () => {
+    mockTemplate.id = 'base2'
+    mockTemplate.handleSteps = function* () {
+      while (true) {
+        const { stepsComplete } = yield 'STEP'
+        if (stepsComplete) break
+      }
+    } as () => StepGenerator
+
+    // The LLM just ends its turn each time.
+    agentRuntimeImpl.promptAiSdkStream = mock(async function* ({}) {
+      llmCallCount++
+      yield { type: 'text' as const, text: 'done\n\n' }
+      yield createToolCallChunk('end_turn', {})
+      return promptSuccess('mock-message-id')
+    })
+
+    // A temp project that declares a Stop hook.
+    const tmpDir = path.join(os.tmpdir(), 'nexus-hooks-test-' + process.pid)
+    fs.mkdirSync(path.join(tmpDir, '.nexus'), { recursive: true })
+    fs.writeFileSync(
+      path.join(tmpDir, '.nexus', 'hooks.json'),
+      JSON.stringify({ Stop: [{ command: 'check' }] }),
+    )
+
+    // Client bridge: the Stop command fails (exit 1) the first time, passes
+    // (exit 0) after — so the loop must run it at least twice.
+    let hookCalls = 0
+    const requestToolCall = mock(async () => {
+      hookCalls++
+      return {
+        output: [
+          {
+            type: 'json' as const,
+            value: {
+              command: 'check',
+              message: hookCalls === 1 ? 'type error!' : 'ok',
+              exitCode: hookCalls === 1 ? 1 : 0,
+            },
+          },
+        ],
+        creditsUsed: 0,
+      }
+    })
+
+    const result = await loopAgentSteps({
+      ...loopAgentStepsBaseParams,
+      promptAiSdkStream: agentRuntimeImpl.promptAiSdkStream,
+      requestToolCall,
+      fileContext: { ...mockFileContext, projectRoot: tmpDir },
+      agentType: 'base2',
+      localAgentTemplates: { base2: mockTemplate },
+    })
+
+    fs.rmSync(tmpDir, { recursive: true, force: true })
+
+    // Ran the Stop hook (fail then pass) and forced an extra step before ending.
+    expect(hookCalls).toBeGreaterThanOrEqual(2)
+    expect(llmCallCount).toBeGreaterThanOrEqual(2)
+    const sawFailure = result.agentState.messageHistory.some((m) => {
+      const c = (m as { content?: unknown }).content
+      const text =
+        typeof c === 'string'
+          ? c
+          : Array.isArray(c)
+            ? c.map((p: any) => (typeof p?.text === 'string' ? p.text : '')).join(' ')
+            : ''
+      return text.includes('Stop hook') && text.includes('exit 1')
+    })
+    expect(sawFailure).toBe(true)
   })
 
   it('should handle programmatic agent that yields STEP_ALL', async () => {

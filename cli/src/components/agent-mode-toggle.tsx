@@ -229,9 +229,9 @@ export const AgentModeToggle = ({
           fg={isCollapsedHovered ? theme.foreground : theme.muted}
         >
           {isCollapsedHovered ? (
-            <b>{`⬢ ${modeLabel(mode)}`}</b>
+            <b>{`◆ ${modeLabel(mode)}`}</b>
           ) : (
-            `⬢ ${modeLabel(mode)}`
+            `◆ ${modeLabel(mode)}`
           )}
         </text>
       </Button>

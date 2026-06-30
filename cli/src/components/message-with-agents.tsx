@@ -372,7 +372,7 @@ const AgentMessage = memo(
 
     const agentChildren = messageTree?.get(message.id) ?? []
 
-    const bulletChar = '• '
+    const bulletChar = '▸ '
     const fullPrefix = bulletChar
 
     const lines = message.content.split('\n').filter((line) => line.trim())

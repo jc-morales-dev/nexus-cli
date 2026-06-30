@@ -98,8 +98,10 @@ export function createBase2(
       'read_subtree',
       !isFast && 'write_todos',
       !isFast && !noAskUser && 'suggest_followups',
-      'str_replace',
-      'write_file',
+      // Plan mode is read-only: deny the write tools at the harness level (not
+      // just via the prompt) so even a weak model physically cannot edit files.
+      !planOnly && 'str_replace',
+      !planOnly && 'write_file',
       !isFree && 'propose_str_replace',
       !isFree && 'propose_write_file',
       !noAskUser && 'ask_user',
@@ -120,8 +122,8 @@ export function createBase2(
       isDefault && 'thinker',
       (isDefault || isMax) && ['opus-agent', 'gpt-5-agent'],
       isMax && 'thinker-best-of-n-opus',
-      isDefault && 'editor',
-      isMax && 'editor-multi-prompt',
+      !planOnly && isDefault && 'editor',
+      !planOnly && isMax && 'editor-multi-prompt',
       'tmux-cli',
       'browser-use',
       isFree && freeCodeReviewerAgentId,

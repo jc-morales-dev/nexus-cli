@@ -95,6 +95,13 @@ export function useHoverToggle() {
 }
 
 /**
+ * Display label for a mode. "DEFAULT" reads as "BUILD" so the Plan/Build switch
+ * matches the opencode-style wording; other modes keep their names.
+ */
+export const modeLabel = (mode: AgentMode): string =>
+  mode === 'DEFAULT' ? 'BUILD' : mode
+
+/**
  * Builds the segment configuration for the expanded state.
  * Shows all modes plus an active indicator with reversed arrow.
  */
@@ -103,14 +110,14 @@ export function buildExpandedSegments(currentMode: AgentMode): Segment[] {
     // All mode options (disabled for current mode)
     ...AGENT_MODES.map((m) => ({
       id: m,
-      label: m,
+      label: modeLabel(m),
       isBold: false,
       disabled: m === currentMode,
     })),
     // Active mode indicator with reversed arrow
     {
       id: `active-${currentMode}`,
-      label: `> ${currentMode}`,
+      label: `> ${modeLabel(currentMode)}`,
       isSelected: true,
       defaultHighlighted: true,
     },
@@ -221,7 +228,11 @@ export const AgentModeToggle = ({
           wrapMode="none"
           fg={isCollapsedHovered ? theme.foreground : theme.muted}
         >
-          {isCollapsedHovered ? <b>{`< ${mode}`}</b> : `< ${mode}`}
+          {isCollapsedHovered ? (
+            <b>{`< ${modeLabel(mode)}`}</b>
+          ) : (
+            `< ${modeLabel(mode)}`
+          )}
         </text>
       </Button>
     )

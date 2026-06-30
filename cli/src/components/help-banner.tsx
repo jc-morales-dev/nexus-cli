@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { isByokDirectMode } from '@nexus/common/constants/byok'
+
 import { BottomBanner } from './bottom-banner'
 import { useSubscriptionQuery } from '../hooks/use-subscription-query'
 import { useTheme } from '../hooks/use-theme'
@@ -39,6 +41,8 @@ export const HelpBanner = () => {
   const { data: subscriptionData } = useSubscriptionQuery()
   const hasSubscription = subscriptionData?.hasSubscription ?? false
   const chatGptOAuth = getChatGptOAuthStatus()
+  // BYOK (free, account-less) mode: hide Nexus-account features like credits.
+  const byok = isByokDirectMode()
 
   // Auto-hide after timeout
   React.useEffect(() => {
@@ -62,6 +66,7 @@ export const HelpBanner = () => {
             <Shortcut keys="Ctrl+J / Opt+Enter" action="newline" />
             <Shortcut keys="↑↓" action="history" />
             <Shortcut keys="Ctrl+T" action="collapse/expand agents" />
+            {!IS_FREETIER && <Shortcut keys="Tab" action="Plan/Build mode" />}
           </box>
         </box>
 
@@ -96,11 +101,16 @@ export const HelpBanner = () => {
             <text style={{ fg: theme.muted }}>
               Esc to cancel the current response
             </text>
+            {byok && (
+              <text style={{ fg: theme.muted }}>
+                /key API key · /model pick model · /undo · /bg jobs
+              </text>
+            )}
           </box>
         </box>
 
-        {/* Credits Section — hidden in FreeTier */}
-        {!IS_FREETIER && (
+        {/* Credits Section — hidden in FreeTier and in BYOK (no account) */}
+        {!IS_FREETIER && !byok && (
           <box style={{ flexDirection: 'column', gap: 0 }}>
             <SectionHeader>Credits</SectionHeader>
             <box style={{ flexDirection: 'column', paddingLeft: 2 }}>

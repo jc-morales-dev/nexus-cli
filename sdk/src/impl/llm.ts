@@ -333,10 +333,38 @@ export async function* promptAiSdkStream(
     })
   }
 
+  // Auto-abort if the model produces NO activity for a while. Free/cheap models
+  // on OpenRouter can queue or stall indefinitely, leaving the CLI stuck on
+  // "thinking...". The idle timer resets on every stream chunk, so long-but-
+  // active generations are never cut off — only true stalls. Also aborts when
+  // the user cancels (params.signal). Configurable via NEXUS_INFERENCE_TIMEOUT_MS.
+  const IDLE_TIMEOUT_MS =
+    Number(process.env.NEXUS_INFERENCE_TIMEOUT_MS) || 120_000
+  const inferenceController = new AbortController()
+  let inferenceTimedOut = false
+  let idleTimer: ReturnType<typeof setTimeout> | null = null
+  const armIdleTimer = () => {
+    if (idleTimer) clearTimeout(idleTimer)
+    idleTimer = setTimeout(() => {
+      inferenceTimedOut = true
+      inferenceController.abort()
+    }, IDLE_TIMEOUT_MS)
+  }
+  const clearIdleTimer = () => {
+    if (idleTimer) {
+      clearTimeout(idleTimer)
+      idleTimer = null
+    }
+  }
+  const onUserAbort = () => inferenceController.abort()
+  if (params.signal.aborted) inferenceController.abort()
+  else params.signal.addEventListener('abort', onUserAbort, { once: true })
+
   const response = streamText({
     ...streamParams,
     prompt: undefined,
     model: aiSDKModel,
+    abortSignal: inferenceController.signal,
     messages: convertCbToModelMessages(params),
     // ChatGPT OAuth disables retries (avoids cascading auth failures). BYOK/
     // OpenRouter routes get a higher retry budget so transient 429/5xx from
@@ -470,7 +498,10 @@ export async function* promptAiSdkStream(
   // Track if we've yielded any content - if so, we can't safely fall back
   let hasYieldedContent = false
 
+  armIdleTimer()
+  try {
   for await (const chunkValue of response.fullStream) {
+    armIdleTimer()
     if (chunkValue.type !== 'text-delta') {
       const flushed = stopSequenceHandler.flush()
       if (flushed) {
@@ -672,6 +703,17 @@ export async function* promptAiSdkStream(
     if (chunkValue.type === 'tool-call') {
       yield chunkValue
     }
+  }
+  } catch (err) {
+    if (inferenceTimedOut) {
+      throw new Error(
+        'El modelo tardó demasiado en responder (probablemente saturado o lento — común con los modelos gratis). Probá de nuevo, o cambiá de modelo con /model.',
+      )
+    }
+    throw err
+  } finally {
+    clearIdleTimer()
+    params.signal.removeEventListener('abort', onUserAbort)
   }
   const flushed = stopSequenceHandler.flush()
   if (flushed) {

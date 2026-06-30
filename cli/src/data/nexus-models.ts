@@ -77,29 +77,32 @@ export const NEXUS_MODELS: readonly NexusModel[] = [
     tagline: 'Máxima calidad de Anthropic ($5/$25)',
     tier: 'premium',
   },
-  // ---- Gratis: con tu key, $0 (ojo: límite de usos diario en OpenRouter) ---
+  // ---- Gratis: con tu key, $0. SOLO los que respondieron rápido y estable en
+  // pruebas reales contra OpenRouter (los populares como qwen3-coder/llama-3.3/
+  // gpt-oss-120B dan 429 "saturado" casi siempre, por eso NO están acá). Aun así
+  // el free tier puede saturarse; si uno tarda, NEXUS corta solo y podés cambiar.
   {
-    id: 'qwen/qwen3-coder:free',
-    label: 'Qwen3 Coder (gratis)',
-    tagline: 'Gratis · especialista en código',
+    id: 'nvidia/nemotron-3-super-120b-a12b:free',
+    label: 'Nemotron 3 Super (gratis)',
+    tagline: 'Gratis · rápido y capaz ✓ probado',
     tier: 'free',
   },
   {
-    id: 'openai/gpt-oss-120b:free',
-    label: 'GPT-OSS 120B (gratis)',
-    tagline: 'Gratis · razonamiento fuerte',
+    id: 'google/gemma-4-26b-a4b-it:free',
+    label: 'Gemma 4 26B (gratis)',
+    tagline: 'Gratis · rápido y limpio ✓ probado',
     tier: 'free',
   },
   {
-    id: 'qwen/qwen3-next-80b-a3b-instruct:free',
-    label: 'Qwen3 Next 80B (gratis)',
-    tagline: 'Gratis · grande y capaz',
+    id: 'google/gemma-4-31b-it:free',
+    label: 'Gemma 4 31B (gratis)',
+    tagline: 'Gratis · rápido ✓ probado',
     tier: 'free',
   },
   {
-    id: 'meta-llama/llama-3.3-70b-instruct:free',
-    label: 'Llama 3.3 70B (gratis)',
-    tagline: 'Gratis · uso general',
+    id: 'openai/gpt-oss-20b:free',
+    label: 'GPT-OSS 20B (gratis)',
+    tagline: 'Gratis · rápido ✓ (el 120B se satura, este no)',
     tier: 'free',
   },
 ] as const

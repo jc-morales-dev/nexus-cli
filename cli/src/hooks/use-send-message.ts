@@ -9,6 +9,7 @@ import { AGENT_MODE_TO_COST_MODE, IS_FREETIER } from '../utils/constants'
 import { createEventHandlerState } from '../utils/create-event-handler-state'
 import { createRunConfig } from '../utils/create-run-config'
 import { getAgentIdForMode } from '../utils/freetier-agent-selection'
+import { getEffectiveAgentMode } from '../utils/task-complexity'
 import { loadAgentDefinitions } from '../utils/local-agent-registry'
 import { logger } from '../utils/logger'
 import {
@@ -417,7 +418,6 @@ export const useSendMessage = ({
       // Execute SDK run with streaming handlers
       try {
         const agentDefinitions = loadAgentDefinitions()
-        const resolvedAgent = resolveAgent(agentMode, agentId, agentDefinitions)
 
         const promptWithBashContext = bashContextForPrompt
           ? bashContextForPrompt + finalContent
@@ -425,6 +425,18 @@ export const useSendMessage = ({
         const effectivePrompt = buildPromptWithContext(
           promptWithBashContext,
           messageContent,
+        )
+
+        // Auto right-sizing: run a clearly-trivial task in the cheaper DEFAULT
+        // path even when the user is in MAX. Only for mode-based runs (not an
+        // explicit @agent), never PLAN. Conservative — any doubt keeps the mode.
+        const effectiveAgentMode = agentId
+          ? agentMode
+          : getEffectiveAgentMode(agentMode, effectivePrompt)
+        const resolvedAgent = resolveAgent(
+          effectiveAgentMode,
+          agentId,
+          agentDefinitions,
         )
 
         const eventHandlerState = createEventHandlerState({
@@ -460,7 +472,7 @@ export const useSendMessage = ({
           agentDefinitions,
           eventHandlerState,
           signal: abortController.signal,
-          costMode: AGENT_MODE_TO_COST_MODE[agentMode],
+          costMode: AGENT_MODE_TO_COST_MODE[effectiveAgentMode],
           extraNexusMetadata:
             IS_FREETIER && freetierInstanceId
               ? { freetier_instance_id: freetierInstanceId }

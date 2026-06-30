@@ -66,7 +66,9 @@ export const HelpBanner = () => {
             <Shortcut keys="Ctrl+J / Opt+Enter" action="newline" />
             <Shortcut keys="↑↓" action="history" />
             <Shortcut keys="Ctrl+T" action="collapse/expand agents" />
-            {!IS_FREETIER && <Shortcut keys="Tab" action="Plan/Build mode" />}
+            {!IS_FREETIER && (
+              <Shortcut keys="Tab" action="cycle mode (Build/Lite/Max/Plan)" />
+            )}
           </box>
         </box>
 

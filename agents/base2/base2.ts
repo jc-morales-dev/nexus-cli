@@ -127,7 +127,7 @@ export function createBase2(
       'tmux-cli',
       'browser-use',
       isFree && freeCodeReviewerAgentId,
-      isDefault && 'code-reviewer',
+      (isDefault || isMax) && 'code-reviewer',
       isMax && 'code-reviewer-multi-prompt',
       hasFreeGeminiThinker && FREETIER_GEMINI_THINKER_AGENT_ID,
       'thinker-gpt',
@@ -208,14 +208,14 @@ Use the spawn_agents tool to spawn specialized agents to help you complete the u
     (isDefault || isMax) &&
       `- Spawn the ${isDefault ? 'thinker' : 'thinker-best-of-n-opus'} after gathering context to solve complex problems or when the user asks you to think about a problem. (gpt-5-agent is a last resort for complex problems)`,
     isMax &&
-      `- IMPORTANT: You must spawn the editor-multi-prompt agent to implement the changes after you have gathered all the context you need. You must spawn this agent for non-trivial changes, since it writes much better code than you would with the str_replace or write_file tools. Don't spawn the editor in parallel with context-gathering agents.`,
+      `- For SUBSTANTIAL code changes (multi-file or non-trivial logic), spawn the editor-multi-prompt agent (it writes better code from multiple proposals) once you have the context you need; don't spawn it in parallel with context-gathering agents. For SMALL or obvious changes (a new file, or a single-file edit under ~30 lines), just edit directly with str_replace or write_file -- skip the multi-prompt machinery.`,
     isFree &&
       `- Spawn a ${freeCodeReviewerAgentId} to review the changes after you have implemented the changes.`,
     '- Spawn bashers sequentially if the second command depends on the the first.',
     isDefault &&
       '- Spawn a code-reviewer to review the changes after you have implemented the changes.',
     isMax &&
-      '- Spawn a code-reviewer-multi-prompt to review the changes after you have implemented the changes.',
+      '- After implementing, review: spawn a code-reviewer-multi-prompt for substantial changes, or a single code-reviewer for small ones (skip review for trivial changes).',
   ).join('\n  ')}
 - **No need to include context:** When prompting an agent, realize that many agents can already see the entire conversation history, so you can be brief in prompting them without needing to include context.
 - **Never spawn the context-pruner agent:** This agent is spawned automatically for you and you don't need to spawn it yourself.
@@ -417,7 +417,7 @@ The user asks you to implement a new feature. You respond in multiple steps:
 ${buildArray(
   EXPLORE_PROMPT,
   isMax &&
-    `- Important: Read as many files as could possibly be relevant to the task over several steps to improve your understanding of the user's request and produce the best possible code changes. Find more examples within the codebase similar to the user's request, dependencies that help with understanding how things work, tests, etc. This is frequently 12-20 files, depending on the task.`,
+    `- Read enough of the codebase to make the best change. For SUBSTANTIAL tasks, read broadly over several steps (examples similar to the request, dependencies, tests) -- often 12-20 files. For SMALL or isolated tasks (a new file, or a single-file edit), read only what is needed (1-3 files) and don't over-explore.`,
   !noAskUser &&
     'After getting context on the user request from the codebase or from research, use the ask_user tool to ask the user for important clarifications on their request or alternate implementation strategies. You should skip this step if the choice is obvious -- only ask the user if you need their help making the best choice.',
   (isDefault || isMax || isFree) &&
@@ -428,15 +428,15 @@ ${buildArray(
   isDefault &&
     '- IMPORTANT: You must spawn the editor agent to implement the changes after you have gathered all the context you need. This agent will do the best job of implementing the changes so you must spawn it for all non-trivial changes. Do not pass any prompt or params to the editor agent when spawning it. It will make its own best choices of what to do.',
   isMax &&
-    `- IMPORTANT: You must spawn the editor-multi-prompt agent to implement non-trivial code changes, since it will generate the best code changes from multiple implementation proposals. This is the best way to make high quality code changes -- strongly prefer using this agent over the str_replace or write_file tools, unless the change is very straightforward and obvious. You should also prompt it to implement the full task rather than just a single step.`,
+    `- Match the tool to the task size. For SMALL or obvious changes (creating a new file, or a single-file edit under ~30 lines), implement DIRECTLY with the str_replace or write_file tools -- do NOT spawn editor-multi-prompt; the multi-proposal machinery is wasteful and slow for trivial edits. Reserve the editor-multi-prompt agent for SUBSTANTIAL changes (multi-file, or non-trivial logic), where it generates the best code from multiple proposals; prompt it to implement the full task.`,
   isFast &&
     '- Implement the changes using the str_replace or write_file tools. Implement all the changes in one go.',
   isFast &&
     '- Do a single typecheck targeted for your changes at most (if applicable for the project). Or skip this step if the change was small.',
   !hasNoValidation &&
-    `- For non-trivial changes, test them by running appropriate validation commands for the project (e.g. typechecks, tests, lints, etc.). Try to run all appropriate commands in parallel. ${isMax ? ' Typecheck and test the specific area of the project that you are editing *AND* then typecheck and test the entire project if necessary.' : ' If you can, only test the area of the project that you are editing, rather than the entire project.'} You may have to explore the project to find the appropriate commands. Don't skip this step, unless the change is very small and targeted (< 10 lines and unlikely to have a type error)!`,
+    `- For non-trivial changes, test them by running appropriate validation commands for the project (e.g. typechecks, tests, lints, etc.). Try to run all appropriate commands in parallel. ${isMax ? ' Typecheck and test the specific area you are editing; only run whole-project checks if you touched shared APIs or many files.' : ' If you can, only test the area of the project that you are editing, rather than the entire project.'} You may have to explore the project to find the appropriate commands. Don't skip this step, unless the change is very small and targeted (< 10 lines and unlikely to have a type error)!`,
   (isDefault || isMax) &&
-    `- Spawn a ${isDefault ? 'code-reviewer' : 'code-reviewer-multi-prompt'} to review the changes after you have implemented changes. (Skip this step only if the change is extremely straightforward and obvious.)`,
+    `- After implementing changes, review them. For SUBSTANTIAL changes spawn a ${isDefault ? 'code-reviewer' : 'code-reviewer-multi-prompt'}; for SMALL changes a single code-reviewer is enough, and you may skip review entirely when the change is trivial and obvious.`,
   isFree &&
     `- Spawn a ${freeCodeReviewerAgentId} to review the changes after you have implemented changes. (Skip this step only if the change is extremely straightforward and obvious.)`,
   `- Inform the user that you have completed the task in one sentence or a few short bullet points.${isSonnet ? " Don't create any markdown summary files or example documentation files, unless asked by the user." : ''}`,
@@ -473,9 +473,9 @@ function buildImplementationStepPrompt({
     'Consider loading relevant skills with the skill tool if they might help with the current task. Do not reload skills that were already loaded earlier in this conversation.',
     hasFreeGeminiThinker && FREETIER_GEMINI_THINKER_STEP_PROMPT,
     isMax &&
-      `You must spawn the 'editor-multi-prompt' agent to implement code changes rather than using the str_replace or write_file tools, since it will generate the best code changes.`,
+      `For SUBSTANTIAL code changes (multi-file or non-trivial logic), spawn the 'editor-multi-prompt' agent. For SMALL or obvious changes (a new file, or a single-file edit under ~30 lines), edit directly with str_replace or write_file -- don't spawn the multi-prompt editor for trivial work.`,
     (isDefault || isMax) &&
-      `You must spawn a ${isDefault ? 'code-reviewer' : 'code-reviewer-multi-prompt'} to review the changes after you have implemented the changes and in parallel with typechecking or testing.`,
+      `After implementing changes, review them in parallel with typechecking/testing: spawn a ${isDefault ? 'code-reviewer' : 'code-reviewer for small changes, or code-reviewer-multi-prompt for substantial ones'}. Skip review entirely for trivial changes.`,
     isFree &&
       `You must spawn a ${freeCodeReviewerAgentId} to review the changes after you have implemented the changes and in parallel with typechecking or testing.`,
     `After completing the user request, summarize your changes in a sentence${isFast ? '' : ' or a few short bullet points'}.${isSonnet ? " Don't create any summary markdown files or example documentation files, unless asked by the user." : ''}.`,

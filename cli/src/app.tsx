@@ -25,7 +25,7 @@ import { IS_FREETIER } from './utils/constants'
 import { findGitRoot } from './utils/git'
 import { openFileAtPath } from './utils/open-file'
 import { formatCwd } from './utils/path-helpers'
-import { getLogoBlockColor, getLogoAccentColor } from './utils/theme-system'
+import { getLogoAccentColor } from './utils/theme-system'
 
 import type { MultilineInputHandle } from './components/multiline-input'
 import type { AgentMode } from './utils/constants'
@@ -62,8 +62,9 @@ export const App = ({
 
   // Sheen animation state for the logo
   const [sheenPosition, setSheenPosition] = useState(0)
-  const blockColor = getLogoBlockColor(theme.name)
   const accentColor = getLogoAccentColor(theme.name)
+  // All-red wordmark to match the NEXUS brand: blocks and shadow share the red.
+  const blockColor = accentColor
   const { applySheenToChar } = useSheenAnimation({
     logoColor: theme.foreground,
     accentColor,

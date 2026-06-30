@@ -432,6 +432,11 @@ export const ChatInputBar = ({
                 </text>
               </box>
             )}
+            {inputMode === 'default' && (
+              <box style={{ flexShrink: 0, paddingRight: 1 }}>
+                <text style={{ fg: theme.primary }}>›</text>
+              </box>
+            )}
             <box style={{ flexGrow: 1, minWidth: 0 }}>
               <MultilineInput
                 value={inputValue}

@@ -339,7 +339,15 @@ export async function* promptAiSdkStream(
   // active generations are never cut off — only true stalls. Also aborts when
   // the user cancels (params.signal). Configurable via NEXUS_INFERENCE_TIMEOUT_MS.
   const IDLE_TIMEOUT_MS =
-    Number(process.env.NEXUS_INFERENCE_TIMEOUT_MS) || 120_000
+    Number(process.env.NEXUS_INFERENCE_TIMEOUT_MS) || 60_000
+  // Wasted-token guard: the AI SDK re-sends the FULL context on every retry, so a
+  // saturated free provider can bill the same request several times over. Keep the
+  // budget low (default 2 = 1 try + 1 retry) so one transient 429/5xx still self-
+  // heals without paying 5x. Override with NEXUS_INFERENCE_MAX_RETRIES.
+  const inferenceMaxRetries = (() => {
+    const raw = Number(process.env.NEXUS_INFERENCE_MAX_RETRIES)
+    return Number.isFinite(raw) && raw >= 0 ? raw : 2
+  })()
   const inferenceController = new AbortController()
   let inferenceTimedOut = false
   let idleTimer: ReturnType<typeof setTimeout> | null = null
@@ -367,9 +375,9 @@ export async function* promptAiSdkStream(
     abortSignal: inferenceController.signal,
     messages: convertCbToModelMessages(params),
     // ChatGPT OAuth disables retries (avoids cascading auth failures). BYOK/
-    // OpenRouter routes get a higher retry budget so transient 429/5xx from
-    // cheap providers self-heal instead of surfacing as a hard error.
-    maxRetries: isChatGptOAuth ? 0 : 4,
+    // OpenRouter routes get a small retry budget so a single transient 429/5xx
+    // from cheap providers self-heals, without re-billing the full context 5x.
+    maxRetries: isChatGptOAuth ? 0 : inferenceMaxRetries,
     // For ChatGPT OAuth direct, don't send nexus metadata/provider options to OpenAI
     ...(isChatGptOAuth
       ? {}

@@ -226,7 +226,8 @@ export const App = ({
         <text
           style={{ wrapMode: 'word', marginBottom: 1, fg: theme.foreground }}
         >
-          {IS_FREETIER ? 'FreeTier' : 'NEXUS'} will run commands on your behalf to help you build.
+          <span fg={accentColor}>◇ </span>
+          {IS_FREETIER ? 'FreeTier' : 'NEXUS'} — tu CLI de coding, gratis y con el modelo que elijas.
         </text>
         <text
           style={{ wrapMode: 'word', marginBottom: 1, fg: theme.foreground }}
@@ -239,6 +240,9 @@ export const App = ({
             underlineOnHover={true}
             onActivate={() => openFileAtPath(projectRoot)}
           />
+        </text>
+        <text style={{ wrapMode: 'word', marginBottom: 1, fg: theme.muted }}>
+          Tab cambia modo  ·  / comandos  ·  @ agentes  ·  /help
         </text>
         {!process.env.OPENROUTER_API_KEY && (
           <text style={{ wrapMode: 'word', marginTop: 1, fg: theme.foreground }}>

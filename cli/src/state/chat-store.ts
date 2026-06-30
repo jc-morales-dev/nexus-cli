@@ -65,8 +65,6 @@ export type ChatStoreState = {
   slashSelectedIndex: number
   agentSelectedIndex: number
   agentMode: AgentMode
-  /** The last non-PLAN mode, so toggling out of Plan returns you to it. */
-  previousBuildMode: AgentMode
   hasReceivedPlanResponse: boolean
   lastMessageMode: AgentMode | null
   sessionCreditsUsed: number
@@ -188,7 +186,6 @@ const initialState: ChatStoreState = {
   slashSelectedIndex: 0,
   agentSelectedIndex: 0,
   agentMode: IS_FREETIER ? ('LITE' as const) : loadModePreference(),
-  previousBuildMode: 'DEFAULT' as const,
   hasReceivedPlanResponse: false,
   lastMessageMode: null,
   sessionCreditsUsed: 0,
@@ -280,20 +277,14 @@ export const useChatStore = create<ChatStore>()(
         saveModePreference(mode)
       }),
 
-    // Tab toggles between Plan (read-only analysis) and Build (your last
-    // non-plan mode), matching the opencode-style plan/build switch. LITE and
-    // MAX stay reachable via the /mode:* commands and are remembered across the
-    // toggle, so Tab-ing out of Plan returns you to MAX/LITE if that's where you
-    // were.
+    // Tab cycles through every mode in order: BUILD → LITE → MAX → PLAN → BUILD.
+    // The indicator shows the current one ("DEFAULT" displays as "BUILD").
     toggleAgentMode: () =>
       set((state) => {
         if (IS_FREETIER) return
-        if (state.agentMode === 'PLAN') {
-          state.agentMode = state.previousBuildMode ?? 'DEFAULT'
-        } else {
-          state.previousBuildMode = state.agentMode
-          state.agentMode = 'PLAN'
-        }
+        const currentIndex = AGENT_MODES.indexOf(state.agentMode)
+        const nextIndex = (currentIndex + 1) % AGENT_MODES.length
+        state.agentMode = AGENT_MODES[nextIndex]
         saveModePreference(state.agentMode)
       }),
 

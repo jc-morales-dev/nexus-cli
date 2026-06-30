@@ -34,6 +34,12 @@ import {
   MAX_STOP_HOOK_RETRIES,
   type HooksConfig,
 } from './hooks/hooks-config'
+import {
+  collectDiagnostics,
+  extractEditedFilePaths,
+  formatDiagnosticsForAgent,
+  lspEnabled,
+} from './lsp'
 import { additionalSystemPrompts } from './system-prompt/prompts'
 import { getAgentTemplate } from './templates/agent-registry'
 import { buildAgentToolSet } from './templates/prompts'
@@ -882,6 +888,10 @@ export async function loopAgentSteps(
     : null
   const hooksEnabled = hasAnyHooks(hooksConfig)
   let stopHookRetries = 0
+  // Diagnostics gate (LSP-lite): force at most this many fix-the-compiler-errors
+  // rounds per turn so an unfixable error can never trap the user.
+  const MAX_LSP_RETRIES = 2
+  let lspRetries = 0
   const requestToolCall = (params as { requestToolCall?: unknown })
     .requestToolCall
   // Run a hook command on the client; return combined output text + exit code.
@@ -1110,6 +1120,48 @@ export async function loopAgentSteps(
         if (anyFailed) {
           stopHookRetries++
           shouldEndTurn = false
+        }
+      }
+
+      // Diagnostics gate (LSP-lite): the agent edited files and wants to finish.
+      // Run the compiler on exactly those files; if errors remain, feed them
+      // back and don't let the turn end. Model-agnostic — a small model gets the
+      // same compiler signal a strong one would have reasoned about. Bounded,
+      // fail-soft, and scoped to the main coding agent.
+      if (
+        shouldEndTurn &&
+        isMainCodingAgent &&
+        lspEnabled() &&
+        lspRetries < MAX_LSP_RETRIES
+      ) {
+        const editedFiles = extractEditedFilePaths(
+          currentAgentState.messageHistory,
+          turnStartMessageCount,
+          fileContext.projectRoot,
+        )
+        if (editedFiles.length > 0) {
+          let diagnostics: Awaited<ReturnType<typeof collectDiagnostics>> = []
+          try {
+            diagnostics = await collectDiagnostics(editedFiles)
+          } catch {
+            diagnostics = []
+          }
+          if (diagnostics.length > 0) {
+            lspRetries++
+            currentAgentState.messageHistory = [
+              ...currentAgentState.messageHistory,
+              userMessage({
+                content: withSystemTags(
+                  formatDiagnosticsForAgent(
+                    diagnostics,
+                    fileContext.projectRoot,
+                  ),
+                ),
+                keepDuringTruncation: true,
+              }),
+            ]
+            shouldEndTurn = false
+          }
         }
       }
 

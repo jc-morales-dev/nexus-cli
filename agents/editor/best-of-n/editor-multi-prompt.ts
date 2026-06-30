@@ -137,51 +137,63 @@ function* handleStepsMultiPrompt({
     }
   })
 
-  // Spawn selector with implementations (showing unified diffs for review)
-  const { toolResult: selectorResult } = yield {
-    toolName: 'spawn_agents',
-    input: {
-      agents: [
-        {
-          agent_type: 'best-of-n-selector2',
-          params: {
-            implementations: implementations.map((impl) => ({
-              id: impl.id,
-              strategy: impl.strategy,
-              content: impl.content,
-            })),
+  // Pick the implementation to apply. With a single proposal there is nothing to
+  // choose between, so skip the selector agent entirely -- pure waste removal
+  // with zero quality impact (you can't pick a best-of-1). Only spawn the
+  // selector when there are genuinely multiple proposals to compare.
+  let chosenImplementation: (typeof implementations)[number] | undefined
+  let reason = ''
+  let suggestedImprovements = ''
+
+  if (implementations.length === 1) {
+    chosenImplementation = implementations[0]
+    reason = 'Single proposal -- applied directly.'
+  } else {
+    // Spawn selector with implementations (showing unified diffs for review)
+    const { toolResult: selectorResult } = yield {
+      toolName: 'spawn_agents',
+      input: {
+        agents: [
+          {
+            agent_type: 'best-of-n-selector2',
+            params: {
+              implementations: implementations.map((impl) => ({
+                id: impl.id,
+                strategy: impl.strategy,
+                content: impl.content,
+              })),
+            },
           },
-        },
-      ],
-    },
-    includeToolCall: false,
-  } satisfies ToolCall<'spawn_agents'>
+        ],
+      },
+      includeToolCall: false,
+    } satisfies ToolCall<'spawn_agents'>
 
-  const selectorOutput = extractSpawnResults<{
-    implementationId: string
-    reason: string
-    suggestedImprovements: string
-  }>(selectorResult)[0]
+    const selectorOutput = extractSpawnResults<{
+      implementationId: string
+      reason: string
+      suggestedImprovements: string
+    }>(selectorResult)[0]
 
-  if (!selectorOutput || !('implementationId' in selectorOutput)) {
-    yield {
-      toolName: 'set_output',
-      input: { error: 'Selector failed to return an implementation' },
-    } satisfies ToolCall<'set_output'>
-    return
+    if (!selectorOutput || !('implementationId' in selectorOutput)) {
+      yield {
+        toolName: 'set_output',
+        input: { error: 'Selector failed to return an implementation' },
+      } satisfies ToolCall<'set_output'>
+      return
+    }
+
+    chosenImplementation = implementations.find(
+      (implementation) => implementation.id === selectorOutput.implementationId,
+    )
+    reason = selectorOutput.reason
+    suggestedImprovements = selectorOutput.suggestedImprovements
   }
-
-  const { implementationId } = selectorOutput
-  const chosenImplementation = implementations.find(
-    (implementation) => implementation.id === implementationId,
-  )
 
   if (!chosenImplementation) {
     yield {
       toolName: 'set_output',
-      input: {
-        error: `Failed to find chosen implementation: ${implementationId}`,
-      },
+      input: { error: 'Failed to find an implementation to apply' },
     } satisfies ToolCall<'set_output'>
     return
   }
@@ -207,9 +219,6 @@ function* handleStepsMultiPrompt({
       appliedToolResults.push(toolResult)
     }
   }
-
-  // Extract suggested improvements from selector output
-  const { reason, suggestedImprovements } = selectorOutput
 
   // Set output with the applied results and suggested improvements
   yield {

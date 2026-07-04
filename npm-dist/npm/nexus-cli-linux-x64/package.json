@@ -1,0 +1,16 @@
+{
+  "name": "@victor00128/nexus-cli-linux-x64",
+  "version": "1.0.0",
+  "description": "NEXUS CLI — binario linux-x64. Instalado automáticamente por @victor00128/nexus-cli.",
+  "license": "Apache-2.0",
+  "preferUnplugged": true,
+  "os": [
+    "linux"
+  ],
+  "cpu": [
+    "x64"
+  ],
+  "files": [
+    "bin/"
+  ]
+}

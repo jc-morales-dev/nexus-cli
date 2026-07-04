@@ -1,0 +1,16 @@
+{
+  "name": "@victor00128/nexus-cli-darwin-arm64",
+  "version": "1.0.0",
+  "description": "NEXUS CLI — binario darwin-arm64. Instalado automáticamente por @victor00128/nexus-cli.",
+  "license": "Apache-2.0",
+  "preferUnplugged": true,
+  "os": [
+    "darwin"
+  ],
+  "cpu": [
+    "arm64"
+  ],
+  "files": [
+    "bin/"
+  ]
+}

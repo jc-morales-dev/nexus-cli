@@ -48,6 +48,7 @@ import { installProcessCleanupHandlers, TERMINAL_RESET_SEQUENCES } from './utils
 import { initializeSkillRegistry } from './utils/skill-registry'
 import { detectTerminalTheme } from './utils/terminal-color-detection'
 import { setOscDetectedTheme } from './utils/theme-system'
+import { maybePrintUpdateBanner, scheduleUpdateCheck } from './utils/update-check'
 
 import type { AgentMode } from './utils/constants'
 import type { FileTreeNode } from '@nexus/common/util/file'
@@ -360,6 +361,14 @@ async function main(): Promise<void> {
   if (clearLogs) {
     clearLogFile()
   }
+
+  // Update notifier: refresh the "latest version" cache in the background (never
+  // blocks startup) and, if a previous check already found a newer release,
+  // print a small banner. Printed before the alternate screen so it lands in
+  // scrollback when the user exits. Self-guards on dev/CI/opt-out/non-TTY.
+  const cliVersion = loadPackageVersion()
+  scheduleUpdateCheck(cliVersion)
+  maybePrintUpdateBanner(cliVersion)
 
   const queryClient = createQueryClient()
 

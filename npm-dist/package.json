@@ -1,5 +1,5 @@
 {
-  "name": "nexus-ai-cli",
+  "name": "@victor00128/nexus-cli",
   "version": "1.0.0",
   "description": "NEXUS — un CLI de coding con IA, gratis. Traé tu propia API key de OpenRouter (gratis o de pago) y usá cualquier modelo.",
   "keywords": [

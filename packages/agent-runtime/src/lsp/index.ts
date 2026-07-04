@@ -9,6 +9,9 @@
  */
 import path from 'node:path'
 
+import { goProvider } from './go-provider'
+import { pythonProvider } from './python-provider'
+import { rustProvider } from './rust-provider'
 import { tsProvider } from './ts-provider'
 
 import type { Diagnostic, DiagnosticsProvider } from './types'
@@ -17,8 +20,17 @@ export type { Diagnostic, DiagnosticsProvider } from './types'
 export { extractEditedFilePaths } from './edited-files'
 export { MAX_PROGRAM_FILES } from './ts-provider'
 
-/** Registered providers. Add external-LSP providers here for more languages. */
-const PROVIDERS: DiagnosticsProvider[] = [tsProvider]
+/**
+ * Registered providers. TS/JS runs in-process (bundled compiler); Python, Go
+ * and Rust shell out to the user's own toolchain and fail soft when it's not
+ * installed.
+ */
+const PROVIDERS: DiagnosticsProvider[] = [
+  tsProvider,
+  pythonProvider,
+  goProvider,
+  rustProvider,
+]
 
 /** Cap how many diagnostics we feed back, so a broken file can't flood context. */
 export const MAX_REPORTED_DIAGNOSTICS = 25

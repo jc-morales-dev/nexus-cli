@@ -226,7 +226,13 @@ export const AgentModeToggle = ({
       >
         <text
           wrapMode="none"
-          fg={isCollapsedHovered ? theme.foreground : theme.muted}
+          fg={
+            mode === 'PLAN'
+              ? theme.warning
+              : isCollapsedHovered
+                ? theme.foreground
+                : theme.muted
+          }
         >
           {isCollapsedHovered ? (
             <b>{`◆ ${modeLabel(mode)}`}</b>

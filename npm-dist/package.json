@@ -10,20 +10,21 @@
     "llm",
     "terminal"
   ],
-  "license": "MIT",
+  "license": "Apache-2.0",
   "bin": {
     "nexus": "bin/nexus.js"
   },
   "files": [
-    "bin/"
-  ],
-  "os": [
-    "win32"
-  ],
-  "cpu": [
-    "x64"
+    "bin/nexus.js"
   ],
   "engines": {
     "node": ">=16"
+  },
+  "optionalDependencies": {
+    "@victor00128/nexus-cli-win32-x64": "1.0.0",
+    "@victor00128/nexus-cli-linux-x64": "1.0.0",
+    "@victor00128/nexus-cli-linux-arm64": "1.0.0",
+    "@victor00128/nexus-cli-darwin-x64": "1.0.0",
+    "@victor00128/nexus-cli-darwin-arm64": "1.0.0"
   }
 }

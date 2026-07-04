@@ -1153,6 +1153,10 @@ export async function loopAgentSteps(
           }
           if (diagnostics.length > 0) {
             lspRetries++
+            logger.info(
+              { count: diagnostics.length, retry: lspRetries, editedFiles },
+              'LSP gate: blocking end-of-turn with compiler errors',
+            )
             currentAgentState.messageHistory = [
               ...currentAgentState.messageHistory,
               userMessage({

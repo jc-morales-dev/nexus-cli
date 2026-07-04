@@ -2,6 +2,7 @@ import { env, DEBUG_ANALYTICS } from '@nexus/common/env'
 
 import { createPostHogClient, type AnalyticsClient } from './analytics-core'
 import { AnalyticsEvent } from './constants/analytics-events'
+import { isByokDirectMode } from './constants/byok'
 
 import type { TrackEventFn } from '@nexus/common/types/contracts/analytics'
 import type { Logger } from '@nexus/common/types/contracts/logger'
@@ -56,6 +57,11 @@ export function trackEvent({
   properties?: Record<string, any>
   logger: Logger
 }) {
+  // BYOK (NEXUS) never phones home — the user runs on their own key, there is
+  // no account and no telemetry backend to report to.
+  if (isByokDirectMode()) {
+    return
+  }
   // Don't track events in non-production environments
   if (env.NEXT_PUBLIC_CB_ENVIRONMENT !== 'prod') {
     if (DEBUG_ANALYTICS) {

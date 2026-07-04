@@ -491,27 +491,58 @@ export const handleRunCompletion = (params: {
   // the final answer from the run state; if the model returned no text at all,
   // render a clear hint instead of leaving it empty. Common with reasoning/free
   // models via BYOK that only surface the answer in the final run state.
+  //
+  // Second case (text → tool call → answer): the model streamed intro text
+  // BEFORE its tool call, but the actual answer produced AFTER the tool never
+  // arrived as visible deltas — it only exists in the final run state. Checking
+  // "is there any text at all" is not enough: render the final answer unless
+  // that exact text is already on screen.
   updater.updateAiMessageBlocks((blocks) => {
-    const hasVisibleAnswer = blocks.some(
-      (b) =>
+    const visibleTexts = blocks
+      .map((b) =>
         b.type === 'text' &&
         b.textType !== 'reasoning' &&
         typeof b.content === 'string' &&
-        b.content.trim().length > 0,
-    )
-    if (hasVisibleAnswer) return blocks
+        b.content.trim().length > 0
+          ? b.content
+          : null,
+      )
+      .filter((content): content is string => content !== null)
     const finalText = extractFinalAssistantText(output)
-    return [
-      ...blocks,
-      {
-        type: 'text' as const,
-        content:
-          finalText ??
-          '_El modelo terminó sin devolver texto. Probá reformular el pedido o reintentar._',
-        textType: 'text' as const,
-        status: 'complete' as const,
-      },
-    ]
+
+    if (visibleTexts.length === 0) {
+      return [
+        ...blocks,
+        {
+          type: 'text' as const,
+          content:
+            finalText ??
+            '_El modelo terminó sin devolver texto. Probá reformular el pedido o reintentar._',
+          textType: 'text' as const,
+          status: 'complete' as const,
+        },
+      ]
+    }
+
+    if (finalText) {
+      const norm = (s: string) => s.replace(/\s+/g, ' ').trim()
+      const target = norm(finalText)
+      const alreadyShown = visibleTexts.some((content) =>
+        norm(content).includes(target),
+      )
+      if (!alreadyShown) {
+        return [
+          ...blocks,
+          {
+            type: 'text' as const,
+            content: finalText,
+            textType: 'text' as const,
+            status: 'complete' as const,
+          },
+        ]
+      }
+    }
+    return blocks
   })
 
   updater.markComplete({

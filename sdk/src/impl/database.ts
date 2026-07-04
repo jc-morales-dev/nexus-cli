@@ -319,7 +319,12 @@ export async function startAgentRun(
   params: ParamsOf<StartAgentRunFn>,
 ): ReturnType<StartAgentRunFn> {
   // BYOK direct mode: no server-side run tracking. Return a local stub run id.
-  if (isByokDirectMode()) return 'byok-local-run'
+  // MUST be unique per run: the agent runtime keys per-run state by runId
+  // (e.g. the handleSteps generator cache in run-programmatic-step). A constant
+  // stub made every agent share one cache slot, so an inline child (like
+  // context-pruner) could resume its PARENT's generator and try to spawn
+  // itself — "context-pruner is not allowed to spawn child context-pruner".
+  if (isByokDirectMode()) return `byok-local-run-${crypto.randomUUID()}`
 
   const { apiKey, agentId, ancestorRunIds, logger } = params
 

@@ -434,7 +434,13 @@ export const ChatInputBar = ({
             )}
             {inputMode === 'default' && (
               <box style={{ flexShrink: 0, paddingRight: 1 }}>
-                <text style={{ fg: theme.primary }}>›</text>
+                <text
+                  style={{
+                    fg: agentMode === 'PLAN' ? theme.warning : theme.primary,
+                  }}
+                >
+                  ›
+                </text>
               </box>
             )}
             <box style={{ flexGrow: 1, minWidth: 0 }}>

@@ -135,12 +135,12 @@ export const SimpleToolCallItem = ({
   descriptionColor,
 }: SimpleToolCallItemProps) => {
   const theme = useTheme()
-  const bulletChar = '• '
+  const bulletChar = '▸ '
 
   return (
     <box style={{ flexDirection: 'row', alignItems: 'center', width: '100%' }}>
       <text style={{ wrapMode: 'word' }}>
-        <span fg={theme.foreground}>{bulletChar}</span>
+        <span fg={theme.primary}>{bulletChar}</span>
         <span fg={theme.foreground} attributes={TextAttributes.BOLD}>
           {name}
         </span>
@@ -175,7 +175,7 @@ export const ToolCallItem = ({
   }
 
   const isExpanded = !isCollapsed
-  const bulletChar = '• '
+  const bulletChar = '▸ '
   const toggleIndicator = onToggle ? (isCollapsed ? '▸ ' : '▾ ') : ''
   const toggleLabel = onToggle ? toggleIndicator : bulletChar
   // Width in cells of the toggle label (toggle arrow or bullet). Used to align
@@ -211,7 +211,7 @@ export const ToolCallItem = ({
         >
           <text style={{ wrapMode: 'none' }}>
             <span
-              fg={theme.foreground}
+              fg={theme.primary}
               attributes={isExpanded ? TextAttributes.BOLD : undefined}
             >
               {toggleLabel}
@@ -228,7 +228,9 @@ export const ToolCallItem = ({
               <span fg={theme.primary} attributes={TextAttributes.DIM}>
                 {' running'}
               </span>
-            ) : null}
+            ) : (
+              <span fg={theme.muted}>{' ✓'}</span>
+            )}
           </text>
         </Button>
 

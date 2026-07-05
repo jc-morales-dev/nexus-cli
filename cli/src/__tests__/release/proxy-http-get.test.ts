@@ -17,12 +17,9 @@ const helperModules = [
       new URL('../../../release-staging/http.js', import.meta.url),
     ),
   },
-  {
-    name: 'freetier release helper',
-    path: fileURLToPath(
-      new URL('../../../../freetier/cli/release/http.js', import.meta.url),
-    ),
-  },
+  // Note: the old "freetier" release helper was removed with the freetier
+  // subsystem — NEXUS is BYOK-only, so there's no freetier/cli/release/http.js
+  // to test anymore.
 ]
 
 function createResponse(statusCode: number, headers: Record<string, string>, body = '') {

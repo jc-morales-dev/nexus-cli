@@ -155,7 +155,9 @@ describe('init-direnv', () => {
       }
     })
 
-    test('handles symlinked directories', () => {
+    // Windows blocks symlink creation without Developer Mode / admin (EPERM),
+    // and direnv is Unix-only anyway — skip there.
+    test.skipIf(os.platform() === 'win32')('handles symlinked directories', () => {
       const actualDir = path.join(tempDir, 'actual')
       fs.mkdirSync(actualDir)
       fs.writeFileSync(path.join(actualDir, '.envrc'), 'export FOO=bar')
@@ -380,7 +382,9 @@ describe('init-direnv', () => {
       spawnSyncSpy.mockRestore()
     })
 
-    test('sets environment variables from direnv export', () => {
+    // initializeDirenv() short-circuits on Windows (isDirenvAvailable() is
+    // false there by design), so the mocked direnv flow only runs on Unix.
+    test.skipIf(os.platform() === 'win32')('sets environment variables from direnv export', () => {
       fs.writeFileSync(path.join(tempDir, '.envrc'), 'export TEST_VAR=test_value')
       process.chdir(tempDir)
 
@@ -413,7 +417,7 @@ describe('init-direnv', () => {
       expect(process.env.TEST_VAR).toBe('test_value')
     })
 
-    test('unsets environment variables when direnv returns null', () => {
+    test.skipIf(os.platform() === 'win32')('unsets environment variables when direnv returns null', () => {
       fs.writeFileSync(path.join(tempDir, '.envrc'), 'unset OLD_VAR')
       process.chdir(tempDir)
       process.env.OLD_VAR = 'should_be_removed'

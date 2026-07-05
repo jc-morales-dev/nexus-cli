@@ -84,8 +84,8 @@ describe('fingerprint utilities', () => {
 
       test('should return fingerprint of expected length', () => {
         const fingerprint = generateFingerprintIdSync()
-        // Format: nexus-cli- (13 chars) + 8 random chars = 21 chars
-        expect(fingerprint.length).toBe(21)
+        // Format: "nexus-cli-" (10 chars) + 8 random chars = 18 chars
+        expect(fingerprint.length).toBe(18)
       })
 
       test('should contain only valid base64url characters in suffix', () => {

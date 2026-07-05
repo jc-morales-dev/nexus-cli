@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
+import { enableMapSet } from 'immer'
 import React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 
@@ -11,6 +12,10 @@ import { MessageWithAgents } from '../message-with-agents'
 import type { ChatMessage } from '../../types/chat'
 import type { MarkdownPalette } from '../../utils/markdown-renderer'
 
+// The message-block store produces Immer drafts over Map/Set state. In the real
+// app init-app.ts calls enableMapSet() at startup; tests don't go through that
+// bootstrap, so enable the plugin here too or Immer throws "plugin not loaded".
+enableMapSet()
 initializeThemeStore()
 
 const theme = chatThemes.light

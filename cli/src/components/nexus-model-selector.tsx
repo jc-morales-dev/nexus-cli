@@ -22,7 +22,12 @@ interface NexusModelSelectorProps {
   onCancel: () => void
 }
 
-const TIER_ORDER: readonly NexusModelTier[] = ['balanced', 'premium', 'free']
+const TIER_ORDER: readonly NexusModelTier[] = [
+  'frontier',
+  'premium',
+  'value',
+  'free',
+]
 
 /**
  * Full-screen, centered model picker reached via `/model`. One compact line per

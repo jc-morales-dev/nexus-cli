@@ -144,6 +144,16 @@ function buildTarget(target: Target) {
   run('bun', ['run', 'scripts/build-binary.ts', 'nexus', version], extraEnv)
 }
 
+/** Copy LICENSE + NOTICE from the repo root into a package dir. */
+function copyLicenseFiles(pkgDir: string) {
+  for (const name of ['LICENSE', 'NOTICE']) {
+    const src = join(repoRoot, name)
+    if (existsSync(src)) {
+      copyFileSync(src, join(pkgDir, name))
+    }
+  }
+}
+
 function writePlatformPackage(target: Target) {
   const pkgName = `${SCOPE}/${BASE_NAME}-${target.key}`
   const pkgDir = join(npmDistDir, 'npm', `${BASE_NAME}-${target.key}`)
@@ -167,6 +177,10 @@ function writePlatformPackage(target: Target) {
   if (existsSync(rgSrc)) {
     copyFileSync(rgSrc, join(pkgBinDir, rgName))
   }
+
+  // Apache-2.0 compliance: the binary is a derived work, so every published
+  // package carries LICENSE + NOTICE (npm auto-includes both in the tarball).
+  copyLicenseFiles(pkgDir)
 
   writeFileSync(
     join(pkgDir, 'package.json'),
@@ -215,6 +229,7 @@ function writeMainPackage(builtKeys: string[]) {
       2,
     ) + '\n',
   )
+  copyLicenseFiles(npmDistDir)
   console.log(
     `[pack:npm] paquete principal listo (targets construidos: ${builtKeys.join(', ')})`,
   )

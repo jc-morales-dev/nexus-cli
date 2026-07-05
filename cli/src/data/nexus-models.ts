@@ -11,7 +11,7 @@
  * actual billing is OpenRouter's. The user can also type any model id directly
  * with `/model <id>`, so this list is a convenience, not a hard allowlist.
  */
-export type NexusModelTier = 'balanced' | 'premium' | 'free'
+export type NexusModelTier = 'frontier' | 'premium' | 'value' | 'free'
 
 export interface NexusModel {
   /** OpenRouter model id, e.g. "deepseek/deepseek-v3.2". */
@@ -27,42 +27,42 @@ export interface NexusModel {
 export const NEXUS_DEFAULT_MODEL = 'deepseek/deepseek-v3.2'
 
 export const NEXUS_MODELS: readonly NexusModel[] = [
-  // ---- Equilibrados: calidad alta a precio bajo (lo recomendado) ----------
+  // ---- SUPER POTENTES: la frontera absoluta, sin mirar el precio ----------
   {
-    id: 'deepseek/deepseek-v3.2',
-    label: 'DeepSeek V3.2',
-    tagline: 'Recomendado · razona muy bien, baratísimo ($0.23/$0.34)',
-    tier: 'balanced',
+    id: 'anthropic/claude-fable-5',
+    label: 'Claude Fable 5',
+    tagline: 'Lo más potente que existe · 1M ctx ($10/$50)',
+    tier: 'frontier',
   },
   {
-    id: 'deepseek/deepseek-v4-pro',
-    label: 'DeepSeek V4 Pro',
-    tagline: 'Más nuevo, razonamiento top, barato ($0.43/$0.87)',
-    tier: 'balanced',
+    id: 'openai/gpt-5.5',
+    label: 'GPT-5.5',
+    tagline: 'Frontera de OpenAI · 1M ctx ($5/$30)',
+    tier: 'frontier',
   },
   {
-    id: 'z-ai/glm-4.7',
-    label: 'GLM 4.7',
-    tagline: 'Muy fuerte en código, barato ($0.40/$1.75)',
-    tier: 'balanced',
+    id: 'sakana/fugu-ultra',
+    label: 'Fugu Ultra',
+    tagline: 'Frontera de Sakana · 1M ctx ($5/$30)',
+    tier: 'frontier',
   },
   {
-    id: 'qwen/qwen3-coder',
-    label: 'Qwen3 Coder',
-    tagline: 'Especialista en programar, barato ($0.22/$1.80)',
-    tier: 'balanced',
+    id: 'anthropic/claude-opus-4.8',
+    label: 'Claude Opus 4.8',
+    tagline: 'Razonamiento profundo de Anthropic ($5/$25)',
+    tier: 'frontier',
   },
-  // ---- Máxima calidad: lo mejor, más caro --------------------------------
+  // ---- POTENTES: top para programar a precio medio ------------------------
   {
-    id: 'anthropic/claude-sonnet-4.6',
-    label: 'Claude Sonnet 4.6',
-    tagline: 'Top para programar ($3/$15)',
+    id: 'anthropic/claude-sonnet-5',
+    label: 'Claude Sonnet 5',
+    tagline: 'Top para programar · 1M ctx ($2/$10)',
     tier: 'premium',
   },
   {
-    id: 'openai/gpt-5.1-codex',
-    label: 'GPT-5.1 Codex',
-    tagline: 'Top de OpenAI para código ($1.25/$10)',
+    id: 'openai/gpt-5.2-codex',
+    label: 'GPT-5.2 Codex',
+    tagline: 'Especialista en código de OpenAI ($1.75/$14)',
     tier: 'premium',
   },
   {
@@ -72,10 +72,53 @@ export const NEXUS_MODELS: readonly NexusModel[] = [
     tier: 'premium',
   },
   {
-    id: 'anthropic/claude-opus-4.8',
-    label: 'Claude Opus 4.8',
-    tagline: 'Máxima calidad de Anthropic ($5/$25)',
+    id: 'x-ai/grok-4.20',
+    label: 'Grok 4.20',
+    tagline: 'xAI · 2M ctx, rápido ($1.25/$2.50)',
     tier: 'premium',
+  },
+  // ---- FRONTERA BARATÍSIMOS: nivel top a precio de risa -------------------
+  {
+    id: 'deepseek/deepseek-v3.2',
+    label: 'DeepSeek V3.2',
+    tagline: 'Recomendado · razona muy bien, baratísimo ($0.23/$0.34)',
+    tier: 'value',
+  },
+  {
+    id: 'deepseek/deepseek-v4-pro',
+    label: 'DeepSeek V4 Pro',
+    tagline: 'Nivel frontera · 1M ctx ($0.43/$0.87)',
+    tier: 'value',
+  },
+  {
+    id: 'z-ai/glm-5.2',
+    label: 'GLM 5.2',
+    tagline: 'Bestia en código · 1M ctx ($0.74/$2.33)',
+    tier: 'value',
+  },
+  {
+    id: 'moonshotai/kimi-k2.7-code',
+    label: 'Kimi K2.7 Code',
+    tagline: 'Especialista en código ($0.74/$3.50)',
+    tier: 'value',
+  },
+  {
+    id: 'minimax/minimax-m3',
+    label: 'MiniMax M3',
+    tagline: 'Agéntico fuerte · 1M ctx ($0.30/$1.20)',
+    tier: 'value',
+  },
+  {
+    id: 'qwen/qwen3.5-plus-20260420',
+    label: 'Qwen 3.5 Plus',
+    tagline: 'Alibaba, muy completo · 1M ctx ($0.30/$1.80)',
+    tier: 'value',
+  },
+  {
+    id: 'deepseek/deepseek-v4-flash',
+    label: 'DeepSeek V4 Flash',
+    tagline: 'Ultra barato y rapidísimo · 1M ctx ($0.09/$0.18)',
+    tier: 'value',
   },
   // ---- Gratis: con tu key, $0. SOLO los que respondieron rápido y estable en
   // pruebas reales contra OpenRouter (los populares como qwen3-coder/llama-3.3/
@@ -113,7 +156,8 @@ export function nexusModelLabel(id: string): string {
 }
 
 export const NEXUS_TIER_LABELS: Record<NexusModelTier, string> = {
-  balanced: 'EQUILIBRADOS  (calidad alta, barato)',
-  premium: 'MÁXIMA CALIDAD  (lo mejor, más caro)',
+  frontier: 'SUPER POTENTES  (frontera absoluta, caros)',
+  premium: 'POTENTES  (top para programar, precio medio)',
+  value: 'FRONTERA BARATÍSIMOS  (nivel top, precio de risa)',
   free: 'GRATIS  (con tu key, ojo el límite diario)',
 }

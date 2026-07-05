@@ -34,6 +34,23 @@ export interface MockFsWithMocks {
   stat: Mock<(path: PathLike) => Promise<Stats>>
 }
 
+/**
+ * Normalize a path to forward slashes so lookups are separator-agnostic.
+ * Production code resolves paths with the native `path` module, which emits
+ * `\` on Windows; test fixtures are written with `/`. Without this, every
+ * mock-fs lookup misses on Windows ("File not found: \repo\src\file.ts").
+ */
+const normalizePath = (path: PathLike): string =>
+  String(path).replace(/\\/g, '/')
+
+const normalizeKeys = <T>(record: Record<string, T>): Record<string, T> =>
+  Object.fromEntries(
+    Object.entries(record).map(([key, value]) => [
+      key.replace(/\\/g, '/'),
+      value,
+    ]),
+  )
+
 /** Creates a mock filesystem compatible with NexusFileSystem. */
 export function createMockFs(options: CreateMockFsOptions = {}): MockFs {
   const {
@@ -46,11 +63,12 @@ export function createMockFs(options: CreateMockFsOptions = {}): MockFs {
     statImpl,
   } = options
 
-  const writtenFiles: Record<string, string> = { ...files }
-  const createdDirs: Set<string> = new Set(Object.keys(directories))
+  const writtenFiles: Record<string, string> = normalizeKeys(files)
+  const normalizedDirs: Record<string, string[]> = normalizeKeys(directories)
+  const createdDirs: Set<string> = new Set(Object.keys(normalizedDirs))
 
   const defaultReadFile = async (path: PathLike): Promise<string> => {
-    const pathStr = String(path)
+    const pathStr = normalizePath(path)
     if (pathStr in writtenFiles) {
       return writtenFiles[pathStr]
     }
@@ -58,9 +76,9 @@ export function createMockFs(options: CreateMockFsOptions = {}): MockFs {
   }
 
   const defaultReaddir = async (path: PathLike): Promise<string[]> => {
-    const pathStr = String(path)
-    if (pathStr in directories) {
-      return directories[pathStr]
+    const pathStr = normalizePath(path)
+    if (pathStr in normalizedDirs) {
+      return normalizedDirs[pathStr]
     }
     throw new Error(`Directory not found: ${pathStr}`)
   }
@@ -69,20 +87,20 @@ export function createMockFs(options: CreateMockFsOptions = {}): MockFs {
     path: PathLike,
     data: string,
   ): Promise<void> => {
-    const pathStr = String(path)
+    const pathStr = normalizePath(path)
     writtenFiles[pathStr] = data
   }
 
   const defaultMkdir = async (path: PathLike): Promise<string | undefined> => {
-    const pathStr = String(path)
+    const pathStr = normalizePath(path)
     createdDirs.add(pathStr)
     return undefined
   }
 
   const defaultStat = async (path: PathLike): Promise<Stats> => {
-    const pathStr = String(path)
+    const pathStr = normalizePath(path)
     const isFile = pathStr in writtenFiles
-    const isDir = pathStr in directories || createdDirs.has(pathStr)
+    const isDir = pathStr in normalizedDirs || createdDirs.has(pathStr)
 
     if (!isFile && !isDir) {
       throw new Error(`Path not found: ${pathStr}`)

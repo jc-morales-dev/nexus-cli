@@ -99,44 +99,51 @@ describe('usePathTabCompletion - completion result detection', () => {
 })
 
 describe('usePathTabCompletion - relative path conversion', () => {
+  // Build paths with the platform separator so these tests exercise the same
+  // logic on Windows (`\`) and POSIX (`/`). The hook feeds toRelativePath paths
+  // that came from path.join(), so they already use path.sep — hard-coding `/`
+  // here would only ever match on POSIX and spuriously fail on Windows.
+  const p = (...segments: string[]): string =>
+    path.sep + segments.join(path.sep)
+
   describe('toRelativePath', () => {
     test('converts absolute completion to relative when within currentPath', () => {
-      const currentPath = '/home/user/projects'
-      const completed = '/home/user/projects/myproject'
-      
+      const currentPath = p('home', 'user', 'projects')
+      const completed = p('home', 'user', 'projects', 'myproject')
+
       const result = toRelativePath(completed, currentPath)
       expect(result).toBe('myproject')
     })
 
     test('converts nested path correctly', () => {
-      const currentPath = '/home/user'
-      const completed = '/home/user/Documents/work'
-      
+      const currentPath = p('home', 'user')
+      const completed = p('home', 'user', 'Documents', 'work')
+
       const result = toRelativePath(completed, currentPath)
-      expect(result).toBe('Documents/work')
+      expect(result).toBe(['Documents', 'work'].join(path.sep))
     })
 
     test('returns null when completion is not under currentPath', () => {
-      const currentPath = '/home/user/projects'
-      const completed = '/usr/local/bin'
-      
+      const currentPath = p('home', 'user', 'projects')
+      const completed = p('usr', 'local', 'bin')
+
       const result = toRelativePath(completed, currentPath)
       expect(result).toBeNull()
     })
 
     test('returns null when completion exactly equals currentPath', () => {
-      const currentPath = '/home/user/projects'
-      const completed = '/home/user/projects'
-      
-      // Note: This would need to be `/home/user/projects/` + something to match
+      const currentPath = p('home', 'user', 'projects')
+      const completed = p('home', 'user', 'projects')
+
+      // Would need currentPath + sep + something to produce a match.
       const result = toRelativePath(completed, currentPath)
       expect(result).toBeNull()
     })
 
     test('handles paths with trailing separators correctly', () => {
-      const currentPath = '/home/user'
-      const completed = '/home/user/test'
-      
+      const currentPath = p('home', 'user')
+      const completed = p('home', 'user', 'test')
+
       const result = toRelativePath(completed, currentPath)
       expect(result).toBe('test')
     })

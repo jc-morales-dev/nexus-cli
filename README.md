@@ -10,7 +10,7 @@ credits, no sign-up. Your key stays on your machine.
 ## Install
 
 ```bash
-npm install -g nexus-ai-cli
+npm install -g @victor00128/nexus-cli
 ```
 
 It ships a self-contained binary — you don't need to install Node or Bun

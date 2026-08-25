@@ -24,7 +24,11 @@ nexus
 
 1. The first time, type `/key` and paste your OpenRouter API key
    (get one free at https://openrouter.ai/keys).
-2. Pick a model with `/model` (DeepSeek by default: strong reasoning, cheap).
+2. Pick a model with `/model`. The default is Ox Alpha — frontier-class, 1M
+   context, currently free. Note that it is a *stealth* model: the provider is
+   anonymous and logs prompts (that is, your code) to evaluate the model, and
+   OpenRouter can retire it without notice. Switch any time with
+   `/model <id>` — DeepSeek V3.2 is a good, cheap, non-logging alternative.
 3. Start coding — just tell NEXUS what you want.
 
 Examples:

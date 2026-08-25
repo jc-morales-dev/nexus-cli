@@ -23,11 +23,35 @@ export interface NexusModel {
   tier: NexusModelTier
 }
 
-/** The built-in default STRONG model: strong reasoning, very cheap. */
-export const NEXUS_DEFAULT_MODEL = 'deepseek/deepseek-v3.2'
+/** The built-in default STRONG model: frontier-class, 1M ctx, currently $0. */
+export const NEXUS_DEFAULT_MODEL = 'stealth/ox-alpha'
+
+/**
+ * Models OpenRouter ships "cloaked": the provider is anonymous and, per the
+ * listing terms, prompts and completions are logged so the lab can evaluate
+ * the model. That matters more than usual for a coding agent, which reads your
+ * source. Also worth knowing: a stealth id is temporary — OpenRouter retires it
+ * without notice once the cloak lifts, and requests then start 404ing, so
+ * `/model <otro-id>` is the escape hatch.
+ */
+const NEXUS_STEALTH_MODEL_IDS: readonly string[] = ['stealth/ox-alpha']
+
+export function isNexusStealthModel(id: string): boolean {
+  return NEXUS_STEALTH_MODEL_IDS.includes(id)
+}
+
+/** Warning appended when a stealth model is selected. */
+export const NEXUS_STEALTH_WARNING =
+  '⚠ Es un modelo "stealth": el proveedor es anónimo y registra tus prompts (o sea, tu código) para evaluarlo. Además puede desaparecer sin aviso — si empieza a fallar, cambiá con /model <id>.'
 
 export const NEXUS_MODELS: readonly NexusModel[] = [
-  // ---- SUPER POTENTES: la frontera absoluta, sin mirar el precio ----------
+  // ---- SUPER POTENTES: la frontera absoluta -------------------------------
+  {
+    id: 'stealth/ox-alpha',
+    label: 'Ox Alpha',
+    tagline: 'Por defecto · frontera anónima · 1M ctx · GRATIS ⚠ registra tus prompts',
+    tier: 'frontier',
+  },
   {
     id: 'anthropic/claude-fable-5',
     label: 'Claude Fable 5',
@@ -153,7 +177,7 @@ export function nexusModelLabel(id: string): string {
 }
 
 export const NEXUS_TIER_LABELS: Record<NexusModelTier, string> = {
-  frontier: 'SUPER POTENTES  (frontera absoluta, caros)',
+  frontier: 'SUPER POTENTES  (frontera absoluta)',
   premium: 'POTENTES  (top para programar, precio medio)',
   value: 'FRONTERA BARATÍSIMOS  (nivel top, precio de risa)',
   free: 'GRATIS  (con tu key, ojo el límite diario)',

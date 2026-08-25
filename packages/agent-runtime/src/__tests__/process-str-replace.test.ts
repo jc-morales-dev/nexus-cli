@@ -257,9 +257,16 @@ describe('processStrReplace', () => {
       expect(result.content).toBe(
         'const x = 10;\nconst y = 2;\nconst z = 30;\n',
       )
-      expect(result.messages).toContain(
-        'The old string "const w = 4;" was not found in the file, skipping. Please try again with a different old string that matches the file content exactly.',
-      )
+      // Assert the contract (the failed replacement is reported, and names the
+      // string it could not find) rather than the exact guidance wording, which
+      // buildNotFoundError tunes for the model and may append a file excerpt.
+      expect(
+        result.messages.some(
+          (m) =>
+            m.includes('const w = 4;') &&
+            m.includes('was not found in the file'),
+        ),
+      ).toBe(true)
     }
   })
 

@@ -73,7 +73,7 @@ describe('read_docs tool with researcher agent (via web API facade)', () => {
       clientSessionId: 'test-session',
       fingerprintId: 'test-fingerprint',
       onResponseChunk: () => {},
-      agentType: 'researcher',
+      agentType: 'researcher-docs',
       spawnParams: undefined,
       signal: new AbortController().signal,
       tools: {},
@@ -86,7 +86,9 @@ describe('read_docs tool with researcher agent (via web API facade)', () => {
 
   const mockFileContextWithAgents = {
     ...mockFileContext,
-    agentTemplates: { researcher: researcherAgent },
+    // Keyed by the agent's declared id — validateAgents() indexes the assembled
+    // map by `definition.id`, so a different key here would never be found.
+    agentTemplates: { 'researcher-docs': researcherAgent },
   }
 
   test('should successfully fetch documentation with basic query', async () => {
@@ -107,7 +109,7 @@ describe('read_docs tool with researcher agent (via web API facade)', () => {
     const sessionState = getInitialSessionState(mockFileContextWithAgents)
     const agentState = {
       ...sessionState.mainAgentState,
-      agentType: 'researcher' as const,
+      agentType: 'researcher-docs' as const,
     }
     const { agentTemplates } = assembleLocalAgentTemplates({
       ...agentRuntimeImpl,
@@ -118,7 +120,7 @@ describe('read_docs tool with researcher agent (via web API facade)', () => {
       ...runAgentStepBaseParams,
       fileContext: mockFileContextWithAgents,
       localAgentTemplates: agentTemplates,
-      agentTemplate: agentTemplates['researcher'],
+      agentTemplate: agentTemplates['researcher-docs'],
       agentState,
       prompt: 'Get React documentation',
     })
@@ -155,7 +157,7 @@ describe('read_docs tool with researcher agent (via web API facade)', () => {
     const sessionState = getInitialSessionState(mockFileContextWithAgents)
     const agentState = {
       ...sessionState.mainAgentState,
-      agentType: 'researcher' as const,
+      agentType: 'researcher-docs' as const,
     }
     const { agentTemplates } = assembleLocalAgentTemplates({
       ...agentRuntimeImpl,
@@ -166,7 +168,7 @@ describe('read_docs tool with researcher agent (via web API facade)', () => {
       ...runAgentStepBaseParams,
       fileContext: mockFileContextWithAgents,
       localAgentTemplates: agentTemplates,
-      agentTemplate: agentTemplates['researcher'],
+      agentTemplate: agentTemplates['researcher-docs'],
       agentState,
       prompt: 'Get React hooks documentation',
     })
@@ -195,7 +197,7 @@ describe('read_docs tool with researcher agent (via web API facade)', () => {
     const sessionState = getInitialSessionState(mockFileContextWithAgents)
     const agentState = {
       ...sessionState.mainAgentState,
-      agentType: 'researcher' as const,
+      agentType: 'researcher-docs' as const,
     }
     const { agentTemplates } = assembleLocalAgentTemplates({
       ...agentRuntimeImpl,
@@ -206,7 +208,7 @@ describe('read_docs tool with researcher agent (via web API facade)', () => {
       ...runAgentStepBaseParams,
       fileContext: mockFileContextWithAgents,
       localAgentTemplates: agentTemplates,
-      agentTemplate: agentTemplates['researcher'],
+      agentTemplate: agentTemplates['researcher-docs'],
       agentState,
       prompt: 'Get documentation for NonExistentLibrary',
     })
@@ -235,7 +237,7 @@ describe('read_docs tool with researcher agent (via web API facade)', () => {
     const sessionState = getInitialSessionState(mockFileContextWithAgents)
     const agentState = {
       ...sessionState.mainAgentState,
-      agentType: 'researcher' as const,
+      agentType: 'researcher-docs' as const,
     }
     const { agentTemplates } = assembleLocalAgentTemplates({
       ...agentRuntimeImpl,
@@ -246,7 +248,7 @@ describe('read_docs tool with researcher agent (via web API facade)', () => {
       ...runAgentStepBaseParams,
       fileContext: mockFileContextWithAgents,
       localAgentTemplates: agentTemplates,
-      agentTemplate: agentTemplates['researcher'],
+      agentTemplate: agentTemplates['researcher-docs'],
       agentState,
       prompt: 'Get React documentation',
     })
@@ -274,7 +276,7 @@ describe('read_docs tool with researcher agent (via web API facade)', () => {
     const sessionState = getInitialSessionState(mockFileContextWithAgents)
     const agentState = {
       ...sessionState.mainAgentState,
-      agentType: 'researcher' as const,
+      agentType: 'researcher-docs' as const,
     }
     const { agentTemplates } = assembleLocalAgentTemplates({
       ...agentRuntimeImpl,
@@ -285,7 +287,7 @@ describe('read_docs tool with researcher agent (via web API facade)', () => {
       ...runAgentStepBaseParams,
       fileContext: mockFileContextWithAgents,
       localAgentTemplates: agentTemplates,
-      agentTemplate: agentTemplates['researcher'],
+      agentTemplate: agentTemplates['researcher-docs'],
       agentState,
       prompt: 'Get React server components documentation',
     })
@@ -315,7 +317,7 @@ describe('read_docs tool with researcher agent (via web API facade)', () => {
     const sessionState = getInitialSessionState(mockFileContextWithAgents)
     const agentState = {
       ...sessionState.mainAgentState,
-      agentType: 'researcher' as const,
+      agentType: 'researcher-docs' as const,
     }
     const { agentTemplates } = assembleLocalAgentTemplates({
       ...agentRuntimeImpl,
@@ -326,7 +328,7 @@ describe('read_docs tool with researcher agent (via web API facade)', () => {
       ...runAgentStepBaseParams,
       fileContext: mockFileContextWithAgents,
       localAgentTemplates: agentTemplates,
-      agentTemplate: agentTemplates['researcher'],
+      agentTemplate: agentTemplates['researcher-docs'],
       agentState,
       prompt: 'Get React documentation',
     })
@@ -359,7 +361,7 @@ describe('read_docs tool with researcher agent (via web API facade)', () => {
     const sessionState = getInitialSessionState(mockFileContextWithAgents)
     const agentState = {
       ...sessionState.mainAgentState,
-      agentType: 'researcher' as const,
+      agentType: 'researcher-docs' as const,
     }
     const { agentTemplates } = assembleLocalAgentTemplates({
       ...agentRuntimeImpl,
@@ -372,7 +374,7 @@ describe('read_docs tool with researcher agent (via web API facade)', () => {
       ...runAgentStepBaseParams,
       fileContext: mockFileContextWithAgents,
       localAgentTemplates: agentTemplates,
-      agentTemplate: agentTemplates['researcher'],
+      agentTemplate: agentTemplates['researcher-docs'],
       agentState,
       prompt: 'Get React documentation',
     })

@@ -1,6 +1,7 @@
 import { FILE_READ_STATUS } from '@nexus/common/old-constants'
 import * as projectFileTree from '@nexus/common/project-file-tree'
 import { createNodeError } from '@nexus/common/testing/errors'
+import { toPosixPath } from '@nexus/common/util/path-format'
 import {
   describe,
   test,
@@ -10,22 +11,38 @@ import {
   mock,
   spyOn,
 } from 'bun:test'
+import path from 'path'
 
 import { getFiles } from '../tools/read-files'
 
 import type { NexusFileSystem } from '@nexus/common/types/filesystem'
 import type { PathLike } from 'node:fs'
 
-// Helper to create a mock filesystem
+// Helper to create a mock filesystem.
+//
+// Keys go through the same canonical form as the shared mock in
+// @nexus/common/testing/mocks/filesystem: absolutise, then flatten separators.
+// Fixtures below are written with POSIX roots ('/project/...'), while on Windows
+// production resolves those to 'E:\project\...' — without canonicalising both
+// sides every lookup would miss.
+function mockPath(filePath: PathLike | string): string {
+  return toPosixPath(path.resolve(String(filePath)))
+}
+
 function createMockFs(config: {
   files?: Record<string, { content: string; size?: number }>
   errors?: Record<string, { code?: string; message?: string }>
 }): NexusFileSystem {
-  const { files = {}, errors = {} } = config
+  const canonicalise = <T>(record: Record<string, T>): Record<string, T> =>
+    Object.fromEntries(
+      Object.entries(record).map(([key, value]) => [mockPath(key), value]),
+    )
+  const files = canonicalise(config.files ?? {})
+  const errors = canonicalise(config.errors ?? {})
 
   return {
     readFile: async (filePath: PathLike) => {
-      const pathStr = String(filePath)
+      const pathStr = mockPath(filePath)
       if (errors[pathStr]) {
         throw createNodeError(
           errors[pathStr].message || 'Unknown error',
@@ -41,7 +58,7 @@ function createMockFs(config: {
       )
     },
     stat: async (filePath: PathLike) => {
-      const pathStr = String(filePath)
+      const pathStr = mockPath(filePath)
       if (errors[pathStr]) {
         throw createNodeError(
           errors[pathStr].message || 'Unknown error',

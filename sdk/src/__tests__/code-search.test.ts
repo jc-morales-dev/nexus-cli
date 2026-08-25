@@ -9,6 +9,7 @@ import {
   createRgJsonContext,
 } from '@nexus/common/testing/mocks'
 import { describe, expect, it, mock, beforeEach, afterEach } from 'bun:test'
+import path from 'path'
 
 import { codeSearch } from '../tools/code-search'
 
@@ -847,8 +848,10 @@ describe('codeSearch', () => {
       // Verify spawn was called with correct cwd
       expect(mockSpawn).toHaveBeenCalled()
       const spawnOptions = mockSpawn.mock.calls[0]![2] as { cwd: string }
-      // When cwd is '.', it should resolve to the project root
-      expect(spawnOptions.cwd).toBe('/test/project')
+      // When cwd is '.', it should resolve to the project root. The cwd handed
+      // to spawn stays in native form on purpose, so compare against the
+      // platform's own resolution rather than the POSIX literal.
+      expect(spawnOptions.cwd).toBe(path.resolve('/test/project'))
     })
 
     it('should handle cwd: "subdir" correctly', async () => {
@@ -872,7 +875,9 @@ describe('codeSearch', () => {
       // Verify spawn was called with correct cwd
       expect(mockSpawn).toHaveBeenCalled()
       const spawnOptions = mockSpawn.mock.calls[0]![2] as { cwd: string }
-      expect(spawnOptions.cwd).toBe('/test/project/subdir')
+      expect(spawnOptions.cwd).toBe(
+        path.join(path.resolve('/test/project'), 'subdir'),
+      )
     })
 
     it('should reject cwd outside project directory', async () => {

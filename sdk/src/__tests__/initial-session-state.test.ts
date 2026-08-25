@@ -2,6 +2,7 @@ import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'fs'
 import os from 'os'
 import path from 'path'
 
+import { mockFsPath } from '@nexus/common/testing/mocks/filesystem'
 import { describe, expect, test, beforeEach } from 'bun:test'
 import { z } from 'zod/v4'
 
@@ -116,23 +117,31 @@ describe('Initial Session State', () => {
   })
 
   test('discovers project files automatically when projectFiles is undefined', async () => {
+    // These overrides replace the mock's own functions, so they have to
+    // canonicalise paths themselves: production walks the tree with
+    // `path.join`, which on Windows yields '\test-project\src'.
+    const ROOT = mockFsPath('/test-project')
+    const SRC = mockFsPath('/test-project/src')
+    const GIT = mockFsPath('/test-project/.git')
+
     mockFs.readdir = (async (dirPath: string) => {
-      if (dirPath === '/test-project') {
+      if (mockFsPath(dirPath) === ROOT) {
         return ['src', '.git', 'knowledge.md', 'README.md', '.gitignore']
       }
-      if (dirPath === '/test-project/src') {
+      if (mockFsPath(dirPath) === SRC) {
         return ['index.ts', 'utils.ts', 'generated.ts']
       }
       return []
     }) as NexusFileSystem['readdir']
-    mockFs.stat = (async (filePath: string) =>
-      ({
-        isDirectory: () =>
-          filePath === '/test-project/src' || filePath === '/test-project/.git',
-        isFile: () =>
-          filePath !== '/test-project/src' && filePath !== '/test-project/.git',
+    mockFs.stat = (async (filePath: string) => {
+      const canonical = mockFsPath(filePath)
+      const isDir = canonical === SRC || canonical === GIT
+      return {
+        isDirectory: () => isDir,
+        isFile: () => !isDir,
         size: filePath.endsWith('generated.ts') ? 1_000_001 : 100,
-      }) as MockStatResult & { size: number }) as NexusFileSystem['stat']
+      } as MockStatResult & { size: number }
+    }) as NexusFileSystem['stat']
 
     const readFilePaths: string[] = []
     const originalReadFile = mockFs.readFile
@@ -151,13 +160,14 @@ describe('Initial Session State', () => {
     expect(sessionState.fileContext.fileTree).toBeDefined()
     expect(sessionState.mainAgentState.agentId).toBe('main-agent')
     expect(sessionState.mainAgentState.messageHistory).toEqual([])
-    expect(readFilePaths.some((p) => p.endsWith('src/index.ts'))).toBe(true)
-    expect(readFilePaths.some((p) => p.endsWith('src/utils.ts'))).toBe(true)
-    expect(readFilePaths.some((p) => p.endsWith('src/generated.ts'))).toBe(
-      false,
-    )
-    expect(readFilePaths.some((p) => p.endsWith('README.md'))).toBe(false)
-    expect(readFilePaths.some((p) => p.endsWith('knowledge.md'))).toBe(true)
+    // These are absolute read paths built with `path.join`, so on Windows they
+    // carry backslashes. Compare on the forward-slash form.
+    const readPaths = readFilePaths.map((p) => p.replace(/\\/g, '/'))
+    expect(readPaths.some((p) => p.endsWith('src/index.ts'))).toBe(true)
+    expect(readPaths.some((p) => p.endsWith('src/utils.ts'))).toBe(true)
+    expect(readPaths.some((p) => p.endsWith('src/generated.ts'))).toBe(false)
+    expect(readPaths.some((p) => p.endsWith('README.md'))).toBe(false)
+    expect(readPaths.some((p) => p.endsWith('knowledge.md'))).toBe(true)
   })
 
   test('derives knowledgeFiles from projectFiles when not provided', async () => {

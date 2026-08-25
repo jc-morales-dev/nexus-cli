@@ -1,10 +1,20 @@
-import { createMockFs } from '@nexus/common/testing/mocks/filesystem'
+import {
+  createMockFs,
+  mockFsPath,
+} from '@nexus/common/testing/mocks/filesystem'
 import { createMockLogger } from '@nexus/common/testing/mocks/logger'
 import { describe, it, expect } from 'bun:test'
 
 import { loadUserKnowledgeFiles } from '../run-state'
 
 const MOCK_HOME = '/mock/home'
+
+/**
+ * Canonical path of a file in the mock home, matching what the mock hands to a
+ * custom `readFileImpl`. On Windows `path.resolve('/mock/home')` picks up the
+ * current drive, so comparing against the raw literal would never match.
+ */
+const homeFile = (name: string): string => mockFsPath(`${MOCK_HOME}/${name}`)
 
 describe('loadUserKnowledgeFiles', () => {
   it('should return empty object when no knowledge files exist', async () => {
@@ -29,7 +39,7 @@ describe('loadUserKnowledgeFiles', () => {
     const mockFs = createMockFs({
       readdirImpl: async () => ['.knowledge.md', '.bashrc'],
       readFileImpl: async (path: string) => {
-        if (path === '/mock/home/.knowledge.md') {
+        if (path === homeFile('.knowledge.md')) {
           return '# My user knowledge'
         }
         throw new Error('File not found')
@@ -50,7 +60,7 @@ describe('loadUserKnowledgeFiles', () => {
     const mockFs = createMockFs({
       readdirImpl: async () => ['.AGENTS.md', '.bashrc'],
       readFileImpl: async (path: string) => {
-        if (path === '/mock/home/.AGENTS.md') {
+        if (path === homeFile('.AGENTS.md')) {
           return '# Agents config'
         }
         throw new Error('File not found')
@@ -71,7 +81,7 @@ describe('loadUserKnowledgeFiles', () => {
     const mockFs = createMockFs({
       readdirImpl: async () => ['.CLAUDE.md', '.bashrc'],
       readFileImpl: async (path: string) => {
-        if (path === '/mock/home/.CLAUDE.md') {
+        if (path === homeFile('.CLAUDE.md')) {
           return '# Claude instructions'
         }
         throw new Error('File not found')
@@ -92,10 +102,10 @@ describe('loadUserKnowledgeFiles', () => {
     const mockFs = createMockFs({
       readdirImpl: async () => ['.AGENTS.md', '.knowledge.md', '.bashrc'],
       readFileImpl: async (path: string) => {
-        if (path === '/mock/home/.knowledge.md') {
+        if (path === homeFile('.knowledge.md')) {
           return '# Knowledge content'
         }
-        if (path === '/mock/home/.AGENTS.md') {
+        if (path === homeFile('.AGENTS.md')) {
           return '# Agents content'
         }
         throw new Error('File not found')
@@ -116,10 +126,10 @@ describe('loadUserKnowledgeFiles', () => {
     const mockFs = createMockFs({
       readdirImpl: async () => ['.CLAUDE.md', '.AGENTS.md'],
       readFileImpl: async (path: string) => {
-        if (path === '/mock/home/.AGENTS.md') {
+        if (path === homeFile('.AGENTS.md')) {
           return '# Agents content'
         }
-        if (path === '/mock/home/.CLAUDE.md') {
+        if (path === homeFile('.CLAUDE.md')) {
           return '# Claude content'
         }
         throw new Error('File not found')
@@ -145,13 +155,13 @@ describe('loadUserKnowledgeFiles', () => {
         '.bashrc',
       ],
       readFileImpl: async (path: string) => {
-        if (path === '/mock/home/.knowledge.md') {
+        if (path === homeFile('.knowledge.md')) {
           return '# Knowledge'
         }
-        if (path === '/mock/home/.AGENTS.md') {
+        if (path === homeFile('.AGENTS.md')) {
           return '# Agents'
         }
-        if (path === '/mock/home/.CLAUDE.md') {
+        if (path === homeFile('.CLAUDE.md')) {
           return '# Claude'
         }
         throw new Error('File not found')
@@ -174,7 +184,7 @@ describe('loadUserKnowledgeFiles', () => {
       const mockFs = createMockFs({
         readdirImpl: async () => ['.KNOWLEDGE.md', '.bashrc', '.gitconfig'],
         readFileImpl: async (path: string) => {
-          if (path === '/mock/home/.KNOWLEDGE.md') {
+          if (path === homeFile('.KNOWLEDGE.md')) {
             return '# User knowledge (uppercase)'
           }
           throw new Error('File not found')
@@ -196,7 +206,7 @@ describe('loadUserKnowledgeFiles', () => {
       const mockFs = createMockFs({
         readdirImpl: async () => ['.agents.md', '.bashrc'],
         readFileImpl: async (path: string) => {
-          if (path === '/mock/home/.agents.md') {
+          if (path === homeFile('.agents.md')) {
             return '# Agents file (lowercase)'
           }
           throw new Error('File not found')
@@ -218,7 +228,7 @@ describe('loadUserKnowledgeFiles', () => {
       const mockFs = createMockFs({
         readdirImpl: async () => ['.claude.md', '.bashrc'],
         readFileImpl: async (path: string) => {
-          if (path === '/mock/home/.claude.md') {
+          if (path === homeFile('.claude.md')) {
             return '# Claude (lowercase)'
           }
           throw new Error('File not found')
@@ -240,7 +250,7 @@ describe('loadUserKnowledgeFiles', () => {
       const mockFs = createMockFs({
         readdirImpl: async () => ['.Knowledge.md', '.bashrc'],
         readFileImpl: async (path: string) => {
-          if (path === '/mock/home/.Knowledge.md') {
+          if (path === homeFile('.Knowledge.md')) {
             return '# Mixed case'
           }
           throw new Error('File not found')
@@ -262,10 +272,10 @@ describe('loadUserKnowledgeFiles', () => {
       const mockFs = createMockFs({
         readdirImpl: async () => ['.AGENTS.md', '.Knowledge.md', '.bashrc'],
         readFileImpl: async (path: string) => {
-          if (path === '/mock/home/.Knowledge.md') {
+          if (path === homeFile('.Knowledge.md')) {
             return '# Knowledge content'
           }
-          if (path === '/mock/home/.AGENTS.md') {
+          if (path === homeFile('.AGENTS.md')) {
             return '# Agents content'
           }
           throw new Error('File not found')
@@ -287,7 +297,7 @@ describe('loadUserKnowledgeFiles', () => {
       const mockFs = createMockFs({
         readdirImpl: async () => ['.KNOWLEDGE.MD', '.bashrc'],
         readFileImpl: async (path: string) => {
-          if (path === '/mock/home/.KNOWLEDGE.MD') {
+          if (path === homeFile('.KNOWLEDGE.MD')) {
             return '# All caps'
           }
           throw new Error('File not found')
@@ -329,10 +339,10 @@ describe('loadUserKnowledgeFiles', () => {
       const mockFs = createMockFs({
         readdirImpl: async () => ['.knowledge.md', '.AGENTS.md'],
         readFileImpl: async (path: string) => {
-          if (path === '/mock/home/.knowledge.md') {
+          if (path === homeFile('.knowledge.md')) {
             throw new Error('Read error')
           }
-          if (path === '/mock/home/.AGENTS.md') {
+          if (path === homeFile('.AGENTS.md')) {
             return '# Agents fallback'
           }
           throw new Error('File not found')

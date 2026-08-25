@@ -1,4 +1,7 @@
 import { mock } from 'bun:test'
+import nodePath from 'path'
+
+import { toPosixPath } from '../../util/path-format'
 
 import type { NexusFileSystem } from '../../types/filesystem'
 import type { Mock } from 'bun:test'
@@ -35,21 +38,34 @@ export interface MockFsWithMocks {
 }
 
 /**
- * Normalize a path to forward slashes so lookups are separator-agnostic.
- * Production code resolves paths with the native `path` module, which emits
- * `\` on Windows; test fixtures are written with `/`. Without this, every
- * mock-fs lookup misses on Windows ("File not found: \repo\src\file.ts").
+ * Canonical mock-fs key: absolutise with the host `path` module, then flatten
+ * separators to '/'.
+ *
+ * Both halves matter on Windows, and only together do fixtures and production
+ * meet:
+ *  - `path.resolve` is what reconciles a POSIX fixture root. Production either
+ *    resolves ('/repo' -> 'E:\repo') or joins ('\repo\...'); resolving the
+ *    fixture key too gives both the same drive letter.
+ *  - flattening separators makes '\' and '/' interchangeable, since fixtures
+ *    are written with '/' and the native `path` module emits '\'.
+ *
+ * On POSIX both steps are the identity for the absolute paths these tests use.
  */
 const normalizePath = (path: PathLike): string =>
-  String(path).replace(/\\/g, '/')
+  toPosixPath(nodePath.resolve(String(path)))
 
 const normalizeKeys = <T>(record: Record<string, T>): Record<string, T> =>
   Object.fromEntries(
-    Object.entries(record).map(([key, value]) => [
-      key.replace(/\\/g, '/'),
-      value,
-    ]),
+    Object.entries(record).map(([key, value]) => [normalizePath(key), value]),
   )
+
+/**
+ * The same canonical key the mock uses internally, exported for tests that pass
+ * custom `*Impl` callbacks. Those callbacks receive an already-canonical path,
+ * so they must canonicalise their own fixture literals before comparing —
+ * otherwise the comparison misses on Windows.
+ */
+export const mockFsPath = (path: PathLike): string => normalizePath(path)
 
 /** Creates a mock filesystem compatible with NexusFileSystem. */
 export function createMockFs(options: CreateMockFsOptions = {}): MockFs {
@@ -135,25 +151,29 @@ export function createMockFs(options: CreateMockFsOptions = {}): MockFs {
     } as Stats
   }
 
+  // Custom *Impl callbacks get the same canonical key as the defaults. They
+  // compare against fixture literals just like the built-in lookups do, so
+  // skipping normalization here would make them miss on Windows.
   const readFileFn = readFileImpl
-    ? async (path: PathLike) => readFileImpl(String(path))
+    ? async (path: PathLike) => readFileImpl(normalizePath(path))
     : defaultReadFile
 
   const readdirFn = readdirImpl
-    ? async (path: PathLike) => readdirImpl(String(path))
+    ? async (path: PathLike) => readdirImpl(normalizePath(path))
     : defaultReaddir
 
   const writeFileFn = writeFileImpl
-    ? async (path: PathLike, data: string) => writeFileImpl(String(path), data)
+    ? async (path: PathLike, data: string) =>
+        writeFileImpl(normalizePath(path), data)
     : defaultWriteFile
 
   const mkdirFn = mkdirImpl
     ? async (path: PathLike, opts?: { recursive?: boolean }) =>
-        mkdirImpl(String(path), opts)
+        mkdirImpl(normalizePath(path), opts)
     : defaultMkdir
 
   const statFn = statImpl
-    ? async (path: PathLike) => statImpl(String(path))
+    ? async (path: PathLike) => statImpl(normalizePath(path))
     : defaultStat
 
   return {

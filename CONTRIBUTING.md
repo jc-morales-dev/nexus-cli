@@ -72,6 +72,37 @@ Tests run with `bun test`. Two conventions worth knowing:
   compare against a raw literal, your test will pass on Linux and fail on
   Windows.
 
+## Releasing the CLI
+
+NEXUS cannot run on plain Node — OpenTUI needs Bun's FFI — so it ships the same
+way esbuild and biome do: a self-contained binary per platform, published as
+npm packages, plus a tiny Node shim that execs the right one.
+
+1. Bump `version` in `cli/package.json`.
+2. Build the packages. Pass every target you want to publish, otherwise only
+   your current platform is built:
+
+   ```bash
+   bun run --cwd cli pack:npm win32-x64 linux-x64 linux-arm64 darwin-x64 darwin-arm64
+   ```
+
+   This writes `npm-dist/`, and cross-compiling downloads the target Bun
+   runtimes on demand.
+3. Publish. **Order matters** — every platform package first, the main package
+   last, because the main one lists them as `optionalDependencies` at that exact
+   version. `pack:npm` prints the commands, which are:
+
+   ```bash
+   cd npm-dist/npm/nexus-cli-<platform> && npm publish --access public   # ×5
+   cd npm-dist && npm publish --access public
+   ```
+
+Publishing to npm is irreversible — a version number can never be reused. Check
+`npm-dist/package.json` before the last step.
+
+For the SDK, `bun run --cwd sdk prepare-dist` does a dry run and
+`publish-dist` does the real publish.
+
 ## Pull requests
 
 Keep changes focused, explain what you verified, and include the output of the

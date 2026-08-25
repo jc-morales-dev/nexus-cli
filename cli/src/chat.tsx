@@ -70,7 +70,12 @@ import {
   clearOpenRouterApiKey,
   saveNexusModel,
 } from './utils/settings'
-import { NEXUS_DEFAULT_MODEL, nexusModelLabel } from './data/nexus-models'
+import {
+  NEXUS_DEFAULT_MODEL,
+  NEXUS_STEALTH_WARNING,
+  isNexusStealthModel,
+  nexusModelLabel,
+} from './data/nexus-models'
 
 import {
   type ChatKeyboardState,
@@ -936,7 +941,9 @@ export const Chat = ({
       setMessages((prev) => [
         ...prev,
         getSystemMessage(
-          `✅ Modelo cambiado a ${nexusModelLabel(modelId)} (${modelId}).\nLas tareas chicas siguen usando un modelo barato para ahorrarte tokens.`,
+          `✅ Modelo cambiado a ${nexusModelLabel(modelId)} (${modelId}).\nLas tareas chicas siguen usando un modelo barato para ahorrarte tokens.${
+            isNexusStealthModel(modelId) ? `\n${NEXUS_STEALTH_WARNING}` : ''
+          }`,
         ),
       ])
     },

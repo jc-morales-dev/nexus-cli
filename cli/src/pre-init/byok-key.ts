@@ -9,6 +9,7 @@
 // out of the compiled binary entirely (the sideEffects glob in package.json is
 // not honored), which silently broke account-less boot and saved-key loading in
 // the distributed .exe. An explicit call cannot be stripped.
+import { NEXUS_DEFAULT_MODEL } from '../data/nexus-models'
 import { loadOpenRouterApiKey, loadNexusModel } from '../utils/settings'
 
 export function initByokKey(): void {
@@ -33,7 +34,9 @@ export function initByokKey(): void {
   //   STRONG = reasoning/editing (the "smart" model the user picks via /model)
   //   CHEAP  = utility agents (file search, context pruning) — kept cheap to save
   //            tokens while quality work still runs on STRONG.
-  const STRONG_DEFAULT = 'deepseek/deepseek-v3.2'
+  // Single source of truth with the /model picker — a default that lives in two
+  // places drifts, and the boot value is the one that actually reaches the API.
+  const STRONG_DEFAULT = NEXUS_DEFAULT_MODEL
   const CHEAP_DEFAULT = 'deepseek/deepseek-v4-flash'
   if (!process.env.NEXUS_MODEL) {
     // The user's saved /model pick wins over the baked default (and over a STRONG

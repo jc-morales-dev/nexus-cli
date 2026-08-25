@@ -25,7 +25,12 @@ import {
   clearOpenRouterApiKey,
   saveNexusModel,
 } from '../utils/settings'
-import { NEXUS_DEFAULT_MODEL, nexusModelLabel } from '../data/nexus-models'
+import {
+  NEXUS_DEFAULT_MODEL,
+  NEXUS_STEALTH_WARNING,
+  isNexusStealthModel,
+  nexusModelLabel,
+} from '../data/nexus-models'
 import { getSkillByName } from '../utils/skill-registry'
 
 import type { MultilineInputHandle } from '../components/multiline-input'
@@ -654,7 +659,9 @@ const ALL_COMMANDS: CommandDefinition[] = [
       process.env.NEXUS_MODEL_STRONG = target
       resetNexusClient()
       post(
-        `✅ Modelo cambiado a ${nexusModelLabel(target)} (${target}).\nLas tareas chicas siguen usando un modelo barato para ahorrarte tokens.`,
+        `✅ Modelo cambiado a ${nexusModelLabel(target)} (${target}).\nLas tareas chicas siguen usando un modelo barato para ahorrarte tokens.${
+          isNexusStealthModel(target) ? `\n${NEXUS_STEALTH_WARNING}` : ''
+        }`,
       )
       return
     },

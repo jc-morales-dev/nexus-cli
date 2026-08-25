@@ -1,228 +1,68 @@
-## Nexus for Windows dev setup
+# NEXUS on Windows
 
-Welcome!
+NEXUS ships a native Windows binary and is developed on Windows, so it is a
+supported platform rather than an afterthought. This page covers the few
+Windows-specific things worth knowing.
 
-For development, we have a shared windows machine, via shadow.tech.
+## Install
 
-### Accessing the machine
-
-You can access the machine either from the browser or with the desktop app:
-
-1. Shadow.tech Web viewer:
-
-- Go to https://pc.shadow.tech/home
-
-2. Shadow.tech desktop app:
-
-- They claim its better, idk.
-- https://shadow.tech/download/
-
-Supposedly you can also use Window's Remote Desktop to access the machine instead, but I've not tried it. Shadow.tech claims their protocol is better optimized for lower bandwidth use & hence smoother performance.
-
-## Set-up guide:
-
-You shouldn't need this - but just in case you stop using Shadow.tech, or make a new account, here's a guide on how to get from a blank Windows install to a Nexus install.
-
-Surprisingly: most guides in fact recommend running everything in an Admin PowerShell, contra to advice to not use sudo on eg: Linux/macOS.
-
-- Install Choco: Open PowerShell as Admin, and run the command from https://chocolatey.org/install
-- Install NVM: Restart PowerShell (still as Admin) and run `choco install nvm -y`
-- Install Node: Restart PowerShell (still as Admin) and run `nvm install node`
-- Install Nexus: Run `npm i -g nexus`
-
----
-
-## Common Windows Issues & Troubleshooting
-
-Running into problems? Here are solutions to the most common Windows-specific issues.
-
-### Issue: "Failed to determine latest version" on First Run
-
-**Symptom**:
 ```powershell
-PS C:\> nexus
-❌ Failed to determine latest version
-Please check your internet connection and try again
+npm install -g @victor00128/nexus-cli
 ```
 
-**Cause**:
-Nexus checks GitHub for the latest release on first run. This fails when:
-- Corporate firewall blocks `github.com`
-- Proxy settings not configured
-- Network connectivity issues
-- VPN required for external access
+The package pulls a self-contained binary for your platform — you do not need
+Node or Bun installed separately. Then run:
 
-**Solutions**:
+```powershell
+nexus
+```
 
-1. **Set the `HTTPS_PROXY` environment variable** (if behind corporate proxy):
+On first run, type `/key` and paste your [OpenRouter](https://openrouter.ai/keys)
+API key. There is no account and no browser login: the key is stored locally and
+never leaves your machine except to call OpenRouter.
 
-   Nexus natively supports proxy environment variables. This is the recommended fix:
+## Bash is required
 
-   **PowerShell:**
-   ```powershell
-   $env:HTTPS_PROXY = "http://your-proxy-server:port"
-   nexus
-   ```
+This is the one hard requirement on Windows. NEXUS runs terminal commands
+through bash, so if you see:
 
-   **CMD:**
-   ```cmd
-   set HTTPS_PROXY=http://your-proxy-server:port
-   nexus
-   ```
-
-   To make it permanent, add `HTTPS_PROXY` to your Windows System Environment Variables (Settings → System → Advanced → Environment Variables).
-
-2. **Verify network access**:
-   ```powershell
-   curl https://registry.npmjs.org/nexus/latest
-   ```
-   If this fails, you have a network/firewall issue.
-
-3. **Configure npm proxy** (for the `npm install` step only):
-   ```powershell
-   npm config set proxy http://your-proxy-server:port
-   npm config set https-proxy http://your-proxy-server:port
-   ```
-   Note: This only helps with `npm install`. Nexus's own downloads use `HTTPS_PROXY` instead.
-
-4. **Disable VPN temporarily** or whitelist `registry.npmjs.org` and `nexus.com` in your firewall
-
-5. **Clear npm cache and reinstall**:
-   ```powershell
-   npm cache clean --force
-   npm uninstall -g nexus
-   npm install -g nexus
-   ```
-
-**Reference**: Issue [#294](https://github.com/NexusAI/nexus/issues/294)
-
----
-
-### Issue: "Bash is required but was not found" Error
-
-**Symptom**:
 ```
 Bash is required but was not found on this Windows system.
 ```
 
-**Cause**:
-Nexus requires bash for command execution. This error appears when:
-- Git for Windows is not installed
-- You're not running inside WSL
-- bash.exe is not in your PATH
+pick one of these:
 
-**Solutions**:
+1. **Install Git for Windows** (recommended) — <https://git-scm.com/download/win>.
+   It provides `bash.exe`, which NEXUS detects automatically. This works whether
+   you run NEXUS from PowerShell, CMD, or Git Bash.
 
-1. **Install Git for Windows** (recommended):
-   - Download from https://git-scm.com/download/win
-   - This installs `bash.exe` which Nexus will automatically detect
-   - Works in PowerShell, CMD, or Git Bash terminals
+2. **Run inside WSL** — a full Linux environment. Install with `wsl --install`
+   from an elevated PowerShell, then run NEXUS inside it.
 
-2. **Use WSL (Windows Subsystem for Linux)**:
-   - Provides full Linux environment with native bash
-   - Install: `wsl --install` in PowerShell (Admin)
-   - Run nexus inside WSL for best compatibility
+3. **Point NEXUS at a custom bash** — if `bash.exe` lives somewhere unusual:
 
-3. **Set custom bash path** (advanced):
-   - If bash.exe is installed in a non-standard location:
    ```powershell
-   set NEXUS_GIT_BASH_PATH=C:\path\to\bash.exe
+   $env:NEXUS_GIT_BASH_PATH = "C:\path\to\bash.exe"
    ```
 
-**Reference**: Issue [#274](https://github.com/NexusAI/nexus/issues/274)
+   The lookup order is implemented in `sdk/src/tools/run-terminal-command.ts`:
+   `NEXUS_GIT_BASH_PATH` first, then the standard Git for Windows locations.
 
----
+The same requirement explains most "git command failed with a syntax error"
+reports: complex git invocations are quoted for bash, so they need a real bash
+to run under.
 
-### Issue: Git Commands Fail on Windows
+## Paths
 
-**Symptom**:
-Git operations (commit, rebase, complex commands) fail with syntax errors or unexpected behavior.
+Tool output uses forward slashes on every platform (`src/index.ts`, never
+`src\index.ts`) so that the model sees one consistent form. Paths handed to the
+filesystem stay in native Windows form. If you are working on the code, the
+distinction is documented on `ResolvedProjectPath` in
+`sdk/src/tools/path-utils.ts` — do not "fix" one into the other.
 
-**Cause**:
-Complex git commands may have issues with Windows path handling or shell escaping.
+## Reporting a problem
 
-**Solutions**:
-
-1. **Ensure Git for Windows is installed**:
-   - Download from https://git-scm.com/download/win
-   - Nexus uses bash.exe from Git for Windows for command execution
-
-2. **Use WSL for complex operations**:
-   - Provides full Linux environment with native bash
-   - Install: `wsl --install` in PowerShell (Admin)
-   - Run nexus inside WSL for best compatibility
-
-**Reference**: Issue [#274](https://github.com/NexusAI/nexus/issues/274)
-
----
-
-### Issue: Login Browser Window Fails to Open
-
-**Symptom**:
-```
-Press ENTER to open your browser and finish logging in...
-
-Caught exception: Error: Executable not found in $PATH: "start"
-Error: Executable not found in $PATH: "start"
-TLCWeb > Unable to login. Please try again by typing "login" in the terminal.
-```
-
-**Cause**:
-When running Nexus in Git Bash (MINGW64), the `start` command is not available in PATH. The browser auto-open feature fails.
-
-**Solutions**:
-
-1. **Manually open the login URL** (easiest):
-   - Nexus displays the login URL after the error
-   - Copy the full URL starting with `https://nexus.com/login?auth_code=...`
-   - Paste into your browser
-   - Complete login in browser
-   - Return to terminal - login will succeed
-
-2. **Use native Windows terminals**:
-   - PowerShell: `powershell`
-   - Command Prompt: `cmd`
-   - These have `start` command available
-
-3. **Clear cache if login still fails** (per issue #299):
-   ```powershell
-   npm cache clean --force
-   npm uninstall -g nexus
-   npm install -g nexus
-   ```
-
-**Reference**: Issue [#299](https://github.com/NexusAI/nexus/issues/299)
-
----
-
-### Message: "Update available: error → [version]"
-
-**What it means**:
-This is **not an error** - it's an informational message indicating:
-- Your local binary needs to be downloaded/updated
-- "error" is a placeholder version (not a real error state)
-- Nexus will automatically download the correct version
-
-**What to do**:
-- Wait for the download to complete: "Download complete! Starting Nexus..."
-- If download fails, check your internet connection
-- If it persists, try the solutions in "Failed to determine latest version" above
-
-**Reference**: Issue [#299](https://github.com/NexusAI/nexus/issues/299)
-
----
-
-### Still Having Issues?
-
-If these solutions don't resolve your problem:
-
-1. **Search existing issues**: https://github.com/NexusAI/nexus/issues
-2. **Open a new issue**: https://github.com/NexusAI/nexus/issues/new
-3. **Join Discord community**: https://nexus.com/discord
-
-When reporting issues, please include:
-- Windows version: `winver` command
-- PowerShell/Git Bash/CMD
-- Node version: `node --version`
-- Full error message
-- Steps to reproduce
+Open an issue at
+<https://github.com/Victor00128/nexus-cli/issues> and include your Windows
+version, your terminal (PowerShell / CMD / Git Bash / WSL), the output of
+`nexus --version`, and whether `bash.exe` is on your `PATH`.

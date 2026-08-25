@@ -11,15 +11,11 @@ const helperModules = [
     name: 'nexus release helper',
     path: fileURLToPath(new URL('../../../release/http.js', import.meta.url)),
   },
-  {
-    name: 'nexus staging release helper',
-    path: fileURLToPath(
-      new URL('../../../release-staging/http.js', import.meta.url),
-    ),
-  },
   // Note: the old "freetier" release helper was removed with the freetier
   // subsystem — NEXUS is BYOK-only, so there's no freetier/cli/release/http.js
-  // to test anymore.
+  // to test anymore. The "release-staging" copy went the same way: it was a
+  // byte-identical duplicate of release/http.js left over from the Codecane
+  // rebrand, and nothing in the publish pipeline referenced it.
 ]
 
 function createResponse(statusCode: number, headers: Record<string, string>, body = '') {

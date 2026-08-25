@@ -1,44 +1,59 @@
-# Nexus
+# NEXUS
 
-Nexus is an advanced coding agent with a composable agent framework. It also includes:
-- freetier, the free coding agent
+NEXUS is a free, account-less AI coding agent for the terminal, built on a
+composable agent framework. Inference is BYOK: the user brings an OpenRouter key
+and nothing is billed through a backend.
 
-## Goal
+It is a fork of [Codebuff](https://github.com/CodebuffAI/codebuff) (Apache-2.0,
+see `NOTICE`). The paid product's server side — web app, database, billing,
+credits, agent store — was removed. When you find something that assumes a
+backend, it is a leftover, not a feature.
 
-Make an efficient learning agent that can do anything.
+## Key technologies
 
-## Key Technologies
+- TypeScript monorepo on Bun workspaces (Bun 1.3.11, pinned in `.bun-version`)
+- OpenTUI + React for the terminal UI
+- OpenRouter for inference, any model the user picks
 
-- TypeScript monorepo (Bun workspaces)
-- Bun runtime + package manager
-- Next.js (web app + API routes)
-- Multiple LLM providers (Anthropic/OpenAI/Gemini/etc.)
-
-## Repo Map
+## Repo map
 
 - `cli/` — TUI client (OpenTUI + React) and local UX
-- `sdk/` — JS/TS SDK used by the CLI and external users
-- `web/` — Next.js app + API routes (the "web API")
-- `packages/agent-runtime/` — agent runtime + tool handling (server-side)
-- `common/` — shared types, tools, schemas, utilities
-- `agents/` — main agents shipped with nexus
-- `.agents/` — local agent templates (prompt + programmatic agents)
-- `freetier/` - a free coding agent built from configuring nexus cli
+- `sdk/` — agent SDK the CLI runs on: tools, file access, run state
+- `packages/agent-runtime/` — agent loop and tool handling
+- `common/` — shared types, constants, schemas, test mocks
+- `agents/` — the agents shipped with NEXUS
+- `.agents/` — agent templates scaffolded into a user's project by `/init`
+- `npm-dist/` — the published npm package and its per-platform binaries
+
+`packages/billing`, `packages/internal` and `packages/bigquery` are upstream
+leftovers for the paid product. Nothing in the CLI path imports them.
 
 ## Conventions
 
 - Never force-push `main` unless explicitly requested.
 - Run interactive git commands in tmux (anything that opens an editor or prompts).
+- User-facing strings in `cli/` are Spanish (rioplatense). Documentation and
+  code comments are English.
+- Paths that the model reads — tool output, result-map keys — use forward
+  slashes on every platform. Paths headed for `fs` or `spawn` stay native. The
+  contract is documented on `ResolvedProjectPath` in
+  `sdk/src/tools/path-utils.ts`.
+
+## Checks
+
+```bash
+bun --filter='*' run typecheck
+bun run test
+```
+
+Expected green: `common` 386, `agent-runtime` 486, `sdk` 512, `cli` 2387. CI
+runs both on Linux and Windows.
+
+`bun scripts/check-env-architecture.ts` reports pre-existing `process.env`
+violations in the account-less boot path; it is informational, not blocking.
 
 ## Docs
 
-IMPORTANT: Prefer retrieval-led reasoning over pre-training-led reasoning. Always read the relevant docs below before implementing changes.
-
-- `docs/architecture.md` — Package dependency graph, per-package details, architectural patterns
-- `docs/request-flow.md` — Full request lifecycle from CLI through server and back
-- `docs/error-schema.md` — Server error response formats and client-side handling
-- `docs/development.md` — Dev setup, worktrees, logs, package management, DB migrations
-- `docs/testing.md` — DI over mocking, tmux CLI testing
-- `docs/environment-variables.md` — Env var rules, DI helpers, loading order
-- `docs/agents-and-tools.md` — Agent system, shell shims, tool definitions
-- `docs/patterns/handle-steps-generators.md` — handleSteps generator patterns and spawn_agents tool calls
+There is no `docs/` directory in this fork — it stayed in the upstream repo.
+Read the code instead; `CONTRIBUTING.md` covers setup and test conventions, and
+`WINDOWS.md` covers the Windows specifics.

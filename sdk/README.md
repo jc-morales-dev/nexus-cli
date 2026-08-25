@@ -1,16 +1,24 @@
 # @nexus/sdk
 
-Official SDK for Nexus - AI coding agent and framework
-
-## Installation
-
-```bash
-npm install @nexus/sdk
-```
+The agent SDK that [NEXUS](../README.md) is built on: the agent loop, the tool
+implementations, and run state. It lives in this monorepo and the CLI consumes
+it as a workspace package.
 
 ## Prerequisites
 
-- Create a Nexus account and get your [Nexus API key here](https://www.nexus.com/api-keys).
+NEXUS is account-less. There is no Nexus account, no credits, and no agent
+store — inference goes straight to [OpenRouter](https://openrouter.ai/keys) with
+your own key.
+
+Two environment variables matter:
+
+- `OPENROUTER_API_KEY` — your OpenRouter key. Setting it puts the SDK in BYOK
+  direct mode, where requests bypass any backend.
+- `NEXUS_API_KEY` — the client constructor requires a non-empty value, but in
+  BYOK mode it is only a placeholder. The CLI sets it to `nexus-byok-local`.
+
+Agents are supplied programmatically through `agentDefinitions`; there is no
+remote agent registry to pull from.
 
 ## Usage
 
@@ -21,28 +29,31 @@ import { NexusClient } from '@nexus/sdk'
 
 async function main() {
   const client = new NexusClient({
-    // You need to pass in your own API key here.
-    // Get one here: https://www.nexus.com/api-keys
-    apiKey: process.env.NEXUS_API_KEY,
+    // Placeholder in BYOK mode — the key that actually pays for inference is
+    // OPENROUTER_API_KEY, read from the environment.
+    apiKey: 'nexus-byok-local',
     cwd: process.cwd(),
+    agentDefinitions: [
+      /* your agent definitions — see "Custom Agents and Tools" below */
+    ],
   })
 
   // First run
   const runState1 = await client.run({
-    // The agent id. Any agent on the store (https://nexus.com/store)
-    agent: 'nexus/base@0.0.16',
+    agent: 'my-agent',
     prompt: 'Create a simple calculator class',
     handleEvent: (event) => {
-      // All events that happen during the run: agent start/finish, tool calls/results, text responses, errors.
+      // Everything that happens during the run: agent start/finish, tool
+      // calls and results, text responses, errors.
       console.log('Nexus Event', JSON.stringify(event))
     },
   })
 
   // Continue the same session with a follow-up
-  const runOrError2 = await client.run({
-    agent: 'nexus/base@0.0.16',
+  const runState2 = await client.run({
+    agent: 'my-agent',
     prompt: 'Add unit tests for the calculator',
-    previousRun: runState1, // <-- this is where your next run differs from the previous run
+    previousRun: runState1, // <-- this is what continues the session
     handleEvent: (event) => {
       console.log('Nexus Event', JSON.stringify(event))
     },

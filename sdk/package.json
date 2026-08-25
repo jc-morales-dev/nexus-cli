@@ -50,12 +50,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/NexusAI/nexus.git",
+    "url": "git+https://github.com/Victor00128/nexus-cli.git",
     "directory": "sdk"
   },
-  "homepage": "https://nexus.com",
+  "homepage": "https://github.com/Victor00128/nexus-cli",
   "bugs": {
-    "url": "https://github.com/NexusAI/nexus/issues"
+    "url": "https://github.com/Victor00128/nexus-cli/issues"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "2.0.50",

@@ -3,7 +3,9 @@ import { FILE_READ_STATUS } from '@nexus/common/old-constants'
 import * as projectFileTree from '@nexus/common/project-file-tree'
 import { getInitialSessionState } from '@nexus/common/types/session-state'
 import { getStubProjectFileContext } from '@nexus/common/util/file'
+import { toPosixPath } from '@nexus/common/util/path-format'
 import { afterEach, describe, expect, it, mock, spyOn } from 'bun:test'
+import path from 'path'
 
 import { NexusClient } from '../client'
 import * as databaseModule from '../impl/database'
@@ -22,14 +24,27 @@ const createNodeError = (message: string, code: string): NodeError => {
   return error
 }
 
+// Same canonical key as the shared mock in
+// @nexus/common/testing/mocks/filesystem: absolutise, then flatten separators,
+// so the POSIX fixtures below line up with the native paths production computes
+// on Windows.
+function mockPath(filePath: PathLike | string): string {
+  return toPosixPath(path.resolve(String(filePath)))
+}
+
 function createMockFs(config: {
   files?: Record<string, { content: string; size?: number }>
 }): NexusFileSystem {
-  const { files = {} } = config
+  const files = Object.fromEntries(
+    Object.entries(config.files ?? {}).map(([key, value]) => [
+      mockPath(key),
+      value,
+    ]),
+  )
 
   return {
     readFile: async (filePath: PathLike) => {
-      const pathStr = String(filePath)
+      const pathStr = mockPath(filePath)
       if (files[pathStr]) {
         return files[pathStr].content
       }
@@ -39,7 +54,7 @@ function createMockFs(config: {
       )
     },
     stat: async (filePath: PathLike) => {
-      const pathStr = String(filePath)
+      const pathStr = mockPath(filePath)
       if (files[pathStr]) {
         return {
           size: files[pathStr].size ?? files[pathStr].content.length,

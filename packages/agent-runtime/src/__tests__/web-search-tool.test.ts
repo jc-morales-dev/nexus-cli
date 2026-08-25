@@ -53,7 +53,7 @@ describe('web_search tool with researcher agent (via web API facade)', () => {
       ...agentRuntimeImpl,
 
       additionalToolDefinitions: () => Promise.resolve({}),
-      agentType: 'researcher',
+      agentType: 'researcher-web',
       ancestorRunIds: [],
       clientSessionId: 'test-session',
       fileContext: mockFileContext,
@@ -92,7 +92,9 @@ describe('web_search tool with researcher agent (via web API facade)', () => {
 
   const mockFileContextWithAgents = {
     ...mockFileContext,
-    agentTemplates: { researcher: researcherAgent },
+    // Keyed by the agent's declared id — validateAgents() indexes the assembled
+    // map by `definition.id`, so a different key here would never be found.
+    agentTemplates: { 'researcher-web': researcherAgent },
   }
 
   test('should call web facade when web_search tool is used', async () => {
@@ -109,7 +111,7 @@ describe('web_search tool with researcher agent (via web API facade)', () => {
     const sessionState = getInitialSessionState(mockFileContextWithAgents)
     const agentState = {
       ...sessionState.mainAgentState,
-      agentType: 'researcher' as const,
+      agentType: 'researcher-web' as const,
     }
     const { agentTemplates } = assembleLocalAgentTemplates({
       ...agentRuntimeImpl,
@@ -119,7 +121,7 @@ describe('web_search tool with researcher agent (via web API facade)', () => {
     await runAgentStep({
       ...runAgentStepBaseParams,
       localAgentTemplates: agentTemplates,
-      agentTemplate: agentTemplates['researcher'],
+      agentTemplate: agentTemplates['researcher-web'],
       agentState,
       prompt: 'Search for test',
     })
@@ -144,7 +146,7 @@ describe('web_search tool with researcher agent (via web API facade)', () => {
     const sessionState = getInitialSessionState(mockFileContextWithAgents)
     const agentState = {
       ...sessionState.mainAgentState,
-      agentType: 'researcher' as const,
+      agentType: 'researcher-web' as const,
     }
     const { agentTemplates } = assembleLocalAgentTemplates({
       ...agentRuntimeImpl,
@@ -154,7 +156,7 @@ describe('web_search tool with researcher agent (via web API facade)', () => {
     const { agentState: newAgentState } = await runAgentStep({
       ...runAgentStepBaseParams,
       localAgentTemplates: agentTemplates,
-      agentTemplate: agentTemplates['researcher'],
+      agentTemplate: agentTemplates['researcher-web'],
       agentState,
       prompt: 'Search for Next.js 15 new features',
     })
@@ -184,7 +186,7 @@ describe('web_search tool with researcher agent (via web API facade)', () => {
     const sessionState = getInitialSessionState(mockFileContextWithAgents)
     const agentState = {
       ...sessionState.mainAgentState,
-      agentType: 'researcher' as const,
+      agentType: 'researcher-web' as const,
     }
     const { agentTemplates } = assembleLocalAgentTemplates({
       ...agentRuntimeImpl,
@@ -194,7 +196,7 @@ describe('web_search tool with researcher agent (via web API facade)', () => {
     await runAgentStep({
       ...runAgentStepBaseParams,
       localAgentTemplates: agentTemplates,
-      agentTemplate: agentTemplates['researcher'],
+      agentTemplate: agentTemplates['researcher-web'],
       agentState,
       prompt: 'Search deep',
     })
@@ -216,7 +218,7 @@ describe('web_search tool with researcher agent (via web API facade)', () => {
     const sessionState = getInitialSessionState(mockFileContextWithAgents)
     const agentState = {
       ...sessionState.mainAgentState,
-      agentType: 'researcher' as const,
+      agentType: 'researcher-web' as const,
     }
     const { agentTemplates } = assembleLocalAgentTemplates({
       ...agentRuntimeImpl,
@@ -226,7 +228,7 @@ describe('web_search tool with researcher agent (via web API facade)', () => {
     const { agentState: newAgentState } = await runAgentStep({
       ...runAgentStepBaseParams,
       localAgentTemplates: agentTemplates,
-      agentTemplate: agentTemplates['researcher'],
+      agentTemplate: agentTemplates['researcher-web'],
       agentState,
       prompt: 'Search nothing',
     })
@@ -253,7 +255,7 @@ describe('web_search tool with researcher agent (via web API facade)', () => {
     const sessionState = getInitialSessionState(mockFileContextWithAgents)
     const agentState = {
       ...sessionState.mainAgentState,
-      agentType: 'researcher' as const,
+      agentType: 'researcher-web' as const,
     }
     const { agentTemplates } = assembleLocalAgentTemplates({
       ...agentRuntimeImpl,
@@ -263,7 +265,7 @@ describe('web_search tool with researcher agent (via web API facade)', () => {
     const { agentState: newAgentState } = await runAgentStep({
       ...runAgentStepBaseParams,
       localAgentTemplates: agentTemplates,
-      agentTemplate: agentTemplates['researcher'],
+      agentTemplate: agentTemplates['researcher-web'],
       agentState,
       prompt: 'Search for something',
     })
@@ -290,7 +292,7 @@ describe('web_search tool with researcher agent (via web API facade)', () => {
     const sessionState = getInitialSessionState(mockFileContextWithAgents)
     const agentState = {
       ...sessionState.mainAgentState,
-      agentType: 'researcher' as const,
+      agentType: 'researcher-web' as const,
     }
     const { agentTemplates } = assembleLocalAgentTemplates({
       ...agentRuntimeImpl,
@@ -300,7 +302,7 @@ describe('web_search tool with researcher agent (via web API facade)', () => {
     const { agentState: newAgentState } = await runAgentStep({
       ...runAgentStepBaseParams,
       localAgentTemplates: agentTemplates,
-      agentTemplate: agentTemplates['researcher'],
+      agentTemplate: agentTemplates['researcher-web'],
       agentState,
       prompt: 'Search for something',
     })
@@ -328,7 +330,7 @@ describe('web_search tool with researcher agent (via web API facade)', () => {
     const sessionState = getInitialSessionState(mockFileContextWithAgents)
     const agentState = {
       ...sessionState.mainAgentState,
-      agentType: 'researcher' as const,
+      agentType: 'researcher-web' as const,
     }
     const { agentTemplates } = assembleLocalAgentTemplates({
       ...agentRuntimeImpl,
@@ -338,7 +340,7 @@ describe('web_search tool with researcher agent (via web API facade)', () => {
     const { agentState: newAgentState } = await runAgentStep({
       ...runAgentStepBaseParams,
       localAgentTemplates: agentTemplates,
-      agentTemplate: agentTemplates['researcher'],
+      agentTemplate: agentTemplates['researcher-web'],
       agentState,
       prompt: 'Test search result formatting',
     })
@@ -368,7 +370,7 @@ describe('web_search tool with researcher agent (via web API facade)', () => {
     const sessionState = getInitialSessionState(mockFileContextWithAgents)
     const agentState = {
       ...sessionState.mainAgentState,
-      agentType: 'researcher' as const,
+      agentType: 'researcher-web' as const,
     }
     const { agentTemplates } = assembleLocalAgentTemplates({
       ...agentRuntimeImpl,
@@ -380,7 +382,7 @@ describe('web_search tool with researcher agent (via web API facade)', () => {
     const { agentState: newAgentState } = await runAgentStep({
       ...runAgentStepBaseParams,
       localAgentTemplates: agentTemplates,
-      agentTemplate: agentTemplates['researcher'],
+      agentTemplate: agentTemplates['researcher-web'],
       agentState,
       prompt: 'Search for test',
     })

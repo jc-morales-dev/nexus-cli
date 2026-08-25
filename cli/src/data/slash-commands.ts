@@ -29,7 +29,7 @@ const MODE_COMMANDS: SlashCommand[] = IS_FREETIER
   : AGENT_MODES.map((mode) => ({
       id: `mode:${mode.toLowerCase()}`,
       label: `mode:${mode.toLowerCase()}`,
-      description: `Switch to ${mode} mode`,
+      description: `Cambiar al modo ${mode}`,
       aliases: [`model:${mode.toLowerCase()}`],
     }))
 
@@ -66,7 +66,7 @@ const ALL_SLASH_COMMANDS: SlashCommand[] = [
   {
     id: 'help',
     label: 'help',
-    description: 'Display keyboard shortcuts and tips',
+    description: 'Ver atajos de teclado y consejos',
     aliases: ['h', '?'],
     implicitCommand: true,
   },
@@ -87,7 +87,7 @@ const ALL_SLASH_COMMANDS: SlashCommand[] = [
         {
           id: 'connect',
           label: 'connect',
-          description: 'Connect your ChatGPT account',
+          description: 'Conectar tu cuenta de ChatGPT',
           aliases: ['connect:chatgpt', 'chatgpt'],
         },
       ]
@@ -96,17 +96,17 @@ const ALL_SLASH_COMMANDS: SlashCommand[] = [
   {
     id: 'ads:enable',
     label: 'ads:enable',
-    description: 'Enable contextual ads',
+    description: 'Activar los anuncios contextuales',
   },
   {
     id: 'ads:disable',
     label: 'ads:disable',
-    description: 'Disable contextual ads',
+    description: 'Desactivar los anuncios contextuales',
   },
   {
     id: 'init',
     label: 'init',
-    description: 'Create a starter knowledge.md file',
+    description: 'Crear un archivo knowledge.md inicial',
     implicitCommand: true,
   },
   {
@@ -124,47 +124,47 @@ const ALL_SLASH_COMMANDS: SlashCommand[] = [
   {
     id: 'usage',
     label: 'usage',
-    description: 'View credits and subscription quota',
+    description: 'Ver créditos y cuota de suscripción',
     aliases: ['credits'],
   },
   {
     id: 'subscribe',
     label: 'subscribe',
-    description: 'Subscribe to get more usage',
+    description: 'Suscribirte para tener más uso',
     aliases: ['strong', 'sub', 'buy-credits'],
   },
   {
     id: 'interview',
     label: 'interview',
-    description: 'AI asks a series of questions to flesh out request into a spec',
+    description: 'La IA te hace preguntas para convertir tu pedido en una spec',
   },
   {
     id: 'plan',
     label: 'plan',
-    description: 'Create a plan with GPT 5.4',
+    description: 'Crear un plan de trabajo',
   },
   {
     id: 'review',
     label: 'review',
-    description: 'Review code changes with GPT 5.4',
+    description: 'Revisar los cambios de código',
   },
   {
     id: 'new',
     label: 'new',
-    description: 'Clear the conversation history and start a new chat',
+    description: 'Borrar el historial y empezar una conversación nueva',
     aliases: ['n', 'clear', 'c', 'reset'],
     implicitCommand: true,
   },
   {
     id: 'history',
     label: 'history',
-    description: 'Browse and resume past conversations',
+    description: 'Ver y retomar conversaciones anteriores',
     aliases: ['chats'],
   },
   {
     id: 'agent:gpt-5',
     label: 'agent:gpt-5',
-    description: 'Spawn the GPT-5 agent to help solve complex problems',
+    description: 'Lanzar el agente GPT-5 para problemas complejos',
     insertText: '@GPT-5 Agent ',
   },
   // {
@@ -176,18 +176,20 @@ const ALL_SLASH_COMMANDS: SlashCommand[] = [
   {
     id: 'feedback',
     label: 'feedback',
-    description: IS_FREETIER ? 'Share general feedback about FreeTier' : 'Share general feedback about Nexus',
+    description: IS_FREETIER
+      ? 'Dejar comentarios sobre FreeTier'
+      : 'Dejar comentarios sobre NEXUS',
   },
   {
     id: 'bash',
     label: 'bash',
-    description: 'Enter bash mode ("!" at beginning enters bash mode)',
+    description: 'Entrar en modo bash (también con "!" al principio)',
     aliases: ['!'],
   },
   {
     id: 'image',
     label: 'image',
-    description: 'Attach an image file (or Ctrl+V to paste from clipboard)',
+    description: 'Adjuntar una imagen (o Ctrl+V para pegar del portapapeles)',
     aliases: ['img', 'attach'],
   },
   ...MODE_COMMANDS,
@@ -199,25 +201,25 @@ const ALL_SLASH_COMMANDS: SlashCommand[] = [
   {
     id: 'theme:toggle',
     label: 'theme:toggle',
-    description: 'Toggle between light and dark mode',
+    description: 'Alternar entre tema claro y oscuro',
   },
   {
     id: 'end-session',
     label: 'end-session',
-    description: 'End your free session (lets you switch model)',
+    description: 'Terminar tu sesión gratuita (te deja cambiar de modelo)',
     aliases: ['model'],
   },
   {
     id: 'logout',
     label: 'logout',
-    description: 'Sign out of your session',
+    description: 'Cerrar sesión',
     aliases: ['signout'],
     implicitCommand: true,
   },
   {
     id: 'exit',
     label: 'exit',
-    description: 'Quit the CLI',
+    description: 'Salir del CLI',
     aliases: ['quit', 'q'],
     implicitCommand: true,
   },
@@ -265,7 +267,10 @@ export function getSlashCommandsWithSkills(skills: SkillsMap): SlashCommand[] {
   if (IS_FREETIER && !getChatGptOAuthStatus().connected) {
     commands = commands.map((cmd) => {
       if (cmd.id === 'review' || cmd.id === 'plan') {
-        return { ...cmd, description: 'Connect required. ' + cmd.description }
+        return {
+          ...cmd,
+          description: 'Requiere conectarse. ' + cmd.description,
+        }
       }
       return cmd
     })

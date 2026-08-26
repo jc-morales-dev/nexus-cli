@@ -22,7 +22,6 @@
   },
   "dependencies": {
     "@ai-sdk/openai-compatible": "^1.0.19",
-    "@nexus/bigquery": "workspace:*",
     "@nexus/common": "workspace:*"
   },
   "devDependencies": {}

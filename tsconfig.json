@@ -9,9 +9,6 @@
       "@nexus/sdk/*": ["./sdk/*"],
       "@nexus/agent-runtime/*": ["./packages/agent-runtime/src/*"],
       "@nexus/llm-providers/*": ["./packages/llm-providers/src/*"],
-      "@nexus/billing/*": ["./packages/billing/src/*"],
-      "@nexus/bigquery/*": ["./packages/bigquery/src/*"],
-      "@nexus/internal/*": ["./packages/internal/src/*"],
       "@nexus/code-map/*": ["./packages/code-map/*"]
     }
   },
@@ -19,10 +16,7 @@
   "references": [
     { "path": "./common" },
     { "path": "./sdk" },
-    { "path": "./packages/billing" },
-    { "path": "./packages/bigquery" },
     { "path": "./packages/llm-providers" },
-    { "path": "./packages/internal" },
     { "path": "./packages/code-map" },
     { "path": "./scripts" }
   ]

@@ -4,4 +4,4 @@ linker = "hoisted"
 linkWorkspacePackages = true
 
 [test]
-preload = ["./test/setup-env.ts", "../test/setup-bigquery-mocks.ts"]
+preload = ["./test/setup-env.ts"]

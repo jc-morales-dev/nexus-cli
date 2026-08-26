@@ -102,6 +102,3 @@ export {
   promptAiSdkStream,
   promptAiSdkStructured,
 } from './impl/llm'
-export {
-  resetChatGptOAuthRateLimit,
-} from './impl/model-provider'

@@ -6,7 +6,6 @@
  */
 
 import { BYOK_OPENROUTER_ENV_VAR } from '@nexus/common/constants/byok'
-import { CHATGPT_OAUTH_TOKEN_ENV_VAR } from '@nexus/common/constants/chatgpt-oauth'
 import { API_KEY_ENV_VAR } from '@nexus/common/constants/paths'
 import { getBaseEnv } from '@nexus/common/env-process'
 
@@ -79,11 +78,4 @@ export const getStrongModelFromEnv = (): string | undefined => {
 
 export const getCheapModelFromEnv = (): string | undefined => {
   return process.env.NEXUS_MODEL_CHEAP || undefined
-}
-
-/**
- * Get ChatGPT OAuth token from environment variable.
- */
-export const getChatGptOAuthTokenFromEnv = (): string | undefined => {
-  return process.env[CHATGPT_OAUTH_TOKEN_ENV_VAR]
 }

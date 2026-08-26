@@ -1,5 +1,3 @@
-import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
-import { isFreeMode } from '@nexus/common/constants/free-agents'
 import { models, PROFIT_MARGIN } from '@nexus/common/old-constants'
 import { buildArray } from '@nexus/common/util/array'
 import { normalizeProviderRequestBodyForCacheDebug } from '@nexus/common/util/cache-debug'
@@ -22,12 +20,7 @@ import {
   TypeValidationError,
 } from 'ai'
 
-import {
-  getModelForRequest,
-  markChatGptOAuthRateLimited,
-} from './model-provider'
-import { refreshChatGptOAuthToken } from '../credentials'
-import { getErrorStatusCode } from '../error-utils'
+import { getModelForRequest } from './model-provider'
 
 import type { ModelRequestParams } from './model-provider'
 import type {
@@ -136,72 +129,6 @@ type OpenRouterUsageAccounting = {
   }
 }
 
-/**
- * Check if an error is an OAuth rate limit error that should trigger fallback.
- */
-function isOAuthRateLimitError(error: unknown): boolean {
-  if (!error || typeof error !== 'object') return false
-
-  // Check status code (handles both 'status' from AI SDK and 'statusCode' from our errors)
-  const statusCode = getErrorStatusCode(error)
-  if (statusCode === 429) return true
-
-  // Check error message for rate limit indicators
-  const err = error as {
-    message?: string
-    responseBody?: string
-  }
-  const message = (err.message || '').toLowerCase()
-  const responseBody = (err.responseBody || '').toLowerCase()
-
-  if (message.includes('rate_limit') || message.includes('rate limit'))
-    return true
-  if (
-    responseBody.includes('rate_limit') ||
-    responseBody.includes('rate limit')
-  )
-    return true
-
-  return false
-}
-
-/**
- * Check if an error is an OAuth authentication error (expired/invalid token).
- * This indicates we should try refreshing the token.
- */
-function isOAuthAuthError(error: unknown): boolean {
-  if (!error || typeof error !== 'object') return false
-
-  // Check status code (handles both 'status' from AI SDK and 'statusCode' from our errors)
-  const statusCode = getErrorStatusCode(error)
-  if (statusCode === 401 || statusCode === 403) return true
-
-  // Check error message for auth indicators
-  const err = error as {
-    message?: string
-    responseBody?: string
-  }
-  const message = (err.message || '').toLowerCase()
-  const responseBody = (err.responseBody || '').toLowerCase()
-
-  if (message.includes('unauthorized') || message.includes('invalid_token'))
-    return true
-  if (message.includes('authentication') || message.includes('expired'))
-    return true
-  if (
-    responseBody.includes('unauthorized') ||
-    responseBody.includes('invalid_token')
-  )
-    return true
-  if (
-    responseBody.includes('authentication') ||
-    responseBody.includes('expired')
-  )
-    return true
-
-  return false
-}
-
 function getModelProvider(model: LanguageModel): string {
   if (typeof model === 'string') return model
   return model.provider
@@ -254,50 +181,12 @@ function emitCacheDebugUsage(params: {
   })
 }
 
-export type ChatGptOAuthStreamErrorPolicy =
-  | 'fallback-rate-limit'
-  | 'fail-auth-reconnect'
-  | 'fail-fast'
-  | 'ignore'
-
-export function classifyChatGptOAuthStreamError(params: {
-  isChatGptOAuth: boolean
-  skipChatGptOAuth?: boolean
-  hasYieldedContent: boolean
-  error: unknown
-}): ChatGptOAuthStreamErrorPolicy {
-  const { isChatGptOAuth, skipChatGptOAuth, hasYieldedContent, error } = params
-
-  if (!isChatGptOAuth || skipChatGptOAuth || hasYieldedContent) {
-    return 'ignore'
-  }
-
-  if (isOAuthRateLimitError(error)) {
-    return 'fallback-rate-limit'
-  }
-
-  if (isOAuthAuthError(error)) {
-    return 'fail-auth-reconnect'
-  }
-
-  return 'fail-fast'
-}
-
 export async function* promptAiSdkStream(
-  params: ParamsOf<PromptAiSdkStreamFn> & {
-    skipChatGptOAuth?: boolean
-    chatGptOAuthRetried?: boolean
-  },
+  params: ParamsOf<PromptAiSdkStreamFn>,
 ): ReturnType<PromptAiSdkStreamFn> {
   const { providerOptions: originalProviderOptions, ...streamParams } = params
 
-  const {
-    logger,
-    trackEvent,
-    userId,
-    userInputId,
-    model: requestedModel,
-  } = params
+  const { logger } = params
   const agentChunkMetadata =
     params.agentId != null ? { agentId: params.agentId } : undefined
 
@@ -315,23 +204,8 @@ export async function* promptAiSdkStream(
   const modelParams: ModelRequestParams = {
     apiKey: params.apiKey,
     model: params.model,
-    skipChatGptOAuth: params.skipChatGptOAuth,
-    costMode: params.costMode,
   }
-  const { model: aiSDKModel, isChatGptOAuth } =
-    await getModelForRequest(modelParams)
-
-  if (isChatGptOAuth) {
-    trackEvent({
-      event: AnalyticsEvent.CHATGPT_OAUTH_REQUEST,
-      userId: userId ?? '',
-      properties: {
-        model: requestedModel,
-        userInputId,
-      },
-      logger,
-    })
-  }
+  const aiSDKModel = getModelForRequest(modelParams)
 
   // Auto-abort if the model produces NO activity for a while. Free/cheap models
   // on OpenRouter can queue or stall indefinitely, leaving the CLI stuck on
@@ -374,20 +248,14 @@ export async function* promptAiSdkStream(
     model: aiSDKModel,
     abortSignal: inferenceController.signal,
     messages: convertCbToModelMessages(params),
-    // ChatGPT OAuth disables retries (avoids cascading auth failures). BYOK/
-    // OpenRouter routes get a small retry budget so a single transient 429/5xx
-    // from cheap providers self-heals, without re-billing the full context 5x.
-    maxRetries: isChatGptOAuth ? 0 : inferenceMaxRetries,
-    // For ChatGPT OAuth direct, don't send nexus metadata/provider options to OpenAI
-    ...(isChatGptOAuth
-      ? {}
-      : {
-          providerOptions: getProviderOptions({
-            ...params,
-            providerOptions: originalProviderOptions,
-            agentProviderOptions: params.agentProviderOptions,
-          }),
-        }),
+    // A small retry budget so a single transient 429/5xx from cheap providers
+    // self-heals, without re-billing the full context 5x.
+    maxRetries: inferenceMaxRetries,
+    providerOptions: getProviderOptions({
+      ...params,
+      providerOptions: originalProviderOptions,
+      agentProviderOptions: params.agentProviderOptions,
+    }),
     // Handle tool call errors gracefully by passing them through to our validation layer
     // instead of throwing (which would halt the agent). The only special case is when
     // the tool name matches a spawnable agent - transform those to spawn_agents calls.
@@ -503,9 +371,6 @@ export async function* promptAiSdkStream(
 
   const stopSequenceHandler = new StopSequenceHandler(params.stopSequences)
 
-  // Track if we've yielded any content - if so, we can't safely fall back
-  let hasYieldedContent = false
-
   armIdleTimer()
   try {
   for await (const chunkValue of response.fullStream) {
@@ -513,7 +378,6 @@ export async function* promptAiSdkStream(
     if (chunkValue.type !== 'text-delta') {
       const flushed = stopSequenceHandler.flush()
       if (flushed) {
-        hasYieldedContent = true
         yield {
           type: 'text',
           text: flushed,
@@ -565,101 +429,6 @@ export async function* promptAiSdkStream(
         continue
       }
 
-      const chatGptErrorPolicy = classifyChatGptOAuthStreamError({
-        isChatGptOAuth,
-        skipChatGptOAuth: params.skipChatGptOAuth,
-        hasYieldedContent,
-        error: chunkValue.error,
-      })
-
-      if (chatGptErrorPolicy === 'fallback-rate-limit') {
-        const rateLimitErrorDetails =
-          chunkValue.error instanceof Error
-            ? chunkValue.error.message
-            : String(chunkValue.error)
-        logger.warn(
-          { error: getErrorObject(chunkValue.error) },
-          'ChatGPT OAuth rate limited during stream',
-        )
-
-        trackEvent({
-          event: AnalyticsEvent.CHATGPT_OAUTH_RATE_LIMITED,
-          userId: userId ?? '',
-          properties: {
-            model: requestedModel,
-            userInputId,
-          },
-          logger,
-        })
-
-        markChatGptOAuthRateLimited()
-
-        // In free mode, don't fall back to Nexus backend — fail instead
-        if (isFreeMode(params.costMode)) {
-          throw new Error(
-            `ChatGPT rate limit reached. Please wait a few minutes and try again. (${rateLimitErrorDetails})`,
-          )
-        }
-
-        const fallbackResult = yield* promptAiSdkStream({
-          ...params,
-          skipChatGptOAuth: true,
-        })
-        return fallbackResult
-      }
-
-      if (chatGptErrorPolicy === 'fail-auth-reconnect') {
-        logger.info(
-          { error: getErrorObject(chunkValue.error) },
-          'ChatGPT OAuth auth error during stream, attempting token refresh',
-        )
-
-        trackEvent({
-          event: AnalyticsEvent.CHATGPT_OAUTH_AUTH_ERROR,
-          userId: userId ?? '',
-          properties: {
-            model: requestedModel,
-            userInputId,
-          },
-          logger,
-        })
-
-        // Try refreshing the token and retrying once before failing/falling back
-        if (!params.chatGptOAuthRetried) {
-          const refreshed = await refreshChatGptOAuthToken()
-          if (refreshed) {
-            logger.info(
-              { model: requestedModel },
-              'ChatGPT OAuth token refreshed, retrying request',
-            )
-            const retryResult = yield* promptAiSdkStream({
-              ...params,
-              chatGptOAuthRetried: true,
-            })
-            return retryResult
-          }
-          logger.warn(
-            { model: requestedModel },
-            'ChatGPT OAuth token refresh failed, unable to recover',
-          )
-        }
-
-        // Refresh failed or already retried
-        // In free mode, don't fall back to Nexus backend — fail instead
-        if (isFreeMode(params.costMode)) {
-          throw new Error(
-            'ChatGPT OAuth authentication failed. Please reconnect with /connect:chatgpt and try again.',
-          )
-        }
-
-        // Fall back to Nexus backend
-        const fallbackResult = yield* promptAiSdkStream({
-          ...params,
-          skipChatGptOAuth: true,
-        })
-        return fallbackResult
-      }
-
       logger.error(
         {
           chunk: { ...chunkValue, error: undefined },
@@ -688,7 +457,6 @@ export async function* promptAiSdkStream(
     if (chunkValue.type === 'text-delta') {
       if (!params.stopSequences) {
         if (chunkValue.text) {
-          hasYieldedContent = true
           yield {
             type: 'text',
             text: chunkValue.text,
@@ -700,7 +468,6 @@ export async function* promptAiSdkStream(
 
       const stopSequenceResult = stopSequenceHandler.process(chunkValue.text)
       if (stopSequenceResult.text) {
-        hasYieldedContent = true
         yield {
           type: 'text',
           text: stopSequenceResult.text,
@@ -748,29 +515,25 @@ export async function* promptAiSdkStream(
     usage: usageResult,
   })
 
-  // Skip cost tracking for ChatGPT OAuth (user is on their own subscription)
-  if (!isChatGptOAuth) {
-    const providerMetadataResult = await response.providerMetadata
-    const providerMetadata = providerMetadataResult ?? {}
+  const providerMetadata = (await response.providerMetadata) ?? {}
 
-    let costOverrideDollars: number | undefined
-    if (providerMetadata.nexus) {
-      if (providerMetadata.nexus.usage) {
-        const openrouterUsage = providerMetadata.nexus
-          .usage as OpenRouterUsageAccounting
+  let costOverrideDollars: number | undefined
+  if (providerMetadata.nexus) {
+    if (providerMetadata.nexus.usage) {
+      const openrouterUsage = providerMetadata.nexus
+        .usage as OpenRouterUsageAccounting
 
-        costOverrideDollars =
-          (openrouterUsage.cost ?? 0) +
-          (openrouterUsage.costDetails?.upstreamInferenceCost ?? 0)
-      }
+      costOverrideDollars =
+        (openrouterUsage.cost ?? 0) +
+        (openrouterUsage.costDetails?.upstreamInferenceCost ?? 0)
     }
+  }
 
-    // Call the cost callback if provided
-    if (params.onCostCalculated && costOverrideDollars) {
-      await params.onCostCalculated(
-        calculateUsedCredits({ costDollars: costOverrideDollars }),
-      )
-    }
+  // Call the cost callback if provided
+  if (params.onCostCalculated && costOverrideDollars) {
+    await params.onCostCalculated(
+      calculateUsedCredits({ costDollars: costOverrideDollars }),
+    )
   }
 
   return promptSuccess(messageId)
@@ -795,9 +558,8 @@ export async function promptAiSdk(
   const modelParams: ModelRequestParams = {
     apiKey: params.apiKey,
     model: params.model,
-    skipChatGptOAuth: true, // Always use Nexus backend for non-streaming
   }
-  const { model: aiSDKModel } = await getModelForRequest(modelParams)
+  const aiSDKModel = getModelForRequest(modelParams)
 
   const response = await generateText({
     ...params,
@@ -862,9 +624,8 @@ export async function promptAiSdkStructured<T>(
   const modelParams: ModelRequestParams = {
     apiKey: params.apiKey,
     model: params.model,
-    skipChatGptOAuth: true, // Always use Nexus backend for non-streaming
   }
-  const { model: aiSDKModel } = await getModelForRequest(modelParams)
+  const aiSDKModel = getModelForRequest(modelParams)
 
   const response = await generateObject<z.ZodType<T>, 'object'>({
     ...params,

@@ -16,11 +16,8 @@
   "scripts": {
     "dev": "bun start-cli",
     "start-cli": "bun --cwd cli dev",
-    "start-db": "bun --cwd packages/internal db:start",
-    "start-studio": "bun --cwd packages/internal db:studio",
     "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
     "pack:cli": "bun run --cwd=cli pack:npm",
-    "dev:freetier": "FREETIER_MODE=true bun --cwd cli dev",
     "clean-ts": "find . -name '*.tsbuildinfo' -type f -delete && find . -name '.next' -type d -exec rm -rf {} + 2>/dev/null || true && find . -name 'node_modules' -type d -exec rm -rf {} + 2>/dev/null || true && bun install",
     "typecheck": "bun scripts/check-env-architecture.ts && bun --filter='*' run typecheck && echo '✅ All type checks passed!'",
     "test": "bun --filter='{@nexus/common,@nexus/agents,@nexus/agent-runtime,@nexus/llm-providers,@nexus/sdk,@nexus/cli,@nexus/scripts}' run test",

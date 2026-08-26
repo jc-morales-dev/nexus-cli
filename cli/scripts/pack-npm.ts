@@ -179,7 +179,8 @@ function writePlatformPackage(target: Target) {
   }
 
   // Apache-2.0 compliance: the binary is a derived work, so every published
-  // package carries LICENSE + NOTICE (npm auto-includes both in the tarball).
+  // package carries LICENSE + NOTICE. npm auto-includes LICENSE and README but
+  // NOT NOTICE, so NOTICE has to be listed in "files" explicitly below.
   copyLicenseFiles(pkgDir)
 
   writeFileSync(
@@ -193,7 +194,7 @@ function writePlatformPackage(target: Target) {
         preferUnplugged: true,
         os: [target.platform],
         cpu: [target.arch],
-        files: ['bin/'],
+        files: ['bin/', 'NOTICE'],
       },
       null,
       2,
@@ -221,7 +222,7 @@ function writeMainPackage(builtKeys: string[]) {
         keywords: ['ai', 'cli', 'coding-agent', 'openrouter', 'llm', 'terminal'],
         license: 'Apache-2.0',
         bin: { nexus: 'bin/nexus.js' },
-        files: ['bin/nexus.js'],
+        files: ['bin/nexus.js', 'NOTICE'],
         engines: { node: '>=16' },
         optionalDependencies,
       },

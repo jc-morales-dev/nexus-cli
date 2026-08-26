@@ -73,6 +73,48 @@ Per-project settings live under a `.nexus/` directory:
 - `.nexus/permissions.json` — allow/deny rules for terminal commands.
 - `.nexusignore` — files NEXUS should ignore.
 
+## Working on NEXUS itself
+
+There are two separate things, and it helps to keep them straight:
+
+| | Command | What it runs |
+|---|---|---|
+| **Installed** | `nexus` | The published binary from npm. This is what users get. |
+| **Development** | `nexus-dev` | The live source in this repo — every edit takes effect immediately, no rebuild. |
+
+To set up the development side:
+
+```bash
+git clone https://github.com/Victor00128/nexus-cli.git
+cd nexus-cli
+bun install
+bun dev
+```
+
+`bun dev` runs the CLI straight from source. If you want a global `nexus-dev`
+command that does the same from any directory, drop a small wrapper on your
+`PATH`:
+
+```bash
+#!/usr/bin/env bash
+# nexus-dev — runs the live source, wherever you call it from
+invoke_dir="$(pwd)"
+cd "/path/to/nexus-cli/cli" || exit 1
+exec bun --env-file=../.env run src/index.tsx --cwd "$invoke_dir" "$@"
+```
+
+On Windows, the equivalent `.cmd`:
+
+```bat
+@echo off
+setlocal
+set "NEXUS_INVOKE_DIR=%CD%"
+cd /d "C:\path\to\nexus-cli\cli"
+bun --env-file="..\.env" run "src\index.tsx" --cwd "%NEXUS_INVOKE_DIR%" %*
+```
+
+Releasing a new version is documented in [CONTRIBUTING.md](./CONTRIBUTING.md).
+
 ## Custom agents
 
 You can define your own agents under `.agents/` with full control over their

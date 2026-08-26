@@ -144,25 +144,6 @@ export enum AnalyticsEvent {
   TOKEN_COUNT_VALIDATION_ERROR = 'api.token_count_validation_error',
   TOKEN_COUNT_ERROR = 'api.token_count_error',
 
-  // ChatGPT OAuth
-  CHATGPT_OAUTH_REQUEST = 'sdk.chatgpt_oauth_request',
-  CHATGPT_OAUTH_RATE_LIMITED = 'sdk.chatgpt_oauth_rate_limited',
-  CHATGPT_OAUTH_AUTH_ERROR = 'sdk.chatgpt_oauth_auth_error',
-
-  // FreeTier - Creator Attribution
-  FREETIER_REFERRER_ATTRIBUTED = 'freetier.referrer_attributed',
-
-  // FreeTier - Get Started Page
-  FREETIER_GET_STARTED_VIEWED = 'freetier.get_started_viewed',
-  FREETIER_GET_STARTED_HELP_EXPANDED = 'freetier.get_started_help_expanded',
-  FREETIER_GET_STARTED_EDITOR_CLICKED = 'freetier.get_started_editor_clicked',
-
-  // FreeTier - Home Page
-  FREETIER_HOME_INSTALL_COMMAND_COPIED = 'freetier.home_install_command_copied',
-  FREETIER_HOME_GITHUB_CLICKED = 'freetier.home_github_clicked',
-  FREETIER_HOME_INSTALL_GUIDE_EXPANDED = 'freetier.home_install_guide_expanded',
-  FREETIER_HOME_FAQ_OPENED = 'freetier.home_faq_opened',
-
   // Common
   FLUSH_FAILED = 'common.flush_failed',
 

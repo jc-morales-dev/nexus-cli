@@ -12,7 +12,7 @@ import {
 } from '@nexus/sdk'
 import { beforeAll, describe, expect, it } from 'bun:test'
 
-import base2Free from '../base2/base2-free'
+import base2Lite from '../base2/base2-lite'
 import contextPruner from '../context-pruner'
 
 import type { PrintModeEvent } from '@nexus/common/types/print-mode'
@@ -249,7 +249,7 @@ const PROJECT_FILES: Record<string, string> = {
 }
 
 /**
- * Integration test: Verifies that base2-free does not imitate the summarized
+ * Integration test: Verifies that base2-lite does not imitate the summarized
  * tool call format when given a pre-summarized conversation.
  *
  * The test runs multiple times in parallel to get a statistically meaningful sample.
@@ -268,7 +268,7 @@ describe('Base2-Free Summary Format Compliance', () => {
     const apiKey = process.env[API_KEY_ENV_VAR]
     if (!apiKey) {
       console.warn(
-        `${API_KEY_ENV_VAR} is not set; skipping base2-free summary format test.`,
+        `${API_KEY_ENV_VAR} is not set; skipping base2-lite summary format test.`,
       )
       return null
     }
@@ -300,7 +300,7 @@ describe('Base2-Free Summary Format Compliance', () => {
         const events: PrintModeEvent[] = []
 
         const tmpDir = await fs.promises.mkdtemp(
-          path.join(os.tmpdir(), 'base2-free-summary-test-'),
+          path.join(os.tmpdir(), 'base2-lite-summary-test-'),
         )
         tmpDirs.push(tmpDir)
 
@@ -315,7 +315,7 @@ describe('Base2-Free Summary Format Compliance', () => {
           apiKey,
           cwd: tmpDir,
           projectFiles: PROJECT_FILES,
-          agentDefinitions: [base2Free as AgentDefinition, contextPruner],
+          agentDefinitions: [base2Lite as AgentDefinition, contextPruner],
         })
 
         const sessionState = await initialSessionState({
@@ -333,7 +333,7 @@ describe('Base2-Free Summary Format Compliance', () => {
 
         try {
           const run = await client.run({
-            agent: base2Free.id,
+            agent: base2Lite.id,
             prompt: userPrompt,
             previousRun: runStateWithMessages,
             maxAgentSteps: 5,
@@ -377,7 +377,7 @@ describe('Base2-Free Summary Format Compliance', () => {
         }
       }
 
-      console.log(`Running ${NUM_PARALLEL_RUNS} parallel runs of base2-free...`)
+      console.log(`Running ${NUM_PARALLEL_RUNS} parallel runs of base2-lite...`)
       const results = await Promise.all(
         Array.from({ length: NUM_PARALLEL_RUNS }, (_, i) => runOnce(i)),
       )
@@ -439,7 +439,7 @@ describe('Base2-Free Summary Format Compliance', () => {
       if (!apiKey) return
 
       const tmpDir = await fs.promises.mkdtemp(
-        path.join(os.tmpdir(), 'base2-free-midturn-summary-test-'),
+        path.join(os.tmpdir(), 'base2-lite-midturn-summary-test-'),
       )
 
       try {
@@ -453,7 +453,7 @@ describe('Base2-Free Summary Format Compliance', () => {
           apiKey,
           cwd: tmpDir,
           projectFiles: PROJECT_FILES,
-          agentDefinitions: [base2Free as AgentDefinition, contextPruner],
+          agentDefinitions: [base2Lite as AgentDefinition, contextPruner],
         })
 
         const sessionState = await initialSessionState({
@@ -471,7 +471,7 @@ describe('Base2-Free Summary Format Compliance', () => {
 
         const events: PrintModeEvent[] = []
         const run = await client.run({
-          agent: base2Free.id,
+          agent: base2Lite.id,
           prompt: '',
           previousRun: runStateWithMessages,
           maxAgentSteps: 6,

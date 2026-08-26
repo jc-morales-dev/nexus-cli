@@ -1,16 +1,17 @@
 import { buildArray } from '@nexus/common/util/array'
 import { COMPOSIO_META_TOOL_NAMES } from '@nexus/common/constants/composio'
 import {
-  FREETIER_GEMINI_THINKER_AGENT_ID,
-  FREETIER_GEMINI_THINKER_INSTRUCTIONS_PROMPT,
-  FREETIER_GEMINI_THINKER_STEP_PROMPT,
-  FREETIER_GEMINI_THINKER_SYSTEM_INSTRUCTION,
-} from '@nexus/common/constants/freetier-gemini-thinker'
-import { FREETIER_REVIEWER_AGENT_ID_BY_MODEL } from '@nexus/common/constants/free-agents'
+  GEMINI_THINKER_AGENT_ID,
+  GEMINI_THINKER_INSTRUCTIONS_PROMPT,
+  GEMINI_THINKER_STEP_PROMPT,
+  GEMINI_THINKER_SYSTEM_INSTRUCTION,
+} from '@nexus/common/constants/gemini-thinker'
 import {
-  canFreeTierModelSpawnGeminiThinker,
-  FREETIER_MINIMAX_MODEL_ID,
-} from '@nexus/common/constants/freetier-models'
+  canModelSpawnGeminiThinker,
+  LITE_KIMI_MODEL_ID,
+  LITE_MINIMAX_MODEL_ID,
+  REVIEWER_AGENT_ID_BY_MODEL,
+} from '@nexus/common/constants/lite-agents'
 
 import { publisher } from '../constants'
 import {
@@ -43,23 +44,21 @@ export function createBase2(
   const isFree = mode === 'free' || mode === 'lite'
 
   const isSonnet = false
-  // Lite (paid Nexus) defaults to Kimi: no data-retention surface in the
-  // CLI today, so we don't want to silently route Nexus prompts through a
-  // model whose provider trains on user data. Free (freetier) defaults to
-  // MiniMax M2.7; Kimi and DeepSeek are separate free agent variants.
+  // Lite defaults to Kimi: there's no data-retention surface in the CLI today,
+  // so we don't want to silently route Nexus prompts through a model whose
+  // provider trains on user data.
   const model =
     modelOverride ??
     (mode === 'lite'
-      ? 'moonshotai/kimi-k2.6'
+      ? LITE_KIMI_MODEL_ID
       : mode === 'free'
-        ? FREETIER_MINIMAX_MODEL_ID
+        ? LITE_MINIMAX_MODEL_ID
         : 'anthropic/claude-opus-4.7')
-  // Smart freetier model variants (Kimi, DeepSeek) can offload deeper
-  // reasoning. Fast MiniMax omits the extra round trip by construction.
-  const hasFreeGeminiThinker =
-    isFree && canFreeTierModelSpawnGeminiThinker(model)
+  // Smart lite models (Kimi, DeepSeek Pro) can offload deeper reasoning to the
+  // gemini thinker. Fast models omit the extra round trip by construction.
+  const hasFreeGeminiThinker = isFree && canModelSpawnGeminiThinker(model)
   const freeCodeReviewerAgentId =
-    FREETIER_REVIEWER_AGENT_ID_BY_MODEL[model] ?? 'code-reviewer-lite'
+    REVIEWER_AGENT_ID_BY_MODEL[model] ?? 'code-reviewer-lite'
   const defaultProviderOptions = isFree
     ? {
         data_collection: 'deny' as const,
@@ -129,7 +128,7 @@ export function createBase2(
       isFree && freeCodeReviewerAgentId,
       (isDefault || isMax) && 'code-reviewer',
       isMax && 'code-reviewer-multi-prompt',
-      hasFreeGeminiThinker && FREETIER_GEMINI_THINKER_AGENT_ID,
+      hasFreeGeminiThinker && GEMINI_THINKER_AGENT_ID,
       'thinker-gpt',
       'context-pruner',
     ),
@@ -154,8 +153,12 @@ Current date: ${PLACEHOLDER.CURRENT_DATE}.
     }
 - **Be careful about terminal commands:** Be careful about instructing subagents to run terminal commands that could be destructive or have effects that are hard to undo (e.g. git push, git commit, running any scripts -- especially ones that could alter production environments (!), installing packages globally, etc). Don't run any of these effectful commands unless the user explicitly asks you to.
 - **Do what the user asks:** If the user asks you to do something, even running a risky terminal command, do it.
-- **Don't use set_output:** The set_output tool is for spawned subagents to report results. Don't use it yourself.${ENABLE_COMPOSIO_TOOLS ? `
-- **External apps:** When Composio tools are available and the user asks to work with connected apps or services like Gmail, Google Calendar, GitHub, Slack, Linear, or Notion, use them to search for the right app tools, help the user connect their account, and execute the requested action.` : ''}
+- **Don't use set_output:** The set_output tool is for spawned subagents to report results. Don't use it yourself.${
+      ENABLE_COMPOSIO_TOOLS
+        ? `
+- **External apps:** When Composio tools are available and the user asks to work with connected apps or services like Gmail, Google Calendar, GitHub, Slack, Linear, or Notion, use them to search for the right app tools, help the user connect their account, and execute the requested action.`
+        : ''
+    }
 
 # Code Editing Mandates
 
@@ -202,7 +205,7 @@ Use the spawn_agents tool to spawn specialized agents to help you complete the u
     '- Spawn context-gathering agents (file pickers, code searchers, and web/docs researchers) before making edits. Use the list_directory and glob tools directly for searching and exploring the codebase.',
     isFree &&
       'Do not spawn the thinker-gpt agent, unless the user asks. Not everyone has connected their ChatGPT subscription to Nexus to allow for it.',
-    hasFreeGeminiThinker && FREETIER_GEMINI_THINKER_SYSTEM_INSTRUCTION,
+    hasFreeGeminiThinker && GEMINI_THINKER_SYSTEM_INSTRUCTION,
     isDefault &&
       '- Spawn the editor agent to implement the changes after you have gathered all the context you need.',
     (isDefault || isMax) &&
@@ -425,7 +428,7 @@ ${buildArray(
     'After getting context on the user request from the codebase or from research, use the ask_user tool to ask the user for important clarifications on their request or alternate implementation strategies. You should skip this step if the choice is obvious -- only ask the user if you need their help making the best choice.',
   (isDefault || isMax || isFree) &&
     `- For any task requiring 3+ steps, use the write_todos tool to write out your step-by-step implementation plan. Include ALL of the applicable tasks in the list.${isFast ? '' : ' You should include a step to review the changes after you have implemented the changes.'}:${hasNoValidation ? '' : ' You should include at least one step to validate/test your changes: be specific about whether to typecheck, run tests, run lints, etc.'} You may be able to do reviewing and validation in parallel in the same step. Skip write_todos for simple tasks like quick edits or answering questions.`,
-  hasFreeGeminiThinker && FREETIER_GEMINI_THINKER_INSTRUCTIONS_PROMPT,
+  hasFreeGeminiThinker && GEMINI_THINKER_INSTRUCTIONS_PROMPT,
   (isDefault || isMax) &&
     `- For quick problems, briefly explain your reasoning to the user. If you need to think longer, write your thoughts within the <think> tags. Finally, for complex problems, spawn the thinker agent to help find the best solution. (gpt-5-agent is a last resort for complex problems)`,
   isDefault &&
@@ -474,7 +477,7 @@ function buildImplementationStepPrompt({
     isMax &&
       `Keep working until the user's request is completely satisfied${!hasNoValidation ? ' and validated' : ''}, or until you require more information from the user.`,
     'Consider loading relevant skills with the skill tool if they might help with the current task. Do not reload skills that were already loaded earlier in this conversation.',
-    hasFreeGeminiThinker && FREETIER_GEMINI_THINKER_STEP_PROMPT,
+    hasFreeGeminiThinker && GEMINI_THINKER_STEP_PROMPT,
     isMax &&
       `For SUBSTANTIAL code changes (multi-file or non-trivial logic), spawn the 'editor-multi-prompt' agent. For SMALL or obvious changes (a new file, or a single-file edit under ~30 lines), edit directly with str_replace or write_file -- don't spawn the multi-prompt editor for trivial work.`,
     (isDefault || isMax) &&

@@ -8,4 +8,4 @@ linkWorkspacePackages = true
 # Integration tests need real services (DB, network), so they stay out of the
 # default run.
 exclude = ["**/*.integration.test.*"]
-preload = ["./test/setup-scm-loader.ts", "./sdk/test/setup-env.ts", "./test/setup-bigquery-mocks.ts"]
+preload = ["./test/setup-scm-loader.ts", "./sdk/test/setup-env.ts"]

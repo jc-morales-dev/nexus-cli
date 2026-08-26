@@ -1,6 +1,5 @@
 import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
 import { isByokDirectMode } from '@nexus/common/constants/byok'
-import { shouldUseLocalTokenCountForFreeTierDeepseekFlash } from '@nexus/common/constants/free-agents'
 import { supportsCacheControl } from '@nexus/common/old-constants'
 import { TOOLS_WHICH_WONT_FORCE_NEXT_STEP } from '@nexus/common/tools/constants'
 import { buildArray } from '@nexus/common/util/array'
@@ -963,13 +962,7 @@ export async function loopAgentSteps(
       // BYOK direct mode has no Nexus backend, so the token-count API call always
       // fails and falls back to a local estimate anyway — skip the wasteful
       // network round-trip (and its timeout) and estimate locally up front.
-      if (
-        isByokDirectMode() ||
-        shouldUseLocalTokenCountForFreeTierDeepseekFlash({
-          agentId: agentTemplate.id,
-          model: agentTemplate.model,
-        })
-      ) {
+      if (isByokDirectMode()) {
         currentAgentState.contextTokenCount = estimateContextTokensLocally()
       } else {
         // Check context token count via the web API.

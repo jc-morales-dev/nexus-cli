@@ -6,7 +6,7 @@ import { API_KEY_ENV_VAR } from '@nexus/common/constants/paths'
 import { NexusClient, type AgentDefinition } from '@nexus/sdk'
 import { describe, expect, it } from 'bun:test'
 
-import base2Free from '../base2/base2-free'
+import base2Lite from '../base2/base2-lite'
 
 import type { PrintModeEvent } from '@nexus/common/types/print-mode'
 
@@ -27,14 +27,14 @@ describe('Gravity Index SDK E2E', () => {
       )
       const events: PrintModeEvent[] = []
       const gravityIndexTestAgent = {
-        ...(base2Free as AgentDefinition),
-        id: 'base2-free-gravity-index-e2e',
+        ...(base2Lite as AgentDefinition),
+        id: 'base2-lite-gravity-index-e2e',
         displayName: 'Base2 Free Gravity Index E2E',
         toolNames: [
-          ...((base2Free as AgentDefinition).toolNames ?? []),
+          ...((base2Lite as AgentDefinition).toolNames ?? []),
           'gravity_index',
         ],
-        systemPrompt: `${(base2Free as AgentDefinition).systemPrompt}
+        systemPrompt: `${(base2Lite as AgentDefinition).systemPrompt}
 
 For this E2E test, use the gravity_index tool when asked to recommend third-party developer services.`,
       } satisfies AgentDefinition

@@ -1,7 +1,5 @@
-import { CHATGPT_OAUTH_ENABLED } from '@nexus/common/constants/chatgpt-oauth'
 import { isByokDirectMode } from '@nexus/common/constants/byok'
-import { AGENT_MODES, IS_FREETIER } from '../utils/constants'
-import { getChatGptOAuthStatus } from '../utils/chatgpt-oauth'
+import { AGENT_MODES } from '../utils/constants'
 
 import type { SkillsMap } from '@nexus/common/types/skill'
 
@@ -23,32 +21,13 @@ export interface SlashCommand {
   insertText?: string
 }
 
-// Generate mode commands from the AGENT_MODES constant (excluded in FreeTier)
-const MODE_COMMANDS: SlashCommand[] = IS_FREETIER
-  ? []
-  : AGENT_MODES.map((mode) => ({
-      id: `mode:${mode.toLowerCase()}`,
-      label: `mode:${mode.toLowerCase()}`,
-      description: `Cambiar al modo ${mode}`,
-      aliases: [`model:${mode.toLowerCase()}`],
-    }))
-
-const FREETIER_REMOVED_COMMAND_IDS = new Set([
-  'ads:enable',
-  'ads:disable',
-  'usage',
-  'subscribe',
-  'agent:gpt-5',
-  'image',
-  'publish',
-  'init',
-])
-
-const FREETIER_ONLY_COMMAND_IDS = new Set([
-  'connect',
-  'plan',
-  'end-session',
-])
+// Generate mode commands from the AGENT_MODES constant
+const MODE_COMMANDS: SlashCommand[] = AGENT_MODES.map((mode) => ({
+  id: `mode:${mode.toLowerCase()}`,
+  label: `mode:${mode.toLowerCase()}`,
+  description: `Cambiar al modo ${mode}`,
+  aliases: [`model:${mode.toLowerCase()}`],
+}))
 
 // Commands that only make sense with a Nexus account/backend. Hidden in BYOK
 // direct mode (the free, account-less setup) so the slash menu stays clean.
@@ -82,17 +61,6 @@ const ALL_SLASH_COMMANDS: SlashCommand[] = [
     description: 'Elegí el modelo de IA (razonamiento)',
     aliases: ['models', 'modelo'],
   },
-  ...(CHATGPT_OAUTH_ENABLED
-    ? [
-        {
-          id: 'connect',
-          label: 'connect',
-          description: 'Conectar tu cuenta de ChatGPT',
-          aliases: ['connect:chatgpt', 'chatgpt'],
-        },
-      ]
-    : []),
-
   {
     id: 'ads:enable',
     label: 'ads:enable',
@@ -139,11 +107,6 @@ const ALL_SLASH_COMMANDS: SlashCommand[] = [
     description: 'La IA te hace preguntas para convertir tu pedido en una spec',
   },
   {
-    id: 'plan',
-    label: 'plan',
-    description: 'Crear un plan de trabajo',
-  },
-  {
     id: 'review',
     label: 'review',
     description: 'Revisar los cambios de código',
@@ -176,9 +139,7 @@ const ALL_SLASH_COMMANDS: SlashCommand[] = [
   {
     id: 'feedback',
     label: 'feedback',
-    description: IS_FREETIER
-      ? 'Dejar comentarios sobre FreeTier'
-      : 'Dejar comentarios sobre NEXUS',
+    description: 'Dejar comentarios sobre NEXUS',
   },
   {
     id: 'bash',
@@ -204,12 +165,6 @@ const ALL_SLASH_COMMANDS: SlashCommand[] = [
     description: 'Alternar entre tema claro y oscuro',
   },
   {
-    id: 'end-session',
-    label: 'end-session',
-    description: 'Terminar tu sesión gratuita (te deja cambiar de modelo)',
-    aliases: ['model'],
-  },
-  {
     id: 'logout',
     label: 'logout',
     description: 'Cerrar sesión',
@@ -225,15 +180,9 @@ const ALL_SLASH_COMMANDS: SlashCommand[] = [
   },
 ]
 
-export const SLASH_COMMANDS = (
-  IS_FREETIER
-    ? ALL_SLASH_COMMANDS.filter(
-        (cmd) => !FREETIER_REMOVED_COMMAND_IDS.has(cmd.id),
-      )
-    : ALL_SLASH_COMMANDS.filter(
-        (cmd) => !FREETIER_ONLY_COMMAND_IDS.has(cmd.id),
-      )
-).filter((cmd) => !(isByokDirectMode() && BYOK_HIDDEN_COMMAND_IDS.has(cmd.id)))
+export const SLASH_COMMANDS = ALL_SLASH_COMMANDS.filter(
+  (cmd) => !(isByokDirectMode() && BYOK_HIDDEN_COMMAND_IDS.has(cmd.id)),
+)
 
 export const SLASHLESS_COMMAND_IDS = new Set(
   SLASH_COMMANDS.filter((cmd) => cmd.implicitCommand).map((cmd) =>
@@ -262,19 +211,5 @@ export function getSlashCommandsWithSkills(skills: SkillsMap): SlashCommand[] {
     description: truncateDescription(skill.description),
   }))
 
-  let commands = [...SLASH_COMMANDS, ...skillCommands]
-
-  if (IS_FREETIER && !getChatGptOAuthStatus().connected) {
-    commands = commands.map((cmd) => {
-      if (cmd.id === 'review' || cmd.id === 'plan') {
-        return {
-          ...cmd,
-          description: 'Requiere conectarse. ' + cmd.description,
-        }
-      }
-      return cmd
-    })
-  }
-
-  return commands
+  return [...SLASH_COMMANDS, ...skillCommands]
 }

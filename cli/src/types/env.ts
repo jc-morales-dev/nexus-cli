@@ -73,7 +73,6 @@ export type CliEnv = BaseEnv & {
   NEXUS_RG_PATH?: string
   NEXUS_SCROLL_MULTIPLIER?: string
   NEXUS_PERF_TEST?: string
-  FREETIER_MODE?: string
 }
 
 /**

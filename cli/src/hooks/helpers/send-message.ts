@@ -1,23 +1,11 @@
 import { getErrorObject } from '@nexus/common/util/error'
 
-import {
-  markFreeTierSessionCountryBlocked,
-  markFreeTierSessionEnded,
-  markFreeTierSessionSuperseded,
-  refreshFreeTierSession,
-} from '../use-freetier-session'
 import { getProjectRoot } from '../../project-files'
 import { useChatStore } from '../../state/chat-store'
-import { IS_FREETIER } from '../../utils/constants'
 import { processBashContext } from '../../utils/bash-context-processor'
 import { markRunningAgentsAsCancelled } from '../../utils/block-operations'
 import {
-  getCountryBlockFromFreeModeError,
-  getFreeModeUnavailableErrorMessage,
-  getFreeTierGateErrorKind,
-  getFreeTierRateLimitErrorMessage,
   isOutOfCreditsError,
-  isFreeModeUnavailableError,
   OUT_OF_CREDITS_MESSAGE,
 } from '../../utils/error-handling'
 import { formatElapsedTime } from '../../utils/format-elapsed-time'
@@ -427,35 +415,6 @@ export const handleRunCompletion = (params: {
       return
     }
 
-    if (isFreeModeUnavailableError(output)) {
-      updater.setError(getFreeModeUnavailableErrorMessage(output))
-      if (IS_FREETIER) {
-        markFreeTierSessionCountryBlocked(
-          getCountryBlockFromFreeModeError(output) ?? {
-            countryCode: 'UNKNOWN',
-          },
-        )
-      }
-      finalizeAfterError()
-      return
-    }
-
-    const gateKind = getFreeTierGateErrorKind(output)
-    if (gateKind) {
-      handleFreeTierGateError(gateKind, updater)
-      finalizeAfterError()
-      return
-    }
-
-    const freetierRateLimitMessage = IS_FREETIER
-      ? getFreeTierRateLimitErrorMessage(output)
-      : null
-    if (freetierRateLimitMessage) {
-      updater.setError(freetierRateLimitMessage)
-      finalizeAfterError()
-      return
-    }
-
     // Pass the raw error message to setError (displayed in UserErrorBanner without additional wrapper formatting)
     updater.setError(output.message ?? DEFAULT_RUN_OUTPUT_ERROR_MESSAGE)
 
@@ -597,79 +556,8 @@ export const handleRunError = (params: {
     return
   }
 
-  if (isFreeModeUnavailableError(error)) {
-    updater.setError(getFreeModeUnavailableErrorMessage(error))
-    if (IS_FREETIER) {
-      markFreeTierSessionCountryBlocked(
-        getCountryBlockFromFreeModeError(error) ?? {
-          countryCode: 'UNKNOWN',
-        },
-      )
-    }
-    return
-  }
-
-  const gateKind = getFreeTierGateErrorKind(error)
-  if (gateKind) {
-    handleFreeTierGateError(gateKind, updater)
-    return
-  }
-
-  const freetierRateLimitMessage = IS_FREETIER
-    ? getFreeTierRateLimitErrorMessage(error)
-    : null
-  if (freetierRateLimitMessage) {
-    updater.setError(freetierRateLimitMessage)
-    return
-  }
-
   // Use setError for all errors so they display in UserErrorBanner consistently
   const errorMessage = errorInfo.message || 'An unexpected error occurred'
   updater.setError(errorMessage)
 }
 
-/**
- * Surface + recover from a waiting-room gate rejection. The server rejected
- * the request because our seat is no longer valid; update local state so the
- * UI reflects reality and we stop sending requests until we re-admit.
- */
-function handleFreeTierGateError(
-  kind: ReturnType<typeof getFreeTierGateErrorKind>,
-  updater: BatchedMessageUpdater,
-) {
-  switch (kind) {
-    case 'session_expired':
-    case 'waiting_room_required':
-    case 'session_model_mismatch':
-      // Our seat is gone mid-chat. Finalize the AI message so its streaming
-      // indicator stops — otherwise `isComplete` stays false and the message
-      // keeps rendering a blinking cursor forever, making the user think the
-      // agent is still working even though the SessionEndedBanner is visible
-      // and actionable. Also disposes the batched-updater flush interval.
-      updater.markComplete()
-      // Flip to `ended` instead of auto re-queuing: the Chat surface stays
-      // mounted so any in-flight agent work can finish under the server-side
-      // grace period, and the session-ended banner prompts the user to press
-      // Enter when they're ready to rejoin.
-      markFreeTierSessionEnded()
-      return
-    case 'waiting_room_queued':
-      updater.setError(
-        "You're still in the waiting room. Please wait for admission before sending messages.",
-      )
-      // Re-sync without resetting chat — this is a "we'll wait", not a
-      // "let's start fresh".
-      refreshFreeTierSession().catch(() => {})
-      return
-    case 'session_superseded':
-      updater.setError(
-        'Another freetier CLI took over this account. Close the other instance, then restart.',
-      )
-      // Terminal state: stop polling and flip UI to a "please restart" screen
-      // so we don't silently fight the other instance for the seat.
-      markFreeTierSessionSuperseded()
-      return
-    default:
-      return
-  }
-}

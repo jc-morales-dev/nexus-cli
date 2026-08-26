@@ -2,8 +2,6 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { getCurrentChatId } from '../project-files'
 import { flushAnalytics } from '../utils/analytics'
-import { IS_FREETIER } from '../utils/constants'
-import { exitFreeTierCleanly } from '../utils/freetier-exit'
 import { withTimeout } from '../utils/terminal-color-detection'
 
 import type { InputValue } from '../types/store'
@@ -28,9 +26,8 @@ function setupExitMessageHandler() {
       if (chatId) {
         // This runs synchronously during the exit phase
         // OpenTUI has already cleaned up by this point
-        const cliName = IS_FREETIER ? 'freetier' : 'nexus'
         process.stdout.write(
-          `\nTo continue this session later, run:\n${cliName} --continue ${chatId}\n`,
+          `\nTo continue this session later, run:\nnexus --continue ${chatId}\n`,
         )
       }
     } catch {
@@ -40,11 +37,6 @@ function setupExitMessageHandler() {
 }
 
 function exitCli(): void {
-  if (IS_FREETIER) {
-    void exitFreeTierCleanly()
-    return
-  }
-
   withTimeout(flushAnalytics(), EXIT_FLUSH_TIMEOUT_MS, undefined).finally(
     () => {
       process.exit(0)

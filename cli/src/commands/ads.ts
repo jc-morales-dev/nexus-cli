@@ -1,7 +1,6 @@
 import { isByokDirectMode } from '@nexus/common/constants/byok'
 
 import { useChatStore } from '../state/chat-store'
-import { IS_FREETIER } from '../utils/constants'
 import { logger } from '../utils/logger'
 import { getSystemMessage } from '../utils/message-history'
 import { saveSettings, loadSettings } from '../utils/settings'
@@ -40,8 +39,6 @@ export const handleAdsDisable = (): {
 export const getAdsEnabled = (): boolean => {
   // BYOK direct mode is a personal, account-less setup — never fetch ads.
   if (isByokDirectMode()) return false
-  if (IS_FREETIER) return true
-
   // Nexus LITE is a paid mode now, so use the normal saved setting.
   const settings = loadSettings()
   return settings.adsEnabled ?? false

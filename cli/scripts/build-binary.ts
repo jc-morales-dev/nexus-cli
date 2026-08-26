@@ -168,7 +168,6 @@ async function main() {
       'process.env.NEXUS_CLI_TARGET',
       `"${targetInfo.platform}-${targetInfo.arch}"`,
     ],
-    ['process.env.FREETIER_MODE', `"${process.env.FREETIER_MODE ?? 'false'}"`],
     ...nextPublicEnvVars,
   ]
 

@@ -1,4 +1,3 @@
-import { CHATGPT_OAUTH_ENABLED } from '@nexus/common/constants/chatgpt-oauth'
 import { checkpoints, backgroundProcesses } from '@nexus/sdk'
 import { safeOpen } from '../utils/open-url'
 
@@ -9,14 +8,12 @@ import { handleInitializationFlowLocally } from './init'
 import { buildInterviewPrompt, buildPlanPrompt, buildReviewPromptFromArgs } from './prompt-builders'
 import { runBashCommand } from './router'
 import { handleUsageCommand } from './usage'
-import { returnToFreeTierLanding } from '../hooks/use-freetier-session'
 import { useThemeStore } from '../hooks/use-theme'
 import { WEBSITE_URL } from '../login/constants'
 import { useChatStore } from '../state/chat-store'
 import { useFeedbackStore } from '../state/feedback-store'
 import { useLoginStore } from '../state/login-store'
-import { getChatGptOAuthStatus } from '../utils/chatgpt-oauth'
-import { AGENT_MODES, END_SESSION_MESSAGE, IS_FREETIER } from '../utils/constants'
+import { AGENT_MODES } from '../utils/constants'
 import { getSystemMessage, getUserMessage } from '../utils/message-history'
 import { capturePendingAttachments } from '../utils/pending-attachments'
 import { resetNexusClient } from '../utils/nexus-client'
@@ -178,22 +175,6 @@ export function defineCommandWithArgs(
 const clearInput = (params: RouterParams) => {
   params.setInputValue({ text: '', cursorPosition: 0, lastEditDueToNav: false })
 }
-
-const FREETIER_REMOVED_COMMANDS = new Set([
-  'ads:enable',
-  'ads:disable',
-  'usage',
-  'subscribe',
-  'image',
-  'publish',
-  'gpt-5-agent',
-])
-
-const FREETIER_ONLY_COMMANDS = new Set([
-  'connect',
-  'plan',
-  'end-session',
-])
 
 const ALL_COMMANDS: CommandDefinition[] = [
   defineCommand({
@@ -408,8 +389,8 @@ const ALL_COMMANDS: CommandDefinition[] = [
       clearInput(params)
     },
   }),
-  // Mode commands generated from AGENT_MODES (excluded in FreeTier)
-  ...(IS_FREETIER ? [] : AGENT_MODES).map((mode) =>
+  // Mode commands generated from AGENT_MODES
+  ...AGENT_MODES.map((mode) =>
     defineCommandWithArgs({
       name: `mode:${mode.toLowerCase()}`,
       aliases: [`model:${mode.toLowerCase()}`],
@@ -469,19 +450,6 @@ const ALL_COMMANDS: CommandDefinition[] = [
       // Don't save to history - this is just a UI shortcut
     },
   }),
-  ...(CHATGPT_OAUTH_ENABLED
-    ? [
-        defineCommand({
-          name: 'connect',
-          aliases: ['connect:chatgpt', 'chatgpt'],
-          handler: (params) => {
-            useChatStore.getState().setInputMode('connect:chatgpt')
-            params.saveToHistory(params.inputValue.trim())
-            clearInput(params)
-          },
-        }),
-      ]
-    : []),
   defineCommand({
     name: 'history',
     aliases: ['chats'],
@@ -516,62 +484,8 @@ const ALL_COMMANDS: CommandDefinition[] = [
     },
   }),
   defineCommandWithArgs({
-    name: 'plan',
-    handler: (params, args) => {
-      // In freetier mode, require ChatGPT connection
-      if (IS_FREETIER && !getChatGptOAuthStatus().connected) {
-        params.setMessages((prev) => [
-          ...prev,
-          getUserMessage(params.inputValue.trim()),
-          getSystemMessage(
-            'Connect your ChatGPT account to use /plan. Use /connect to get started.',
-          ),
-        ])
-        params.saveToHistory(params.inputValue.trim())
-        clearInput(params)
-        useChatStore.getState().setInputMode('connect:chatgpt')
-        return
-      }
-
-      const trimmedArgs = args.trim()
-
-      params.saveToHistory(params.inputValue.trim())
-      clearInput(params)
-
-      // If user provided plan text directly, send it immediately
-      if (trimmedArgs) {
-        params.sendMessage({
-          content: buildPlanPrompt(trimmedArgs),
-          agentMode: params.agentMode,
-        })
-        setTimeout(() => {
-          params.scrollToLatest()
-        }, 0)
-        return
-      }
-
-      // Otherwise enter plan mode
-      useChatStore.getState().setInputMode('plan')
-    },
-  }),
-  defineCommandWithArgs({
     name: 'review',
     handler: (params, args) => {
-      // In freetier mode, require ChatGPT connection
-      if (IS_FREETIER && !getChatGptOAuthStatus().connected) {
-        params.setMessages((prev) => [
-          ...prev,
-          getUserMessage(params.inputValue.trim()),
-          getSystemMessage(
-            'Connect your ChatGPT account to use /review. Use /connect to get started.',
-          ),
-        ])
-        params.saveToHistory(params.inputValue.trim())
-        clearInput(params)
-        useChatStore.getState().setInputMode('connect:chatgpt')
-        return
-      }
-
       const trimmedArgs = args.trim()
 
       params.saveToHistory(params.inputValue.trim())
@@ -760,32 +674,9 @@ const ALL_COMMANDS: CommandDefinition[] = [
       clearInput(params)
     },
   }),
-  // /end-session (freetier-only) — end the active session early and drop back
-  // to the model picker. The hook flips status to 'none', which unmounts
-  // <Chat> and mounts <WaitingRoomScreen> on the landing view, where the
-  // user picks a model and hits Enter to rejoin the queue.
-  defineCommand({
-    name: 'end-session',
-    aliases: ['model'],
-    handler: (params) => {
-      params.setMessages((prev) => [
-        ...prev,
-        getUserMessage(params.inputValue.trim()),
-        getSystemMessage(END_SESSION_MESSAGE),
-      ])
-      params.saveToHistory(params.inputValue.trim())
-      clearInput(params)
-      returnToFreeTierLanding({ resetChat: true }).catch(() => {
-        // The hook surfaces poll errors via the session store; nothing to do
-        // here beyond letting the chat history reflect the attempt.
-      })
-    },
-  }),
 ]
 
-export const COMMAND_REGISTRY: CommandDefinition[] = IS_FREETIER
-  ? ALL_COMMANDS.filter((cmd) => !FREETIER_REMOVED_COMMANDS.has(cmd.name))
-  : ALL_COMMANDS.filter((cmd) => !FREETIER_ONLY_COMMANDS.has(cmd.name))
+export const COMMAND_REGISTRY: CommandDefinition[] = ALL_COMMANDS
 
 export function findCommand(cmd: string): CommandDefinition | undefined {
   const lowerCmd = cmd.toLowerCase()

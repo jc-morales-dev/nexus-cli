@@ -5,8 +5,6 @@ import { defineToolComponent } from './types'
 import { useTerminalDimensions } from '../../hooks/use-terminal-dimensions'
 import { useTheme } from '../../hooks/use-theme'
 import { getLatestFollowupToolCallId, useChatStore } from '../../state/chat-store'
-import { useFreeTierSessionStore } from '../../state/freetier-session-store'
-import { IS_FREETIER } from '../../utils/constants'
 import { Button } from '../button'
 
 import type { ToolRenderConfig } from './types'
@@ -225,9 +223,6 @@ const SuggestFollowupsItem = ({
 }: SuggestFollowupsItemProps) => {
   const theme = useTheme()
   const inputFocused = useChatStore((state) => state.inputFocused)
-  const isFreeTierSessionOver = useFreeTierSessionStore(
-    (state) => IS_FREETIER && state.session?.status === 'ended',
-  )
   const setSuggestedFollowups = useChatStore(
     (state) => state.setSuggestedFollowups,
   )
@@ -310,7 +305,7 @@ const SuggestFollowupsItem = ({
             isHovered={hoveredIndex === index}
             onSendFollowup={onSendFollowup}
             onHover={setHoveredIndex}
-            disabled={!inputFocused || isFreeTierSessionOver}
+            disabled={!inputFocused}
             labelColumnWidth={labelColumnWidth}
           />
         ))}

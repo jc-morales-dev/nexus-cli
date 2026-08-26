@@ -3,7 +3,6 @@ import { cyan, green, red, yellow, bold } from 'picocolors'
 import { LOGIN_WEBSITE_URL } from './constants'
 import { generateLoginUrl, pollLoginStatus } from './login-flow'
 import { saveUserCredentials } from '../utils/auth'
-import { IS_FREETIER } from '../utils/constants'
 import { getFingerprintId } from '../utils/fingerprint'
 import { logger } from '../utils/logger'
 
@@ -21,7 +20,7 @@ export async function runPlainLogin(): Promise<void> {
   const fingerprintId = await getFingerprintId()
 
   console.log()
-  console.log(bold(IS_FREETIER ? 'FreeTier Login' : 'NEXUS Login'))
+  console.log(bold('NEXUS Login'))
   console.log()
   console.log('Generating login URL...')
 
@@ -72,8 +71,7 @@ export async function runPlainLogin(): Promise<void> {
     console.log()
     console.log(green(`✓ Logged in as ${user.name} (${user.email})`))
     console.log()
-    const cliName = IS_FREETIER ? 'freetier' : 'nexus'
-    console.log('You can now run ' + cyan(cliName) + ' to start.')
+    console.log('You can now run ' + cyan('nexus') + ' to start.')
     process.exit(0)
   } else if (result.status === 'timeout') {
     console.error(red('Login timed out. Please try again.'))

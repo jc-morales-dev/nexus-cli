@@ -69,11 +69,6 @@ describe.skipIf(!tmuxAvailable || !sdkBuilt)(
             }),
           ),
         )
-        // Clear FREETIER_MODE from the tmux global env. A previous freetier
-        // build or `bun run dev:freetier` invocation in the same tmux server
-        // can leave it set globally, which would make this test see the
-        // freetier CLI variant (which has no `--agent` flag).
-        await tmux(['set-environment', '-gu', 'FREETIER_MODE']).catch(() => {})
       }
     })
 

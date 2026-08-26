@@ -10,10 +10,8 @@ import {
 
 import type { MCPConfig } from '@nexus/common/types/mcp'
 
-import { getSelectedFreeTierModel } from '../state/freetier-model-store'
 import { getProjectRoot } from '../project-files'
-import { IS_FREETIER, type AgentMode } from './constants'
-import { getAgentIdForMode } from './freetier-agent-selection'
+import { AGENT_MODE_TO_ID, type AgentMode } from './constants'
 import { logger } from './logger'
 import * as bundledAgentsModule from '../agents/bundled-agents.generated'
 
@@ -244,10 +242,7 @@ const cachedAgentsByMode: Map<string, LocalAgentInfo[]> = new Map()
 export const loadLocalAgents = (
   currentAgentMode?: AgentMode,
 ): LocalAgentInfo[] => {
-  const selectedFreeTierModel = IS_FREETIER ? getSelectedFreeTierModel() : null
-  const cacheKey = selectedFreeTierModel
-    ? `${currentAgentMode ?? 'all'}:${selectedFreeTierModel}`
-    : (currentAgentMode ?? 'all')
+  const cacheKey = currentAgentMode ?? 'all'
   const cached = cachedAgentsByMode.get(cacheKey)
   if (cached) {
     return cached
@@ -261,7 +256,7 @@ export const loadLocalAgents = (
   // Filter bundled agents to only include subagents of the current mode's agent
   let filteredBundledAgents: LocalAgentInfo[]
   if (currentAgentMode) {
-    const currentAgentId = getAgentIdForMode(currentAgentMode)
+    const currentAgentId = AGENT_MODE_TO_ID[currentAgentMode]
     const currentAgentDef = bundledAgents[currentAgentId]
       ? bundledAgents[currentAgentId]
       : undefined

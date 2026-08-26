@@ -41,6 +41,5 @@ export const createTestCliEnv = (overrides: Partial<CliEnv> = {}): CliEnv => ({
   NEXUS_CLI_TARGET: undefined,
   NEXUS_RG_PATH: undefined,
   NEXUS_SCROLL_MULTIPLIER: undefined,
-  FREETIER_MODE: undefined,
   ...overrides,
 })

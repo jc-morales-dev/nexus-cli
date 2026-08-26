@@ -1,5 +1,4 @@
 import { SUBSCRIPTION_DISPLAY_NAME } from '@nexus/common/constants/subscription-plans'
-import { IS_FREETIER } from '../utils/constants'
 import { pluralize } from '@nexus/common/util/string'
 import { TextAttributes } from '@opentui/core'
 import React, { useCallback, useMemo } from 'react'
@@ -161,7 +160,7 @@ export const MessageFooter: React.FC<MessageFooterProps> = ({
       ),
     })
   }
-  if (typeof credits === 'number' && credits > 0 && !IS_FREETIER) {
+  if (typeof credits === 'number' && credits > 0) {
     footerItems.push({
       key: 'credits',
       node: <CreditsOrSubscriptionIndicator credits={credits} />,

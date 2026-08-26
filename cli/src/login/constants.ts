@@ -1,13 +1,9 @@
-import { env, IS_DEV } from '@nexus/common/env'
-
-import { IS_FREETIER } from '../utils/constants'
+import { env } from '@nexus/common/env'
 
 // Get the website URL from environment or use default
 export const WEBSITE_URL = env.NEXT_PUBLIC_NEXUS_APP_URL
 
-// FreeTier login flow uses the freetier web app instead of nexus.com
-const FREETIER_WEB_URL = IS_DEV ? 'http://localhost:3002' : 'https://freetier.com'
-export const LOGIN_WEBSITE_URL = IS_FREETIER ? FREETIER_WEB_URL : WEBSITE_URL
+export const LOGIN_WEBSITE_URL = WEBSITE_URL
 
 // NEXUS ASCII Logo - compact version for 80-width terminals
 const LOGO_NEXUS = `
@@ -28,27 +24,8 @@ const LOGO_SMALL_NEXUS = `
  ╚═╝  ╚═══╝╚═╝  ╚═╝
 `
 
-// FreeTier ASCII Logo
-const LOGO_FREETIER = `
- ███████╗██████╗ ███████╗███████╗██████╗ ██╗   ██╗███████╗███████╗
- ██╔════╝██╔══██╗██╔════╝██╔════╝██╔══██╗██║   ██║██╔════╝██╔════╝
- █████╗  ██████╔╝█████╗  █████╗  ██████╔╝██║   ██║█████╗  █████╗
- ██╔══╝  ██╔══██╗██╔══╝  ██╔══╝  ██╔══██╗██║   ██║██╔══╝  ██╔══╝
- ██║     ██║  ██║███████╗███████╗██████╔╝╚██████╔╝██║     ██║
- ╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝╚═════╝  ╚═════╝ ╚═╝     ╚═╝
-`
-
-const LOGO_SMALL_FREETIER = `
- ███████╗██████╗
- ██╔════╝██╔══██╗
- █████╗  ██████╔╝
- ██╔══╝  ██╔══██╗
- ██║     ██████╔╝
- ╚═╝     ╚═════╝
-`
-
-export const LOGO = IS_FREETIER ? LOGO_FREETIER : LOGO_NEXUS
-export const LOGO_SMALL = IS_FREETIER ? LOGO_SMALL_FREETIER : LOGO_SMALL_NEXUS
+export const LOGO = LOGO_NEXUS
+export const LOGO_SMALL = LOGO_SMALL_NEXUS
 
 // Shadow/border characters that receive the sheen animation effect
 export const SHADOW_CHARS = new Set([

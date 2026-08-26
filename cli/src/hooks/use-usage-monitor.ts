@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react'
 
 import { useUsageQuery } from './use-usage-query'
-import { IS_FREETIER } from '../utils/constants'
 import { useChatStore } from '../state/chat-store'
 import { getAuthToken } from '../utils/auth'
 import { shouldAutoShowBanner } from '../utils/usage-banner-state'
@@ -20,11 +19,9 @@ export function useUsageMonitor() {
   const lastWarnedThresholdRef = useRef<number | null>(null)
 
   // Query usage data - this will refetch when invalidated after message completion
-  const { data: usageData } = useUsageQuery({ enabled: !IS_FREETIER })
+  const { data: usageData } = useUsageQuery({ enabled: true })
 
   useEffect(() => {
-    if (IS_FREETIER) return
-
     // Only show after user has sent at least one message (to avoid overwhelming on app start)
     if (sessionCreditsUsed === 0) {
       return

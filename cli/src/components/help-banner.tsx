@@ -5,9 +5,7 @@ import { isByokDirectMode } from '@nexus/common/constants/byok'
 import { BottomBanner } from './bottom-banner'
 import { useSubscriptionQuery } from '../hooks/use-subscription-query'
 import { useTheme } from '../hooks/use-theme'
-import { IS_FREETIER } from '../utils/constants'
 import { useChatStore } from '../state/chat-store'
-import { getChatGptOAuthStatus } from '../utils/chatgpt-oauth'
 
 const HELP_TIMEOUT = 60 * 1000 // 60 seconds
 
@@ -40,7 +38,6 @@ export const HelpBanner = () => {
   const theme = useTheme()
   const { data: subscriptionData } = useSubscriptionQuery()
   const hasSubscription = subscriptionData?.hasSubscription ?? false
-  const chatGptOAuth = getChatGptOAuthStatus()
   // BYOK (free, account-less) mode: hide Nexus-account features like credits.
   const byok = isByokDirectMode()
 
@@ -66,9 +63,7 @@ export const HelpBanner = () => {
             <Shortcut keys="Ctrl+J / Opt+Enter" action="newline" />
             <Shortcut keys="↑↓" action="history" />
             <Shortcut keys="Ctrl+T" action="collapse/expand agents" />
-            {!IS_FREETIER && (
-              <Shortcut keys="Tab" action="cycle mode (Build/Lite/Max/Plan)" />
-            )}
+            <Shortcut keys="Tab" action="cycle mode (Build/Lite/Max/Plan)" />
           </box>
         </box>
 
@@ -87,16 +82,6 @@ export const HelpBanner = () => {
         <box style={{ flexDirection: 'column', gap: 0 }}>
           <SectionHeader>Tips</SectionHeader>
           <box style={{ flexDirection: 'column', paddingLeft: 2 }}>
-            {IS_FREETIER && !chatGptOAuth.connected && (
-              <text style={{ fg: theme.muted }}>
-                Connect via /connect to unlock /plan & /review
-              </text>
-            )}
-            {IS_FREETIER && chatGptOAuth.connected && (
-              <text style={{ fg: theme.muted }}>
-                Try workflow: /interview → /plan → implement → /review
-              </text>
-            )}
             <text style={{ fg: theme.muted }}>
               Use @ to reference agents to spawn or files to read
             </text>
@@ -111,8 +96,8 @@ export const HelpBanner = () => {
           </box>
         </box>
 
-        {/* Credits Section — hidden in FreeTier and in BYOK (no account) */}
-        {!IS_FREETIER && !byok && (
+        {/* Credits Section — hidden in BYOK (no account) */}
+        {!byok && (
           <box style={{ flexDirection: 'column', gap: 0 }}>
             <SectionHeader>Credits</SectionHeader>
             <box style={{ flexDirection: 'column', paddingLeft: 2 }}>

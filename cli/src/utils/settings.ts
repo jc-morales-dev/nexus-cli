@@ -1,8 +1,6 @@
 import fs from 'fs'
 import path from 'path'
 
-import { isFreeTierModelId } from '@nexus/common/constants/freetier-models'
-
 import { getConfigDir } from './auth'
 import { AGENT_MODES } from './constants'
 import { logger } from './logger'
@@ -31,10 +29,6 @@ export interface Settings {
    *  restarts. Loaded into process.env.NEXUS_MODEL_STRONG at start. Utility
    *  agents keep using the cheap tier, so this only changes the "smart" model. */
   nexusModel?: string
-  /** Last model the user picked in the freetier model selector. Restored on
-   *  next freetier launch so users land in the queue for their preferred
-   *  model without re-picking. Persisted as the canonical model id. */
-  freetierModel?: string
   /** @deprecated Use server-side fallbackToALaCarte setting instead */
   alwaysUseALaCarte?: boolean
   /** @deprecated Use server-side fallbackToALaCarte setting instead */
@@ -128,12 +122,6 @@ const validateSettings = (parsed: unknown): Settings => {
     settings.nexusModel = obj.nexusModel.trim()
   }
 
-  // Validate freetierModel — drop unknown ids so a removed model doesn't
-  // strand the user on a non-existent queue.
-  if (typeof obj.freetierModel === 'string' && isFreeTierModelId(obj.freetierModel)) {
-    settings.freetierModel = obj.freetierModel
-  }
-
   // Validate alwaysUseALaCarte (legacy)
   if (typeof obj.alwaysUseALaCarte === 'boolean') {
     settings.alwaysUseALaCarte = obj.alwaysUseALaCarte
@@ -185,22 +173,6 @@ export const loadModePreference = (): AgentMode => {
  */
 export const saveModePreference = (mode: AgentMode): void => {
   saveSettings({ mode })
-}
-
-/**
- * Load the saved freetier model preference. Returns undefined if none is
- * saved yet — callers should fall back to DEFAULT_FREETIER_MODEL_ID.
- */
-export const loadFreeTierModelPreference = (): string | undefined => {
-  return loadSettings().freetierModel
-}
-
-/**
- * Save the freetier model preference. Called whenever the user picks a model
- * in the waiting room so the next launch defaults to it.
- */
-export const saveFreeTierModelPreference = (model: string): void => {
-  saveSettings({ freetierModel: model })
 }
 
 /** Load the user's saved OpenRouter API key, or undefined if none is set. */

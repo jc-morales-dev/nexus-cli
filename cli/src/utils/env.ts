@@ -73,7 +73,6 @@ export const getCliEnv = (): CliEnv => ({
   NEXUS_RG_PATH: process.env.NEXUS_RG_PATH,
   NEXUS_SCROLL_MULTIPLIER: process.env.NEXUS_SCROLL_MULTIPLIER,
   NEXUS_PERF_TEST: process.env.NEXUS_PERF_TEST,
-  FREETIER_MODE: process.env.FREETIER_MODE,
 })
 
 /**

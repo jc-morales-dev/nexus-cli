@@ -110,40 +110,27 @@ function ensureCliEnvDefaults(): void {
   }
 }
 
+/**
+ * Test environment for the CLI: apply the defaults above and hand them back.
+ *
+ * This used to require `packages/internal/src/env`, which pulled the paid
+ * product's Infisical-backed secrets. That package is gone — NEXUS is
+ * account-less and has no backend — so the defaults are the whole story now,
+ * and tests no longer need `infisical run` to boot.
+ */
 function loadCliEnv(): Record<string, string> {
   if (cachedEnv) {
     return cachedEnv
   }
 
-  try {
-    ensureCliEnvDefaults()
-    // NOTE: Inline require() is used for lazy loading - the env module depends on
-    // Infisical secrets which may not be available at module load time in test environments
-    const { env } = require('../../../packages/internal/src/env') as {
-      env: Record<string, unknown>
-    }
+  ensureCliEnvDefaults()
 
-    cachedEnv = Object.entries(env).reduce<Record<string, string>>(
-      (acc, [key, value]) => {
-        if (value !== undefined && value !== null) {
-          acc[key] = String(value)
-        }
-        return acc
-      },
-      {},
-    )
-
-    return cachedEnv
-  } catch (error) {
-    const message =
-      error instanceof Error
-        ? error.message
-        : 'unknown error loading environment'
-    throw new Error(
-      `Failed to load CLI environment via packages/internal/src/env: ${message}. ` +
-        'Run commands via "infisical run -- bun …" or export the required variables.',
-    )
+  cachedEnv = {
+    ...TEST_CLIENT_ENV_DEFAULTS,
+    ...TEST_SERVER_ENV_DEFAULTS,
   }
+
+  return cachedEnv
 }
 
 export function ensureCliTestEnv(): void {

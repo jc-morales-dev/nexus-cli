@@ -29,7 +29,6 @@ import { trackEvent } from './utils/analytics'
 import { getAuthToken, getAuthTokenDetails } from './utils/auth'
 import { resetNexusClient } from './utils/nexus-client'
 import { setApiClientAuthToken } from './utils/nexus-api'
-import { IS_FREETIER } from './utils/constants'
 import { getCliEnv } from './utils/env'
 import { initializeAgentRegistry } from './utils/local-agent-registry'
 import { clearLogFile, logger } from './utils/logger'
@@ -104,52 +103,32 @@ type ParsedArgs = {
 function parseArgs(): ParsedArgs {
   const program = new Command()
 
-  if (IS_FREETIER) {
-    // FreeTier: simplified CLI - no prompt args, no agent override, no clear-logs
-    program
-      .name('freetier')
-      .description('FreeTier - Free AI coding assistant')
-      .version(loadPackageVersion(), '-v, --version', 'Print the CLI version')
-      .option(
-        '--continue [conversation-id]',
-        'Continue from a previous conversation (optionally specify a conversation id)',
-      )
-      .option(
-        '--cwd <directory>',
-        'Set the working directory (default: current directory)',
-      )
-      .addHelpText('after', '\nCommands:\n  login                          Log in to your account')
-      .helpOption('-h, --help', 'Show this help message')
-      .parse(process.argv)
-  } else {
-    // Nexus: full CLI with all options
-    program
-      .name('nexus')
-      .description('NEXUS CLI - AI-powered coding assistant')
-      .version(loadPackageVersion(), '-v, --version', 'Print the CLI version')
-      .option(
-        '--agent <agent-id>',
-        'Run a specific agent id (skips loading local .agents overrides)',
-      )
-      .option('--clear-logs', 'Remove any existing CLI log files before starting')
-      .option(
-        '--continue [conversation-id]',
-        'Continue from a previous conversation (optionally specify a conversation id)',
-      )
-      .option(
-        '--cwd <directory>',
-        'Set the working directory (default: current directory)',
-      )
-      .option('--lite', 'Start in LITE mode')
-      .option('--free', 'Start in LITE mode (deprecated alias)')
-      .option('--max', 'Start in MAX mode')
-      .option('--plan', 'Start in PLAN mode')
-      .addHelpText('after', '\nCommands:\n  login                          Log in to your account\n  publish                        Publish agents to the registry')
-      .helpOption('-h, --help', 'Show this help message')
-      .argument('[prompt...]', 'Initial prompt to send to the agent')
-      .allowExcessArguments(true)
-      .parse(process.argv)
-  }
+  program
+    .name('nexus')
+    .description('NEXUS CLI - AI-powered coding assistant')
+    .version(loadPackageVersion(), '-v, --version', 'Print the CLI version')
+    .option(
+      '--agent <agent-id>',
+      'Run a specific agent id (skips loading local .agents overrides)',
+    )
+    .option('--clear-logs', 'Remove any existing CLI log files before starting')
+    .option(
+      '--continue [conversation-id]',
+      'Continue from a previous conversation (optionally specify a conversation id)',
+    )
+    .option(
+      '--cwd <directory>',
+      'Set the working directory (default: current directory)',
+    )
+    .option('--lite', 'Start in LITE mode')
+    .option('--free', 'Start in LITE mode (deprecated alias)')
+    .option('--max', 'Start in MAX mode')
+    .option('--plan', 'Start in PLAN mode')
+    .addHelpText('after', '\nCommands:\n  login                          Log in to your account\n  publish                        Publish agents to the registry')
+    .helpOption('-h, --help', 'Show this help message')
+    .argument('[prompt...]', 'Initial prompt to send to the agent')
+    .allowExcessArguments(true)
+    .parse(process.argv)
 
   const options = program.opts()
   const args = program.args
@@ -157,15 +136,10 @@ function parseArgs(): ParsedArgs {
   const continueFlag = options.continue
 
   // Determine initial mode from flags (last flag wins if multiple specified)
-  // FreeTier always uses LITE mode
   let initialMode: AgentMode | undefined
-  if (IS_FREETIER) {
-    initialMode = 'LITE'
-  } else {
-    if (options.free || options.lite) initialMode = 'LITE'
-    if (options.max) initialMode = 'MAX'
-    if (options.plan) initialMode = 'PLAN'
-  }
+  if (options.free || options.lite) initialMode = 'LITE'
+  if (options.max) initialMode = 'MAX'
+  if (options.plan) initialMode = 'PLAN'
 
   return {
     initialPrompt: args.length > 0 ? args.join(' ') : null,
@@ -312,7 +286,6 @@ async function main(): Promise<void> {
     hasAgentOverride: hasAgentOverride,
     continueChat,
     initialMode: initialMode ?? 'DEFAULT',
-    isFreeTier: IS_FREETIER,
   })
 
   // Initialize agent registry (loads user agents via SDK).

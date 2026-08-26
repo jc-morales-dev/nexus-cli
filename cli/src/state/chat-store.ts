@@ -2,7 +2,7 @@ import { castDraft } from 'immer'
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 
-import { AGENT_MODES, IS_FREETIER } from '../utils/constants'
+import { AGENT_MODES } from '../utils/constants'
 import { clamp } from '../utils/math'
 import { loadModePreference, saveModePreference } from '../utils/settings'
 
@@ -185,7 +185,7 @@ const initialState: ChatStoreState = {
   isChainInProgress: false,
   slashSelectedIndex: 0,
   agentSelectedIndex: 0,
-  agentMode: IS_FREETIER ? ('LITE' as const) : loadModePreference(),
+  agentMode: loadModePreference(),
   hasReceivedPlanResponse: false,
   lastMessageMode: null,
   sessionCreditsUsed: 0,
@@ -272,7 +272,6 @@ export const useChatStore = create<ChatStore>()(
 
     setAgentMode: (mode) =>
       set((state) => {
-        if (IS_FREETIER) return
         state.agentMode = mode
         saveModePreference(mode)
       }),
@@ -281,7 +280,6 @@ export const useChatStore = create<ChatStore>()(
     // The indicator shows the current one ("DEFAULT" displays as "BUILD").
     toggleAgentMode: () =>
       set((state) => {
-        if (IS_FREETIER) return
         const currentIndex = AGENT_MODES.indexOf(state.agentMode)
         const nextIndex = (currentIndex + 1) % AGENT_MODES.length
         state.agentMode = AGENT_MODES[nextIndex]

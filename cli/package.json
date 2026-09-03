@@ -19,7 +19,7 @@
     "prebuild:agents": "bun run scripts/prebuild-agents.ts",
     "build:binary": "bun ./scripts/build-binary.ts nexus $npm_package_version",
     "pack:npm": "bun ./scripts/pack-npm.ts",
-    "test": "NODE_ENV=production bun test",
+    "test": "bun run prebuild:agents && NODE_ENV=production bun test",
     "test:tmux-poc": "bun run src/__tests__/tmux-poc.ts",
     "typecheck": "tsc --noEmit -p ."
   },
@@ -58,6 +58,7 @@
   },
   "devDependencies": {
     "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
     "@types/react-reconciler": "^0.32.0",
     "react-dom": "^19.0.0",
     "strip-ansi": "^7.1.2"

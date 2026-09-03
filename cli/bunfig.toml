@@ -1,0 +1,11 @@
+# El bunfig de la raiz no llega hasta aqui cuando `bun test` se lanza con el cwd
+# en cli/ (que es como lo ejecutan tanto `bun run test` como el CI), asi que sus
+# preloads no corrian y common/src/env.ts abortaba la suite entera al validar un
+# entorno vacio. En Windows colaba por el orden en que se cargan los ficheros;
+# en Linux tiraba 229 tests. Se repite aqui con las rutas ya relativas a cli/.
+
+[test]
+# Los tests de integracion necesitan servicios reales (BD, red), fuera del run
+# por defecto.
+exclude = ["**/*.integration.test.*"]
+preload = ["../test/setup-scm-loader.ts", "../sdk/test/setup-env.ts"]

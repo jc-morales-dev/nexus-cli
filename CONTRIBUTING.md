@@ -7,7 +7,7 @@ can run the whole project.
 ## Setup
 
 ```bash
-git clone https://github.com/Victor00128/nexus-cli.git
+git clone https://github.com/jc-morales-dev/nexus-cli.git
 cd nexus-cli
 bun install
 ```

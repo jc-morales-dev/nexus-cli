@@ -85,7 +85,7 @@ There are two separate things, and it helps to keep them straight:
 To set up the development side:
 
 ```bash
-git clone https://github.com/Victor00128/nexus-cli.git
+git clone https://github.com/jc-morales-dev/nexus-cli.git
 cd nexus-cli
 bun install
 bun dev
@@ -120,6 +120,21 @@ Releasing a new version is documented in [CONTRIBUTING.md](./CONTRIBUTING.md).
 You can define your own agents under `.agents/` with full control over their
 tools, prompts, and step-by-step behavior. Run `/init` inside NEXUS to scaffold
 the structure.
+
+## Credits
+
+NEXUS is a fork of [Codebuff](https://github.com/CodebuffAI/codebuff), which did
+the heavy lifting: the multi-agent architecture, the editing tools and most of
+the code you'll find in the git history are theirs.
+
+This fork exists to answer a different question — what's left of that agent once
+you remove the product around it? Gone are the paid backend, the accounts, the
+credit system, the billing and the web app; in their place the CLI talks
+straight to OpenRouter with a key that never leaves your machine. What remains
+is an agent you run, not a service you subscribe to.
+
+There is no telemetry: the distributed binary is built with no analytics
+project behind it, so the client is never created and nothing is sent anywhere.
 
 ## License
 

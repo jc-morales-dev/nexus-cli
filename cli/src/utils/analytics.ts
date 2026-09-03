@@ -55,6 +55,25 @@ export interface AnalyticsDeps {
   generateAnonymousId?: () => string
 }
 
+// NEXUS es BYOK y sin cuenta: no hay ningún proyecto de PostHog al que mandar
+// nada, y el binario que se distribuye se compila con una clave de relleno. Si
+// la clave es una de esas, la telemetría no se enciende siquiera — sin cliente
+// no hay conexión a PostHog ni captura automática de excepciones. El aparato se
+// queda porque el fork lo hereda entero, pero apagado y sin ruido.
+const PLACEHOLDER_POSTHOG_KEYS = new Set(['phc_disabled', 'phc_placeholder'])
+
+function isTelemetryOff(apiKey: string | undefined, hostUrl: string | undefined) {
+  return !apiKey || !hostUrl || PLACEHOLDER_POSTHOG_KEYS.has(apiKey)
+}
+
+// Cuando está en true, todo lo de abajo es un no-op silencioso.
+let telemetryOff = false
+
+/** Para la pantalla de diagnóstico y los tests: si la telemetría está apagada. */
+export function isTelemetryDisabled(): boolean {
+  return telemetryOff
+}
+
 // Anonymous ID used before user identification (for PostHog alias)
 let anonymousId: string | undefined
 // Real user ID after identification
@@ -116,6 +135,7 @@ export function resetAnalyticsState(deps?: AnalyticsDeps) {
   client = undefined
   injectedDeps = deps
   identified = false
+  telemetryOff = false
 }
 
 export let identified: boolean = false
@@ -136,16 +156,15 @@ function logAnalyticsError(error: unknown, context: AnalyticsErrorContext) {
 export function initAnalytics() {
   const { env, isProd, createClient, generateAnonymousId } = resolveDeps()
 
-  if (!env.NEXT_PUBLIC_POSTHOG_API_KEY || !env.NEXT_PUBLIC_POSTHOG_HOST_URL) {
-    const error = new Error(
-      'NEXT_PUBLIC_POSTHOG_API_KEY or NEXT_PUBLIC_POSTHOG_HOST_URL is not set',
-    )
-    logAnalyticsError(error, {
-      stage: AnalyticsErrorStage.Init,
-      missingEnv: true,
-    })
-    throw error
+  const apiKey = env.NEXT_PUBLIC_POSTHOG_API_KEY
+  const hostUrl = env.NEXT_PUBLIC_POSTHOG_HOST_URL
+
+  if (isTelemetryOff(apiKey, hostUrl) || !apiKey || !hostUrl) {
+    telemetryOff = true
+    return
   }
+
+  telemetryOff = false
 
   // Generate anonymous ID for pre-login tracking
   // PostHog will merge this with the real user ID via alias() when user logs in
@@ -153,8 +172,8 @@ export function initAnalytics() {
   identified = false
 
   try {
-    client = createClient(env.NEXT_PUBLIC_POSTHOG_API_KEY, {
-      host: env.NEXT_PUBLIC_POSTHOG_HOST_URL,
+    client = createClient(apiKey, {
+      host: hostUrl,
       enableExceptionAutocapture: isProd,
     })
   } catch (error) {
@@ -180,6 +199,10 @@ export function trackEvent(
   event: AnalyticsEvent,
   properties?: Record<string, any>,
 ) {
+  if (telemetryOff) {
+    return
+  }
+
   const { isProd } = resolveDeps()
   const distinctId = getDistinctId()
 
@@ -232,6 +255,10 @@ export function trackEvent(
 }
 
 export function identifyUser(userId: string, properties?: Record<string, any>) {
+  if (telemetryOff) {
+    return
+  }
+
   if (!client) {
     const error = new Error('Analytics client not initialized')
     logAnalyticsError(error, {

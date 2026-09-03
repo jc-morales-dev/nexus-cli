@@ -63,6 +63,6 @@ distinction is documented on `ResolvedProjectPath` in
 ## Reporting a problem
 
 Open an issue at
-<https://github.com/Victor00128/nexus-cli/issues> and include your Windows
+<https://github.com/jc-morales-dev/nexus-cli/issues> and include your Windows
 version, your terminal (PowerShell / CMD / Git Bash / WSL), the output of
 `nexus --version`, and whether `bash.exe` is on your `PATH`.

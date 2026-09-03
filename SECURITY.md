@@ -4,7 +4,7 @@ If you believe you have found a security vulnerability in NEXUS, please report
 it privately rather than through a public GitHub issue.
 
 Use GitHub's private vulnerability reporting on the repository:
-<https://github.com/Victor00128/nexus-cli/security/advisories/new>
+<https://github.com/jc-morales-dev/nexus-cli/security/advisories/new>
 
 Please include what you did, what you expected, and what happened instead. A
 minimal reproduction helps a lot.

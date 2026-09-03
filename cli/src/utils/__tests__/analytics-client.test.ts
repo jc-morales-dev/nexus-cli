@@ -7,6 +7,7 @@ import {
   trackEvent,
   identifyUser,
   resetAnalyticsState,
+  isTelemetryDisabled,
   type AnalyticsDeps,
 } from '../analytics'
 
@@ -257,6 +258,78 @@ describe('analytics with PostHog alias', () => {
         distinctId: 'user-journey',
         alias: TEST_ANONYMOUS_ID,
       })
+    })
+  })
+
+  // El binario que se distribuye se compila con una clave de relleno porque
+  // NEXUS es BYOK y no hay proyecto de PostHog detrás. Lo que se comprueba aqui
+  // es que en ese caso no se llega a crear cliente: sin cliente no hay conexion
+  // a PostHog ni captura automatica de excepciones desde la maquina del usuario.
+  describe('telemetria apagada (clave de relleno)', () => {
+    function createDisabledDeps(apiKey: string): AnalyticsDeps {
+      return {
+        env: {
+          NEXT_PUBLIC_POSTHOG_API_KEY: apiKey,
+          NEXT_PUBLIC_POSTHOG_HOST_URL: 'https://us.i.posthog.com',
+        },
+        isProd: true,
+        createClient: createClientMock,
+        generateAnonymousId: () => TEST_ANONYMOUS_ID,
+      }
+    }
+
+    let createClientMock: ReturnType<typeof mock>
+
+    beforeEach(() => {
+      createClientMock = mock(() => createMockClient())
+    })
+
+    test('no crea cliente de PostHog con la clave del binario', () => {
+      resetAnalyticsState(createDisabledDeps('phc_disabled'))
+      initAnalytics()
+
+      expect(createClientMock).not.toHaveBeenCalled()
+      expect(isTelemetryDisabled()).toBe(true)
+    })
+
+    test('tampoco lo crea si no hay clave', () => {
+      resetAnalyticsState({
+        env: {
+          NEXT_PUBLIC_POSTHOG_API_KEY: undefined,
+          NEXT_PUBLIC_POSTHOG_HOST_URL: undefined,
+        },
+        isProd: true,
+        createClient: createClientMock,
+        generateAnonymousId: () => TEST_ANONYMOUS_ID,
+      })
+      initAnalytics()
+
+      expect(createClientMock).not.toHaveBeenCalled()
+      expect(isTelemetryDisabled()).toBe(true)
+    })
+
+    // Antes esto reventaba: initAnalytics lanzaba al faltar la clave y
+    // trackEvent volvia a lanzar en produccion al no haber cliente.
+    test('trackEvent e identifyUser no lanzan ni capturan nada', () => {
+      resetAnalyticsState(createDisabledDeps('phc_disabled'))
+      initAnalytics()
+
+      expect(() => {
+        trackEvent(AnalyticsEvent.APP_LAUNCHED, { stage: 'startup' })
+        identifyUser('user-123', { plan: 'byok' })
+      }).not.toThrow()
+
+      expect(captureMock).not.toHaveBeenCalled()
+      expect(identifyMock).not.toHaveBeenCalled()
+      expect(aliasMock).not.toHaveBeenCalled()
+    })
+
+    test('con una clave de verdad la telemetria sigue funcionando', () => {
+      resetAnalyticsState(createDisabledDeps('phc_una_clave_real'))
+      initAnalytics()
+
+      expect(createClientMock).toHaveBeenCalledTimes(1)
+      expect(isTelemetryDisabled()).toBe(false)
     })
   })
 })

@@ -2,6 +2,13 @@
 
 **Status:** `active` — fork of [Codebuff](https://github.com/CodebuffAI/codebuff). Install/release notes: see [ORIGINAL_WORK.md](./ORIGINAL_WORK.md) and [NOTICE](./NOTICE).
 
+## Releases / install
+
+- GitHub Release: https://github.com/jc-morales-dev/nexus-cli/releases/tag/v1.1.0
+- What this fork adds + install notes: [ORIGINAL_WORK.md](./ORIGINAL_WORK.md)
+- Upstream attribution: [NOTICE](./NOTICE)
+
+
 **El agente de terminal BYOK para desarrolladores que quieren controlar modelo,
 costo y datos.**
 

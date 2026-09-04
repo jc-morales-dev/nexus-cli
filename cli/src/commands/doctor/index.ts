@@ -18,6 +18,7 @@ import { redactSecrets } from '@nexus/common/util/redact'
 import { bold, cyan, dim, green, red, yellow } from 'picocolors'
 
 import { runAllChecks, summarize } from './checks'
+import { loadCatalog } from '../../data/model-catalog'
 
 import type { CheckResult, DoctorContext, DoctorSummary } from './checks'
 
@@ -81,7 +82,9 @@ function buildContext(options: DoctorOptions): DoctorContext {
     platform: process.platform,
     arch: process.arch,
     runtimeVersion:
-      typeof Bun !== 'undefined' ? Bun.version : process.version.replace(/^v/, ''),
+      typeof Bun !== 'undefined'
+        ? Bun.version
+        : process.version.replace(/^v/, ''),
     nexusVersion: options.version,
     homeDir: os.homedir(),
     cwd: process.cwd(),
@@ -95,6 +98,7 @@ function buildContext(options: DoctorOptions): DoctorContext {
     accessMode: { R_OK: fs.constants.R_OK, W_OK: fs.constants.W_OK },
     which,
     probe,
+    catalog: (provider, apiKey) => loadCatalog(provider, apiKey),
     allowNetwork: options.allowNetwork,
   }
 }
@@ -108,7 +112,10 @@ export interface DoctorOptions {
 }
 
 /** Format the human-readable report. Exported so it can be tested as a string. */
-export function formatReport(results: CheckResult[], summary: DoctorSummary): string {
+export function formatReport(
+  results: CheckResult[],
+  summary: DoctorSummary,
+): string {
   const lines: string[] = ['', bold(cyan('NEXUS doctor')), '']
 
   for (const result of results) {
@@ -128,7 +135,9 @@ export function formatReport(results: CheckResult[], summary: DoctorSummary): st
   lines.push('', parts.join(dim(' · ')))
 
   if (summary.errors > 0) {
-    lines.push(dim('Arreglá los ✗ primero: son los que impiden que NEXUS funcione.'))
+    lines.push(
+      dim('Arreglá los ✗ primero: son los que impiden que NEXUS funcione.'),
+    )
   } else if (summary.warnings > 0) {
     lines.push(dim('Los ! no impiden usar NEXUS, pero conviene revisarlos.'))
   } else {

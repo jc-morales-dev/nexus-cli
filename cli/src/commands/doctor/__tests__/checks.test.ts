@@ -7,6 +7,7 @@ import {
   checkEnvFileIgnored,
   checkGit,
   checkModel,
+  checkModelExists,
   checkProjectWritable,
   checkProviderReachable,
   checkRipgrep,
@@ -19,6 +20,7 @@ import {
 import { formatReport } from '../index'
 
 import type { CheckResult, DoctorContext } from '../checks'
+import type { ProviderId } from '../../../data/providers'
 
 const FAKE_KEY = 'sk-or-v1-0123456789abcdef0123456789abcdef0123456789abcdef'
 const CONFIG_DIR = path.join('/home', 'dev', '.config', 'nexus')
@@ -66,6 +68,13 @@ function makeContext(overrides: Partial<DoctorContext> = {}): DoctorContext {
     accessMode: { R_OK: 4, W_OK: 2 },
     which: async () => undefined,
     probe: async () => 200,
+    // Por defecto, un catálogo que contiene el modelo por defecto: así los
+    // checks que no van de esto no fallan de rebote.
+    catalog: async (provider) => ({
+      provider,
+      models: [{ id: 'minimax/minimax-m3:free', label: 'MiniMax M3' }],
+      fetchedAt: 0,
+    }),
     allowNetwork: false,
     ...overrides,
   }
@@ -98,7 +107,9 @@ describe('checkApiKey', () => {
   })
 
   test('says which source the key came from', () => {
-    const fromEnv = checkApiKey(makeContext({ env: { OPENROUTER_API_KEY: FAKE_KEY } }))
+    const fromEnv = checkApiKey(
+      makeContext({ env: { OPENROUTER_API_KEY: FAKE_KEY } }),
+    )
     expect(fromEnv.detail).toContain('variable de entorno')
 
     const ctx = makeContext()
@@ -107,7 +118,9 @@ describe('checkApiKey', () => {
   })
 
   test('warns — but does not fail — on a key with an unexpected prefix', () => {
-    const ctx = makeContext({ env: { OPENROUTER_API_KEY: 'gateway-token-abcdef123456' } })
+    const ctx = makeContext({
+      env: { OPENROUTER_API_KEY: 'gateway-token-abcdef123456' },
+    })
     const result = checkApiKey(ctx)
     expect(result.status).toBe('warn')
     expect(result.detail).not.toContain('gateway-token-abcdef123456')
@@ -115,7 +128,11 @@ describe('checkApiKey', () => {
 
   test('prefers the environment variable when it differs from the saved key', () => {
     const ctx = makeContext({ env: { OPENROUTER_API_KEY: FAKE_KEY } })
-    seedFile(ctx, SETTINGS_PATH, JSON.stringify({ openRouterApiKey: 'sk-or-other-value-here' }))
+    seedFile(
+      ctx,
+      SETTINGS_PATH,
+      JSON.stringify({ openRouterApiKey: 'sk-or-other-value-here' }),
+    )
     expect(checkApiKey(ctx).detail).toContain('variable de entorno')
   })
 
@@ -235,15 +252,21 @@ describe('checkEnvFileIgnored', () => {
 
 describe('checkRuntime and checkModel', () => {
   test('warns on a runtime older than the tested minimum', () => {
-    expect(checkRuntime(makeContext({ runtimeVersion: '1.1.0' })).status).toBe('warn')
+    expect(checkRuntime(makeContext({ runtimeVersion: '1.1.0' })).status).toBe(
+      'warn',
+    )
   })
 
   test('accepts the pinned runtime', () => {
-    expect(checkRuntime(makeContext({ runtimeVersion: '1.3.11' })).status).toBe('ok')
+    expect(checkRuntime(makeContext({ runtimeVersion: '1.3.11' })).status).toBe(
+      'ok',
+    )
   })
 
   test('reports a forced model override as such', () => {
-    const result = checkModel(makeContext({ env: { NEXUS_MODEL: 'deepseek/deepseek-v3.2' } }))
+    const result = checkModel(
+      makeContext({ env: { NEXUS_MODEL: 'deepseek/deepseek-v3.2' } }),
+    )
     expect(result.detail).toContain('Forzado')
   })
 
@@ -281,7 +304,9 @@ describe('external tools', () => {
 
 describe('checkProviderReachable', () => {
   test('is skipped without network access', async () => {
-    const result = await checkProviderReachable(makeContext({ allowNetwork: false }))
+    const result = await checkProviderReachable(
+      makeContext({ allowNetwork: false }),
+    )
     expect(result.status).toBe('ok')
     expect(result.detail).toContain('--no-network')
   })
@@ -398,8 +423,20 @@ describe('formatReport', () => {
   test('uses the documented indicators and ends with a summary line', () => {
     const results: CheckResult[] = [
       { id: 'a', label: 'Uno', status: 'ok', detail: 'bien' },
-      { id: 'b', label: 'Dos', status: 'warn', detail: 'ojo', hint: 'revisá esto' },
-      { id: 'c', label: 'Tres', status: 'error', detail: 'roto', hint: 'arreglá esto' },
+      {
+        id: 'b',
+        label: 'Dos',
+        status: 'warn',
+        detail: 'ojo',
+        hint: 'revisá esto',
+      },
+      {
+        id: 'c',
+        label: 'Tres',
+        status: 'error',
+        detail: 'roto',
+        hint: 'arreglá esto',
+      },
     ]
     const report = formatReport(results, summarize(results))
 
@@ -414,9 +451,17 @@ describe('formatReport', () => {
 
   test('does not print hints for passing checks', () => {
     const results: CheckResult[] = [
-      { id: 'a', label: 'Uno', status: 'ok', detail: 'bien', hint: 'no mostrar' },
+      {
+        id: 'a',
+        label: 'Uno',
+        status: 'ok',
+        detail: 'bien',
+        hint: 'no mostrar',
+      },
     ]
-    expect(formatReport(results, summarize(results))).not.toContain('no mostrar')
+    expect(formatReport(results, summarize(results))).not.toContain(
+      'no mostrar',
+    )
   })
 
   test('redacts a secret that reached a check result', () => {
@@ -424,5 +469,128 @@ describe('formatReport', () => {
       { id: 'a', label: 'Uno', status: 'warn', detail: `key ${FAKE_KEY}` },
     ]
     expect(formatReport(results, summarize(results))).not.toContain(FAKE_KEY)
+  })
+})
+
+// Este check nace de un incidente concreto: el modelo por defecto de NEXUS
+// estuvo dias retirado del catalogo de OpenRouter, cada peticion devolvia un
+// aviso en vez de una respuesta, y la version publicada en npm no servia nada
+// mas instalarla. Nadie se entero porque nada lo comprobaba.
+describe('checkModelExists', () => {
+  const catalogoCon =
+    (ids: string[], stale = false) =>
+    async (provider: ProviderId) => ({
+      provider,
+      models: ids.map((id) => ({ id, label: id })),
+      fetchedAt: 0,
+      stale,
+    })
+
+  test('pasa cuando el modelo sigue en el catalogo', async () => {
+    const result = await checkModelExists(
+      makeContext({
+        allowNetwork: true,
+        env: { NEXUS_MODEL_STRONG: 'z-ai/glm-5.2' },
+        catalog: catalogoCon(['z-ai/glm-5.2', 'otro/modelo']),
+      }),
+    )
+
+    expect(result.status).toBe('ok')
+  })
+
+  test('falla cuando el modelo ya no existe', async () => {
+    const result = await checkModelExists(
+      makeContext({
+        allowNetwork: true,
+        env: { NEXUS_MODEL_STRONG: 'stealth/ox-alpha' },
+        catalog: catalogoCon(['minimax/minimax-m3:free']),
+      }),
+    )
+
+    expect(result.status).toBe('error')
+    expect(result.detail).toContain('stealth/ox-alpha')
+    expect(result.hint).toContain('/model')
+  })
+
+  // Con una copia vieja no se puede AFIRMAR que el modelo murio: puede ser
+  // recien salido y la cache no haberlo visto. Avisar, no acusar.
+  test('con catalogo viejo avisa en vez de fallar', async () => {
+    const result = await checkModelExists(
+      makeContext({
+        allowNetwork: true,
+        env: { NEXUS_MODEL_STRONG: 'modelo/nuevo' },
+        catalog: catalogoCon(['otro/modelo'], true),
+      }),
+    )
+
+    expect(result.status).toBe('warn')
+  })
+
+  test('un catalogo vacio no acusa a nadie', async () => {
+    const result = await checkModelExists(
+      makeContext({
+        allowNetwork: true,
+        env: { NEXUS_MODEL_STRONG: 'z-ai/glm-5.2' },
+        catalog: async (provider) => ({ provider, models: [], fetchedAt: 0 }),
+      }),
+    )
+
+    expect(result.status).toBe('ok')
+  })
+
+  test('comprueba contra el proveedor elegido, no siempre OpenRouter', async () => {
+    let visto: ProviderId | undefined
+    await checkModelExists(
+      makeContext({
+        allowNetwork: true,
+        env: {
+          NEXUS_PROVIDER: 'anthropic',
+          NEXUS_MODEL_STRONG: 'claude-opus-4.8',
+          ANTHROPIC_API_KEY: 'sk-ant-api03-x',
+        },
+        catalog: async (provider) => {
+          visto = provider
+          return {
+            provider,
+            models: [{ id: 'claude-opus-4.8', label: 'x' }],
+            fetchedAt: 0,
+          }
+        },
+      }),
+    )
+
+    expect(visto).toBe('anthropic')
+  })
+
+  test('si no se puede consultar, avisa sin romper', async () => {
+    const result = await checkModelExists(
+      makeContext({
+        allowNetwork: true,
+        env: { NEXUS_MODEL_STRONG: 'z-ai/glm-5.2' },
+        catalog: async () => {
+          throw new Error('sin red')
+        },
+      }),
+    )
+
+    expect(result.status).toBe('warn')
+    expect(result.detail).toContain('sin red')
+  })
+
+  test('con --no-network no consulta nada', async () => {
+    let llamado = false
+    const result = await checkModelExists(
+      makeContext({
+        allowNetwork: false,
+        env: { NEXUS_MODEL_STRONG: 'z-ai/glm-5.2' },
+        catalog: async (provider) => {
+          llamado = true
+          return { provider, models: [], fetchedAt: 0 }
+        },
+      }),
+    )
+
+    expect(llamado).toBe(false)
+    expect(result.status).toBe('ok')
   })
 })

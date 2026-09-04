@@ -11,6 +11,15 @@
     "terminal"
   ],
   "license": "Apache-2.0",
+  "author": "Julio Cesar Morales",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jc-morales-dev/nexus-cli.git"
+  },
+  "homepage": "https://github.com/jc-morales-dev/nexus-cli#readme",
+  "bugs": {
+    "url": "https://github.com/jc-morales-dev/nexus-cli/issues"
+  },
   "bin": {
     "nexus": "bin/nexus.js"
   },

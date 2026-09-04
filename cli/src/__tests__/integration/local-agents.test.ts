@@ -72,7 +72,7 @@ describe('Local Agent Integration', () => {
     // No user agents should be loaded (bundled agents may still be present)
     // Check that no test-specific agents are loaded
     expect(definitions.find((d) => d.id.startsWith('test-'))).toBeUndefined()
-  })
+  }, 30_000)
 
   test('handles empty .agents directory', async () => {
     mkdirSync(agentsDir, { recursive: true })

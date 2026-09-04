@@ -7,6 +7,8 @@ coding assistant, but free: bring your own [OpenRouter](https://openrouter.ai)
 key (free or paid models) and use any model you want. No subscription, no
 credits, no sign-up. Your key stays on your machine.
 
+[See exactly what this fork changes](./ORIGINAL_WORK.md).
+
 ## Install
 
 ```bash
@@ -135,6 +137,10 @@ is an agent you run, not a service you subscribe to.
 
 There is no telemetry: the distributed binary is built with no analytics
 project behind it, so the client is never created and nothing is sent anywhere.
+
+The public GitHub identity is `jc-morales-dev`. npm currently uses the legacy
+publisher scope `@victor00128`; the package name is kept explicit here so users
+never confuse a GitHub rename with a separate npm package.
 
 ## License
 

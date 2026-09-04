@@ -3,6 +3,11 @@
   "version": "1.0.4",
   "description": "NEXUS CLI — binario linux-arm64. Instalado automáticamente por @victor00128/nexus-cli.",
   "license": "Apache-2.0",
+  "author": "Julio Cesar Morales",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jc-morales-dev/nexus-cli.git"
+  },
   "preferUnplugged": true,
   "os": [
     "linux"

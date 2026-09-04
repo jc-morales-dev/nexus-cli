@@ -25,8 +25,8 @@
     "init-worktree": "bun scripts/init-worktree.ts",
     "cleanup-worktree": "bun scripts/cleanup-worktree.ts",
     "generate-tool-definitions": "bun scripts/generate-tool-definitions.ts",
-    "eval": "bun --filter=@nexus/evals run eval",
-    "eval:offline": "bun --filter=@nexus/evals run eval:offline",
+    "eval": "bun run --cwd cli prebuild:agents && bun --filter=@nexus/evals run eval",
+    "eval:offline": "bun run --cwd cli prebuild:agents && bun --filter=@nexus/evals run eval:offline",
     "lint": "eslint cli/src sdk/src common/src packages agents evals scripts",
     "lint:fix": "eslint --fix cli/src sdk/src common/src packages agents evals scripts"
   },

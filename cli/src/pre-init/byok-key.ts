@@ -9,10 +9,36 @@
 // out of the compiled binary entirely (the sideEffects glob in package.json is
 // not honored), which silently broke account-less boot and saved-key loading in
 // the distributed .exe. An explicit call cannot be stripped.
-import { NEXUS_DEFAULT_MODEL } from '../data/nexus-models'
-import { loadOpenRouterApiKey, loadNexusModel } from '../utils/settings'
+import { NEXUS_DEFAULT_MODEL, isRetiredNexusModel } from '../data/nexus-models'
+import {
+  loadOpenRouterApiKey,
+  loadNexusModel,
+  clearNexusModel,
+} from '../utils/settings'
 
-export function initByokKey(): void {
+/**
+ * Settings accessors, injectable so tests can drive the retired-model migration
+ * without touching the real config file.
+ *
+ * Injected rather than module-mocked on purpose: `mock.module` in Bun swaps the
+ * module for the WHOLE test process, so stubbing `../utils/settings` here leaks
+ * into every other test file that reads settings (it silently broke the API
+ * integration suite when this was first written). Same shape as AnalyticsDeps in
+ * utils/analytics.ts.
+ */
+export interface ByokSettingsDeps {
+  loadOpenRouterApiKey: () => string | undefined
+  loadNexusModel: () => string | undefined
+  clearNexusModel: () => void
+}
+
+const defaultDeps: ByokSettingsDeps = {
+  loadOpenRouterApiKey,
+  loadNexusModel,
+  clearNexusModel,
+}
+
+export function initByokKey(deps: ByokSettingsDeps = defaultDeps): void {
   // NEXUS is always an account-less, BYOK tool — never a Nexus account. This
   // marker makes isByokDirectMode() true from the very first run (before any key
   // is set), so the CLI skips the Nexus login and onboards the user to paste
@@ -23,7 +49,7 @@ export function initByokKey(): void {
     process.env.NEXUS_API_KEY = 'nexus-byok-local'
   }
 
-  const savedKey = loadOpenRouterApiKey()
+  const savedKey = deps.loadOpenRouterApiKey()
   if (savedKey && !process.env.OPENROUTER_API_KEY) {
     process.env.OPENROUTER_API_KEY = savedKey
   }
@@ -41,10 +67,29 @@ export function initByokKey(): void {
   if (!process.env.NEXUS_MODEL) {
     // The user's saved /model pick wins over the baked default (and over a STRONG
     // value inherited from a dev .env), so changing the model actually sticks.
-    const savedModel = loadNexusModel()
+    //
+    // Unless OpenRouter retired it. A saved id outlives the catalog, so shipping
+    // a new default is not enough on its own: anyone who had picked the old
+    // default would keep sending requests to a model that no longer exists and
+    // would get an error instead of a completion on every single turn. Drop the
+    // stale preference (once — it's persisted) and fall through to the default.
+    let savedModel = deps.loadNexusModel()
+    if (savedModel && isRetiredNexusModel(savedModel)) {
+      try {
+        deps.clearNexusModel()
+      } catch {
+        // A read-only config dir must not stop the CLI from booting; the
+        // in-memory fallback below still gets the user a working model.
+      }
+      savedModel = undefined
+    }
+
     if (savedModel) {
       process.env.NEXUS_MODEL_STRONG = savedModel
-    } else if (!process.env.NEXUS_MODEL_STRONG) {
+    } else if (
+      !process.env.NEXUS_MODEL_STRONG ||
+      isRetiredNexusModel(process.env.NEXUS_MODEL_STRONG)
+    ) {
       process.env.NEXUS_MODEL_STRONG = STRONG_DEFAULT
     }
     if (!process.env.NEXUS_MODEL_CHEAP) {

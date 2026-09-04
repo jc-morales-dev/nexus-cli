@@ -7,6 +7,18 @@ Sin suscripción. Usá modelos gratuitos o de pago con tu propia API key.
 
 [Mirá exactamente qué aporta este fork](./ORIGINAL_WORK.md).
 
+## What's original in this fork
+
+This repository is a fork of [Codebuff](https://github.com/CodebuffAI/codebuff).
+
+- **BYOK OpenRouter** — your key, your models, direct to the provider
+- **Account-less** — no NEXUS account, credits, or paid backend in the middle
+- **npm pack** — installable without upstream paid plumbing
+- **CI without upstream paid-product credentials** — open CI that does not depend on upstream commercial infra
+- **Spanish docs** — terminal UI and docs oriented to Spanish-speaking developers
+
+Prior npm scope `victor00128` is unified under `jc-morales-dev`. [NOTICE](./NOTICE) is kept for upstream attribution. See also [ORIGINAL_WORK.md](./ORIGINAL_WORK.md).
+
 NEXUS edita tu código a partir de instrucciones en lenguaje natural, desde la
 terminal. La diferencia con otros agentes está en quién controla la inferencia:
 vos ponés la key, vos elegís el modelo, y las peticiones van directo al
@@ -183,12 +195,3 @@ NEXUS se publica bajo la [Apache License 2.0](./LICENSE). Es un fork de
 [Codebuff](https://github.com/CodebuffAI/codebuff); ver [NOTICE](./NOTICE) para
 la atribución.
 
-## What's original in this fork
-
-- **BYOK OpenRouter** — your key, your models, direct to the provider
-- **Account-less** — no NEXUS account, credits, or paid backend in the middle
-- **npm pack** — installable without upstream paid plumbing
-- **CI without upstream paid plumbing** — open CI that does not depend on upstream commercial infra
-- **Spanish UX** — terminal UI and docs oriented to Spanish-speaking developers
-
-Prior npm scope `victor00128` is unified under `jc-morales-dev`. [NOTICE](./NOTICE) is kept for upstream attribution. See also [ORIGINAL_WORK.md](./ORIGINAL_WORK.md).

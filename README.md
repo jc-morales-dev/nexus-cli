@@ -1,5 +1,7 @@
 # NEXUS
 
+**Status:** `active` — fork of [Codebuff](https://github.com/CodebuffAI/codebuff). Install/release notes: see [ORIGINAL_WORK.md](./ORIGINAL_WORK.md) and [NOTICE](./NOTICE).
+
 **El agente de terminal BYOK para desarrolladores que quieren controlar modelo,
 costo y datos.**
 

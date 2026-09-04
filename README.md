@@ -14,25 +14,31 @@ costo y datos.**
 
 Sin suscripción. Usá modelos gratuitos o de pago con tu propia API key.
 
-[Mirá exactamente qué aporta este fork](./ORIGINAL_WORK.md).
-
-## What's original in this fork
-
-This repository is a fork of [Codebuff](https://github.com/CodebuffAI/codebuff).
-
-- **BYOK OpenRouter** — your key, your models, direct to the provider
-- **Account-less** — no NEXUS account, credits, or paid backend in the middle
-- **npm pack** — installable without upstream paid plumbing
-- **CI without upstream paid-product credentials** — open CI that does not depend on upstream commercial infra
-- **Spanish docs** — terminal UI and docs oriented to Spanish-speaking developers
-
-Prior npm scope `victor00128` is unified under `jc-morales-dev`. [NOTICE](./NOTICE) is kept for upstream attribution. See also [ORIGINAL_WORK.md](./ORIGINAL_WORK.md).
-
 NEXUS edita tu código a partir de instrucciones en lenguaje natural, desde la
 terminal. La diferencia con otros agentes está en quién controla la inferencia:
 vos ponés la key, vos elegís el modelo, y las peticiones van directo al
 proveedor. No hay una cuenta de NEXUS, ni créditos, ni un backend nuestro en el
 medio.
+
+## Sobre este fork
+
+NEXUS es un fork de [Codebuff](https://github.com/CodebuffAI/codebuff), que
+aportó la arquitectura multi-agente, las herramientas de edición y la mayor
+parte del historial que ves acá. La atribución vive en [NOTICE](./NOTICE).
+
+Lo que agrega este fork:
+
+- **BYOK con OpenRouter** — tu key, tus modelos, directo al proveedor.
+- **Sin producto de pago en el medio** — se sacaron el backend, las cuentas, los
+  créditos, la facturación y la app web.
+- **Paquete de npm propio** — binarios autocontenidos para cinco plataformas.
+- **CI abierto** — corre en Linux y Windows sin credenciales del producto
+  comercial original.
+- **En español** — la interfaz de terminal y la documentación.
+
+Todo eso es comprobable commit a commit en
+[ORIGINAL_WORK.md](./ORIGINAL_WORK.md), que acota el rango exacto donde empieza
+el trabajo propio.
 
 ## Qué significa BYOK
 
@@ -68,6 +74,10 @@ npm install -g @jc-morales-dev/nexus-cli
 ```
 
 Trae un binario autocontenido: no necesitás instalar Node ni Bun aparte.
+
+> Si tenías instalado `@victor00128/nexus-cli`, ese paquete ya no está en npm y
+> no recibe actualizaciones. Desinstalalo (`npm uninstall -g
+> @victor00128/nexus-cli`) e instalá el de arriba.
 
 ## Primeros pasos
 

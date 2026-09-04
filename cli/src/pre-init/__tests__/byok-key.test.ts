@@ -5,7 +5,11 @@ import {
   NEXUS_MODELS,
   isRetiredNexusModel,
 } from '../../data/nexus-models'
+import { DEFAULT_CHEAP_MODEL, PROVIDER_IDS } from '../../data/providers'
 import { initByokKey, type ByokSettingsDeps } from '../byok-key'
+
+import type { ProviderId } from '../../data/providers'
+import type { ActiveModel } from '../../utils/settings'
 
 // OpenRouter retired stealth/ox-alpha — the model NEXUS shipped as its default —
 // on 2026-09-04, and every request to it started coming back as an error instead
@@ -24,7 +28,11 @@ const TOUCHED = [
   'NEXUS_MODEL_STRONG',
   'NEXUS_MODEL_CHEAP',
   'NEXUS_API_KEY',
+  'NEXUS_PROVIDER',
   'OPENROUTER_API_KEY',
+  'ANTHROPIC_API_KEY',
+  'OPENAI_API_KEY',
+  'NVIDIA_API_KEY',
 ] as const
 
 describe('initByokKey — modelos retirados', () => {
@@ -39,6 +47,9 @@ describe('initByokKey — modelos retirados', () => {
       clearNexusModel: () => {
         clearCalls += 1
       },
+      loadActiveModel: () =>
+        savedModel ? { provider: 'openrouter', model: savedModel } : undefined,
+      loadProviderApiKey: () => undefined,
     }
   }
 
@@ -112,6 +123,113 @@ describe('initByokKey — modelos retirados', () => {
     })
 
     expect(process.env.OPENROUTER_API_KEY).toBe('sk-or-v1-de-prueba')
+  })
+})
+
+// Paso 2: el arranque ya no asume OpenRouter. Traduce el proveedor elegido a
+// las variables donde el SDK las busca.
+describe('initByokKey — varios proveedores', () => {
+  const original = new Map<string, string | undefined>()
+
+  function providerDeps(
+    active: ActiveModel | undefined,
+    keys: Partial<Record<ProviderId, string>> = {},
+  ): ByokSettingsDeps {
+    return {
+      loadOpenRouterApiKey: () => keys.openrouter,
+      // Espeja lo que hace settings.ts de verdad: el id pelado solo se devuelve
+      // cuando el modelo es de OpenRouter, porque es lo único que el enrutado
+      // por id sabe resolver.
+      loadNexusModel: () =>
+        active?.provider === 'openrouter' ? active.model : undefined,
+      clearNexusModel: () => {},
+      loadActiveModel: () => active,
+      loadProviderApiKey: (id) => keys[id],
+    }
+  }
+
+  beforeEach(() => {
+    for (const key of TOUCHED) {
+      original.set(key, process.env[key])
+      delete process.env[key]
+    }
+  })
+
+  afterEach(() => {
+    for (const [key, value] of original) {
+      if (value === undefined) delete process.env[key]
+      else process.env[key] = value
+    }
+  })
+
+  test('un modelo de Anthropic fija proveedor, modelo y nivel barato', () => {
+    initByokKey(
+      providerDeps(
+        { provider: 'anthropic', model: 'claude-opus-4.8' },
+        { anthropic: 'sk-ant-api03-x' },
+      ),
+    )
+
+    expect(process.env.NEXUS_PROVIDER).toBe('anthropic')
+    expect(process.env.NEXUS_MODEL_STRONG).toBe('claude-opus-4.8')
+    // El nivel barato sale del MISMO proveedor: si saliera de otro, el usuario
+    // recibiría una segunda factura de un sitio donde no eligió nada.
+    expect(process.env.NEXUS_MODEL_CHEAP).toBe(DEFAULT_CHEAP_MODEL.anthropic)
+  })
+
+  test('con OpenRouter no se fija proveedor: es el camino de siempre', () => {
+    initByokKey(
+      providerDeps(
+        { provider: 'openrouter', model: 'z-ai/glm-5.2' },
+        { openrouter: 'sk-or-v1-x' },
+      ),
+    )
+
+    expect(process.env.NEXUS_PROVIDER).toBeUndefined()
+    expect(process.env.NEXUS_MODEL_STRONG).toBe('z-ai/glm-5.2')
+  })
+
+  // Cargar las keys de todos permite que cambiar de proveedor con /model a
+  // mitad de sesión sea cambiar una variable, sin releer el disco.
+  test('carga las keys de todos los proveedores configurados', () => {
+    initByokKey(
+      providerDeps(undefined, {
+        anthropic: 'sk-ant-api03-x',
+        openai: 'sk-proj-x',
+        nvidia: 'nvapi-x',
+      }),
+    )
+
+    expect(process.env.ANTHROPIC_API_KEY).toBe('sk-ant-api03-x')
+    expect(process.env.OPENAI_API_KEY).toBe('sk-proj-x')
+    expect(process.env.NVIDIA_API_KEY).toBe('nvapi-x')
+  })
+
+  test('no pisa una variable que el usuario ya exportó', () => {
+    process.env.ANTHROPIC_API_KEY = 'la-del-shell'
+
+    initByokKey(providerDeps(undefined, { anthropic: 'la-guardada' }))
+
+    expect(process.env.ANTHROPIC_API_KEY).toBe('la-del-shell')
+  })
+
+  // NEXUS_MODEL fuerza un único modelo para todo y desactiva los tiers; no debe
+  // quedar pisado por la elección guardada.
+  test('un NEXUS_MODEL forzado gana sobre el proveedor guardado', () => {
+    process.env.NEXUS_MODEL = 'deepseek/deepseek-v3.2'
+
+    initByokKey(
+      providerDeps({ provider: 'anthropic', model: 'claude-opus-4.8' }),
+    )
+
+    expect(process.env.NEXUS_PROVIDER).toBeUndefined()
+    expect(process.env.NEXUS_MODEL_STRONG).toBeUndefined()
+  })
+
+  test('cada proveedor tiene su modelo barato', () => {
+    for (const id of PROVIDER_IDS) {
+      expect(DEFAULT_CHEAP_MODEL[id]).toBeTruthy()
+    }
   })
 })
 

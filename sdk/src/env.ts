@@ -56,6 +56,52 @@ export const getOpenRouterApiKeyFromEnv = (): string | undefined => {
 }
 
 /**
+ * Which provider the user's requests go to.
+ *
+ * Until now NEXUS only spoke to OpenRouter, so the provider was implicit. With
+ * several of them the model id alone is no longer enough to decide where a
+ * request goes: `gpt-5.2` exists on OpenAI and, as `openai/gpt-5.2`, on
+ * OpenRouter — same model, two routes, two bills, two id formats. The CLI reads
+ * the user's pick from settings.json and puts it here at boot.
+ *
+ * Unset means OpenRouter, which is what every existing install has.
+ */
+export const getActiveProviderFromEnv = (): string | undefined => {
+  return process.env.NEXUS_PROVIDER || undefined
+}
+
+/** Base OpenAI-compatible endpoints, overridable for proxies and testing. */
+export const OPENAI_API_BASE = 'https://api.openai.com/v1'
+export const NVIDIA_API_BASE = 'https://integrate.api.nvidia.com/v1'
+
+export const getOpenAiApiBaseFromEnv = (): string => {
+  return process.env.OPENAI_API_BASE || OPENAI_API_BASE
+}
+
+export const getNvidiaApiBaseFromEnv = (): string => {
+  return process.env.NVIDIA_API_BASE || NVIDIA_API_BASE
+}
+
+/**
+ * The user's key for a given provider.
+ *
+ * These deliberately use each vendor's conventional variable name rather than a
+ * NEXUS-prefixed one: a developer who already exports ANTHROPIC_API_KEY for
+ * other tooling gets NEXUS working without pasting anything.
+ */
+export const getAnthropicApiKeyFromEnv = (): string | undefined => {
+  return process.env.ANTHROPIC_API_KEY || undefined
+}
+
+export const getOpenAiApiKeyFromEnv = (): string | undefined => {
+  return process.env.OPENAI_API_KEY || undefined
+}
+
+export const getNvidiaApiKeyFromEnv = (): string | undefined => {
+  return process.env.NVIDIA_API_KEY || undefined
+}
+
+/**
  * Optional global model override. When set, EVERY agent uses this model id
  * regardless of its own definition — a single forced model (highest priority,
  * e.g. NEXUS_MODEL=deepseek/deepseek-v3.2). Takes precedence over the tiered

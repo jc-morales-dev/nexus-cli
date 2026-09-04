@@ -183,6 +183,6 @@ NEXUS se publica bajo la [Apache License 2.0](./LICENSE). Es un fork de
 [Codebuff](https://github.com/CodebuffAI/codebuff); ver [NOTICE](./NOTICE) para
 la atribución.
 
-## What is original in this fork
+## What's original in this fork
 
 See ORIGINAL_WORK.md.

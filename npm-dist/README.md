@@ -6,7 +6,7 @@
 
 Traé tu propia API key de [OpenRouter](https://openrouter.ai/keys) (modelos gratis o de pago) y programá desde la terminal con cualquier modelo. Como Claude Code, pero gratis y con tu key.
 
-[![npm](https://img.shields.io/npm/v/@victor00128/nexus-cli?color=cb3837&logo=npm)](https://www.npmjs.com/package/@victor00128/nexus-cli)
+[![npm](https://img.shields.io/npm/v/@jc-morales-dev/nexus-cli?color=cb3837&logo=npm)](https://www.npmjs.com/package/@jc-morales-dev/nexus-cli)
 [![license](https://img.shields.io/badge/license-Apache--2.0-blue)](https://www.apache.org/licenses/LICENSE-2.0)
 ![platforms](https://img.shields.io/badge/plataformas-Windows%20%C2%B7%20macOS%20%C2%B7%20Linux-informational)
 
@@ -19,7 +19,7 @@ Traé tu propia API key de [OpenRouter](https://openrouter.ai/keys) (modelos gra
 ## Instalar
 
 ```bash
-npm install -g @victor00128/nexus-cli
+npm install -g @jc-morales-dev/nexus-cli
 ```
 
 > Trae un binario autocontenido: **no necesitás instalar Node ni Bun aparte**.

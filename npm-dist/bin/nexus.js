@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// npm bin shim for NEXUS. `npm i -g @victor00128/nexus-cli` wires this up as
+// npm bin shim for NEXUS. `npm i -g @jc-morales-dev/nexus-cli` wires this up as
 // the `nexus` command; this shim execs the self-contained NEXUS binary (which
 // embeds the Bun runtime + all code) from the platform-specific optional
 // dependency, forwarding args and the real TTY so the terminal UI works. Same
@@ -14,7 +14,7 @@ const exeName = process.platform === 'win32' ? 'nexus.exe' : 'nexus'
 function resolveBinary() {
   // 1. Platform package installed as optionalDependency (the normal path).
   try {
-    return require.resolve(`@victor00128/nexus-cli-${key}/bin/${exeName}`)
+    return require.resolve(`@jc-morales-dev/nexus-cli-${key}/bin/${exeName}`)
   } catch {}
   // 2. Legacy/local layout: binary sitting right next to this shim.
   const local = path.join(__dirname, exeName)
@@ -29,7 +29,7 @@ if (!exePath) {
   console.error(
     `NEXUS: no encontré el binario para tu plataforma (${key}).\n` +
       `Puede que npm haya salteado la dependencia opcional. Probá:\n` +
-      `  npm i -g @victor00128/nexus-cli-${key}\n` +
+      `  npm i -g @jc-morales-dev/nexus-cli-${key}\n` +
       `Si tu plataforma no está publicada, abrí un issue.`,
   )
   process.exit(1)

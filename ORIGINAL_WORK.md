@@ -9,25 +9,26 @@ The fork-specific work begins after Codebuff commit
 [`eaa8c108`](https://github.com/jc-morales-dev/nexus-cli/commit/eaa8c10892f2e8c81fdc1cc52483ee2b0782b657).
 The auditable range is
 [`eaa8c108..main`](https://github.com/jc-morales-dev/nexus-cli/compare/eaa8c10892f2e8c81fdc1cc52483ee2b0782b657...main).
-At the time this document was added, that range contained 78 commits. The
-current Codebuff repository no longer shares a merge base with this checkout,
-so the preserved baseline is the honest comparison point.
+That compare link is the count: it stays accurate as the fork grows, which a
+number written here would not. The current Codebuff repository no longer shares
+a merge base with this checkout, so the preserved baseline is the honest
+comparison point.
 
 ## Provenance map
 
 | Area | Codebuff foundation | Work maintained by this fork |
 |---|---|---|
 | Agent runtime | Multi-agent orchestration and editing tools | Accountless startup, direct provider routing, reliability guards, and repair feedback for lower-cost models |
-| Provider access | Original hosted product/backend integration | Local BYOK for OpenRouter and NVIDIA, `/key`, `/model`, model tiers, and provider failure handling |
+| Provider access | Original hosted product/backend integration | Local BYOK for OpenRouter, `/key`, `/model`, model tiers, and provider failure handling |
 | Product surface | Codebuff CLI foundations | NEXUS terminal identity, Spanish-first CLI UX, plan/build mode, help, and model-selection flows |
 | Safety and control | Existing tool permission concepts | Deterministic `.nexus/hooks.json`, `/undo`, command sandbox rules, background tasks, and validation gates |
 | Developer tooling | Existing monorepo/tooling foundation | Cross-platform paths, LSP diagnostics for Python/Go/Rust, Linux+Windows CI, and removal of paid-product packages |
-| Distribution | No NEXUS package | Self-contained multi-platform npm binaries and release validation under the legacy npm scope `@victor00128` |
+| Distribution | No NEXUS package | Self-contained multi-platform npm binaries and release validation, published as `@jc-morales-dev/nexus-cli` |
 | Privacy | Codebuff analytics/product plumbing | Paid backend and account flows removed; analytics client disabled so the distributed CLI sends no telemetry |
 
 ## Representative commits
 
-- [`ab87a729`](https://github.com/jc-morales-dev/nexus-cli/commit/ab87a729f) — direct NVIDIA BYOK routing
+- [`ab87a729`](https://github.com/jc-morales-dev/nexus-cli/commit/ab87a729f) — direct NVIDIA BYOK routing, later removed in [`be045c87`](https://github.com/jc-morales-dev/nexus-cli/commit/be045c875) when the fork narrowed to a single provider. Listed because the integration work is part of the record, not because NEXUS ships it today.
 - [`04f8ac0d`](https://github.com/jc-morales-dev/nexus-cli/commit/04f8ac0db) — direct OpenRouter routing
 - [`4e8f886b`](https://github.com/jc-morales-dev/nexus-cli/commit/4e8f886b8) — accountless boot and execution
 - [`8d65a03b`](https://github.com/jc-morales-dev/nexus-cli/commit/8d65a03b6) — anti-loop and validation guards

@@ -129,5 +129,5 @@ describe('pythonProvider (integración real, requiere python en PATH)', () => {
       expect(badDiags[0].message).toContain('SyntaxError')
       expect(badDiags[0].line).toBeGreaterThan(0)
     }
-  })
+  }, 15_000)
 })

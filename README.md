@@ -185,4 +185,10 @@ la atribución.
 
 ## What's original in this fork
 
-See ORIGINAL_WORK.md.
+- **BYOK OpenRouter** — your key, your models, direct to the provider
+- **Account-less** — no NEXUS account, credits, or paid backend in the middle
+- **npm pack** — installable without upstream paid plumbing
+- **CI without upstream paid plumbing** — open CI that does not depend on upstream commercial infra
+- **Spanish UX** — terminal UI and docs oriented to Spanish-speaking developers
+
+Prior npm scope `victor00128` is unified under `jc-morales-dev`. [NOTICE](./NOTICE) is kept for upstream attribution. See also [ORIGINAL_WORK.md](./ORIGINAL_WORK.md).

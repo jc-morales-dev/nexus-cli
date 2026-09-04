@@ -17,6 +17,19 @@ import path from 'path'
 
 import { maskSecret, redactSecrets } from '@nexus/common/util/redact'
 
+import { PROVIDERS, isProviderId, type ProviderId } from '../../data/providers'
+
+import type { Catalog } from '../../data/model-catalog'
+
+/** Dónde vive la key de cada proveedor. Espeja KEY_ENV_VAR de pre-init. */
+const PROVIDER_KEY_ENV_VAR: Record<ProviderId, string | undefined> = {
+  openrouter: 'OPENROUTER_API_KEY',
+  anthropic: 'ANTHROPIC_API_KEY',
+  openai: 'OPENAI_API_KEY',
+  nvidia: 'NVIDIA_API_KEY',
+  codex: undefined,
+}
+
 export type CheckStatus = 'ok' | 'warn' | 'error'
 
 export interface CheckResult {
@@ -56,7 +69,15 @@ export interface DoctorContext {
   /** Resolve an executable on PATH; undefined when absent. */
   which(command: string): Promise<string | undefined>
   /** Probe a URL. Resolves to the HTTP status, or throws. */
-  probe(url: string, init: { headers: Record<string, string>; timeoutMs: number }): Promise<number>
+  probe(
+    url: string,
+    init: { headers: Record<string, string>; timeoutMs: number },
+  ): Promise<number>
+  /**
+   * Fetch a provider's model catalog. Injected like everything else here so the
+   * check can be driven without a network or a cache file on disk.
+   */
+  catalog(provider: ProviderId, apiKey: string | undefined): Promise<Catalog>
   /** Whether to run checks that make network requests. */
   allowNetwork: boolean
 }
@@ -80,10 +101,20 @@ const NETWORK_TIMEOUT_MS = 8000
 function ok(id: string, label: string, detail: string): CheckResult {
   return { id, label, status: 'ok', detail }
 }
-function warn(id: string, label: string, detail: string, hint?: string): CheckResult {
+function warn(
+  id: string,
+  label: string,
+  detail: string,
+  hint?: string,
+): CheckResult {
   return { id, label, status: 'warn', detail, hint }
 }
-function fail(id: string, label: string, detail: string, hint?: string): CheckResult {
+function fail(
+  id: string,
+  label: string,
+  detail: string,
+  hint?: string,
+): CheckResult {
   return { id, label, status: 'error', detail, hint }
 }
 
@@ -107,7 +138,10 @@ export function checkRuntime(ctx: DoctorContext): CheckResult {
 
   // The published CLI is a compiled binary with Bun embedded, so this only
   // constrains people running from source.
-  if (major < MIN_BUN_MAJOR || (major === MIN_BUN_MAJOR && minor < MIN_BUN_MINOR)) {
+  if (
+    major < MIN_BUN_MAJOR ||
+    (major === MIN_BUN_MAJOR && minor < MIN_BUN_MINOR)
+  ) {
     return warn(
       'runtime',
       'Runtime',
@@ -121,7 +155,11 @@ export function checkRuntime(ctx: DoctorContext): CheckResult {
 
 export function checkVersion(ctx: DoctorContext): CheckResult {
   if (ctx.nexusVersion === 'dev') {
-    return ok('version', 'Versión de NEXUS', 'dev (corriendo desde el código fuente)')
+    return ok(
+      'version',
+      'Versión de NEXUS',
+      'dev (corriendo desde el código fuente)',
+    )
   }
   return ok('version', 'Versión de NEXUS', ctx.nexusVersion)
 }
@@ -157,7 +195,11 @@ export function checkConfigDir(ctx: DoctorContext): CheckResult {
 export function checkSettingsFile(ctx: DoctorContext): CheckResult {
   const settingsPath = path.join(ctx.configDir, 'settings.json')
   if (!ctx.fs.existsSync(settingsPath)) {
-    return ok('settings', 'settings.json', 'Sin configuración guardada todavía (se usan los valores por defecto).')
+    return ok(
+      'settings',
+      'settings.json',
+      'Sin configuración guardada todavía (se usan los valores por defecto).',
+    )
   }
 
   try {
@@ -191,7 +233,11 @@ export function checkSettingsPermissions(ctx: DoctorContext): CheckResult {
   const label = 'Permisos de settings.json'
 
   if (ctx.platform === 'win32') {
-    return ok('settings-permissions', label, 'No aplica en Windows (manda la ACL del perfil de usuario).')
+    return ok(
+      'settings-permissions',
+      label,
+      'No aplica en Windows (manda la ACL del perfil de usuario).',
+    )
   }
   if (!ctx.fs.existsSync(settingsPath)) {
     return ok('settings-permissions', label, 'El archivo todavía no existe.')
@@ -207,9 +253,17 @@ export function checkSettingsPermissions(ctx: DoctorContext): CheckResult {
         `Ahí está tu API key en texto plano. Corregilo con: chmod 600 ${settingsPath}`,
       )
     }
-    return ok('settings-permissions', label, 'Solo tu usuario puede leerlo (600).')
+    return ok(
+      'settings-permissions',
+      label,
+      'Solo tu usuario puede leerlo (600).',
+    )
   } catch {
-    return warn('settings-permissions', label, 'No se pudieron leer los permisos del archivo.')
+    return warn(
+      'settings-permissions',
+      label,
+      'No se pudieron leer los permisos del archivo.',
+    )
   }
 }
 
@@ -265,14 +319,22 @@ export function checkApiKey(ctx: DoctorContext): CheckResult {
     )
   }
 
-  return ok('api-key', label, `Configurada (${maskSecret(key)}, desde ${source}).`)
+  return ok(
+    'api-key',
+    label,
+    `Configurada (${maskSecret(key)}, desde ${source}).`,
+  )
 }
 
 export function checkModel(ctx: DoctorContext): CheckResult {
   const label = 'Modelo'
   const forced = ctx.env.NEXUS_MODEL?.trim()
   if (forced) {
-    return ok('model', label, `Forzado a "${forced}" por NEXUS_MODEL (ignora los tiers).`)
+    return ok(
+      'model',
+      label,
+      `Forzado a "${forced}" por NEXUS_MODEL (ignora los tiers).`,
+    )
   }
 
   const strong = ctx.env.NEXUS_MODEL_STRONG?.trim()
@@ -286,7 +348,11 @@ export function checkModel(ctx: DoctorContext): CheckResult {
     )
   }
 
-  return ok('model', label, `principal: ${strong}${cheap ? ` · utilitario: ${cheap}` : ''}`)
+  return ok(
+    'model',
+    label,
+    `principal: ${strong}${cheap ? ` · utilitario: ${cheap}` : ''}`,
+  )
 }
 
 export async function checkGit(ctx: DoctorContext): Promise<CheckResult> {
@@ -326,7 +392,12 @@ export function checkProjectWritable(ctx: DoctorContext): CheckResult {
   try {
     ctx.fs.accessSync(ctx.cwd, ctx.accessMode.R_OK)
   } catch {
-    return fail('project-dir', label, `No se puede leer ${ctx.cwd}.`, 'Abrí NEXUS desde una carpeta accesible.')
+    return fail(
+      'project-dir',
+      label,
+      `No se puede leer ${ctx.cwd}.`,
+      'Abrí NEXUS desde una carpeta accesible.',
+    )
   }
   try {
     ctx.fs.accessSync(ctx.cwd, ctx.accessMode.W_OK)
@@ -377,14 +448,20 @@ export function checkEnvFileIgnored(ctx: DoctorContext): CheckResult {
     )
   }
 
-  return ok('env-file', label, '.env presente y correctamente ignorado por git.')
+  return ok(
+    'env-file',
+    label,
+    '.env presente y correctamente ignorado por git.',
+  )
 }
 
 /**
  * Confirms the provider is reachable *and* that the key is accepted, using a
  * cheap catalogue endpoint rather than a paid completion.
  */
-export async function checkProviderReachable(ctx: DoctorContext): Promise<CheckResult> {
+export async function checkProviderReachable(
+  ctx: DoctorContext,
+): Promise<CheckResult> {
   const label = 'Conexión con OpenRouter'
   if (!ctx.allowNetwork) {
     return ok('provider', label, 'Omitido (--no-network).')
@@ -392,7 +469,12 @@ export async function checkProviderReachable(ctx: DoctorContext): Promise<CheckR
 
   const key = ctx.env.OPENROUTER_API_KEY?.trim()
   if (!key) {
-    return warn('provider', label, 'Sin key configurada, no se puede probar.', 'Configurá la key y volvé a correr "nexus doctor".')
+    return warn(
+      'provider',
+      label,
+      'Sin key configurada, no se puede probar.',
+      'Configurá la key y volvé a correr "nexus doctor".',
+    )
   }
 
   try {
@@ -411,12 +493,21 @@ export async function checkProviderReachable(ctx: DoctorContext): Promise<CheckR
       )
     }
     if (status >= 500) {
-      return warn('provider', label, `OpenRouter respondió ${status}. El problema es de su lado.`, 'Reintentá en un rato.')
+      return warn(
+        'provider',
+        label,
+        `OpenRouter respondió ${status}. El problema es de su lado.`,
+        'Reintentá en un rato.',
+      )
     }
     if (status >= 400) {
       return warn('provider', label, `Respuesta inesperada: HTTP ${status}.`)
     }
-    return ok('provider', label, `Alcanzable y la cuenta acepta la key (HTTP ${status}).`)
+    return ok(
+      'provider',
+      label,
+      `Alcanzable y la cuenta acepta la key (HTTP ${status}).`,
+    )
   } catch (error) {
     // Redacted: fetch failures quote the request, and the request carries the
     // Authorization header.
@@ -428,6 +519,87 @@ export async function checkProviderReachable(ctx: DoctorContext): Promise<CheckR
       label,
       `No se pudo conectar (${message}).`,
       'Revisá tu conexión, el DNS o el proxy. También podés correr "nexus doctor --no-network" para saltear esta prueba.',
+    )
+  }
+}
+
+/**
+ * ¿El modelo configurado sigue existiendo en el catálogo del proveedor?
+ *
+ * Este check nace de un incidente: el modelo por defecto de NEXUS estuvo días
+ * retirado de OpenRouter, cada petición devolvía un aviso en vez de una
+ * respuesta, y la versión publicada en npm no servía nada más instalarla. Nadie
+ * se enteró porque nada lo comprobaba. Ahora lo comprueba esto.
+ */
+export async function checkModelExists(
+  ctx: DoctorContext,
+): Promise<CheckResult> {
+  const label = 'El modelo existe'
+  if (!ctx.allowNetwork) {
+    return ok('model-exists', label, 'Omitido (--no-network).')
+  }
+
+  const model = (ctx.env.NEXUS_MODEL || ctx.env.NEXUS_MODEL_STRONG)?.trim()
+  if (!model) {
+    return ok('model-exists', label, 'No hay modelo configurado que comprobar.')
+  }
+
+  const provider = (ctx.env.NEXUS_PROVIDER?.trim() ||
+    'openrouter') as ProviderId
+  if (!isProviderId(provider)) {
+    return warn(
+      'model-exists',
+      label,
+      `NEXUS_PROVIDER tiene un valor desconocido: "${provider}".`,
+      'Elegí un proveedor con "/model", o borrá la variable para volver a OpenRouter.',
+    )
+  }
+
+  const apiKey = ctx.env[PROVIDER_KEY_ENV_VAR[provider] ?? '']?.trim()
+
+  try {
+    const catalog = await ctx.catalog(provider, apiKey)
+    // Un catálogo vacío no dice nada del modelo; sería un falso positivo.
+    if (catalog.models.length === 0) {
+      return ok('model-exists', label, 'El proveedor no devolvió catálogo.')
+    }
+
+    const found = catalog.models.some((m) => m.id === model)
+    if (found) {
+      const cuando = catalog.stale ? ' (según una copia guardada)' : ''
+      return ok(
+        'model-exists',
+        label,
+        `"${model}" sigue en el catálogo${cuando}.`,
+      )
+    }
+
+    // Con una copia vieja no se puede afirmar que el modelo murió: puede ser
+    // recién salido y la caché no haberlo visto todavía.
+    if (catalog.stale) {
+      return warn(
+        'model-exists',
+        label,
+        `No se pudo actualizar el catálogo y "${model}" no está en la copia guardada.`,
+        'Puede ser un modelo nuevo, o uno retirado. Volvé a intentarlo con red.',
+      )
+    }
+
+    return fail(
+      'model-exists',
+      label,
+      `"${model}" ya no está en el catálogo de ${PROVIDERS[provider].label}. Ninguna consulta va a funcionar.`,
+      'Los proveedores retiran modelos sin avisar. Elegí otro con "/model".',
+    )
+  } catch (error) {
+    const message = redactSecrets(
+      error instanceof Error ? error.message : String(error),
+    )
+    return warn(
+      'model-exists',
+      label,
+      `No se pudo consultar el catálogo (${message}).`,
+      'Revisá tu conexión, o corré "nexus doctor --no-network" para saltear esta prueba.',
     )
   }
 }
@@ -455,6 +627,7 @@ export async function runAllChecks(ctx: DoctorContext): Promise<CheckResult[]> {
     checkGit(ctx),
     checkRipgrep(ctx),
     checkProviderReachable(ctx),
+    checkModelExists(ctx),
   ])
 
   return [...synchronous, ...asynchronous]

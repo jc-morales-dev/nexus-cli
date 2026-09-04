@@ -1,90 +1,171 @@
 # NEXUS
 
-**A free, account-less AI coding agent for your terminal.**
+**El agente de terminal BYOK para desarrolladores que quieren controlar modelo,
+costo y datos.**
 
-NEXUS edits your codebase from natural-language instructions — like a terminal
-coding assistant, but free: bring your own [OpenRouter](https://openrouter.ai)
-key (free or paid models) and use any model you want. No subscription, no
-credits, no sign-up. Your key stays on your machine.
+Sin suscripción. Usá modelos gratuitos o de pago con tu propia API key.
 
-[See exactly what this fork changes](./ORIGINAL_WORK.md).
+[Mirá exactamente qué aporta este fork](./ORIGINAL_WORK.md).
 
-## Install
+NEXUS edita tu código a partir de instrucciones en lenguaje natural, desde la
+terminal. La diferencia con otros agentes está en quién controla la inferencia:
+vos ponés la key, vos elegís el modelo, y las peticiones van directo al
+proveedor. No hay una cuenta de NEXUS, ni créditos, ni un backend nuestro en el
+medio.
+
+## Qué significa BYOK
+
+BYOK es *bring your own key*: traé tu propia clave de API.
+
+- **Ponés tu key.** NEXUS la guarda en tu carpeta de configuración, no la sube
+  a ningún lado. Las peticiones salen de tu máquina directo a
+  [OpenRouter](https://openrouter.ai).
+- **Elegís el modelo.** Cualquiera del catálogo de OpenRouter, y lo cambiás
+  cuando quieras con `/model`.
+- **Ves el costo real.** Lo que gastás es lo que te cobra tu proveedor, al
+  precio de tu proveedor. NEXUS no agrega margen porque no está en el medio.
+
+Dicho al derecho y al revés, para que quede claro:
+
+- NEXUS **no cobra suscripción**. Instalarlo y usarlo no tiene costo.
+- NEXUS **no incluye el costo de las APIs de pago**. Si elegís un modelo que
+  cobra, eso lo pagás vos a OpenRouter.
+- Si tu proveedor ofrece **modelos gratuitos**, podés usarlos y no pagar nada
+  por la inferencia. Suelen tener límites de velocidad más bajos.
+- **No necesitás cuenta de NEXUS** porque no existe tal cosa.
+
+## Para quién es
+
+Desarrolladores hispanohablantes que trabajan en la terminal y quieren decidir
+qué modelo corre su código, cuánto gastan, y a dónde van sus datos. Toda la
+interfaz está en español.
+
+## Instalación
 
 ```bash
-npm install -g @victor00128/nexus-cli
+npm install -g @jc-morales-dev/nexus-cli
 ```
 
-It ships a self-contained binary — you don't need to install Node or Bun
-separately.
+Trae un binario autocontenido: no necesitás instalar Node ni Bun aparte.
 
-## Quick start
+## Primeros pasos
 
 ```bash
 nexus
 ```
 
-1. The first time, type `/key` and paste your OpenRouter API key
-   (get one free at https://openrouter.ai/keys).
-2. Pick a model with `/model`. The default is MiniMax M3 (free tier) — strong at
-   agentic work, 1M context, $0 with your own key. OpenRouter caps free-tier
-   requests per day, so if you hit the limit or want more power, switch any time
-   with `/model <id>` — DeepSeek V3.2 is a good, cheap alternative, and GLM 5.3
-   Flash gives you 1.3M context for cents.
-3. Start coding — just tell NEXUS what you want.
+1. La primera vez, escribí `/key` y pegá tu API key de OpenRouter
+   (se saca gratis en https://openrouter.ai/keys).
+2. Elegí un modelo con `/model`.
+3. Contale a NEXUS qué querés hacer.
 
-Examples:
+Ejemplos:
 
-- "Fix the SQL injection in user registration"
-- "Add rate limiting to all API endpoints"
-- "Refactor the database connection code"
+- "Arreglá la inyección SQL en el registro de usuarios"
+- "Agregá rate limiting a todos los endpoints"
+- "Refactorizá el código de conexión a la base de datos"
 
-## How it works
+Si algo no arranca, `nexus doctor` te dice qué falta.
 
-Instead of using one model for everything, NEXUS coordinates specialized agents
-that explore your project, plan changes, edit precisely, and review the result.
-This gives better context understanding and more accurate edits.
+### Sobre el modelo por defecto
 
-## Commands
+El default es MiniMax M3: tiene un nivel gratuito, buen rendimiento para tareas
+de agente y hasta 1M de contexto. OpenRouter limita la cantidad de solicitudes
+gratuitas por día; si llegás al límite o querés más potencia, cambialo cuando
+quieras con `/model`. DeepSeek V3.2 es una alternativa económica y GLM 5.3 Flash
+ofrece hasta 1.3M de contexto por un costo bajo.
 
-| Command | What it does |
-|---|---|
-| `/key` | Paste / view / clear your OpenRouter API key |
-| `/model` | Choose the AI model |
-| `/undo` | Revert the agent's edits from the last turn |
-| `/bg` | List / kill background processes |
-| `/help` | Help and keyboard shortcuts |
+## Proveedores y modelos
 
-## Features
+Hoy NEXUS habla con **OpenRouter**, y solo con OpenRouter. Es una sola
+integración, pero da acceso a cientos de modelos de decenas de proveedores
+(Anthropic, OpenAI, DeepSeek, Google, Qwen, Meta y demás) con una única key.
 
-- 🆓 **Free and account-less** — your key lives only on your PC.
-- 🧠 **Any OpenRouter model** — free or paid, switch anytime.
-- 🔁 **Multi-agent** — explores, edits and reviews your code.
-- 🪝 **Deterministic hooks** — run format/lint/typecheck automatically (`.nexus/hooks.json`).
-- ⏪ **Undo** — a safety net to revert edits without git.
-- 🌐 **Web search without an API key** — built-in research.
-- 🛡️ **Permissions / sandbox** — blocks dangerous commands before they run.
-- 🔌 **MCP support** — connect external tools.
+NEXUS usa dos modelos a la vez para gastar menos:
 
-## Configuration
-
-Per-project settings live under a `.nexus/` directory:
-
-- `.nexus/hooks.json` — commands to run after edits (PostToolUse) or before
-  finishing (Stop).
-- `.nexus/permissions.json` — allow/deny rules for terminal commands.
-- `.nexusignore` — files NEXUS should ignore.
-
-## Working on NEXUS itself
-
-There are two separate things, and it helps to keep them straight:
-
-| | Command | What it runs |
+| Tier | Para qué | Cómo se configura |
 |---|---|---|
-| **Installed** | `nexus` | The published binary from npm. This is what users get. |
-| **Development** | `nexus-dev` | The live source in this repo — every edit takes effect immediately, no rebuild. |
+| STRONG | Razonar y editar código | `/model`, o `NEXUS_MODEL_STRONG` |
+| CHEAP | Tareas utilitarias (buscar archivos, podar contexto) | `NEXUS_MODEL_CHEAP` |
 
-To set up the development side:
+Con `NEXUS_MODEL` forzás un único modelo para todo e ignorás los tiers.
+
+## Comandos
+
+| Comando | Qué hace |
+|---|---|
+| `/key` | Pegar, ver o borrar tu API key de OpenRouter |
+| `/model` | Elegir el modelo |
+| `/undo` | Revertir las ediciones del último turno |
+| `/bg` | Listar o matar procesos en segundo plano |
+| `/init` | Preparar la estructura de agentes personalizados |
+| `/help` | Ayuda y atajos de teclado |
+
+Desde la shell:
+
+| Comando | Qué hace |
+|---|---|
+| `nexus` | Abrir la interfaz |
+| `nexus doctor` | Diagnosticar la instalación y reportar problemas |
+| `nexus --debug` | Mostrar el detalle completo de los errores |
+| `nexus publish` | Publicar agentes en el registro |
+
+## Qué hace NEXUS
+
+- 🔑 **BYOK** — tu key vive en tu máquina; las peticiones no pasan por ningún
+  servidor nuestro.
+- 🧠 **Cualquier modelo de OpenRouter** — gratuito o de pago, cambiable en
+  cualquier momento.
+- 🔁 **Multi-agente** — agentes especializados exploran, planifican, editan y
+  revisan, en vez de un solo modelo haciendo todo.
+- 🪝 **Hooks deterministas** — formateo, lint o typecheck automáticos
+  (`.nexus/hooks.json`).
+- ⏪ **Undo** — revertir ediciones sin depender de git.
+- 🌐 **Búsqueda web incorporada** — sin API key aparte.
+- 🛡️ **Permisos** — reglas que bloquean comandos peligrosos antes de ejecutarlos
+  (`.nexus/permissions.json`).
+- 🔌 **MCP** — conectar herramientas externas.
+- 🩺 **`nexus doctor`** — diagnóstico de la instalación en un comando.
+
+## Configuración
+
+Por proyecto, en un directorio `.nexus/`:
+
+- `.nexus/hooks.json` — comandos a correr después de editar (PostToolUse) o
+  antes de terminar (Stop).
+- `.nexus/permissions.json` — reglas allow/deny para comandos de terminal.
+- `.nexusignore` — archivos que NEXUS debe ignorar.
+
+Tu key y el modelo elegido se guardan en tu carpeta de usuario
+(`~/.config/nexus/settings.json`), con permisos de solo-tu-usuario.
+
+## Agentes personalizados
+
+Podés definir tus propios agentes en `.agents/`, con control total sobre sus
+herramientas, prompts y comportamiento paso a paso. Corré `/init` dentro de
+NEXUS para generar la estructura, y mirá
+[docs/custom-agents.md](./docs/custom-agents.md) para la guía completa.
+
+## Documentación
+
+- [CONTRIBUTING.md](./CONTRIBUTING.md) — cómo trabajar en NEXUS
+- [ROADMAP.md](./ROADMAP.md) — qué viene
+- [CHANGELOG.md](./CHANGELOG.md) — qué cambió en cada versión
+- [docs/custom-agents.md](./docs/custom-agents.md) — crear agentes propios
+- [docs/versioning.md](./docs/versioning.md) — SemVer, versiones de Node,
+  cambios incompatibles
+- [docs/releasing.md](./docs/releasing.md) — cómo se publica una versión
+- [SECURITY.md](./SECURITY.md) — reportar vulnerabilidades
+- [WINDOWS.md](./WINDOWS.md) — particularidades de Windows
+
+## Trabajar en NEXUS
+
+Hay dos cosas distintas, y conviene no mezclarlas:
+
+| | Comando | Qué corre |
+|---|---|---|
+| **Instalado** | `nexus` | El binario publicado en npm. Lo que reciben los usuarios. |
+| **Desarrollo** | `bun dev` | El código fuente vivo de este repo, sin recompilar. |
 
 ```bash
 git clone https://github.com/jc-morales-dev/nexus-cli.git
@@ -93,56 +174,11 @@ bun install
 bun dev
 ```
 
-`bun dev` runs the CLI straight from source. If you want a global `nexus-dev`
-command that does the same from any directory, drop a small wrapper on your
-`PATH`:
+Los detalles (tests, evals, lint, convenciones) están en
+[CONTRIBUTING.md](./CONTRIBUTING.md).
 
-```bash
-#!/usr/bin/env bash
-# nexus-dev — runs the live source, wherever you call it from
-invoke_dir="$(pwd)"
-cd "/path/to/nexus-cli/cli" || exit 1
-exec bun --env-file=../.env run src/index.tsx --cwd "$invoke_dir" "$@"
-```
+## Licencia
 
-On Windows, the equivalent `.cmd`:
-
-```bat
-@echo off
-setlocal
-set "NEXUS_INVOKE_DIR=%CD%"
-cd /d "C:\path\to\nexus-cli\cli"
-bun --env-file="..\.env" run "src\index.tsx" --cwd "%NEXUS_INVOKE_DIR%" %*
-```
-
-Releasing a new version is documented in [CONTRIBUTING.md](./CONTRIBUTING.md).
-
-## Custom agents
-
-You can define your own agents under `.agents/` with full control over their
-tools, prompts, and step-by-step behavior. Run `/init` inside NEXUS to scaffold
-the structure.
-
-## Credits
-
-NEXUS is a fork of [Codebuff](https://github.com/CodebuffAI/codebuff), which did
-the heavy lifting: the multi-agent architecture, the editing tools and most of
-the code you'll find in the git history are theirs.
-
-This fork exists to answer a different question — what's left of that agent once
-you remove the product around it? Gone are the paid backend, the accounts, the
-credit system, the billing and the web app; in their place the CLI talks
-straight to OpenRouter with a key that never leaves your machine. What remains
-is an agent you run, not a service you subscribe to.
-
-There is no telemetry: the distributed binary is built with no analytics
-project behind it, so the client is never created and nothing is sent anywhere.
-
-The public GitHub identity is `jc-morales-dev`. npm currently uses the legacy
-publisher scope `@victor00128`; the package name is kept explicit here so users
-never confuse a GitHub rename with a separate npm package.
-
-## License
-
-NEXUS is released under the [Apache License 2.0](./LICENSE). See [NOTICE](./NOTICE)
-for attribution.
+NEXUS se publica bajo la [Apache License 2.0](./LICENSE). Es un fork de
+[Codebuff](https://github.com/CodebuffAI/codebuff); ver [NOTICE](./NOTICE) para
+la atribución.

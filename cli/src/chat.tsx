@@ -1,4 +1,5 @@
 import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
+import { maskSecret } from '@nexus/common/util/redact'
 import type { FeedbackCategory } from '@nexus/common/constants/feedback'
 import { safeOpen } from './utils/open-url'
 import {
@@ -897,8 +898,7 @@ export const Chat = ({
       resetNexusClient()
       closeKeyModal()
       setInputFocused(true)
-      const masked =
-        key.length > 12 ? `${key.slice(0, 8)}…${key.slice(-4)}` : key
+      const masked = maskSecret(key)
       const note = key.startsWith('sk-or-')
         ? ''
         : '\n(Ojo: las keys de OpenRouter suelen empezar con "sk-or-".)'

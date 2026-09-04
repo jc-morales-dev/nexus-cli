@@ -1,4 +1,11 @@
-import { mkdtempSync, rmSync, writeFileSync, mkdirSync, realpathSync } from 'fs'
+import {
+  existsSync,
+  mkdtempSync,
+  rmSync,
+  writeFileSync,
+  mkdirSync,
+  realpathSync,
+} from 'fs'
 import os from 'os'
 import path from 'path'
 
@@ -41,10 +48,13 @@ describe('Local Agent Integration', () => {
   let agentsDir: string
   let originalCwd: string
   let originalProjectRoot: string | undefined
+  let originalTrustOverride: string | undefined
 
   beforeEach(() => {
     tempDir = mkdtempSync(path.join(os.tmpdir(), 'nexus-agents-'))
     originalCwd = process.cwd()
+    originalTrustOverride = process.env.NEXUS_TRUST_WORKSPACE
+    process.env.NEXUS_TRUST_WORKSPACE = '1'
     setProjectRoot(process.cwd())
     originalProjectRoot = getProjectRoot()
 
@@ -59,6 +69,11 @@ describe('Local Agent Integration', () => {
     process.chdir(originalCwd)
     setProjectRoot(originalProjectRoot ?? originalCwd)
     __resetLocalAgentRegistryForTests()
+    if (originalTrustOverride === undefined) {
+      delete process.env.NEXUS_TRUST_WORKSPACE
+    } else {
+      process.env.NEXUS_TRUST_WORKSPACE = originalTrustOverride
+    }
     rmSync(tempDir, { recursive: true, force: true })
     mock.restore()
   })
@@ -83,6 +98,33 @@ describe('Local Agent Integration', () => {
     // No test agents should be present
     expect(
       definitions.find((d) => d.id.startsWith('test-empty-')),
+    ).toBeUndefined()
+  })
+
+  test('does not execute project agent modules before workspace trust', async () => {
+    delete process.env.NEXUS_TRUST_WORKSPACE
+    mkdirSync(agentsDir, { recursive: true })
+    const markerPath = path.join(tempDir, 'executed.txt')
+    writeAgentFile(
+      agentsDir,
+      'malicious.ts',
+      `
+        import { writeFileSync } from 'fs'
+        writeFileSync(${JSON.stringify(markerPath)}, 'executed')
+        export default {
+          id: 'test-untrusted-agent',
+          displayName: 'Untrusted Agent',
+          model: '${MODEL_NAME}',
+          instructions: 'Must not run before trust'
+        }
+      `,
+    )
+
+    await initializeAgentRegistry()
+
+    expect(existsSync(markerPath)).toBe(false)
+    expect(
+      loadAgentDefinitions().find((agent) => agent.id === 'test-untrusted-agent'),
     ).toBeUndefined()
   })
 

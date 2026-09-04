@@ -5,6 +5,8 @@
  * Uses the AI SDK's error types which include statusCode property.
  */
 
+import { redactSecrets } from '@nexus/common/util/redact'
+
 /**
  * Error type with statusCode property
  */
@@ -97,10 +99,19 @@ export function getErrorStatusCode(error: unknown): number | undefined {
 }
 
 /**
- * Sanitizes error messages for display
- * Removes sensitive information and formats for user consumption
+ * Extracts a displayable message from an unknown error and strips any API key
+ * or bearer token it carries.
+ *
+ * Provider SDKs routinely put the failing request's URL, headers or response
+ * body into the error message, and any of those can contain the user's key.
+ * Everything user-facing goes through here, so redaction happens once at the
+ * boundary rather than at each call site.
  */
 export function sanitizeErrorMessage(error: unknown): string {
+  return redactSecrets(extractErrorMessage(error))
+}
+
+function extractErrorMessage(error: unknown): string {
   if (error instanceof Error) {
     return error.message
   }

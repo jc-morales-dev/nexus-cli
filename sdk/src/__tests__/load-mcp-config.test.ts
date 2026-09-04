@@ -100,7 +100,10 @@ describe('loadMCPConfigSync', () => {
 
   it('should return empty config when no mcp.json exists in project dir', () => {
     // No mcp.json in tempDir/.agents - should not find any project-specific servers
-    const result = loadMCPConfigSync({ verbose: false })
+    const result = loadMCPConfigSync({
+      verbose: false,
+      configDirs: [path.join(tempDir, '.agents')],
+    })
     // Check that no server named 'testProjectServer' exists (which we'd create if one existed)
     expect(result.mcpServers.testProjectServer).toBeUndefined()
   })
@@ -122,7 +125,10 @@ describe('loadMCPConfigSync', () => {
       JSON.stringify(mcpConfig, null, 2),
     )
 
-    const result = loadMCPConfigSync({ verbose: false })
+    const result = loadMCPConfigSync({
+      verbose: false,
+      configDirs: [agentsDir],
+    })
     expect(result.mcpServers.testServer).toBeDefined()
     const testServer = result.mcpServers.testServer
     if (isStdioConfig(testServer)) {
@@ -155,7 +161,10 @@ describe('loadMCPConfigSync', () => {
       JSON.stringify(mcpConfig, null, 2),
     )
 
-    const result = loadMCPConfigSync({ verbose: false })
+    const result = loadMCPConfigSync({
+      verbose: false,
+      configDirs: [agentsDir],
+    })
     expect(result.mcpServers.envServer).toBeDefined()
     const envServer = result.mcpServers.envServer
     if (isStdioConfig(envServer)) {
@@ -187,7 +196,10 @@ describe('loadMCPConfigSync', () => {
     )
 
     // Should not throw, just skip the server with missing env var
-    const result = loadMCPConfigSync({ verbose: false })
+    const result = loadMCPConfigSync({
+      verbose: false,
+      configDirs: [agentsDir],
+    })
     // The server with missing env var should not be loaded
     expect(result.mcpServers.missingEnvServer).toBeUndefined()
   })
@@ -211,7 +223,10 @@ describe('loadMCPConfigSync', () => {
       JSON.stringify(projectConfig, null, 2),
     )
 
-    const result = loadMCPConfigSync({ verbose: false })
+    const result = loadMCPConfigSync({
+      verbose: false,
+      configDirs: [projectAgentsDir],
+    })
 
     // Project config should be loaded
     const projectServer = result.mcpServers.projectServer
@@ -228,7 +243,10 @@ describe('loadMCPConfigSync', () => {
     fs.writeFileSync(path.join(agentsDir, 'mcp.json'), 'not valid json {')
 
     // Should not throw - just skip the invalid file
-    const result = loadMCPConfigSync({ verbose: false })
+    const result = loadMCPConfigSync({
+      verbose: false,
+      configDirs: [agentsDir],
+    })
     // The result should not contain any servers from this invalid config
     // (though it might contain servers from other directories like home)
     expect(result.mcpServers.invalidServer).toBeUndefined()
@@ -267,7 +285,10 @@ describe('loadMCPConfig', () => {
       JSON.stringify(mcpConfig, null, 2),
     )
 
-    const result = await loadMCPConfig({ verbose: false })
+    const result = await loadMCPConfig({
+      verbose: false,
+      configDirs: [agentsDir],
+    })
     expect(result.mcpServers.asyncServer).toBeDefined()
     const asyncServer = result.mcpServers.asyncServer
     if (isStdioConfig(asyncServer)) {

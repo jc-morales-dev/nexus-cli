@@ -1,0 +1,10 @@
+[install]
+# Match the root hoisted setup so workspace packages resolve the same way.
+linker = "hoisted"
+linkWorkspacePackages = true
+
+[test]
+# `@nexus/common/env` validates a set of NEXT_PUBLIC_* vars at import time.
+# Running the eval tests from this directory (`bun --cwd evals run test`) does
+# not pick up the root bunfig's preload, so the defaults are loaded here too.
+preload = ["./test/setup-env.ts"]

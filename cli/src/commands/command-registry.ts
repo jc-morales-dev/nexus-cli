@@ -1,3 +1,4 @@
+import { maskSecret } from '@nexus/common/util/redact'
 import { checkpoints, backgroundProcesses } from '@nexus/sdk'
 import { safeOpen } from '../utils/open-url'
 
@@ -515,8 +516,6 @@ const ALL_COMMANDS: CommandDefinition[] = [
       params.saveToHistory(params.inputValue.trim())
       clearInput(params)
 
-      const mask = (k: string): string =>
-        k.length > 12 ? `${k.slice(0, 8)}…${k.slice(-4)}` : k
       const post = (text: string) =>
         params.setMessages((prev) => [...prev, getSystemMessage(text)])
 
@@ -540,7 +539,7 @@ const ALL_COMMANDS: CommandDefinition[] = [
       const note = arg.startsWith('sk-or-')
         ? ''
         : '\n(Note: OpenRouter keys usually start with "sk-or-". Run "/key clear" if this was a mistake.)'
-      post(`✅ OpenRouter key saved: ${mask(arg)}. NEXUS is ready — start coding!${note}`)
+      post(`✅ OpenRouter key saved: ${maskSecret(arg)}. NEXUS is ready — start coding!${note}`)
       return
     },
   }),

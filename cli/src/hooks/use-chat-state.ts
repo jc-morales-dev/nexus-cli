@@ -144,10 +144,14 @@ export function useChatState(): UseChatStateReturn {
     () => Array.from(rawStreamingAgents).sort().join(','),
     [rawStreamingAgents],
   )
+  // Depends on the *serialised* key, not the Set itself: the Set identity
+  // changes on every store update even when its contents don't, and this memo
+  // exists precisely to stop that churn from re-rendering the chat.
+  // (The suppression comment that used to sit here named a rule this repo
+  // doesn't configure, so it silenced nothing and failed the lint run.)
   const streamingAgents = useMemo(
     () => rawStreamingAgents,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [streamingAgentsKey],
+    [streamingAgentsKey], // eslint-disable-line
   )
 
   // Refs for tracking state across renders

@@ -89,23 +89,25 @@ function resolveMcpConfigEnv(config: MCPFileConfig): void {
 const MCP_CONFIG_FILE_NAME = 'mcp.json'
 
 /**
- * Get default directories to search for mcp.json.
- * Matches the agent loading directories for consistency.
+ * The SDK cannot establish trust for a checkout, so the safe default is the
+ * user's global directory. Applications can explicitly provide project
+ * directories after their own workspace-trust check.
  */
-const getDefaultMcpConfigDirs = (): string[] => {
-  const cwdAgents = path.join(process.cwd(), '.agents')
-  const parentAgents = path.join(process.cwd(), '..', '.agents')
-  const homeAgents = path.join(os.homedir(), '.agents')
-  return [cwdAgents, parentAgents, homeAgents]
+const getDefaultMcpConfigDirs = (): string[] => [
+  path.join(os.homedir(), '.agents'),
+]
+
+type LoadMCPConfigOptions = {
+  verbose?: boolean
+  /** Explicitly trusted `.agents` directories, merged in order. */
+  configDirs?: string[]
 }
 
 /**
  * Load MCP configuration from `mcp.json` files in `.agents` directories.
  *
- * By default, searches for mcp.json in:
- * - `{cwd}/.agents/mcp.json`
- * - `{cwd}/../.agents/mcp.json`
- * - `{homedir}/.agents/mcp.json`
+ * By default, searches only `{homedir}/.agents/mcp.json`. Project MCP
+ * configuration must be passed through `configDirs` after explicit trust.
  *
  * Later directories take precedence, so project MCP servers override global ones.
  * Environment variable references (e.g., `$API_KEY`) are resolved from process.env.
@@ -124,17 +126,19 @@ const getDefaultMcpConfigDirs = (): string[] => {
  * }
  * ```
  */
-export async function loadMCPConfig(options: {
-  verbose?: boolean
-}): Promise<LoadedMCPConfig> {
-  const { verbose = false } = options
+export async function loadMCPConfig(
+  options: LoadMCPConfigOptions,
+): Promise<LoadedMCPConfig> {
+  const { verbose = false, configDirs } = options
 
   const mergedConfig: LoadedMCPConfig = {
     mcpServers: {},
     _sourceFilePath: '',
   }
 
-  const mcpConfigDirs = getDefaultMcpConfigDirs()
+  const mcpConfigDirs = configDirs
+    ? [...configDirs]
+    : getDefaultMcpConfigDirs()
 
   for (const dir of mcpConfigDirs) {
     const configPath = path.join(dir, MCP_CONFIG_FILE_NAME)
@@ -203,17 +207,19 @@ export async function loadMCPConfig(options: {
  * @param options.verbose - Whether to log errors during loading
  * @returns Record of MCP server configurations keyed by server name
  */
-export function loadMCPConfigSync(options: {
-  verbose?: boolean
-}): LoadedMCPConfig {
-  const { verbose = false } = options
+export function loadMCPConfigSync(
+  options: LoadMCPConfigOptions,
+): LoadedMCPConfig {
+  const { verbose = false, configDirs } = options
 
   const mergedConfig: LoadedMCPConfig = {
     mcpServers: {},
     _sourceFilePath: '',
   }
 
-  const mcpConfigDirs = getDefaultMcpConfigDirs()
+  const mcpConfigDirs = configDirs
+    ? [...configDirs]
+    : getDefaultMcpConfigDirs()
 
   for (const dir of mcpConfigDirs) {
     const configPath = path.join(dir, MCP_CONFIG_FILE_NAME)

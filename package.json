@@ -11,7 +11,8 @@
     "scripts",
     "sdk",
     "agents",
-    "cli"
+    "cli",
+    "evals"
   ],
   "scripts": {
     "dev": "bun start-cli",
@@ -20,10 +21,14 @@
     "pack:cli": "bun run --cwd=cli pack:npm",
     "clean-ts": "find . -name '*.tsbuildinfo' -type f -delete && find . -name '.next' -type d -exec rm -rf {} + 2>/dev/null || true && find . -name 'node_modules' -type d -exec rm -rf {} + 2>/dev/null || true && bun install",
     "typecheck": "bun scripts/check-env-architecture.ts && bun --filter='*' run typecheck && echo '✅ All type checks passed!'",
-    "test": "bun --filter='{@nexus/common,@nexus/agents,@nexus/agent-runtime,@nexus/llm-providers,@nexus/sdk,@nexus/cli,@nexus/scripts}' run test",
+    "test": "bun --filter='{@nexus/common,@nexus/agents,@nexus/agent-runtime,@nexus/llm-providers,@nexus/sdk,@nexus/cli,@nexus/scripts,@nexus/evals}' run test",
     "init-worktree": "bun scripts/init-worktree.ts",
     "cleanup-worktree": "bun scripts/cleanup-worktree.ts",
-    "generate-tool-definitions": "bun scripts/generate-tool-definitions.ts"
+    "generate-tool-definitions": "bun scripts/generate-tool-definitions.ts",
+    "eval": "bun --filter=@nexus/evals run eval",
+    "eval:offline": "bun --filter=@nexus/evals run eval:offline",
+    "lint": "eslint cli/src sdk/src common/src packages agents evals scripts",
+    "lint:fix": "eslint --fix cli/src sdk/src common/src packages agents evals scripts"
   },
   "dependencies": {
     "zod": "^4.2.1"

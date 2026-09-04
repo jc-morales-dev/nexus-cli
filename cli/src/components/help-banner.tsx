@@ -89,9 +89,16 @@ export const HelpBanner = () => {
               Esc to cancel the current response
             </text>
             {byok && (
-              <text style={{ fg: theme.muted }}>
-                /key API key · /model pick model · /undo · /bg jobs
-              </text>
+              <>
+                <text style={{ fg: theme.muted }}>
+                  /key API key · /model pick model · /undo · /bg jobs
+                </text>
+                {/* Discoverability: doctor is a shell command, so it never
+                    shows up in the slash menu where users go looking. */}
+                <text style={{ fg: theme.muted }}>
+                  Desde la shell: nexus doctor (diagnóstico) · nexus --debug
+                </text>
+              </>
             )}
           </box>
         </box>

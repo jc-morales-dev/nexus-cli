@@ -1,0 +1,51 @@
+name: Proponer una funcionalidad
+description: Una idea para NEXUS
+labels: ['enhancement']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Antes de escribir, mirá el [ROADMAP](https://github.com/jc-morales-dev/nexus-cli/blob/main/ROADMAP.md):
+        puede que ya esté anotado, o que esté explícitamente fuera de alcance.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Qué problema resolvería
+      description: >
+        Empezá por el problema, no por la solución. Qué estabas haciendo y
+        dónde te trabaste.
+      placeholder: |
+        Quiero saber cuánto gasté en una sesión larga, y hoy tengo que ir a
+        mirar el panel de OpenRouter.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Qué proponés
+      description: Cómo te imaginás que funcionaría.
+      placeholder: |
+        Un comando /costo que muestre el acumulado de la sesión.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Qué probaste
+      description: Otras formas de resolverlo, y por qué no alcanzan.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Compatibilidad
+      options:
+        - label: >
+            Esto no requiere una cuenta de NEXUS, créditos, ni un backend
+            propio que intermedie la inferencia (ver "fuera de alcance" en el
+            ROADMAP)
+          required: true

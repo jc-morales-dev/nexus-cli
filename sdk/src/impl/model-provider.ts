@@ -92,8 +92,14 @@ export function getModelForRequest(params: ModelRequestParams): LanguageModel {
   // NEXUS is account-less: if no provider key is set yet, guide the user to add
   // one instead of silently failing against a Nexus backend that isn't there.
   if (process.env.NEXUS_MODE) {
+    // The wording is load-bearing: cli-errors.ts matches on "no openrouter api
+    // key" to classify this as `missing-api-key` and render the full guidance
+    // (which env var, which command, where to get one). Keep the phrase if you
+    // reword the rest.
     throw new Error(
-      'No OpenRouter API key set. Run "/key sk-or-..." to add yours (get a free key at https://openrouter.ai/keys).',
+      'No OpenRouter API key set. NEXUS is BYOK: add yours with "/key sk-or-..." ' +
+        'or set OPENROUTER_API_KEY. Get one at https://openrouter.ai/keys — ' +
+        'there are free models, and "nexus doctor" checks your setup.',
     )
   }
 

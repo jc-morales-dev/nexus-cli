@@ -11,6 +11,7 @@ import {
   isFullTelemetryEnabled,
   summarizeAnalyticsValue,
 } from '@nexus/common/util/analytics-sampling'
+import { redactDeep, redactSecrets } from '@nexus/common/util/redact'
 import { pino } from 'pino'
 
 import {
@@ -143,15 +144,27 @@ function sendAnalyticsAndLog(
   }
 
   const isStringOnly = typeof data === 'string' && msg === undefined
-  const normalizedData = isStringOnly ? undefined : data
-  const normalizedMsg = isStringOnly ? (data as string) : msg
+  const rawData = isStringOnly ? undefined : data
+  const rawMsg = isStringOnly ? (data as string) : msg
+
+  // Single redaction point for every sink below — the JSONL file on disk, the
+  // PostHog payloads, and the error reporter. A provider key reaches this
+  // function inside request headers, error stacks and tool output; redacting
+  // here means no downstream branch can be the one that forgets.
+  const normalizedData = rawData === undefined ? undefined : redactDeep(rawData)
+  const normalizedMsg =
+    typeof rawMsg === 'string' ? redactSecrets(rawMsg) : rawMsg
+  const safeArgs = args.map((arg) =>
+    typeof arg === 'string' ? redactSecrets(arg) : redactDeep(arg),
+  )
+
   const includeData = normalizedData != null && !isEmptyObject(normalizedData)
 
   const toTrack = {
     ...(includeData ? { data: normalizedData } : {}),
     level,
     loggerContext,
-    msg: stringFormat(normalizedMsg, ...args),
+    msg: stringFormat(normalizedMsg, ...safeArgs),
   }
 
   logAsErrorIfNeeded(toTrack)
@@ -160,7 +173,7 @@ function sendAnalyticsAndLog(
     const analyticsPayloads = analyticsDispatcher.process({
       data: normalizedData,
       level,
-      msg: stringFormat(normalizedMsg ?? '', ...args),
+      msg: stringFormat(normalizedMsg ?? '', ...safeArgs),
       fallbackUserId: loggerContext.userId,
     })
 
@@ -188,7 +201,7 @@ function sendAnalyticsAndLog(
 
     trackEvent(AnalyticsEvent.CLI_LOG, {
       level,
-      msg: stringFormat(normalizedMsg ?? '', ...args),
+      msg: stringFormat(normalizedMsg ?? '', ...safeArgs),
       ...dataProperties,
       ...loggerContext,
     })
@@ -202,7 +215,7 @@ function sendAnalyticsAndLog(
       timestamp: new Date().toISOString(),
       ...loggerContext,
       ...(includeData ? { data: normalizedData } : {}),
-      msg: stringFormat(normalizedMsg ?? '', ...args),
+      msg: stringFormat(normalizedMsg ?? '', ...safeArgs),
     })
     try {
       appendFileSync(logPath, logEntry + '\n')
@@ -212,7 +225,7 @@ function sendAnalyticsAndLog(
   } else if (pinoLogger !== undefined) {
     const base = { ...loggerContext }
     const obj = includeData ? { ...base, data: normalizedData } : base
-    pinoLogger[level](obj, normalizedMsg as any, ...args)
+    pinoLogger[level](obj, normalizedMsg as any, ...safeArgs)
   }
 }
 

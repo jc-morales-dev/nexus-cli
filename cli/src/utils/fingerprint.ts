@@ -1,14 +1,30 @@
 /**
- * Enhanced fingerprinting for CLI authentication.
+ * Deterministic fingerprinting for CLI authentication.
  *
- * Uses hardware-based identifiers to create deterministic fingerprints,
- * making it harder for users to game the system by creating multiple accounts.
+ * The fingerprint identifies this installation across restarts so a login flow
+ * can be correlated. It is derived from the machine id plus stable OS facts,
+ * and falls back to a random per-process id when that fails.
  *
- * Falls back to legacy random fingerprints if enhanced fingerprinting fails.
+ * This used to also pull manufacturer, serial number, chassis UUID, CPU brand
+ * and distro out of the `systeminformation` package. That was removed:
+ *
+ *  - Its stated purpose ("make it harder to game the system by creating
+ *    multiple accounts") belonged to the upstream paid product. NEXUS is
+ *    account-less and BYOK — there is no account to multiply and no backend
+ *    to game.
+ *  - `systeminformation` shells out to collect that data and carries four
+ *    unfixed command-injection advisories (GHSA-5vv4-hvf7-2h46,
+ *    GHSA-9c88-49p5-5ggf, GHSA-hvx9-hwr7-wjj9, GHSA-5xpp-75jx-m839), all
+ *    covering every published version.
+ *  - Harvesting a machine's serial number is hard to justify in a tool whose
+ *    pitch is that the user controls their own data.
+ *
+ * `node-machine-id` plus `node:os` already supply the stable identity, so the
+ * fingerprint stays deterministic without any of that.
  */
 
 import { createHash, randomBytes } from 'node:crypto'
-import { cpus, networkInterfaces } from 'node:os'
+import { arch, cpus, hostname, networkInterfaces, platform, release } from 'node:os'
 
 import { AnalyticsEvent } from '@nexus/common/constants/analytics-events'
 
@@ -16,9 +32,9 @@ import { trackEvent } from './analytics'
 import { detectShell } from './detect-shell'
 import { logger } from './logger'
 
-// Lazy imports for optional dependencies
+// Lazy import: node-machine-id touches the registry / filesystem, and doing
+// that at module evaluation time would slow every CLI start.
 let machineIdModule: typeof import('node-machine-id') | null = null
-let systeminformationModule: typeof import('systeminformation') | null = null
 
 async function getMachineId(): Promise<string> {
   if (!machineIdModule) {
@@ -33,46 +49,28 @@ async function getMachineId(): Promise<string> {
   return id
 }
 
-async function getSystemInfo(): Promise<{
-  system: { manufacturer: string; model: string; serial: string; uuid: string }
-  cpu: { manufacturer: string; brand: string; cores: number; physicalCores: number }
-  os: { platform: string; distro: string; arch: string; hostname: string }
-}> {
-  try {
-    if (!systeminformationModule) {
-      systeminformationModule = await import('systeminformation')
-    }
-    const [systemInfo, cpuInfo, osInfo] = await Promise.all([
-      systeminformationModule.system(),
-      systeminformationModule.cpu(),
-      systeminformationModule.osInfo(),
-    ])
-    return {
-      system: {
-        manufacturer: systemInfo.manufacturer,
-        model: systemInfo.model,
-        serial: systemInfo.serial,
-        uuid: systemInfo.uuid,
-      },
-      cpu: {
-        manufacturer: cpuInfo.manufacturer,
-        brand: cpuInfo.brand,
-        cores: cpuInfo.cores,
-        physicalCores: cpuInfo.physicalCores,
-      },
-      os: {
-        platform: osInfo.platform,
-        distro: osInfo.distro,
-        arch: osInfo.arch,
-        hostname: osInfo.hostname,
-      },
-    }
-  } catch {
-    return {
-      system: { manufacturer: '', model: '', serial: '', uuid: '' },
-      cpu: { manufacturer: '', brand: '', cores: 0, physicalCores: 0 },
-      os: { platform: process.platform, distro: '', arch: process.arch, hostname: '' },
-    }
+/**
+ * Stable OS facts, straight from `node:os`.
+ *
+ * Everything here is already available to the process without spawning a
+ * subprocess, which is the whole reason the heavyweight alternative went away.
+ */
+function getSystemInfo(): {
+  os: { platform: string; release: string; arch: string; hostname: string }
+  cpu: { model: string; cores: number }
+} {
+  const cpuList = cpus()
+  return {
+    os: {
+      platform: platform(),
+      release: release(),
+      arch: arch(),
+      hostname: hostname(),
+    },
+    cpu: {
+      model: cpuList[0]?.model ?? '',
+      cores: cpuList.length,
+    },
   }
 }
 
@@ -85,11 +83,9 @@ async function calculateEnhancedFingerprint(): Promise<string> {
   // getMachineId will throw if it can't get a valid machine ID
   const machineIdValue = await getMachineId()
   
-  const [sysInfo, shell, networkInfo] = await Promise.all([
-    getSystemInfo(),
-    Promise.resolve(detectShell()),
-    Promise.resolve(networkInterfaces()),
-  ])
+  const sysInfo = getSystemInfo()
+  const shell = detectShell()
+  const networkInfo = networkInterfaces()
 
   // Extract MAC addresses for additional uniqueness
   const macAddresses = Object.values(networkInfo)
@@ -102,7 +98,6 @@ async function calculateEnhancedFingerprint(): Promise<string> {
     .sort()
 
   const fingerprintInfo = {
-    system: sysInfo.system,
     cpu: sysInfo.cpu,
     os: sysInfo.os,
     runtime: {
@@ -110,14 +105,15 @@ async function calculateEnhancedFingerprint(): Promise<string> {
       platform: process.platform,
       arch: process.arch,
       shell,
-      cpuCount: cpus().length,
     },
     network: {
       macAddresses,
       interfaceCount: Object.keys(networkInfo).length,
     },
     machineId: machineIdValue,
-    fingerprintVersion: '2.0',
+    // Bumped from 2.0: the inputs changed, so fingerprints from before this
+    // version hash differently. Nothing persists them across releases.
+    fingerprintVersion: '3.0',
   }
 
   const fingerprintString = JSON.stringify(fingerprintInfo)

@@ -24,7 +24,7 @@
     "@modelcontextprotocol/sdk": "^1.18.2",
     "@types/seedrandom": "^3.0.8",
     "ai": "^5.0.52",
-    "ignore": "5.3.2",
+    "ignore": "7.0.8",
     "lodash": "4.17.23",
     "partial-json": "^0.1.7",
     "posthog-node": "^5.8.0",

@@ -51,7 +51,10 @@ function runCommand(
   args: string[],
   options: SpawnSyncOptions = {},
 ) {
-  const result = spawnSync(command, args, {
+  // On Windows, `bun` may be a .cmd shim that spawnSync cannot launch without
+  // a shell. The current process is already Bun, so reuse its executable.
+  const executable = command === 'bun' ? process.execPath : command
+  const result = spawnSync(executable, args, {
     cwd: options.cwd,
     stdio: VERBOSE ? 'inherit' : 'pipe',
     env: options.env,

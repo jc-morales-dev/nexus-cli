@@ -7,7 +7,7 @@ Windows-specific things worth knowing.
 ## Install
 
 ```powershell
-npm install -g @victor00128/nexus-cli
+npm install -g @jc-morales-dev/nexus-cli
 ```
 
 The package pulls a self-contained binary for your platform — you do not need

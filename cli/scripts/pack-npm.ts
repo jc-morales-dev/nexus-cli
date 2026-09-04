@@ -6,8 +6,8 @@
  * biome, and turbo — we ship self-contained prebuilt binaries inside npm
  * packages and a tiny Node bin shim that execs the right one:
  *
- *   @victor00128/nexus-cli            → shim + optionalDependencies (universal)
- *   @victor00128/nexus-cli-<platform> → the actual binary (os/cpu restricted)
+ *   @jc-morales-dev/nexus-cli            → shim + optionalDependencies (universal)
+ *   @jc-morales-dev/nexus-cli-<platform> → the actual binary (os/cpu restricted)
  *
  * npm only downloads the optionalDependency matching the user's os/cpu.
  *
@@ -33,13 +33,8 @@ const repoRoot = dirname(cliRoot)
 const npmDistDir = join(repoRoot, 'npm-dist')
 const version = process.env.npm_package_version ?? '1.0.0'
 
-const SCOPE = '@victor00128'
+const SCOPE = '@jc-morales-dev'
 const BASE_NAME = 'nexus-cli'
-const AUTHOR = 'Julio Cesar Morales'
-const REPOSITORY = {
-  type: 'git',
-  url: 'git+https://github.com/jc-morales-dev/nexus-cli.git',
-}
 
 interface Target {
   key: string // npm-style key: <platform>-<arch>
@@ -118,7 +113,11 @@ const DIST_ENV: Record<string, string> = {
 }
 
 function run(cmd: string, args: string[], extraEnv: Record<string, string> = {}) {
-  const r = spawnSync(cmd, args, {
+  // `bun` can resolve to a shell shim (`bun.cmd`) on Windows, which spawnSync
+  // cannot execute without a shell. Reuse the current Bun executable so the
+  // release build is portable and does not need shell interpolation.
+  const executable = cmd === 'bun' ? process.execPath : cmd
+  const r = spawnSync(executable, args, {
     cwd: cliRoot,
     stdio: 'inherit',
     env: { ...process.env, ...DIST_ENV, ...extraEnv },
@@ -195,9 +194,14 @@ function writePlatformPackage(target: Target) {
         name: pkgName,
         version,
         description: `NEXUS CLI — binario ${target.key}. Instalado automáticamente por ${SCOPE}/${BASE_NAME}.`,
+        author: 'Julio Cesar Morales',
         license: 'Apache-2.0',
-        author: AUTHOR,
-        repository: REPOSITORY,
+        repository: {
+          type: 'git',
+          url: 'git+https://github.com/jc-morales-dev/nexus-cli.git',
+        },
+        homepage: 'https://github.com/jc-morales-dev/nexus-cli#readme',
+        bugs: { url: 'https://github.com/jc-morales-dev/nexus-cli/issues' },
         preferUnplugged: true,
         os: [target.platform],
         cpu: [target.arch],
@@ -225,11 +229,14 @@ function writeMainPackage(builtKeys: string[]) {
         name: `${SCOPE}/${BASE_NAME}`,
         version,
         description:
-          'NEXUS — un CLI de coding con IA, gratis. Traé tu propia API key de OpenRouter (gratis o de pago) y usá cualquier modelo.',
+          'NEXUS — un CLI de coding con IA sin suscripción. Traé tu propia API key de OpenRouter y usá modelos gratuitos o de pago.',
+        author: 'Julio Cesar Morales',
         keywords: ['ai', 'cli', 'coding-agent', 'openrouter', 'llm', 'terminal'],
         license: 'Apache-2.0',
-        author: AUTHOR,
-        repository: REPOSITORY,
+        repository: {
+          type: 'git',
+          url: 'git+https://github.com/jc-morales-dev/nexus-cli.git',
+        },
         homepage: 'https://github.com/jc-morales-dev/nexus-cli#readme',
         bugs: { url: 'https://github.com/jc-morales-dev/nexus-cli/issues' },
         bin: { nexus: 'bin/nexus.js' },

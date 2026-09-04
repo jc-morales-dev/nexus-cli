@@ -1,0 +1,62 @@
+# Dependency updates for NEXUS.
+#
+# Deliberately narrow. This is a one-maintainer fork of a large upstream
+# monorepo: a Dependabot that opens twenty PRs a week gets muted, and a muted
+# bot is worse than no bot because it hides the security ones.
+#
+# So: security updates flow freely, routine version bumps are batched weekly
+# and grouped, and the packages that would break the build loudly (Bun,
+# OpenTUI, React) are pinned out of automatic updates.
+
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: '/'
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    commit-message:
+      # Conventional Commits, so the changelog generator picks these up
+      # correctly and they land as patch releases rather than features.
+      prefix: 'fix'
+      prefix-development: 'chore'
+      include: scope
+    groups:
+      # One PR for all the type packages: they never break at runtime and
+      # reviewing them one by one is pure overhead.
+      types:
+        patterns: ['@types/*']
+      # Linting and formatting move together.
+      tooling:
+        patterns:
+          - 'eslint*'
+          - '@typescript-eslint/*'
+          - 'typescript-eslint'
+          - 'prettier*'
+    ignore:
+      # The terminal UI is pinned to an exact OpenTUI version; a minor bump has
+      # broken rendering before, and it needs a manual smoke test in a real
+      # terminal, which CI cannot do.
+      - dependency-name: '@opentui/core'
+      - dependency-name: '@opentui/react'
+      # React 19 is pinned through the root `overrides`. Bumping it here
+      # without the override just creates a duplicate tree.
+      - dependency-name: 'react'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'react-dom'
+        update-types: ['version-update:semver-major']
+      # TypeScript majors need a manual pass over the whole monorepo.
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: github-actions
+    directory: '/'
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: 'ci'
+    groups:
+      actions:
+        patterns: ['*']

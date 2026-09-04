@@ -10,7 +10,7 @@ import { logger } from './logger'
 // "name" exactly — it's the source of truth we compare the running binary's
 // baked-in version against. Scoped under the publisher's npm account so the name
 // stays ours (the unscoped "nexus-ai-cli" is already taken by someone else).
-const PACKAGE_NAME = '@victor00128/nexus-cli'
+const PACKAGE_NAME = '@jc-morales-dev/nexus-cli'
 const REGISTRY_URL = `https://registry.npmjs.org/${PACKAGE_NAME}/latest`
 // The exact command a user runs to update. It's an npm global install, so this
 // is the same regardless of platform.

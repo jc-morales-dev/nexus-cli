@@ -143,20 +143,27 @@ const getAllAgentFiles = (dir: string): string[] => {
   return files
 }
 
-const getDefaultAgentDirs = () => {
-  const cwdAgents = path.join(process.cwd(), '.agents')
-  const parentAgents = path.join(process.cwd(), '..', '.agents')
-  const homeAgents = path.join(os.homedir(), '.agents')
-  return [cwdAgents, parentAgents, homeAgents]
+/**
+ * The SDK cannot decide whether an arbitrary checkout is trusted. Its safe
+ * default is therefore limited to the user's own global agent directory.
+ * Applications may pass `agentDirs` after making an explicit trust decision.
+ */
+const getDefaultAgentDirs = () => [path.join(os.homedir(), '.agents')]
+
+type LoadLocalAgentsOptions = {
+  /** A single explicitly trusted agents directory. */
+  agentsPath?: string
+  /** Explicitly trusted directories, merged in order (later entries win). */
+  agentDirs?: string[]
+  verbose?: boolean
 }
 
 /**
  * Load agent definitions from `.agents` directories.
  *
- * By default, searches for agents in:
- * - `{cwd}/.agents`
- * - `{cwd}/../.agents`
- * - `{homedir}/.agents`
+ * By default, searches only `{homedir}/.agents`, which is controlled by the
+ * user. Loading project code requires an explicit `agentsPath`/`agentDirs`
+ * supplied by an application after it has established workspace trust.
  *
  * Agent files can be `.ts`, `.tsx`, `.js`, `.mjs`, or `.cjs`.
  * TypeScript files are loaded natively by Bun's runtime.
@@ -197,6 +204,7 @@ const getDefaultAgentDirs = () => {
 // Overload: validate: true returns result with agents and errors
 export async function loadLocalAgents(options: {
   agentsPath?: string
+  agentDirs?: string[]
   verbose?: boolean
   validate: true
 }): Promise<LoadLocalAgentsResult>
@@ -204,6 +212,7 @@ export async function loadLocalAgents(options: {
 // Overload: validate: false or omitted returns just agents (backward compatible)
 export async function loadLocalAgents(options: {
   agentsPath?: string
+  agentDirs?: string[]
   verbose?: boolean
   validate?: false
 }): Promise<LoadedAgents>
@@ -211,16 +220,19 @@ export async function loadLocalAgents(options: {
 // Implementation
 export async function loadLocalAgents({
   agentsPath,
+  agentDirs: explicitAgentDirs,
   verbose = false,
   validate = false,
-}: {
-  agentsPath?: string
-  verbose?: boolean
+}: LoadLocalAgentsOptions & {
   validate?: boolean
 }): Promise<LoadedAgents | LoadLocalAgentsResult> {
   const agents: LoadedAgents = {}
 
-  const agentDirs = agentsPath ? [agentsPath] : getDefaultAgentDirs()
+  const agentDirs = agentsPath
+    ? [agentsPath]
+    : explicitAgentDirs
+      ? [...explicitAgentDirs]
+      : getDefaultAgentDirs()
   const allAgentFiles = agentDirs.flatMap((dir) => getAllAgentFiles(dir))
 
   if (allAgentFiles.length === 0) {

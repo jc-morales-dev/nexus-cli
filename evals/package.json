@@ -1,0 +1,20 @@
+{
+  "name": "@nexus/evals",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Repeatable behavioural evaluations for the NEXUS agent",
+  "scripts": {
+    "eval": "bun run index.ts",
+    "eval:offline": "bun run index.ts --offline",
+    "test": "bun test __tests__",
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "dependencies": {
+    "@nexus/common": "workspace:*",
+    "@nexus/sdk": "workspace:*"
+  },
+  "engines": {
+    "bun": "1.3.11"
+  }
+}

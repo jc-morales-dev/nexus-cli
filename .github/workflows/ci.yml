@@ -47,6 +47,35 @@ jobs:
         continue-on-error: true
         run: bun scripts/check-env-architecture.ts
 
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-project
+
+      # Fails on errors only. The ~360 warnings are inherited import-order and
+      # type-import nits from upstream; making them blocking would mean a
+      # thousand-file reformat commit, and a job that is red from day one gets
+      # ignored. `bun run lint:fix` handles them file by file as code is touched.
+      - name: ESLint
+        run: bun run lint
+
+  # The deterministic half of the eval suite: no model, no API key, no cost.
+  # It exercises error classification, the permission rules and secret
+  # redaction end to end, which unit tests alone don't cover.
+  evals:
+    name: Evals (offline)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-project
+
+      - name: Run offline evals
+        run: bun run eval:offline
+
   test:
     name: Test (${{ matrix.os }})
     runs-on: ${{ matrix.os }}

@@ -9,6 +9,7 @@
 // out of the compiled binary entirely (the sideEffects glob in package.json is
 // not honored), which silently broke account-less boot and saved-key loading in
 // the distributed .exe. An explicit call cannot be stripped.
+import { registerSecret } from '@nexus/common/util/redact'
 import { NEXUS_DEFAULT_MODEL, isRetiredNexusModel } from '../data/nexus-models'
 import {
   loadOpenRouterApiKey,
@@ -53,6 +54,7 @@ export function initByokKey(deps: ByokSettingsDeps = defaultDeps): void {
   if (savedKey && !process.env.OPENROUTER_API_KEY) {
     process.env.OPENROUTER_API_KEY = savedKey
   }
+  registerSecret(process.env.OPENROUTER_API_KEY)
 
   // Tiered models — single source of truth so the user's /model pick persists and
   // the distributable binary works with no .env. An explicit NEXUS_MODEL (a

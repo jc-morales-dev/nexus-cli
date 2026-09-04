@@ -1,0 +1,208 @@
+# Release automation for NEXUS.
+#
+# Triggered by pushing a `v*` tag, which is the only manual step. Everything
+# after that is reproducible: verify → build every platform → verify again →
+# publish → GitHub Release.
+#
+# The design constraint is that publishing to npm is irreversible: a version
+# number can never be reused. So every check that can run before `npm publish`
+# runs before it, and the publish step is the last thing in the pipeline.
+#
+# Why not semantic-release or changesets: NEXUS publishes six generated
+# packages (five cross-compiled binaries plus a Node shim) in a specific order.
+# Both tools assume a single `npm publish` of a hand-maintained package.json
+# and would need custom plugins for all of it. See
+# `scripts/release/conventional-commits.ts` and `docs/releasing.md`.
+
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+# A release must never race another release.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: write # create the GitHub Release and upload assets
+  id-token: write # npm provenance
+
+jobs:
+  # Gate 1: the same checks CI runs on every push. A tag that doesn't pass
+  # them never reaches the build.
+  verify:
+    name: Verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-project
+
+      - name: Confirm the tag matches cli/package.json
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          PKG_VERSION="$(node -p "require('./cli/package.json').version")"
+          if [ "$TAG_VERSION" != "$PKG_VERSION" ]; then
+            echo "::error::El tag $GITHUB_REF_NAME no coincide con cli/package.json ($PKG_VERSION)."
+            echo "Corré 'bun scripts/release/prepare.ts' antes de taguear."
+            exit 1
+          fi
+
+      - name: Typecheck
+        run: bun --filter='*' run typecheck
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Test
+        run: bun run test
+
+      - name: Offline evals
+        run: bun run eval:offline
+
+  # Cross-compiles all five targets from Linux. Bun downloads the target
+  # runtimes on demand; ripgrep is vendored per platform by the SDK.
+  build:
+    name: Build packages
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-project
+
+      - name: Fetch vendored ripgrep for every platform
+        run: bun --cwd sdk run fetch-ripgrep
+
+      - name: Build the SDK
+        run: bun --cwd sdk run build
+
+      - name: Build binaries and assemble npm packages
+        run: |
+          bun run --cwd cli pack:npm \
+            win32-x64 linux-x64 linux-arm64 darwin-x64 darwin-arm64
+
+      # Gate 2: the packages themselves. Version agreement across all six,
+      # binary present, tree-sitter.wasm shipped next to it, NOTICE included
+      # (Apache-2.0), changelog entry present, no credential-shaped strings.
+      - name: Verify the built packages
+        run: bun scripts/release/verify.ts "${GITHUB_REF_NAME}"
+
+      - name: Upload packages for the publish job
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-dist
+          path: npm-dist/
+          retention-days: 7
+
+  publish:
+    name: Publish to npm
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # Requires a repository environment named "npm-publish". Add a required
+    # reviewer there if you want a human to approve every publish.
+    environment: npm-publish
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: npm-dist
+          path: npm-dist/
+
+      # Order matters: the main package lists every platform package as an
+      # optionalDependency pinned to this exact version, so publishing it first
+      # would leave a window where `npm install` resolves nothing.
+      - name: Publish the platform packages
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -euo pipefail
+          VERSION="${GITHUB_REF_NAME#v}"
+          for platform in win32-x64 linux-x64 linux-arm64 darwin-x64 darwin-arm64; do
+            PACKAGE="@jc-morales-dev/nexus-cli-$platform"
+            if npm view "$PACKAGE@$VERSION" version >/dev/null 2>&1; then
+              echo "── $PACKAGE@$VERSION ya existe; omitiendo"
+            else
+              echo "── publicando $PACKAGE@$VERSION"
+              ( cd "npm-dist/npm/nexus-cli-$platform" \
+                && npm publish --access public --provenance )
+            fi
+          done
+
+      - name: Publish the main package
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          PACKAGE="@jc-morales-dev/nexus-cli"
+          if npm view "$PACKAGE@$VERSION" version >/dev/null 2>&1; then
+            echo "── $PACKAGE@$VERSION ya existe; omitiendo"
+          else
+            cd npm-dist && npm publish --access public --provenance
+          fi
+
+  github-release:
+    name: GitHub Release
+    needs: publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: npm-dist
+          path: npm-dist/
+
+      # The release notes are the CHANGELOG section for this version — the
+      # same text a reviewer approved, not a second summary that can drift.
+      - name: Extract the changelog entry
+        id: notes
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          {
+            echo 'body<<CHANGELOG_EOF'
+            awk -v version="## $VERSION" '
+              $0 ~ "^"version { found = 1; next }
+              found && /^## / { exit }
+              found { print }
+            ' CHANGELOG.md
+            echo 'CHANGELOG_EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Package the binaries as release assets
+        run: |
+          set -euo pipefail
+          mkdir -p release-assets
+          for platform in win32-x64 linux-x64 linux-arm64 darwin-x64 darwin-arm64; do
+            dir="npm-dist/npm/nexus-cli-$platform"
+            [ -d "$dir/bin" ] || continue
+            tar -czf "release-assets/nexus-${GITHUB_REF_NAME}-$platform.tar.gz" -C "$dir" bin
+          done
+          ( cd release-assets && sha256sum *.tar.gz > SHA256SUMS.txt )
+
+      - name: Create the release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: NEXUS ${{ github.ref_name }}
+          body: |
+            ${{ steps.notes.outputs.body }}
+
+            ## Instalación
+
+            ```bash
+            npm install -g @jc-morales-dev/nexus-cli@${{ github.ref_name }}
+            ```
+          files: release-assets/*
+          fail_on_unmatched_files: false

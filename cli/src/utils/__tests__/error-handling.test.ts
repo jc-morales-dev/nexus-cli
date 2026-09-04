@@ -80,215 +80,147 @@ describe('error-handling', () => {
     })
   })
 
+  // createErrorMessage renders a *classified* error now: a headline, an
+  // explanation and a next step, instead of the provider's raw message with a
+  // stack trace stapled to it. These tests assert the classification is right
+  // and that the raw text does not leak, which is a stronger contract than the
+  // substring checks they replace.
   describe('createErrorMessage', () => {
-    test('creates message from Error object', () => {
-      const error = new Error('Something went wrong')
-      const result = createErrorMessage(error, 'msg-123')
+    test('creates a complete message with the given id', () => {
+      const result = createErrorMessage(new Error('Something went wrong'), 'msg-123')
 
       expect(result.id).toBe('msg-123')
-      expect(result.content).toContain('Something went wrong')
       expect(result.content).toContain('**Error:**')
       expect(result.isComplete).toBe(true)
       expect(result.blocks).toBeUndefined()
     })
 
-    test('creates message from string error', () => {
-      const result = createErrorMessage('String error', 'msg-456')
-
-      expect(result.id).toBe('msg-456')
-      expect(result.content).toContain('String error')
+    test('surfaces an unrecognised message rather than swallowing it', () => {
+      const result = createErrorMessage(new Error('Something went wrong'), 'msg-1')
+      expect(result.content).toContain('Something went wrong')
     })
 
-    test('creates message from object with message property', () => {
+    test('accepts a bare string error', () => {
+      expect(createErrorMessage('String error', 'msg-456').content).toContain(
+        'String error',
+      )
+    })
+
+    test('accepts an object with a message property', () => {
       const error = { message: 'Object error message', code: 'ERR_001' }
-      const result = createErrorMessage(error, 'msg-789')
-
-      expect(result.content).toContain('Object error message')
+      expect(createErrorMessage(error, 'msg-789').content).toContain(
+        'Object error message',
+      )
     })
 
-    test('uses fallback for unknown error types', () => {
-      const result = createErrorMessage(null, 'msg-null')
-
-      expect(result.content).toContain('Unknown error occurred')
-    })
-
-    test('includes stack trace when available', () => {
+    test('does not print a stack trace by default', () => {
       const error = new Error('Error with stack')
       const result = createErrorMessage(error, 'msg-stack')
 
-      expect(result.content).toContain('Error with stack')
-      // Stack trace should be included
-      expect(result.content).toContain('at')
+      expect(error.stack).toBeDefined()
+      expect(result.content).not.toContain('at ')
+      expect(result.content).not.toContain('error-handling.test')
     })
 
-    test('handles error without message property', () => {
-      const error = { code: 'ERR_UNKNOWN' }
-      const result = createErrorMessage(error, 'msg-no-msg')
-
-      expect(result.content).toContain('Unknown error occurred')
+    test('offers --debug when there is nothing more specific to say', () => {
+      const result = createErrorMessage({ code: 'ERR_UNKNOWN' }, 'msg-no-msg')
+      expect(result.content).toContain('--debug')
     })
 
-    test('handles error with empty message', () => {
-      const error = { message: '' }
-      const result = createErrorMessage(error, 'msg-empty')
-
-      expect(result.content).toContain('Unknown error occurred')
+    test('handles null and empty-message errors without throwing', () => {
+      expect(createErrorMessage(null, 'msg-null').content).toContain('**Error:**')
+      expect(createErrorMessage({ message: '' }, 'msg-empty').content).toContain(
+        '**Error:**',
+      )
+      expect(createErrorMessage({ message: 123 }, 'msg-num').content).toContain(
+        '**Error:**',
+      )
     })
 
-    test('handles error with numeric message', () => {
-      const error = { message: 123 }
-      const result = createErrorMessage(error, 'msg-num')
-
-      expect(result.content).toContain('Unknown error occurred')
+    test('explains a 402 as missing credits and how to avoid it', () => {
+      const result = createErrorMessage(
+        { statusCode: 402, message: 'Payment required' },
+        'msg-402',
+      )
+      expect(result.content).toContain('saldo')
+      expect(result.content).toContain('/model')
     })
 
-    test('handles out of credits error', () => {
-      const error = { statusCode: 402, message: 'Payment required' }
-      const result = createErrorMessage(error, 'msg-402')
-
-      expect(result.content).toContain('Payment required')
+    test('explains a 401 as a rejected key and points at /key', () => {
+      const result = createErrorMessage(
+        { statusCode: 401, message: 'Invalid authentication token' },
+        'msg-auth',
+      )
+      expect(result.content).toContain('/key')
+      expect(result.content).not.toContain('sk-')
     })
 
-    test('preserves message ID', () => {
-      const error = new Error('Test')
-      const result = createErrorMessage(error, 'unique-id-123')
-
-      expect(result.id).toBe('unique-id-123')
+    test('blames the provider, not the user, on a 500', () => {
+      const result = createErrorMessage(
+        { statusCode: 500, message: 'Internal server error' },
+        'msg-500',
+      )
+      expect(result.content).toContain('proveedor')
     })
 
-    test('marks message as complete', () => {
-      const error = new Error('Test')
-      const result = createErrorMessage(error, 'msg-complete')
-
-      expect(result.isComplete).toBe(true)
+    test('explains a 429 as rate limiting', () => {
+      const result = createErrorMessage(
+        { statusCode: 429, message: 'Too many requests', retryAfter: 60 },
+        'msg-rate',
+      )
+      expect(result.content).toContain('Límite de velocidad')
     })
 
-    test('clears blocks from error message', () => {
-      const error = new Error('Test')
-      const result = createErrorMessage(error, 'msg-blocks')
-
-      expect(result.blocks).toBeUndefined()
+    test('explains a 403 as a permissions problem', () => {
+      const result = createErrorMessage(
+        { statusCode: 403, message: 'Access denied' },
+        'msg-403',
+      )
+      expect(result.content).toContain('Acceso denegado')
     })
 
-    test('handles deeply nested error objects', () => {
-      const error = {
-        message: 'Outer error',
-        cause: {
-          message: 'Inner error',
-          cause: {
-            message: 'Root cause',
-          },
-        },
-      }
-      const result = createErrorMessage(error, 'msg-nested')
-
-      // Should only extract the top-level message
-      expect(result.content).toContain('Outer error')
+    test('reads a 404 as an unavailable model', () => {
+      const result = createErrorMessage(
+        { statusCode: 404, message: 'Resource not found' },
+        'msg-404',
+      )
+      expect(result.content).toContain('Modelo inexistente')
+      expect(result.content).toContain('/model')
     })
 
-    test('handles API error responses', () => {
-      const apiError = {
-        message: 'API request failed',
-        statusCode: 500,
-        response: { error: 'Internal server error' },
-      }
-      const result = createErrorMessage(apiError, 'msg-api')
-
-      expect(result.content).toContain('API request failed')
-    })
-
-    test('handles network timeout errors', () => {
+    test('distinguishes a timeout from a generic failure', () => {
       const timeoutError = new Error('Request timeout')
       ;(timeoutError as any).code = 'ETIMEDOUT'
       const result = createErrorMessage(timeoutError, 'msg-timeout')
 
-      expect(result.content).toContain('Request timeout')
+      expect(result.content).toContain('tiempo de espera')
     })
 
-    test('handles auth errors', () => {
-      const authError = {
-        statusCode: 401,
-        message: 'Invalid authentication token',
-      }
-      const result = createErrorMessage(authError, 'msg-auth')
+    test('preserves the message id and completion flags', () => {
+      const result = createErrorMessage(new Error('Test'), 'unique-id-123')
+      expect(result.id).toBe('unique-id-123')
+      expect(result.isComplete).toBe(true)
+      expect(result.blocks).toBeUndefined()
+    })
 
-      expect(result.content).toContain('Invalid authentication token')
+    test('only reports the top-level message of a nested error', () => {
+      const error = {
+        message: 'Outer error',
+        cause: { message: 'Inner error', cause: { message: 'Root cause' } },
+      }
+      const result = createErrorMessage(error, 'msg-nested')
+
+      expect(result.content).toContain('Outer error')
+      expect(result.content).not.toContain('Root cause')
     })
   })
 
-  describe('error scenarios', () => {
-    test('handles rate limit error (429)', () => {
-      const rateLimitError = {
-        statusCode: 429,
-        message: 'Too many requests',
-        retryAfter: 60,
-      }
-
-      expect(isOutOfCreditsError(rateLimitError)).toBe(false)
-
-      const result = createErrorMessage(rateLimitError, 'msg-rate')
-      expect(result.content).toContain('Too many requests')
-    })
-
-    test('handles server error (500)', () => {
-      const serverError = {
-        statusCode: 500,
-        message: 'Internal server error',
-      }
-
-      expect(isOutOfCreditsError(serverError)).toBe(false)
-
-      const result = createErrorMessage(serverError, 'msg-500')
-      expect(result.content).toContain('Internal server error')
-    })
-
-    test('handles validation error (400)', () => {
-      const validationError = {
-        statusCode: 400,
-        message: 'Invalid request parameters',
-        errors: [{ field: 'prompt', message: 'Required' }],
-      }
-
-      expect(isOutOfCreditsError(validationError)).toBe(false)
-
-      const result = createErrorMessage(validationError, 'msg-400')
-      expect(result.content).toContain('Invalid request parameters')
-    })
-
-    test('handles forbidden error (403)', () => {
-      const forbiddenError = {
-        statusCode: 403,
-        message: 'Access denied',
-      }
-
-      expect(isOutOfCreditsError(forbiddenError)).toBe(false)
-
-      const result = createErrorMessage(forbiddenError, 'msg-403')
-      expect(result.content).toContain('Access denied')
-    })
-
-    test('handles not found error (404)', () => {
-      const notFoundError = {
-        statusCode: 404,
-        message: 'Resource not found',
-      }
-
-      expect(isOutOfCreditsError(notFoundError)).toBe(false)
-
-      const result = createErrorMessage(notFoundError, 'msg-404')
-      expect(result.content).toContain('Resource not found')
-    })
-
-    test('handles conflict error (409)', () => {
-      const conflictError = {
-        statusCode: 409,
-        message: 'Conflict detected',
-      }
-
-      expect(isOutOfCreditsError(conflictError)).toBe(false)
-
-      const result = createErrorMessage(conflictError, 'msg-409')
-      expect(result.content).toContain('Conflict detected')
-    })
+  describe('out-of-credits detection stays independent of formatting', () => {
+    test.each([429, 500, 400, 403, 404, 409])(
+      'status %i is not treated as out of credits',
+      (statusCode) => {
+        expect(isOutOfCreditsError({ statusCode, message: 'x' })).toBe(false)
+      },
+    )
   })
 })

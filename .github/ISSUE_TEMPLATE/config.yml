@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Vulnerabilidad de seguridad
+    url: https://github.com/jc-morales-dev/nexus-cli/blob/main/SECURITY.md
+    about: >
+      No abras un issue público. Seguí el procedimiento de SECURITY.md.
+  - name: Mi API key no funciona
+    url: https://github.com/jc-morales-dev/nexus-cli/blob/main/README.md#primeros-pasos
+    about: >
+      Corré "nexus doctor" primero — diagnostica la mayoría de los problemas
+      de configuración, incluida una key revocada.

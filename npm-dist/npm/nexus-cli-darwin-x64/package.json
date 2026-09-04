@@ -1,12 +1,16 @@
 {
-  "name": "@victor00128/nexus-cli-darwin-x64",
-  "version": "1.0.4",
-  "description": "NEXUS CLI — binario darwin-x64. Instalado automáticamente por @victor00128/nexus-cli.",
-  "license": "Apache-2.0",
+  "name": "@jc-morales-dev/nexus-cli-darwin-x64",
+  "version": "1.1.0",
+  "description": "NEXUS CLI — binario darwin-x64. Instalado automáticamente por @jc-morales-dev/nexus-cli.",
   "author": "Julio Cesar Morales",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jc-morales-dev/nexus-cli.git"
+  },
+  "homepage": "https://github.com/jc-morales-dev/nexus-cli#readme",
+  "bugs": {
+    "url": "https://github.com/jc-morales-dev/nexus-cli/issues"
   },
   "preferUnplugged": true,
   "os": [

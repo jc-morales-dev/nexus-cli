@@ -1,7 +1,8 @@
 {
-  "name": "@victor00128/nexus-cli",
-  "version": "1.0.4",
-  "description": "NEXUS — un CLI de coding con IA, gratis. Traé tu propia API key de OpenRouter (gratis o de pago) y usá cualquier modelo.",
+  "name": "@jc-morales-dev/nexus-cli",
+  "version": "1.1.0",
+  "description": "NEXUS — un CLI de coding con IA sin suscripción. Traé tu propia API key de OpenRouter y usá modelos gratuitos o de pago.",
+  "author": "Julio Cesar Morales",
   "keywords": [
     "ai",
     "cli",
@@ -11,7 +12,6 @@
     "terminal"
   ],
   "license": "Apache-2.0",
-  "author": "Julio Cesar Morales",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jc-morales-dev/nexus-cli.git"
@@ -31,10 +31,10 @@
     "node": ">=16"
   },
   "optionalDependencies": {
-    "@victor00128/nexus-cli-win32-x64": "1.0.4",
-    "@victor00128/nexus-cli-linux-x64": "1.0.4",
-    "@victor00128/nexus-cli-linux-arm64": "1.0.4",
-    "@victor00128/nexus-cli-darwin-x64": "1.0.4",
-    "@victor00128/nexus-cli-darwin-arm64": "1.0.4"
+    "@jc-morales-dev/nexus-cli-win32-x64": "1.1.0",
+    "@jc-morales-dev/nexus-cli-linux-x64": "1.1.0",
+    "@jc-morales-dev/nexus-cli-linux-arm64": "1.1.0",
+    "@jc-morales-dev/nexus-cli-darwin-x64": "1.1.0",
+    "@jc-morales-dev/nexus-cli-darwin-arm64": "1.1.0"
   }
 }

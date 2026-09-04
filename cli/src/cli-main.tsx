@@ -26,9 +26,11 @@ import { runPlainLogin } from './login/plain-login'
 import { initializeApp } from './init/init-app'
 import { getProjectRoot, setProjectRoot } from './project-files'
 import { trackEvent } from './utils/analytics'
-import { getAuthToken, getAuthTokenDetails } from './utils/auth'
+import { getAuthToken, getAuthTokenDetails, getConfigDir } from './utils/auth'
 import { resetNexusClient } from './utils/nexus-client'
 import { setApiClientAuthToken } from './utils/nexus-api'
+import { describeError } from './utils/cli-errors'
+import { initDebugMode, isDebugMode } from './utils/debug-mode'
 import { getCliEnv } from './utils/env'
 import { initializeAgentRegistry } from './utils/local-agent-registry'
 import { clearLogFile, logger } from './utils/logger'
@@ -92,8 +94,10 @@ function createQueryClient(): QueryClient {
 
 type ParsedArgs = {
   initialPrompt: string | null
+  network?: boolean
   agent?: string
   clearLogs: boolean
+  debug: boolean
   continue: boolean
   continueId?: string | null
   cwd?: string
@@ -113,6 +117,10 @@ function parseArgs(): ParsedArgs {
     )
     .option('--clear-logs', 'Remove any existing CLI log files before starting')
     .option(
+      '--debug',
+      'Show full error detail (stack traces, raw provider messages) instead of the short summary',
+    )
+    .option(
       '--continue [conversation-id]',
       'Continue from a previous conversation (optionally specify a conversation id)',
     )
@@ -124,7 +132,17 @@ function parseArgs(): ParsedArgs {
     .option('--free', 'Start in LITE mode (deprecated alias)')
     .option('--max', 'Start in MAX mode')
     .option('--plan', 'Start in PLAN mode')
-    .addHelpText('after', '\nCommands:\n  login                          Log in to your account\n  publish                        Publish agents to the registry')
+    .option(
+      '--no-network',
+      'For "nexus doctor": skip the checks that make network requests',
+    )
+    .addHelpText(
+      'after',
+      '\nCommands:\n' +
+        '  doctor                         Diagnose the installation and report problems\n' +
+        '  login                          Log in to your account\n' +
+        '  publish                        Publish agents to the registry',
+    )
     .helpOption('-h, --help', 'Show this help message')
     .argument('[prompt...]', 'Initial prompt to send to the agent')
     .allowExcessArguments(true)
@@ -145,6 +163,8 @@ function parseArgs(): ParsedArgs {
     initialPrompt: args.length > 0 ? args.join(' ') : null,
     agent: options.agent,
     clearLogs: options.clearLogs || false,
+    debug: options.debug || false,
+    network: options.network,
     continue: Boolean(continueFlag),
     continueId:
       typeof continueFlag === 'string' && continueFlag.trim().length > 0
@@ -250,11 +270,30 @@ async function main(): Promise<void> {
     initialPrompt,
     agent,
     clearLogs,
+    debug,
     continue: continueChat,
     continueId,
     cwd,
     initialMode,
   } = parseArgs()
+
+  // Set before anything can fail: --debug decides how much detail every error
+  // message downstream carries, including startup crashes.
+  initDebugMode(debug)
+
+  // `nexus doctor` runs before initializeApp: half of what it diagnoses is
+  // why initializeApp would fail. It prints and exits, never touching the TUI.
+  if (process.argv[2] === 'doctor') {
+    const { runDoctor } = await import('./commands/doctor')
+    const exitCode = await runDoctor({
+      version: loadPackageVersion(),
+      configDir: getConfigDir(),
+      // commander maps `--no-network` onto options.network === false.
+      allowNetwork: parseArgs().network !== false,
+      json: process.argv.includes('--json'),
+    })
+    process.exit(exitCode)
+  }
 
   const isLoginCommand = process.argv[2] === 'login'
   const isPublishCommand = process.argv[2] === 'publish'
@@ -451,7 +490,12 @@ async function main(): Promise<void> {
       // stdout may be closed
     }
     try {
-      console.error('Fatal error during startup:', error)
+      // A classified message the user can act on, not a raw dump. The stack is
+      // one `--debug` away, and everything printed here is redacted first.
+      console.error(describeError(error, { fallbackTitle: 'Fallo al arrancar' }))
+      if (!isDebugMode()) {
+        console.error('\nVolvé a correr con --debug para ver el stack completo.')
+      }
     } catch {
       // stderr may be closed
     }

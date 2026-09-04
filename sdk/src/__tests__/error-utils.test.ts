@@ -218,6 +218,23 @@ describe('error-utils', () => {
       expect(sanitizeErrorMessage('Plain string error')).toBe('Plain string error')
     })
 
+    // The whole point of "sanitize": provider SDKs put the failing request's
+    // URL, headers or body into the error message, and the user's key rides
+    // along. These messages reach the terminal and the log file.
+    test('redacts an API key embedded in the error message', () => {
+      const fakeKey = 'sk-or-v1-0123456789abcdef0123456789abcdef0123456789abcdef'
+      const error = new Error(`401 Unauthorized for key ${fakeKey}`)
+      const result = sanitizeErrorMessage(error)
+      expect(result).not.toContain(fakeKey)
+      expect(result).toContain('401 Unauthorized')
+    })
+
+    test('redacts a bearer token echoed back by the provider', () => {
+      const token = 'Zm9vYmFyYmF6cXV4MTIzNDU2Nzg5'
+      const result = sanitizeErrorMessage(`request failed: Bearer ${token}`)
+      expect(result).not.toContain(token)
+    })
+
     test('extracts message from object with message property', () => {
       const error = { message: 'Object error message' }
       expect(sanitizeErrorMessage(error)).toBe('Object error message')

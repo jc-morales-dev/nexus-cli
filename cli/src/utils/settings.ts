@@ -1,6 +1,8 @@
 import fs from 'fs'
 import path from 'path'
 
+import { registerSecret, unregisterSecret } from '@nexus/common/util/redact'
+
 import { getConfigDir } from './auth'
 import { AGENT_MODES } from './constants'
 import { logger } from './logger'
@@ -43,12 +45,38 @@ export const getSettingsPath = (): string => {
 }
 
 /**
+ * settings.json holds the user's provider key in plain text, so it is written
+ * owner-only. On Windows these bits are ignored by the filesystem; the ACL
+ * inherited from the user's profile directory is what applies there.
+ */
+const SETTINGS_FILE_MODE = 0o600
+const CONFIG_DIR_MODE = 0o700
+
+/**
  * Ensure the config directory exists, creating it if necessary
  */
 const ensureConfigDirExists = (): void => {
   const configDir = getConfigDir()
   if (!fs.existsSync(configDir)) {
-    fs.mkdirSync(configDir, { recursive: true })
+    fs.mkdirSync(configDir, { recursive: true, mode: CONFIG_DIR_MODE })
+  }
+}
+
+/**
+ * Write settings.json with owner-only permissions.
+ *
+ * `writeFileSync`'s mode only applies when the file is created, so an existing
+ * world-readable file — left by an older NEXUS, or by a permissive umask — is
+ * tightened explicitly. Failures are ignored: a settings file that can't be
+ * chmod'ed (network share, exotic filesystem) is still better than a CLI that
+ * refuses to start.
+ */
+const writeSettingsFile = (settingsPath: string, contents: string): void => {
+  fs.writeFileSync(settingsPath, contents, { mode: SETTINGS_FILE_MODE })
+  try {
+    fs.chmodSync(settingsPath, SETTINGS_FILE_MODE)
+  } catch {
+    // Permission bits are advisory on some platforms; don't fail the write.
   }
 }
 
@@ -62,7 +90,7 @@ export const loadSettings = (): Settings => {
   if (!fs.existsSync(settingsPath)) {
     ensureConfigDirExists()
     // Create default settings file
-    fs.writeFileSync(settingsPath, JSON.stringify(DEFAULT_SETTINGS, null, 2))
+    writeSettingsFile(settingsPath, JSON.stringify(DEFAULT_SETTINGS, null, 2))
     return DEFAULT_SETTINGS
   }
 
@@ -148,7 +176,7 @@ export const saveSettings = (newSettings: Partial<Settings>): void => {
     const existingSettings = loadSettings()
     const mergedSettings = { ...existingSettings, ...newSettings }
 
-    fs.writeFileSync(settingsPath, JSON.stringify(mergedSettings, null, 2))
+    writeSettingsFile(settingsPath, JSON.stringify(mergedSettings, null, 2))
   } catch (error) {
     logger.debug(
       {
@@ -175,18 +203,31 @@ export const saveModePreference = (mode: AgentMode): void => {
   saveSettings({ mode })
 }
 
-/** Load the user's saved OpenRouter API key, or undefined if none is set. */
+/**
+ * Load the user's saved OpenRouter API key, or undefined if none is set.
+ *
+ * Registers the key with the redactor on the way out: this is the earliest
+ * point at which the process knows the value, and every reader of the key goes
+ * through here.
+ */
 export const loadOpenRouterApiKey = (): string | undefined => {
-  return loadSettings().openRouterApiKey
+  const key = loadSettings().openRouterApiKey
+  registerSecret(key)
+  return key
 }
 
 /** Persist the user's OpenRouter API key to their config dir. */
 export const saveOpenRouterApiKey = (key: string): void => {
-  saveSettings({ openRouterApiKey: key.trim() })
+  const trimmed = key.trim()
+  // Registered here rather than at the call sites so no future caller of
+  // saveOpenRouterApiKey can introduce a key the redactor doesn't know about.
+  registerSecret(trimmed)
+  saveSettings({ openRouterApiKey: trimmed })
 }
 
 /** Remove the saved OpenRouter API key. */
 export const clearOpenRouterApiKey = (): void => {
+  unregisterSecret(loadSettings().openRouterApiKey)
   saveSettings({ openRouterApiKey: undefined })
 }
 

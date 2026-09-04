@@ -224,7 +224,7 @@ export const App = ({
           style={{ wrapMode: 'word', marginBottom: 1, fg: theme.foreground }}
         >
           <span fg={accentColor}>◇ </span>
-          NEXUS — tu CLI de coding, gratis y con el modelo que elijas.
+          NEXUS — tu CLI de coding. Sin suscripción: tu API key, tu modelo.
         </text>
         <text
           style={{ wrapMode: 'word', marginBottom: 1, fg: theme.foreground }}

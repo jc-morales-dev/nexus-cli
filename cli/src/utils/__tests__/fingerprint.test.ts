@@ -1,6 +1,11 @@
 import { describe, test, expect } from 'bun:test'
 
-import { getFingerprintType, generateFingerprintIdSync } from '../fingerprint'
+import {
+  calculateFingerprint,
+  generateFingerprintIdSync,
+  getFingerprintId,
+  getFingerprintType,
+} from '../fingerprint'
 
 describe('fingerprint utilities', () => {
   describe('getFingerprintType', () => {
@@ -139,6 +144,33 @@ describe('fingerprint utilities', () => {
           expect(getFingerprintType(fingerprint)).toBe('legacy')
         }
       })
+    })
+  })
+
+  // The point of the enhanced fingerprint is that the same machine produces
+  // the same id. Dropping `systeminformation` removed several inputs to the
+  // hash, so these pin the property that actually mattered.
+  describe('determinism after dropping the hardware probe', () => {
+    test('the same machine produces the same fingerprint twice', async () => {
+      const first = await calculateFingerprint()
+      const second = await calculateFingerprint()
+      expect(first).toBe(second)
+    })
+
+    test('the fingerprint is stable within a process', async () => {
+      expect(await getFingerprintId()).toBe(await getFingerprintId())
+    })
+
+    test('the fingerprint carries no raw machine identifiers', async () => {
+      const fingerprint = await calculateFingerprint()
+      // It's a hash: the hostname must not survive into it verbatim.
+      const { hostname } = await import('node:os')
+      expect(fingerprint).not.toContain(hostname())
+    })
+
+    test('produces a recognised fingerprint type', async () => {
+      const fingerprint = await calculateFingerprint()
+      expect(['enhanced_cli', 'legacy']).toContain(getFingerprintType(fingerprint))
     })
   })
 })

@@ -13,6 +13,7 @@ import type { MCPConfig } from '@nexus/common/types/mcp'
 import { getProjectRoot } from '../project-files'
 import { AGENT_MODE_TO_ID, type AgentMode } from './constants'
 import { logger } from './logger'
+import { getWorkspaceTrustStatus } from './workspace-trust'
 import * as bundledAgentsModule from '../agents/bundled-agents.generated'
 
 import type { AgentDefinition } from '@nexus/common/templates/initial-agents-dir/types/agent-definition'
@@ -53,11 +54,28 @@ let mcpServersCache: Record<string, MCPConfig> = {}
  * Later directories take precedence, so project agents override global ones.
  */
 export async function initializeAgentRegistry(): Promise<void> {
+  const workspacePath = getProjectRoot() || process.cwd()
+  const trustStatus = getWorkspaceTrustStatus(workspacePath)
+  const agentDirs = getAllowedAgentDirs(trustStatus.trusted)
+
+  cachedAgentsByMode.clear()
+  cachedAgentsDir = null
+
+  if (!trustStatus.trusted && hasProjectAgentConfiguration()) {
+    logger.warn(
+      { workspacePath: trustStatus.workspacePath },
+      'Se ignoró la configuración local de .agents porque el workspace no es confiable. Ejecutá `nexus trust` para habilitarla.',
+    )
+  }
+
   try {
-    // Let SDK load from all default directories (cwd, parent, home)
-    userAgentsCache = await sdkLoadLocalAgents({ verbose: false })
-    // Build ID-to-filepath map by scanning all agent directories
-    userAgentFilePaths = buildAgentFilePathMap(getDefaultAgentDirs())
+    // Directories from the checkout are executable code. Only hand them to the
+    // SDK after the explicit workspace-trust decision above.
+    userAgentsCache = await sdkLoadLocalAgents({
+      agentDirs,
+      verbose: false,
+    })
+    userAgentFilePaths = buildAgentFilePathMap(agentDirs)
   } catch (error) {
     // Fall back to empty cache if SDK loading fails, but log a warning
     logger.warn(
@@ -70,7 +88,10 @@ export async function initializeAgentRegistry(): Promise<void> {
 
   // Load MCP config from mcp.json files in .agents directories
   try {
-    const mcpConfig = loadMCPConfigSync({ verbose: false })
+    const mcpConfig = loadMCPConfigSync({
+      configDirs: agentDirs,
+      verbose: false,
+    })
     mcpServersCache = mcpConfig.mcpServers
     if (Object.keys(mcpServersCache).length > 0) {
       logger.debug(
@@ -88,14 +109,31 @@ export async function initializeAgentRegistry(): Promise<void> {
 }
 
 /**
- * Get default agent directories to scan.
- * Matches the SDK's getDefaultAgentDirs() to ensure consistency.
+ * Get the only directories that may be executed for this process. The global
+ * directory belongs to the user and remains available everywhere. Checkout
+ * directories require explicit workspace trust.
  */
-const getDefaultAgentDirs = (): string[] => {
+const getAllowedAgentDirs = (workspaceTrusted: boolean): string[] => {
   const cwdAgents = path.join(process.cwd(), AGENTS_DIR_NAME)
   const parentAgents = path.join(process.cwd(), '..', AGENTS_DIR_NAME)
   const homeAgents = path.join(os.homedir(), AGENTS_DIR_NAME)
-  return [cwdAgents, parentAgents, homeAgents]
+  return workspaceTrusted
+    ? [homeAgents, parentAgents, cwdAgents]
+    : [homeAgents]
+}
+
+const hasProjectAgentConfiguration = (): boolean => {
+  const candidates = [
+    path.join(process.cwd(), AGENTS_DIR_NAME),
+    path.join(process.cwd(), '..', AGENTS_DIR_NAME),
+  ]
+  return candidates.some((candidate) => {
+    try {
+      return fs.statSync(candidate).isDirectory()
+    } catch {
+      return false
+    }
+  })
 }
 
 /**
@@ -187,38 +225,18 @@ export const findAgentsDirectory = (): string | null => {
     return cachedAgentsDir
   }
 
-  const projectRoot = getProjectRoot() || process.cwd()
-  if (projectRoot) {
-    const rootCandidate = path.join(projectRoot, AGENTS_DIR_NAME)
-    if (
-      fs.existsSync(rootCandidate) &&
-      fs.statSync(rootCandidate).isDirectory()
-    ) {
-      cachedAgentsDir = rootCandidate
-      return cachedAgentsDir
+  const workspacePath = getProjectRoot() || process.cwd()
+  const trusted = getWorkspaceTrustStatus(workspacePath).trusted
+  const candidates = getAllowedAgentDirs(trusted).reverse()
+  for (const candidate of candidates) {
+    try {
+      if (fs.statSync(candidate).isDirectory()) {
+        cachedAgentsDir = candidate
+        return cachedAgentsDir
+      }
+    } catch {
+      // Missing/unreadable agent directories are expected.
     }
-  }
-
-  let currentDir = process.cwd()
-  const filesystemRoot = path.parse(currentDir).root
-
-  while (true) {
-    const candidate = path.join(currentDir, AGENTS_DIR_NAME)
-    if (fs.existsSync(candidate) && fs.statSync(candidate).isDirectory()) {
-      cachedAgentsDir = candidate
-      return cachedAgentsDir
-    }
-
-    if (currentDir === filesystemRoot) {
-      break
-    }
-
-    const parentDir = path.dirname(currentDir)
-    if (parentDir === currentDir) {
-      break
-    }
-
-    currentDir = parentDir
   }
 
   cachedAgentsDir = null

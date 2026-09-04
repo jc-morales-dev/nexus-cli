@@ -11,11 +11,17 @@
 // the distributed .exe. An explicit call cannot be stripped.
 import { registerSecret } from '@nexus/common/util/redact'
 import { NEXUS_DEFAULT_MODEL, isRetiredNexusModel } from '../data/nexus-models'
+import { DEFAULT_CHEAP_MODEL, PROVIDER_IDS } from '../data/providers'
 import {
   loadOpenRouterApiKey,
   loadNexusModel,
   clearNexusModel,
+  loadActiveModel,
+  loadProviderApiKey,
 } from '../utils/settings'
+
+import type { ProviderId } from '../data/providers'
+import type { ActiveModel } from '../utils/settings'
 
 /**
  * Settings accessors, injectable so tests can drive the retired-model migration
@@ -31,12 +37,34 @@ export interface ByokSettingsDeps {
   loadOpenRouterApiKey: () => string | undefined
   loadNexusModel: () => string | undefined
   clearNexusModel: () => void
+  /** Proveedor + modelo elegidos. Indefinido si el usuario no eligió nada. */
+  loadActiveModel: () => ActiveModel | undefined
+  /** La key guardada de cada proveedor configurado. */
+  loadProviderApiKey: (id: ProviderId) => string | undefined
 }
 
 const defaultDeps: ByokSettingsDeps = {
   loadOpenRouterApiKey,
   loadNexusModel,
   clearNexusModel,
+  loadActiveModel,
+  loadProviderApiKey,
+}
+
+/**
+ * Dónde busca el SDK la key de cada proveedor.
+ *
+ * Son los nombres convencionales de cada fabricante, no unos con prefijo
+ * NEXUS_: quien ya tenga exportada ANTHROPIC_API_KEY para otras herramientas
+ * arranca NEXUS sin pegar nada.
+ */
+const KEY_ENV_VAR: Record<ProviderId, string | undefined> = {
+  openrouter: 'OPENROUTER_API_KEY',
+  anthropic: 'ANTHROPIC_API_KEY',
+  openai: 'OPENAI_API_KEY',
+  nvidia: 'NVIDIA_API_KEY',
+  // Codex entra por navegador; no hay key que exportar.
+  codex: undefined,
 }
 
 export function initByokKey(deps: ByokSettingsDeps = defaultDeps): void {
@@ -56,6 +84,22 @@ export function initByokKey(deps: ByokSettingsDeps = defaultDeps): void {
   }
   registerSecret(process.env.OPENROUTER_API_KEY)
 
+  // Las keys de TODOS los proveedores configurados, no solo la del activo: así
+  // cambiar de proveedor con /model a mitad de sesión es cambiar una variable,
+  // sin volver a leer el disco ni reiniciar.
+  //
+  // Una variable ya exportada por el usuario nunca se pisa: si tiene
+  // ANTHROPIC_API_KEY en su shell, esa manda sobre la guardada.
+  for (const id of PROVIDER_IDS) {
+    const envVar = KEY_ENV_VAR[id]
+    if (!envVar || process.env[envVar]) continue
+    const key = deps.loadProviderApiKey(id)
+    if (key) {
+      process.env[envVar] = key
+      registerSecret(key)
+    }
+  }
+
   // Tiered models — single source of truth so the user's /model pick persists and
   // the distributable binary works with no .env. An explicit NEXUS_MODEL (a
   // forced single-model override) disables the tiered map entirely, so respect it.
@@ -65,7 +109,23 @@ export function initByokKey(deps: ByokSettingsDeps = defaultDeps): void {
   // Single source of truth with the /model picker — a default that lives in two
   // places drifts, and the boot value is the one that actually reaches the API.
   const STRONG_DEFAULT = NEXUS_DEFAULT_MODEL
-  const CHEAP_DEFAULT = 'deepseek/deepseek-v4-flash'
+  const CHEAP_DEFAULT = DEFAULT_CHEAP_MODEL.openrouter
+
+  // El usuario eligió un proveedor que no es OpenRouter. Ese caso se resuelve
+  // entero acá y se sale: el modelo, el proveedor y el nivel barato salen los
+  // tres del mismo sitio, y mezclarlos con la rama de abajo — que asume ids con
+  // formato de OpenRouter — solo puede acabar mandando un id a donde no existe.
+  const active = deps.loadActiveModel()
+  if (!process.env.NEXUS_MODEL && active && active.provider !== 'openrouter') {
+    process.env.NEXUS_PROVIDER = active.provider
+    process.env.NEXUS_MODEL_STRONG = active.model
+    // Los agentes auxiliares van al modelo barato del MISMO proveedor. Si
+    // salieran de otro, el usuario recibiría una segunda factura de un sitio
+    // donde no eligió nada.
+    process.env.NEXUS_MODEL_CHEAP = DEFAULT_CHEAP_MODEL[active.provider]
+    return
+  }
+
   if (!process.env.NEXUS_MODEL) {
     // The user's saved /model pick wins over the baked default (and over a STRONG
     // value inherited from a dev .env), so changing the model actually sticks.

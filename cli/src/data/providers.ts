@@ -100,6 +100,28 @@ export const PROVIDERS: Record<ProviderId, ProviderInfo> = {
 
 export const PROVIDER_IDS = Object.keys(PROVIDERS) as ProviderId[]
 
+/**
+ * El modelo que usan los agentes auxiliares (buscar ficheros, podar contexto)
+ * en cada proveedor.
+ *
+ * Lo elige NEXUS, no el usuario, y siempre del MISMO proveedor que el modelo
+ * principal. Si el nivel barato se quedara fijo en OpenRouter, alguien que
+ * eligiera Claude en Anthropic acabaría pagando dos facturas sin haberlo
+ * pedido: una por lo que eligió y otra por un sitio donde no eligió nada.
+ *
+ * El criterio es el más barato de cada catálogo que aún sepa usar herramientas;
+ * un modelo que no las sabe usar no sirve para un agente por barato que sea.
+ */
+export const DEFAULT_CHEAP_MODEL: Record<ProviderId, string> = {
+  openrouter: 'deepseek/deepseek-v4-flash',
+  anthropic: 'claude-haiku-4.5',
+  openai: 'gpt-5.2-mini',
+  nvidia: 'nemotron-3.5-lightning',
+  // Codex no factura por token: entra con la cuenta del usuario, así que no hay
+  // nada que ahorrar y el nivel barato es el mismo modelo.
+  codex: 'gpt-5.2',
+}
+
 export function isProviderId(value: unknown): value is ProviderId {
   return typeof value === 'string' && value in PROVIDERS
 }

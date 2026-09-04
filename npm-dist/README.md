@@ -10,6 +10,8 @@ Traé tu propia API key de [OpenRouter](https://openrouter.ai/keys) (modelos gra
 [![license](https://img.shields.io/badge/license-Apache--2.0-blue)](https://www.apache.org/licenses/LICENSE-2.0)
 ![platforms](https://img.shields.io/badge/plataformas-Windows%20%C2%B7%20macOS%20%C2%B7%20Linux-informational)
 
+[Código y documentación](https://github.com/jc-morales-dev/nexus-cli)
+
 </div>
 
 ---
@@ -33,11 +35,10 @@ nexus
 
 1. La primera vez, escribí **`/key`** y pegá tu API key de OpenRouter
    (conseguí una gratis en <https://openrouter.ai/keys>).
-2. Elegí el modelo con **`/model`**. Por defecto viene **Ox Alpha**: nivel
-   frontera, 1M de contexto y hoy sale $0. Ojo, es un modelo *stealth* — el
-   proveedor es anónimo, registra los prompts (o sea, tu código) para evaluarlo
-   y puede desaparecer sin aviso. Si preferís algo estable y sin registro,
-   `/model deepseek/deepseek-v3.2` es barato y razona muy bien.
+2. Elegí el modelo con **`/model`**. El predeterminado es **MiniMax M3** en el
+   nivel gratuito. Si el proveedor cambia su catálogo o llegás al límite diario,
+   elegí otro modelo disponible; `/model deepseek/deepseek-v3.2` es una opción
+   económica de pago.
 3. Escribí lo que querés hacer en lenguaje natural. NEXUS explora el repo, edita
    archivos y te muestra los cambios para que los apruebes.
 

@@ -35,6 +35,11 @@ const version = process.env.npm_package_version ?? '1.0.0'
 
 const SCOPE = '@victor00128'
 const BASE_NAME = 'nexus-cli'
+const AUTHOR = 'Julio Cesar Morales'
+const REPOSITORY = {
+  type: 'git',
+  url: 'git+https://github.com/jc-morales-dev/nexus-cli.git',
+}
 
 interface Target {
   key: string // npm-style key: <platform>-<arch>
@@ -191,6 +196,8 @@ function writePlatformPackage(target: Target) {
         version,
         description: `NEXUS CLI — binario ${target.key}. Instalado automáticamente por ${SCOPE}/${BASE_NAME}.`,
         license: 'Apache-2.0',
+        author: AUTHOR,
+        repository: REPOSITORY,
         preferUnplugged: true,
         os: [target.platform],
         cpu: [target.arch],
@@ -221,6 +228,10 @@ function writeMainPackage(builtKeys: string[]) {
           'NEXUS — un CLI de coding con IA, gratis. Traé tu propia API key de OpenRouter (gratis o de pago) y usá cualquier modelo.',
         keywords: ['ai', 'cli', 'coding-agent', 'openrouter', 'llm', 'terminal'],
         license: 'Apache-2.0',
+        author: AUTHOR,
+        repository: REPOSITORY,
+        homepage: 'https://github.com/jc-morales-dev/nexus-cli#readme',
+        bugs: { url: 'https://github.com/jc-morales-dev/nexus-cli/issues' },
         bin: { nexus: 'bin/nexus.js' },
         files: ['bin/nexus.js', 'NOTICE'],
         engines: { node: '>=16' },

@@ -6,9 +6,9 @@ multi-agent architecture, editing tools, and much of the retained history. This
 fork preserves that credit in [README.md](README.md) and [NOTICE](NOTICE).
 
 The fork-specific work begins after Codebuff commit
-[`eaa8c108`](https://github.com/jc-morales-dev/nexus-cli/commit/eaa8c10892f2e8c81fdc1cc52483ee2b0782b657).
+[`7383f286`](https://github.com/jc-morales-dev/nexus-cli/commit/7383f28634b8ec0925159215943a53e3ef2fe221).
 The auditable range is
-[`eaa8c108..main`](https://github.com/jc-morales-dev/nexus-cli/compare/eaa8c10892f2e8c81fdc1cc52483ee2b0782b657...main).
+[`7383f286..main`](https://github.com/jc-morales-dev/nexus-cli/compare/7383f28634b8ec0925159215943a53e3ef2fe221...main).
 That compare link is the count: it stays accurate as the fork grows, which a
 number written here would not. The current Codebuff repository no longer shares
 a merge base with this checkout, so the preserved baseline is the honest
@@ -28,15 +28,15 @@ comparison point.
 
 ## Representative commits
 
-- [`ab87a729`](https://github.com/jc-morales-dev/nexus-cli/commit/ab87a729f) — direct NVIDIA BYOK routing, later removed in [`be045c87`](https://github.com/jc-morales-dev/nexus-cli/commit/be045c875) when the fork narrowed to a single provider. Listed because the integration work is part of the record, not because NEXUS ships it today.
-- [`04f8ac0d`](https://github.com/jc-morales-dev/nexus-cli/commit/04f8ac0db) — direct OpenRouter routing
-- [`4e8f886b`](https://github.com/jc-morales-dev/nexus-cli/commit/4e8f886b8) — accountless boot and execution
-- [`8d65a03b`](https://github.com/jc-morales-dev/nexus-cli/commit/8d65a03b6) — anti-loop and validation guards
-- [`7349cc51`](https://github.com/jc-morales-dev/nexus-cli/commit/7349cc51d) — deterministic hooks
-- [`4a70cd8e`](https://github.com/jc-morales-dev/nexus-cli/commit/4a70cd8ec) — undo checkpoints
-- [`f3f2a82d`](https://github.com/jc-morales-dev/nexus-cli/commit/f3f2a82d2) — command permission sandbox
-- [`9b2eeafc`](https://github.com/jc-morales-dev/nexus-cli/commit/9b2eeafcc) — Linux and Windows CI
-- [`68fe8ef2`](https://github.com/jc-morales-dev/nexus-cli/commit/68fe8ef21) — telemetry disablement and Codebuff attribution
+- [`173c4cd6`](https://github.com/jc-morales-dev/nexus-cli/commit/173c4cd677aa93945c1d1b40eef8059fd47b2085) — direct NVIDIA BYOK routing, later removed in [`6dc0779f`](https://github.com/jc-morales-dev/nexus-cli/commit/6dc0779f5dfc080c338a9870fcc13b6ab15cdf07) when the fork narrowed to a single provider. Listed because the integration work is part of the record, not because NEXUS ships it today.
+- [`3e4f08bb`](https://github.com/jc-morales-dev/nexus-cli/commit/3e4f08bbec1ad5cc9805734bba2a0df206aa215e) — direct OpenRouter routing
+- [`2d275aa6`](https://github.com/jc-morales-dev/nexus-cli/commit/2d275aa6573fe51b335ef35162d65269108bd33d) — accountless boot and execution
+- [`cd3e9b36`](https://github.com/jc-morales-dev/nexus-cli/commit/cd3e9b366bdcb6de90dc40f956bec002abe2efdf) — anti-loop and validation guards
+- [`69de513c`](https://github.com/jc-morales-dev/nexus-cli/commit/69de513c963936dc9cdbd74a996e639e294be17e) — deterministic hooks
+- [`fdd555a6`](https://github.com/jc-morales-dev/nexus-cli/commit/fdd555a68853eb488ce07a540b82156c1b5f3085) — undo checkpoints
+- [`6def7200`](https://github.com/jc-morales-dev/nexus-cli/commit/6def72009977b1a07234fc0ee2e4e2391d7c51ea) — command permission sandbox
+- [`24d960fb`](https://github.com/jc-morales-dev/nexus-cli/commit/24d960fb5d687ba4327b5321eb6193a64492c71a) — Linux and Windows CI
+- [`adec8380`](https://github.com/jc-morales-dev/nexus-cli/commit/adec838084e9ab84a8831e2116e6073304be4b61) — telemetry disablement and Codebuff attribution
 
 This document deliberately avoids claiming that the fork wrote the inherited
 agent architecture. It makes the integration, removal, hardening, UX, and

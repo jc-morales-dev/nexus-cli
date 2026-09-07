@@ -36,7 +36,7 @@
     "@opentui/react": "0.2.2",
     "@tanstack/react-query": "^5.90.12",
     "commander": "^14.0.1",
-    "immer": "^10.1.3",
+    "immer": "^11.1.18",
     "jimp": "^1.6.0",
     "node-machine-id": "^1.1.12",
     "open": "^10.1.0",

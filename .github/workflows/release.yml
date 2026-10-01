@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-project
 
       - name: Confirm the tag matches cli/package.json
@@ -70,7 +70,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-project
 
       - name: Fetch vendored ripgrep for every platform
@@ -91,7 +91,7 @@ jobs:
         run: bun scripts/release/verify.ts "${GITHUB_REF_NAME}"
 
       - name: Upload packages for the publish job
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: npm-dist
           path: npm-dist/
@@ -106,14 +106,14 @@ jobs:
     # reviewer there if you want a human to approve every publish.
     environment: npm-publish
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
           registry-url: 'https://registry.npmjs.org'
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: npm-dist
           path: npm-dist/
@@ -156,11 +156,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: npm-dist
           path: npm-dist/
@@ -193,7 +193,7 @@ jobs:
           ( cd release-assets && sha256sum *.tar.gz > SHA256SUMS.txt )
 
       - name: Create the release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           name: NEXUS ${{ github.ref_name }}
           body: |
